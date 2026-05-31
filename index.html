@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ontario Broker Rate Desk</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Portal navigation">
+        <div class="brand-lockup">
+          <div class="brand-mark">OR</div>
+          <div>
+            <p class="eyebrow">Ontario</p>
+            <h1>Broker Rate Desk</h1>
+          </div>
+        </div>
+
+        <nav class="nav-list">
+          <a href="#dashboard" class="active">Dashboard</a>
+          <a href="#lenders">Lenders</a>
+          <a href="#programs">Programs</a>
+          <a href="#contacts">BDM Contacts</a>
+          <a href="#compliance">Compliance</a>
+        </nav>
+
+        <section class="sidebar-panel">
+          <p class="panel-label">Today</p>
+          <strong id="todayLabel"></strong>
+          <span>Rate data is managed by your brokerage.</span>
+        </section>
+      </aside>
+
+      <main>
+        <header class="topbar" id="dashboard">
+          <div>
+            <p class="eyebrow">Daily lender intelligence</p>
+            <h2>Rates, guidelines, programs, policies, BDMs.</h2>
+          </div>
+          <div class="topbar-actions">
+            <button class="icon-button" id="themeToggle" type="button" title="Toggle theme" aria-label="Toggle theme">
+              <span>◐</span>
+            </button>
+            <button class="primary-button" id="openRateEditor" type="button">Update Rates</button>
+          </div>
+        </header>
+
+        <section class="metric-grid" aria-label="Portal summary">
+          <article>
+            <span>Tracked lenders</span>
+            <strong id="lenderCount">0</strong>
+          </article>
+          <article>
+            <span>Lowest insured fixed</span>
+            <strong id="lowestFixed">0.00%</strong>
+          </article>
+          <article>
+            <span>Alt lending range</span>
+            <strong id="altRange">0</strong>
+          </article>
+          <article>
+            <span>BDM contacts</span>
+            <strong id="bdmCount">0</strong>
+          </article>
+        </section>
+
+        <section class="workspace">
+          <div class="control-row">
+            <label class="search-box">
+              <span>Search</span>
+              <input id="searchInput" type="search" placeholder="Lender, product, policy, BDM..." />
+            </label>
+
+            <div class="segmented-control" aria-label="Lender type filter">
+              <button class="active" type="button" data-filter="all">All</button>
+              <button type="button" data-filter="bank">Bank</button>
+              <button type="button" data-filter="monoline">Monoline</button>
+              <button type="button" data-filter="alternative">Alternative</button>
+              <button type="button" data-filter="credit union">Credit Union</button>
+            </div>
+          </div>
+
+          <section class="split-view" id="lenders">
+            <div>
+              <div class="section-heading">
+                <div>
+                  <p class="eyebrow">Lender sheet</p>
+                  <h3>Daily Rate Board</h3>
+                </div>
+                <button class="secondary-button" id="clearFilters" type="button">Clear</button>
+              </div>
+              <div class="lender-list" id="lenderList"></div>
+            </div>
+
+            <aside class="detail-panel" id="detailPanel" aria-live="polite"></aside>
+          </section>
+        </section>
+
+        <section class="band" id="programs">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Broker placement</p>
+              <h3>Program Finder</h3>
+            </div>
+          </div>
+          <div class="program-grid" id="programGrid"></div>
+        </section>
+
+        <section class="band" id="contacts">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Relationship desk</p>
+              <h3>BDM Contact Directory</h3>
+            </div>
+          </div>
+          <div class="contact-table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Lender</th>
+                  <th>BDM / Region</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Website</th>
+                </tr>
+              </thead>
+              <tbody id="contactTable"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="band compliance" id="compliance">
+          <div>
+            <p class="eyebrow">Compliance note</p>
+            <h3>Built for internal broker use</h3>
+          </div>
+          <p>
+            Sample rates and guidelines are placeholders for your brokerage operations team to replace with current lender notices.
+            Brokers should confirm pricing, eligibility, compensation, and policies with each lender before advising a borrower.
+          </p>
+        </section>
+      </main>
+    </div>
+
+    <dialog id="rateDialog">
+      <form method="dialog" class="dialog-card">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Desk admin</p>
+            <h3>Update Sample Rates</h3>
+          </div>
+          <button class="icon-button" value="cancel" type="submit" title="Close" aria-label="Close">×</button>
+        </div>
+        <label>
+          Lender
+          <select id="rateLenderSelect"></select>
+        </label>
+        <div class="form-grid">
+          <label>
+            Insured 5-year fixed
+            <input id="insuredFixedInput" type="number" min="0" step="0.01" />
+          </label>
+          <label>
+            Insured variable
+            <input id="variableInput" type="number" min="0" step="0.01" />
+          </label>
+          <label>
+            Conventional 5-year fixed
+            <input id="conventionalInput" type="number" min="0" step="0.01" />
+          </label>
+          <label>
+            Alt stated-income
+            <input id="altInput" type="number" min="0" step="0.01" />
+          </label>
+        </div>
+        <label>
+          Desk note
+          <textarea id="noteInput" rows="3"></textarea>
+        </label>
+        <menu>
+          <button class="secondary-button" id="resetDemoData" type="button">Reset Demo Data</button>
+          <button class="primary-button" id="saveRates" value="default" type="submit">Save Update</button>
+        </menu>
+      </form>
+    </dialog>
+
+    <script src="script.js"></script>
+  </body>
+</html>
