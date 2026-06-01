@@ -4,7 +4,807 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Ontario Broker Rate Desk</title>
-    <link rel="stylesheet" href="styles.css" />
+    <style>
+:root {
+  color-scheme: light;
+  --bg: #eef3f5;
+  --surface: #ffffff;
+  --surface-strong: #f4f7f8;
+  --surface-tint: #e9f5f6;
+  --text: #13202a;
+  --muted: #63727f;
+  --line: #d8e1e5;
+  --accent: #087a8a;
+  --accent-strong: #035f6d;
+  --accent-soft: #d9f1f3;
+  --green: #167a55;
+  --amber: #b86809;
+  --red: #b0443f;
+  --nav: #111d24;
+  --shadow: 0 18px 50px rgba(15, 31, 42, 0.1);
+  --shadow-soft: 0 10px 24px rgba(15, 31, 42, 0.07);
+}
+
+body.dark {
+  color-scheme: dark;
+  --bg: #0e1418;
+  --surface: #151d22;
+  --surface-strong: #1c262c;
+  --surface-tint: #183039;
+  --text: #edf5f7;
+  --muted: #a3b1ba;
+  --line: #2c3941;
+  --accent: #69c7d4;
+  --accent-strong: #8ce2ec;
+  --accent-soft: #17363d;
+  --green: #6ed2a4;
+  --amber: #f0b65f;
+  --red: #ef8a83;
+  --nav: #0b1013;
+  --shadow: 0 18px 50px rgba(0, 0, 0, 0.34);
+  --shadow-soft: 0 10px 24px rgba(0, 0, 0, 0.28);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background:
+    radial-gradient(circle at top right, rgba(8, 122, 138, 0.16), transparent 34rem),
+    linear-gradient(180deg, #f8fafb 0, var(--bg) 32rem);
+  color: var(--text);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+body.dark {
+  background:
+    radial-gradient(circle at top right, rgba(105, 199, 212, 0.12), transparent 34rem),
+    linear-gradient(180deg, #101820 0, var(--bg) 32rem);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+}
+
+.app-shell {
+  display: grid;
+  grid-template-columns: 286px minmax(0, 1fr);
+  min-height: 100vh;
+  min-width: 0;
+  overflow-x: hidden;
+}
+
+.sidebar {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  height: 100vh;
+  padding: 24px;
+  background:
+    linear-gradient(180deg, rgba(105, 199, 212, 0.1), transparent 32%),
+    var(--nav);
+  color: #f4fbfd;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  min-width: 0;
+  width: 100%;
+}
+
+.brand-lockup {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.brand-mark {
+  width: 48px;
+  aspect-ratio: 1;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, #80d4df, #f3bd6b);
+  color: #102127;
+  font-weight: 900;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.28);
+}
+
+.brand-lockup h1,
+.topbar h2,
+.workspace-header h3,
+.section-heading h3,
+.compliance h3 {
+  margin: 0;
+  line-height: 1.08;
+}
+
+.brand-lockup h1 {
+  font-size: 1.3rem;
+}
+
+.eyebrow,
+.panel-label {
+  margin: 0 0 6px;
+  color: var(--muted);
+  font-size: 0.73rem;
+  text-transform: uppercase;
+  letter-spacing: 0;
+  font-weight: 800;
+}
+
+.sidebar .eyebrow,
+.sidebar .panel-label {
+  color: #9cc8d2;
+}
+
+.nav-list {
+  display: grid;
+  gap: 8px;
+}
+
+.nav-list a {
+  text-decoration: none;
+  padding: 12px 12px;
+  border-radius: 8px;
+  color: #c9dbe0;
+  border: 1px solid transparent;
+}
+
+.nav-list a.active,
+.nav-list a:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.sidebar-panel {
+  margin-top: auto;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 8px;
+  padding: 16px;
+  display: grid;
+  gap: 8px;
+  color: #cfe3e8;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.sidebar-panel strong {
+  color: #ffffff;
+  font-size: 1.02rem;
+}
+
+main {
+  padding: 28px;
+  display: grid;
+  gap: 22px;
+  min-width: 0;
+  overflow-x: hidden;
+}
+
+.topbar {
+  min-height: 260px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: clamp(22px, 4vw, 36px);
+  background:
+    linear-gradient(135deg, rgba(8, 122, 138, 0.12), transparent 48%),
+    linear-gradient(180deg, var(--surface), var(--surface-strong));
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.topbar,
+.section-heading,
+.control-row,
+menu,
+.workspace-header,
+.status-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.topbar > div:first-child {
+  min-width: 0;
+}
+
+.status-row {
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+.topbar h2 {
+  font-size: clamp(2.2rem, 5vw, 4.7rem);
+  max-width: 960px;
+  letter-spacing: 0;
+  overflow-wrap: anywhere;
+}
+
+.topbar-copy {
+  max-width: 720px;
+  margin: 16px 0 0;
+  color: var(--muted);
+  font-size: 1.05rem;
+  line-height: 1.55;
+}
+
+.live-pill,
+.desk-badges span {
+  min-height: 28px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0 10px;
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  border: 1px solid color-mix(in srgb, var(--accent) 22%, transparent);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.topbar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-self: flex-start;
+}
+
+.primary-button,
+.secondary-button,
+.icon-button,
+.segmented-control button {
+  min-height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+}
+
+.primary-button {
+  padding: 0 17px;
+  border-color: var(--accent);
+  background: linear-gradient(180deg, var(--accent), var(--accent-strong));
+  color: #ffffff;
+  font-weight: 800;
+  min-width: 136px;
+  white-space: nowrap;
+  box-shadow: 0 10px 22px rgba(8, 122, 138, 0.2);
+}
+
+.secondary-button {
+  padding: 0 14px;
+}
+
+.icon-button {
+  width: 44px;
+  display: grid;
+  place-items: center;
+  font-size: 1.25rem;
+}
+
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.metric-grid article {
+  min-height: 122px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: var(--shadow-soft);
+  display: grid;
+  gap: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.metric-grid article::after {
+  content: "";
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  width: 44px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--surface-tint);
+}
+
+.metric-grid small {
+  color: var(--accent-strong);
+  font-weight: 900;
+  font-size: 0.76rem;
+}
+
+.metric-grid span,
+.lender-meta,
+.policy-list,
+.program-card p,
+.contact-line,
+.compliance p {
+  color: var(--muted);
+}
+
+.metric-grid strong {
+  font-size: clamp(1.65rem, 3vw, 2.15rem);
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.workspace,
+.band {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.82);
+  padding: 18px;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(14px);
+}
+
+body.dark .workspace,
+body.dark .band {
+  background: rgba(21, 29, 34, 0.84);
+}
+
+.workspace-header {
+  align-items: flex-start;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.workspace-header h3 {
+  font-size: 1.35rem;
+}
+
+.desk-badges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.control-row {
+  align-items: end;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+
+.search-box {
+  flex: 1 1 330px;
+  display: grid;
+  gap: 7px;
+  color: var(--muted);
+  font-weight: 800;
+  font-size: 0.84rem;
+}
+
+.search-box input,
+select,
+input,
+textarea {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px 12px;
+  background: var(--surface);
+  color: var(--text);
+  outline: none;
+}
+
+.search-box input:focus,
+select:focus,
+input:focus,
+textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 16%, transparent);
+}
+
+.segmented-control {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 5px;
+  border-radius: 8px;
+  background: var(--surface-strong);
+}
+
+.segmented-control button {
+  min-height: 35px;
+  padding: 0 12px;
+  background: transparent;
+}
+
+.segmented-control button.active {
+  background: var(--surface);
+  border-color: var(--accent);
+  color: var(--accent-strong);
+  box-shadow: var(--shadow-soft);
+}
+
+.split-view {
+  display: grid;
+  grid-template-columns: minmax(0, 1.24fr) minmax(360px, 0.76fr);
+  gap: 18px;
+}
+
+.lender-list {
+  display: grid;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.lender-card {
+  width: 100%;
+  text-align: left;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  padding: 15px;
+  display: grid;
+  gap: 13px;
+  transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.lender-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-soft);
+}
+
+.lender-card.active {
+  border-color: var(--accent);
+  box-shadow: inset 4px 0 0 var(--accent), var(--shadow-soft);
+}
+
+.lender-card header,
+.rate-row,
+.badge-row,
+.detail-title {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+}
+
+.lender-card header {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+}
+
+.lender-logo {
+  width: 42px;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--accent-soft), #fff4dc);
+  color: var(--accent-strong);
+  font-weight: 900;
+  border: 1px solid var(--line);
+}
+
+body.dark .lender-logo {
+  background: linear-gradient(135deg, var(--accent-soft), rgba(240, 182, 95, 0.16));
+}
+
+.detail-logo {
+  display: inline-grid;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+.lender-card h4,
+.detail-panel h4,
+.program-card h4 {
+  margin: 0;
+}
+
+.lender-card h4 {
+  font-size: 1.02rem;
+}
+
+.badge-row {
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 27px;
+  padding: 0 9px;
+  border-radius: 999px;
+  background: var(--surface-strong);
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+  border: 1px solid var(--line);
+}
+
+.rate-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.rate-pill {
+  min-height: 66px;
+  padding: 10px;
+  border-radius: 8px;
+  background: var(--surface-strong);
+  display: grid;
+  gap: 4px;
+  border: 1px solid transparent;
+}
+
+.rate-pill span {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.rate-pill strong {
+  font-size: 1.14rem;
+}
+
+.rate-pill:has(strong:not(:empty)) {
+  border-color: color-mix(in srgb, var(--accent) 10%, transparent);
+}
+
+.detail-panel {
+  position: sticky;
+  top: 20px;
+  align-self: start;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 18px;
+  background:
+    linear-gradient(180deg, var(--surface), var(--surface-strong));
+  display: grid;
+  gap: 17px;
+  box-shadow: var(--shadow-soft);
+}
+
+.detail-title {
+  align-items: start;
+}
+
+.detail-panel h4 {
+  display: flex;
+  align-items: center;
+  font-size: 1.35rem;
+}
+
+.website-link {
+  color: var(--accent-strong);
+  font-weight: 850;
+}
+
+.policy-list {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.policy-list li + li {
+  margin-top: 8px;
+}
+
+.program-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.program-card {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 16px;
+  background: var(--surface);
+  display: grid;
+  gap: 10px;
+  min-height: 132px;
+  box-shadow: var(--shadow-soft);
+}
+
+.program-card h4::before {
+  content: "";
+  display: inline-block;
+  width: 9px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  margin-right: 8px;
+  background: var(--amber);
+}
+
+.contact-table-wrap {
+  overflow-x: auto;
+  margin-top: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 760px;
+  background: var(--surface);
+}
+
+th,
+td {
+  padding: 14px 12px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+
+tbody tr:hover {
+  background: var(--surface-strong);
+}
+
+th {
+  color: var(--muted);
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0;
+}
+
+.compliance {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+  border-left: 4px solid var(--amber);
+}
+
+dialog {
+  width: min(720px, calc(100vw - 28px));
+  border: 0;
+  border-radius: 8px;
+  padding: 0;
+  background: transparent;
+}
+
+dialog::backdrop {
+  background: rgba(10, 14, 18, 0.58);
+}
+
+.dialog-card {
+  padding: 20px;
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  display: grid;
+  gap: 16px;
+}
+
+.dialog-card label {
+  display: grid;
+  gap: 7px;
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+menu {
+  margin: 0;
+  padding: 0;
+}
+
+@media (max-width: 1160px) {
+  .metric-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .split-view,
+  .compliance {
+    grid-template-columns: 1fr;
+  }
+
+  .detail-panel {
+    position: static;
+  }
+}
+
+@media (max-width: 1080px) {
+  .app-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    position: static;
+    height: auto;
+  }
+
+  .nav-list {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  main {
+    padding: 16px;
+  }
+
+  .topbar,
+  .section-heading,
+  .workspace-header,
+  menu {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .topbar-actions,
+  .desk-badges {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .topbar-actions .primary-button {
+    flex: 1 1 180px;
+    width: auto;
+  }
+
+  .topbar-actions .icon-button {
+    flex: 0 0 44px;
+  }
+
+  .primary-button,
+  .secondary-button {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .metric-grid,
+  .program-grid,
+  .rate-row,
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .nav-list {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .lender-card header {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .lender-card header .badge {
+    grid-column: 1 / -1;
+    width: max-content;
+  }
+}
+
+    </style>
   </head>
   <body>
     <div class="app-shell">
@@ -35,8 +835,14 @@
       <main>
         <header class="topbar" id="dashboard">
           <div>
-            <p class="eyebrow">Daily lender intelligence</p>
-            <h2>Rates, guidelines, programs, policies, BDMs.</h2>
+            <div class="status-row">
+              <p class="eyebrow">Daily lender intelligence</p>
+              <span class="live-pill">Broker desk live</span>
+            </div>
+            <h2>Ontario mortgage lender command center.</h2>
+            <p class="topbar-copy">
+              Compare daily rates, match programs, review policy notes, and reach the right lender contact from one focused workspace.
+            </p>
           </div>
           <div class="topbar-actions">
             <button class="icon-button" id="themeToggle" type="button" title="Toggle theme" aria-label="Toggle theme">
@@ -48,24 +854,40 @@
 
         <section class="metric-grid" aria-label="Portal summary">
           <article>
+            <small>01</small>
             <span>Tracked lenders</span>
             <strong id="lenderCount">0</strong>
           </article>
           <article>
+            <small>02</small>
             <span>Lowest insured fixed</span>
             <strong id="lowestFixed">0.00%</strong>
           </article>
           <article>
+            <small>03</small>
             <span>Alt lending range</span>
             <strong id="altRange">0</strong>
           </article>
           <article>
+            <small>04</small>
             <span>BDM contacts</span>
             <strong id="bdmCount">0</strong>
           </article>
         </section>
 
         <section class="workspace">
+          <div class="workspace-header">
+            <div>
+              <p class="eyebrow">Pipeline triage</p>
+              <h3>Find the right lender before you submit.</h3>
+            </div>
+            <div class="desk-badges">
+              <span>Prime</span>
+              <span>Alternative</span>
+              <span>Rental</span>
+              <span>Switch</span>
+            </div>
+          </div>
           <div class="control-row">
             <label class="search-box">
               <span>Search</span>
@@ -185,6 +1007,476 @@
       </form>
     </dialog>
 
-    <script src="script.js"></script>
+    <script>
+const demoLenders = [
+  {
+    id: "first-national",
+    name: "First National",
+    type: "monoline",
+    website: "https://www6.firstnational.ca/",
+    portal: "MERLIN broker resources",
+    region: "Ontario",
+    bdm: "Ontario Broker Support Desk",
+    email: "brokerinfo@firstnational.ca",
+    phone: "1-888-488-0794",
+    rates: { insuredFixed: 4.79, variable: 4.95, conventional: 4.99, alt: null },
+    updated: "May 31, 2026",
+    programs: ["Insured purchase", "Conventional purchase", "Rental", "Switch/transfer"],
+    guidelines: [
+      "Monoline lender focused on broker-originated residential mortgages.",
+      "Useful fit for prime insured and conventional files with standard income documentation.",
+      "Confirm current rate holds, prepayment privileges, rental offsets, and exception paths in the lender portal."
+    ],
+    policyNote: "Demo pricing. Replace with your daily First National rate sheet."
+  },
+  {
+    id: "mcap",
+    name: "MCAP",
+    type: "monoline",
+    website: "https://www.mcap.com/",
+    portal: "MCAP broker portal",
+    region: "Ontario",
+    bdm: "Regional Sales Team",
+    email: "brokersupport@mcap.com",
+    phone: "1-800-265-2624",
+    rates: { insuredFixed: 4.84, variable: 5.05, conventional: 5.04, alt: null },
+    updated: "May 31, 2026",
+    programs: ["Insured purchase", "Conventional purchase", "Rental", "Renewal", "Switch/transfer"],
+    guidelines: [
+      "Broker-channel lender with prime residential mortgage products.",
+      "Good placement candidate for clean prime income, switches, and purchase files.",
+      "Confirm rental policy, rate hold windows, and prepayment rules against the current lender notice."
+    ],
+    policyNote: "Demo pricing. Replace with your daily MCAP bulletin."
+  },
+  {
+    id: "merix",
+    name: "MERIX Financial",
+    type: "monoline",
+    website: "https://www.merixfinancial.com/",
+    portal: "MyMERIX",
+    region: "Ontario",
+    bdm: "Ontario Relationship Manager",
+    email: "brokerrelations@merixfinancial.com",
+    phone: "1-877-637-4911",
+    rates: { insuredFixed: 4.89, variable: 5.09, conventional: 5.09, alt: null },
+    updated: "May 31, 2026",
+    programs: ["Insured purchase", "Conventional purchase", "Rental", "Refinance"],
+    guidelines: [
+      "Prime lender option for standard residential applications through the broker channel.",
+      "Consider for files where flexible servicing and retention support matter.",
+      "Confirm current compensation, documentation, and prepayment features before submission."
+    ],
+    policyNote: "Demo pricing. Replace with your daily MERIX sheet."
+  },
+  {
+    id: "td",
+    name: "TD Canada Trust",
+    type: "bank",
+    website: "https://www.td.com/ca/en/personal-banking/products/mortgages",
+    portal: "TD broker channel / lender desk",
+    region: "Ontario",
+    bdm: "TD Broker Services",
+    email: "Use assigned BDM contact",
+    phone: "Use assigned BDM phone",
+    rates: { insuredFixed: 4.94, variable: 5.15, conventional: 5.14, alt: null },
+    updated: "May 31, 2026",
+    programs: ["Bank mortgage", "Switch/transfer", "Refinance", "New construction"],
+    guidelines: [
+      "Major bank option for clients who value branch ecosystem and bank servicing.",
+      "Confirm broker-channel availability and documents with your assigned TD contact.",
+      "Useful to compare against monoline pricing, portability, collateral charge, and refinance requirements."
+    ],
+    policyNote: "Demo pricing. Replace with official broker-channel rates."
+  },
+  {
+    id: "scotia",
+    name: "Scotiabank",
+    type: "bank",
+    website: "https://www.scotiabank.com/ca/en/personal/mortgages.html",
+    portal: "Scotia Mortgage Authority",
+    region: "Ontario",
+    bdm: "SMA Relationship Desk",
+    email: "Use assigned BDM contact",
+    phone: "Use assigned BDM phone",
+    rates: { insuredFixed: 4.99, variable: 5.2, conventional: 5.19, alt: null },
+    updated: "May 31, 2026",
+    programs: ["Bank mortgage", "Purchase plus improvements", "Switch/transfer", "Refinance"],
+    guidelines: [
+      "Bank lender placement option with broker-channel process through Scotia Mortgage Authority.",
+      "Confirm policy differences between posted, discretionary, and broker-channel rates.",
+      "Review insurer rules, income policy, and property requirements before advising clients."
+    ],
+    policyNote: "Demo pricing. Replace with the daily SMA rate notice."
+  },
+  {
+    id: "equitable",
+    name: "Equitable Bank",
+    type: "alternative",
+    website: "https://www.equitablebank.ca/mortgage-products",
+    portal: "Equitable Bank broker resources",
+    region: "Ontario",
+    bdm: "Alternative Mortgage Specialist",
+    email: "mortgages@eqbank.ca",
+    phone: "1-866-407-0004",
+    rates: { insuredFixed: null, variable: null, conventional: 5.49, alt: 6.69 },
+    updated: "May 31, 2026",
+    programs: ["Alternative A/B", "Self-employed", "New to Canada", "Reverse mortgage", "HELOC"],
+    guidelines: [
+      "Alternative lending option for broader income, credit, and net-worth scenarios.",
+      "Consider where bank or monoline policy does not fit, subject to suitability and disclosure.",
+      "Confirm fees, lender compensation, GDS/TDS limits, beacon requirements, and appraisal rules."
+    ],
+    policyNote: "Demo pricing. Replace with Equitable's current broker product sheet."
+  },
+  {
+    id: "home-trust",
+    name: "Home Trust",
+    type: "alternative",
+    website: "https://www.hometrust.ca/",
+    portal: "Home Trust broker resources",
+    region: "Ontario",
+    bdm: "Ontario Alternative Lending Desk",
+    email: "broker.relations@hometrust.ca",
+    phone: "1-855-270-3630",
+    rates: { insuredFixed: null, variable: null, conventional: 5.59, alt: 6.79 },
+    updated: "May 31, 2026",
+    programs: ["Alternative lending", "Self-employed", "Bruised credit", "Equity-focused refinance"],
+    guidelines: [
+      "Alternative lender candidate for clients outside prime policy.",
+      "Suitable files require clear borrower benefit, strong disclosure, and current fee confirmation.",
+      "Confirm property type, location, max LTV, income reasonability, and exit strategy."
+    ],
+    policyNote: "Demo pricing. Replace with current Home Trust broker bulletin."
+  },
+  {
+    id: "rfa",
+    name: "RFA",
+    type: "monoline",
+    website: "https://www.admin.rfa.ca/brokers",
+    portal: "RFA broker resources",
+    region: "Ontario",
+    bdm: "RVP Ontario",
+    email: "Use assigned RVP contact",
+    phone: "Use assigned RVP phone",
+    rates: { insuredFixed: 4.92, variable: 5.14, conventional: 5.12, alt: 6.49 },
+    updated: "May 31, 2026",
+    programs: ["Prime", "Alternative", "Rental", "Refinance", "Switch/transfer"],
+    guidelines: [
+      "Broker-focused lender with prime and alternative placement paths.",
+      "Useful when comparing prime rate competitiveness against flexible program options.",
+      "Confirm registration, submission route, and current RVP coverage before placing a file."
+    ],
+    policyNote: "Demo pricing. Replace with the current RFA rate card."
+  }
+];
+
+const storageKey = "ontarioBrokerRateDesk.lenders";
+let lenders = loadLenders();
+let activeFilter = "all";
+let activeLenderId = lenders[0].id;
+
+const lenderList = document.querySelector("#lenderList");
+const detailPanel = document.querySelector("#detailPanel");
+const searchInput = document.querySelector("#searchInput");
+const filterButtons = document.querySelectorAll("[data-filter]");
+const rateDialog = document.querySelector("#rateDialog");
+const rateLenderSelect = document.querySelector("#rateLenderSelect");
+
+document.querySelector("#todayLabel").textContent = new Intl.DateTimeFormat("en-CA", {
+  weekday: "short",
+  month: "short",
+  day: "numeric",
+  year: "numeric"
+}).format(new Date());
+
+document.querySelector("#themeToggle").addEventListener("click", () => {
+  document.body.classList.toggle("dark");
+  localStorage.setItem("ontarioBrokerRateDesk.theme", document.body.classList.contains("dark") ? "dark" : "light");
+});
+
+if (localStorage.getItem("ontarioBrokerRateDesk.theme") === "dark") {
+  document.body.classList.add("dark");
+}
+
+document.querySelector("#openRateEditor").addEventListener("click", () => {
+  populateRateEditor(activeLenderId);
+  rateDialog.showModal();
+});
+
+document.querySelector("#clearFilters").addEventListener("click", () => {
+  activeFilter = "all";
+  searchInput.value = "";
+  filterButtons.forEach((button) => button.classList.toggle("active", button.dataset.filter === "all"));
+  render();
+});
+
+filterButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    activeFilter = button.dataset.filter;
+    filterButtons.forEach((item) => item.classList.toggle("active", item === button));
+    render();
+  });
+});
+
+searchInput.addEventListener("input", render);
+
+rateLenderSelect.addEventListener("change", () => populateRateEditor(rateLenderSelect.value));
+
+document.querySelector("#saveRates").addEventListener("click", () => {
+  const lender = lenders.find((item) => item.id === rateLenderSelect.value);
+  if (!lender) return;
+
+  lender.rates.insuredFixed = numberOrNull("#insuredFixedInput");
+  lender.rates.variable = numberOrNull("#variableInput");
+  lender.rates.conventional = numberOrNull("#conventionalInput");
+  lender.rates.alt = numberOrNull("#altInput");
+  lender.policyNote = document.querySelector("#noteInput").value.trim();
+  lender.updated = new Intl.DateTimeFormat("en-CA", { month: "short", day: "numeric", year: "numeric" }).format(new Date());
+
+  saveLenders();
+  activeLenderId = lender.id;
+  render();
+});
+
+document.querySelector("#resetDemoData").addEventListener("click", () => {
+  lenders = structuredClone(demoLenders);
+  activeLenderId = lenders[0].id;
+  saveLenders();
+  populateRateEditor(activeLenderId);
+  render();
+});
+
+function loadLenders() {
+  const stored = localStorage.getItem(storageKey);
+  if (!stored) return structuredClone(demoLenders);
+
+  try {
+    return JSON.parse(stored);
+  } catch {
+    return structuredClone(demoLenders);
+  }
+}
+
+function saveLenders() {
+  localStorage.setItem(storageKey, JSON.stringify(lenders));
+}
+
+function rate(value) {
+  return typeof value === "number" ? `${value.toFixed(2)}%` : "N/A";
+}
+
+function numberOrNull(selector) {
+  const value = document.querySelector(selector).value;
+  return value === "" ? null : Number(value);
+}
+
+function filteredLenders() {
+  const query = searchInput.value.trim().toLowerCase();
+  return lenders.filter((lender) => {
+    const matchesType = activeFilter === "all" || lender.type === activeFilter;
+    const haystack = [
+      lender.name,
+      lender.type,
+      lender.website,
+      lender.portal,
+      lender.bdm,
+      lender.email,
+      lender.phone,
+      lender.programs.join(" "),
+      lender.guidelines.join(" "),
+      lender.policyNote
+    ]
+      .join(" ")
+      .toLowerCase();
+
+    return matchesType && (!query || haystack.includes(query));
+  });
+}
+
+function render() {
+  const results = filteredLenders();
+
+  if (!results.some((lender) => lender.id === activeLenderId) && results[0]) {
+    activeLenderId = results[0].id;
+  }
+
+  renderMetrics();
+  renderLenderList(results);
+  renderDetails(lenders.find((lender) => lender.id === activeLenderId) || results[0]);
+  renderPrograms();
+  renderContacts();
+  renderRateSelect();
+}
+
+function renderMetrics() {
+  const fixedRates = lenders.map((item) => item.rates.insuredFixed).filter((item) => typeof item === "number");
+  const altRates = lenders.map((item) => item.rates.alt).filter((item) => typeof item === "number");
+
+  document.querySelector("#lenderCount").textContent = lenders.length;
+  document.querySelector("#lowestFixed").textContent = fixedRates.length ? rate(Math.min(...fixedRates)) : "N/A";
+  document.querySelector("#altRange").textContent = altRates.length ? `${rate(Math.min(...altRates))}–${rate(Math.max(...altRates))}` : "N/A";
+  document.querySelector("#bdmCount").textContent = lenders.filter((item) => item.bdm).length;
+}
+
+function renderLenderList(results) {
+  lenderList.innerHTML = "";
+
+  if (!results.length) {
+    lenderList.innerHTML = `<p class="lender-meta">No lenders match the current search.</p>`;
+    return;
+  }
+
+  results.forEach((lender) => {
+    const card = document.createElement("button");
+    card.type = "button";
+    card.className = `lender-card lender-${lender.type.replace(" ", "-")} ${lender.id === activeLenderId ? "active" : ""}`;
+    card.innerHTML = `
+      <header>
+        <div class="lender-logo" aria-hidden="true">${initials(lender.name)}</div>
+        <div>
+          <h4>${lender.name}</h4>
+          <p class="lender-meta">${titleCase(lender.type)} · ${lender.portal}</p>
+        </div>
+        <span class="badge">${lender.updated}</span>
+      </header>
+      <div class="rate-row">
+        <div class="rate-pill"><span>Insured fixed</span><strong>${rate(lender.rates.insuredFixed)}</strong></div>
+        <div class="rate-pill"><span>Variable</span><strong>${rate(lender.rates.variable)}</strong></div>
+        <div class="rate-pill"><span>Conventional</span><strong>${rate(lender.rates.conventional)}</strong></div>
+        <div class="rate-pill"><span>Alt</span><strong>${rate(lender.rates.alt)}</strong></div>
+      </div>
+      <div class="badge-row">${lender.programs.slice(0, 4).map((program) => `<span class="badge">${program}</span>`).join("")}</div>
+    `;
+
+    card.addEventListener("click", () => {
+      activeLenderId = lender.id;
+      render();
+    });
+
+    lenderList.appendChild(card);
+  });
+}
+
+function renderDetails(lender) {
+  if (!lender) {
+    detailPanel.innerHTML = `<p class="lender-meta">Select a lender to view details.</p>`;
+    return;
+  }
+
+  detailPanel.innerHTML = `
+    <div class="detail-title">
+      <div>
+        <p class="eyebrow">${titleCase(lender.type)} · ${lender.region}</p>
+        <h4><span class="lender-logo detail-logo" aria-hidden="true">${initials(lender.name)}</span>${lender.name}</h4>
+      </div>
+      <a class="website-link" href="${lender.website}" target="_blank" rel="noreferrer">Website</a>
+    </div>
+
+    <div class="rate-row">
+      <div class="rate-pill"><span>Insured fixed</span><strong>${rate(lender.rates.insuredFixed)}</strong></div>
+      <div class="rate-pill"><span>Variable</span><strong>${rate(lender.rates.variable)}</strong></div>
+      <div class="rate-pill"><span>Conventional</span><strong>${rate(lender.rates.conventional)}</strong></div>
+      <div class="rate-pill"><span>Alt</span><strong>${rate(lender.rates.alt)}</strong></div>
+    </div>
+
+    <div>
+      <p class="eyebrow">Guidelines and policy watch</p>
+      <ul class="policy-list">
+        ${lender.guidelines.map((item) => `<li>${item}</li>`).join("")}
+      </ul>
+    </div>
+
+    <div>
+      <p class="eyebrow">Programs</p>
+      <div class="badge-row">${lender.programs.map((program) => `<span class="badge">${program}</span>`).join("")}</div>
+    </div>
+
+    <div>
+      <p class="eyebrow">BDM contact</p>
+      <strong>${lender.bdm}</strong>
+      <p class="contact-line">${lender.email}<br />${lender.phone}</p>
+    </div>
+
+    <div>
+      <p class="eyebrow">Desk note</p>
+      <p class="contact-line">${lender.policyNote}</p>
+    </div>
+  `;
+}
+
+function renderPrograms() {
+  const programMap = new Map();
+  lenders.forEach((lender) => {
+    lender.programs.forEach((program) => {
+      if (!programMap.has(program)) programMap.set(program, []);
+      programMap.get(program).push(lender.name);
+    });
+  });
+
+  document.querySelector("#programGrid").innerHTML = [...programMap.entries()]
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([program, lenderNames]) => {
+      const displayed = lenderNames.slice(0, 4).join(", ");
+      const extra = lenderNames.length > 4 ? ` +${lenderNames.length - 4}` : "";
+      return `
+        <article class="program-card">
+          <h4>${program}</h4>
+          <p>${displayed}${extra}</p>
+          <span class="badge">${lenderNames.length} lender${lenderNames.length === 1 ? "" : "s"}</span>
+        </article>
+      `;
+    })
+    .join("");
+}
+
+function renderContacts() {
+  document.querySelector("#contactTable").innerHTML = lenders
+    .map(
+      (lender) => `
+        <tr>
+          <td><strong>${lender.name}</strong><br /><span class="contact-line">${titleCase(lender.type)}</span></td>
+          <td>${lender.bdm}<br /><span class="contact-line">${lender.region}</span></td>
+          <td>${lender.email}</td>
+          <td>${lender.phone}</td>
+          <td><a class="website-link" href="${lender.website}" target="_blank" rel="noreferrer">Open</a></td>
+        </tr>
+      `
+    )
+    .join("");
+}
+
+function renderRateSelect() {
+  rateLenderSelect.innerHTML = lenders.map((lender) => `<option value="${lender.id}">${lender.name}</option>`).join("");
+}
+
+function populateRateEditor(id) {
+  renderRateSelect();
+  const lender = lenders.find((item) => item.id === id) || lenders[0];
+  rateLenderSelect.value = lender.id;
+  document.querySelector("#insuredFixedInput").value = lender.rates.insuredFixed ?? "";
+  document.querySelector("#variableInput").value = lender.rates.variable ?? "";
+  document.querySelector("#conventionalInput").value = lender.rates.conventional ?? "";
+  document.querySelector("#altInput").value = lender.rates.alt ?? "";
+  document.querySelector("#noteInput").value = lender.policyNote;
+}
+
+function titleCase(value) {
+  return value.replace(/\b\w/g, (letter) => letter.toUpperCase());
+}
+
+function initials(value) {
+  return value
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((word) => word[0])
+    .join("")
+    .toUpperCase();
+}
+
+render();
+
+    </script>
   </body>
 </html>
