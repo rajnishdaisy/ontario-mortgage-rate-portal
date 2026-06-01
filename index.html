@@ -353,6 +353,137 @@ menu,
   line-height: 1;
 }
 
+.landing-rate-board {
+  display: grid;
+  gap: 16px;
+}
+
+.best-rate-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(320px, 0.55fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.best-rate-grid {
+  display: grid;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.best-rate-card,
+.preferred-lender-panel,
+.preferred-lender-card {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: var(--shadow-soft);
+}
+
+.best-rate-card {
+  padding: 14px;
+  display: grid;
+  gap: 12px;
+}
+
+.best-rate-card header,
+.preferred-lender-card header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.best-rate-card h4,
+.preferred-lender-panel h4,
+.preferred-lender-card h5 {
+  margin: 0;
+}
+
+.best-rate-card p,
+.preferred-lender-card p {
+  margin: 4px 0 0;
+  color: var(--muted);
+}
+
+.best-rate-pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.best-rate-cell {
+  min-height: 82px;
+  border: 1px solid color-mix(in srgb, var(--green) 22%, var(--line));
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--green) 7%, var(--surface)), var(--surface-strong));
+  color: var(--text);
+  padding: 10px;
+  text-align: left;
+  display: grid;
+  gap: 3px;
+  width: 100%;
+}
+
+button.best-rate-cell:hover {
+  border-color: var(--green);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--green) 20%, transparent);
+}
+
+.best-rate-cell span {
+  color: var(--muted);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  font-weight: 850;
+}
+
+.best-rate-cell strong {
+  color: var(--green);
+  font-size: 1.35rem;
+}
+
+.best-rate-cell small {
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.best-rate-cell.empty {
+  opacity: 0.68;
+  border-color: var(--line);
+  background: var(--surface-strong);
+}
+
+.preferred-lender-panel {
+  padding: 16px;
+  display: grid;
+  gap: 14px;
+  border-left: 5px solid var(--accent);
+}
+
+.preferred-lender-card {
+  --lender-color: var(--accent);
+  --lender-accent: var(--accent-strong);
+  padding: 13px;
+  display: grid;
+  gap: 12px;
+  border-color: color-mix(in srgb, var(--lender-color) 36%, var(--line));
+}
+
+.preferred-lender-card .primary-button {
+  width: 100%;
+}
+
+.lender-card.preferred {
+  border-color: color-mix(in srgb, var(--green) 58%, var(--line));
+}
+
+.preferred-badge {
+  background: color-mix(in srgb, var(--green) 12%, var(--surface));
+  border-color: color-mix(in srgb, var(--green) 34%, var(--line));
+  color: color-mix(in srgb, var(--green) 78%, var(--text));
+}
+
 .workspace,
 .band {
   border: 1px solid var(--line);
@@ -366,6 +497,99 @@ menu,
 body.dark .workspace,
 body.dark .band {
   background: rgba(21, 29, 34, 0.84);
+}
+
+.package-band {
+  display: grid;
+  gap: 16px;
+}
+
+.package-layout {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.package-card {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--accent) 5%, var(--surface)), var(--surface));
+  padding: 18px;
+  display: grid;
+  gap: 12px;
+  box-shadow: var(--shadow-soft);
+}
+
+.package-card.featured {
+  border-color: color-mix(in srgb, var(--green) 34%, var(--line));
+  box-shadow: inset 5px 0 0 var(--green), var(--shadow-soft);
+}
+
+.package-card h4 {
+  margin: 0;
+  font-size: 1.32rem;
+}
+
+.price-line {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.price-line strong {
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  line-height: 1;
+  color: var(--accent-strong);
+}
+
+.price-line span {
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.feature-list {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--muted);
+}
+
+.feature-list li + li {
+  margin-top: 8px;
+}
+
+.capability-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.capability-grid article {
+  min-height: 150px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  padding: 14px;
+  display: grid;
+  gap: 8px;
+}
+
+.capability-grid span {
+  color: var(--accent-strong);
+  font-size: 0.76rem;
+  font-weight: 900;
+}
+
+.capability-grid strong {
+  line-height: 1.25;
+}
+
+.capability-grid p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.42;
+  font-size: 0.92rem;
 }
 
 .workspace-header {
@@ -399,6 +623,10 @@ body.dark .band {
   color: var(--muted);
   font-weight: 800;
   font-size: 0.84rem;
+}
+
+.search-button {
+  align-self: end;
 }
 
 .search-box input,
@@ -457,6 +685,8 @@ textarea:focus {
 }
 
 .lender-card {
+  --lender-color: var(--accent);
+  --lender-accent: var(--accent-strong);
   width: 100%;
   text-align: left;
   border: 1px solid var(--line);
@@ -467,6 +697,16 @@ textarea:focus {
   display: grid;
   gap: 13px;
   transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.lender-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 5px;
+  background: linear-gradient(180deg, var(--lender-color), var(--lender-accent));
 }
 
 .lender-card:hover {
@@ -475,8 +715,8 @@ textarea:focus {
 }
 
 .lender-card.active {
-  border-color: var(--accent);
-  box-shadow: inset 4px 0 0 var(--accent), var(--shadow-soft);
+  border-color: color-mix(in srgb, var(--lender-color) 70%, var(--line));
+  box-shadow: inset 4px 0 0 var(--lender-color), var(--shadow-soft);
 }
 
 .lender-card header,
@@ -500,14 +740,14 @@ textarea:focus {
   display: grid;
   place-items: center;
   border-radius: 8px;
-  background: linear-gradient(135deg, var(--accent-soft), #fff4dc);
-  color: var(--accent-strong);
+  background: linear-gradient(135deg, var(--lender-color), var(--lender-accent));
+  color: #ffffff;
   font-weight: 900;
-  border: 1px solid var(--line);
+  border: 1px solid color-mix(in srgb, var(--lender-color) 30%, #ffffff);
 }
 
 body.dark .lender-logo {
-  background: linear-gradient(135deg, var(--accent-soft), rgba(240, 182, 95, 0.16));
+  background: linear-gradient(135deg, var(--lender-color), var(--lender-accent));
 }
 
 .detail-logo {
@@ -544,19 +784,37 @@ body.dark .lender-logo {
   border: 1px solid var(--line);
 }
 
+.program-badge {
+  background: color-mix(in srgb, var(--program-color) 12%, var(--surface));
+  border-color: color-mix(in srgb, var(--program-color) 28%, var(--line));
+  color: color-mix(in srgb, var(--program-color) 78%, var(--text));
+}
+
+.program-link {
+  cursor: pointer;
+}
+
+.program-link:focus {
+  outline: 3px solid color-mix(in srgb, var(--program-color) 28%, transparent);
+  outline-offset: 2px;
+}
+
 .rate-row {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 .rate-pill {
+  --product-color: var(--accent);
   min-height: 66px;
   padding: 10px;
   border-radius: 8px;
-  background: var(--surface-strong);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--product-color) 9%, var(--surface)), var(--surface-strong));
   display: grid;
   gap: 4px;
-  border: 1px solid transparent;
+  border: 1px solid color-mix(in srgb, var(--product-color) 24%, transparent);
+  box-shadow: inset 3px 0 0 var(--product-color);
 }
 
 .rate-pill span {
@@ -567,10 +825,11 @@ body.dark .lender-logo {
 
 .rate-pill strong {
   font-size: 1.14rem;
+  color: color-mix(in srgb, var(--product-color) 72%, var(--text));
 }
 
 .rate-pill:has(strong:not(:empty)) {
-  border-color: color-mix(in srgb, var(--accent) 10%, transparent);
+  border-color: color-mix(in srgb, var(--product-color) 28%, transparent);
 }
 
 .detail-panel {
@@ -611,6 +870,295 @@ body.dark .lender-logo {
   margin-top: 8px;
 }
 
+.underwriting-panel {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--green) 5%, var(--surface)), var(--surface));
+  box-shadow: var(--shadow-soft);
+  padding: 14px;
+  display: grid;
+  gap: 12px;
+}
+
+.underwriting-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.underwriting-header h5 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.underwriting-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.underwriting-grid article {
+  min-height: 102px;
+  border: 1px solid color-mix(in srgb, var(--green) 18%, var(--line));
+  border-radius: 8px;
+  background: var(--surface);
+  padding: 10px;
+  display: grid;
+  gap: 5px;
+}
+
+.underwriting-grid strong {
+  color: var(--green);
+  font-size: 0.82rem;
+}
+
+.underwriting-grid p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.38;
+  font-size: 0.86rem;
+}
+
+.product-policy-panel {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--accent) 5%, var(--surface)), var(--surface));
+  box-shadow: var(--shadow-soft);
+  padding: 14px;
+  display: grid;
+  gap: 12px;
+}
+
+.rental-assignment-panel {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--amber) 6%, var(--surface)), var(--surface));
+  box-shadow: var(--shadow-soft);
+  padding: 14px;
+  display: grid;
+  gap: 12px;
+}
+
+.product-policy-list {
+  display: grid;
+  gap: 10px;
+}
+
+.product-policy-card {
+  border: 1px solid color-mix(in srgb, var(--program-color) 22%, var(--line));
+  border-left: 5px solid var(--program-color);
+  border-radius: 8px;
+  background: var(--surface);
+  padding: 12px;
+  display: grid;
+  gap: 10px;
+}
+
+.product-policy-card header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.product-policy-card h6 {
+  margin: 0;
+  font-size: 0.98rem;
+}
+
+.policy-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.policy-stat-grid span {
+  min-height: 68px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface-strong);
+  padding: 8px;
+  display: grid;
+  gap: 4px;
+}
+
+.policy-stat-grid small {
+  color: var(--muted);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  font-weight: 850;
+}
+
+.policy-stat-grid strong {
+  color: var(--text);
+  font-size: 0.86rem;
+  line-height: 1.28;
+}
+
+.policy-breakdown {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.policy-breakdown div {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px;
+  background: color-mix(in srgb, var(--program-color, var(--accent)) 5%, var(--surface));
+}
+
+.policy-breakdown strong {
+  color: color-mix(in srgb, var(--program-color, var(--accent)) 72%, var(--text));
+  font-size: 0.82rem;
+}
+
+.policy-breakdown ul {
+  margin: 7px 0 0;
+  padding-left: 17px;
+  color: var(--muted);
+  line-height: 1.35;
+  font-size: 0.84rem;
+}
+
+.policy-breakdown li + li {
+  margin-top: 5px;
+}
+
+.policy-resource-links {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  padding: 12px;
+  display: grid;
+  gap: 8px;
+}
+
+.policy-resource-links > div {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.policy-resource-links a {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface-strong);
+  padding: 10px;
+  text-decoration: none;
+  display: grid;
+  gap: 4px;
+}
+
+.policy-resource-links strong {
+  color: var(--accent-strong);
+  font-size: 0.9rem;
+}
+
+.policy-resource-links span {
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1.35;
+}
+
+.deal-desk-panel {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: var(--shadow-soft);
+  padding: 14px;
+  display: grid;
+  gap: 12px;
+}
+
+.deal-desk-header,
+.deal-desk-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.deal-desk-header h5,
+.deal-desk-card h5 {
+  margin: 0;
+}
+
+.deal-desk-meta {
+  justify-content: flex-start;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.deal-desk-meta span {
+  min-height: 28px;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0 10px;
+  background: var(--surface-strong);
+}
+
+.deal-desk-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.deal-desk-card {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: linear-gradient(180deg, var(--surface), var(--surface-strong));
+  padding: 12px;
+  display: grid;
+  gap: 10px;
+}
+
+.deal-desk-card h5 {
+  font-size: 0.95rem;
+}
+
+.deal-rate-chips {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.deal-rate-chip {
+  min-height: 54px;
+  border: 1px solid color-mix(in srgb, var(--accent) 20%, var(--line));
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--accent) 6%, var(--surface));
+  padding: 8px;
+  display: grid;
+  gap: 3px;
+}
+
+.deal-rate-chip small {
+  color: var(--muted);
+  font-size: 0.68rem;
+  line-height: 1.2;
+  font-weight: 800;
+}
+
+.deal-rate-chip strong {
+  color: var(--accent-strong);
+  font-size: 1rem;
+}
+
+.deal-rate-chip.empty {
+  opacity: 0.56;
+  background: var(--surface-strong);
+  border-color: var(--line);
+}
+
 .program-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -618,15 +1166,136 @@ body.dark .lender-logo {
   margin-top: 14px;
 }
 
+.program-detail {
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.65fr);
+  gap: 14px;
+}
+
+.program-detail-main,
+.program-lender-list {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: var(--shadow-soft);
+}
+
+.program-detail-main {
+  padding: 18px;
+  border-left: 5px solid var(--program-color);
+  display: grid;
+  gap: 16px;
+}
+
+.program-detail-main h4 {
+  margin: 0;
+  font-size: 1.35rem;
+}
+
+.program-detail-main p {
+  color: var(--muted);
+  line-height: 1.55;
+  margin: 8px 0 0;
+}
+
+.program-policy-summary {
+  margin-top: 14px;
+  display: grid;
+  gap: 10px;
+}
+
+.credit-score-box {
+  margin-top: 14px;
+  border: 1px solid color-mix(in srgb, var(--program-color) 28%, var(--line));
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--program-color) 8%, var(--surface));
+  padding: 12px;
+  display: grid;
+  gap: 4px;
+}
+
+.credit-score-box span,
+.credit-score-box small {
+  color: var(--muted);
+}
+
+.credit-score-box span {
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  font-weight: 850;
+}
+
+.credit-score-box strong {
+  color: color-mix(in srgb, var(--program-color) 72%, var(--text));
+  font-size: 1.18rem;
+}
+
+.credit-score-box small {
+  line-height: 1.4;
+}
+
+.program-columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.program-columns ul {
+  margin: 8px 0 0;
+  padding-left: 18px;
+  color: var(--muted);
+}
+
+.program-columns li + li {
+  margin-top: 6px;
+}
+
+.program-lender-list {
+  padding: 14px;
+  display: grid;
+  gap: 10px;
+}
+
+.program-lender {
+  width: 100%;
+  min-height: 58px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface-strong);
+  color: var(--text);
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  text-align: left;
+}
+
+.program-lender small {
+  display: block;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
 .program-card {
   border: 1px solid var(--line);
   border-radius: 8px;
   padding: 16px;
   background: var(--surface);
+  color: var(--text);
   display: grid;
   gap: 10px;
   min-height: 132px;
   box-shadow: var(--shadow-soft);
+  text-align: left;
+  cursor: pointer;
+}
+
+.program-card.active,
+.program-card:hover {
+  border-color: color-mix(in srgb, var(--program-color) 54%, var(--line));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--program-color) 24%, transparent), var(--shadow-soft);
 }
 
 .program-card h4::before {
@@ -636,7 +1305,138 @@ body.dark .lender-logo {
   aspect-ratio: 1;
   border-radius: 50%;
   margin-right: 8px;
-  background: var(--amber);
+  background: var(--program-color, var(--amber));
+}
+
+.insurer-grid {
+  display: grid;
+  gap: 16px;
+  margin-top: 14px;
+}
+
+.insurer-program-detail {
+  border: 1px solid var(--line);
+  border-left: 5px solid var(--insurer-color);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--insurer-color) 7%, var(--surface)), var(--surface));
+  box-shadow: var(--shadow-soft);
+  padding: 18px;
+  display: grid;
+  gap: 16px;
+}
+
+.insurer-program-detail h4 {
+  margin: 0;
+  font-size: 1.45rem;
+}
+
+.insurer-program-detail p,
+.insurer-program-detail small,
+.insurer-detail-columns ul {
+  color: var(--muted);
+}
+
+.insurer-program-detail p {
+  margin: 8px 0 0;
+  line-height: 1.55;
+}
+
+.insurer-program-detail small {
+  line-height: 1.4;
+}
+
+.insurer-detail-columns {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.insurer-detail-columns ul {
+  margin: 8px 0 0;
+  padding-left: 18px;
+}
+
+.insurer-detail-columns li + li {
+  margin-top: 6px;
+}
+
+.insurer-card {
+  --insurer-color: var(--accent);
+  --insurer-accent: var(--accent-strong);
+  border: 1px solid var(--line);
+  border-left: 5px solid var(--insurer-color);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: var(--shadow-soft);
+  padding: 18px;
+  display: grid;
+  gap: 16px;
+}
+
+.insurer-card header {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+}
+
+.insurer-logo {
+  width: 48px;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--insurer-color), var(--insurer-accent));
+  color: #ffffff;
+  font-weight: 900;
+}
+
+.insurer-card h4 {
+  margin: 0;
+  font-size: 1.45rem;
+}
+
+.insurer-score {
+  margin-top: 0;
+}
+
+.insurer-program {
+  background: color-mix(in srgb, var(--insurer-color) 10%, var(--surface));
+  border-color: color-mix(in srgb, var(--insurer-color) 26%, var(--line));
+  color: color-mix(in srgb, var(--insurer-color) 76%, var(--text));
+  cursor: pointer;
+}
+
+.insurer-program.active {
+  background: linear-gradient(180deg, var(--insurer-color), var(--insurer-accent));
+  border-color: var(--insurer-color);
+  color: #ffffff;
+}
+
+.insurer-program:focus {
+  outline: 3px solid color-mix(in srgb, var(--insurer-color) 28%, transparent);
+  outline-offset: 2px;
+}
+
+.insurer-columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.insurer-card footer {
+  border-top: 1px solid var(--line);
+  padding-top: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  color: var(--muted);
+}
+
+.insurer-card footer strong {
+  color: var(--text);
+  flex-basis: 100%;
 }
 
 .contact-table-wrap {
@@ -724,6 +1524,14 @@ menu {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .capability-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .best-rate-layout {
+    grid-template-columns: 1fr;
+  }
+
   .split-view,
   .compliance {
     grid-template-columns: 1fr;
@@ -784,10 +1592,29 @@ menu {
   }
 
   .metric-grid,
+  .best-rate-pair,
+  .package-layout,
+  .capability-grid,
+  .underwriting-grid,
+  .policy-stat-grid,
+  .policy-breakdown,
+  .policy-resource-links > div,
   .program-grid,
+  .program-detail,
+  .program-columns,
+  .insurer-columns,
+  .insurer-detail-columns,
   .rate-row,
   .form-grid {
     grid-template-columns: 1fr;
+  }
+
+  .insurer-card header {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .insurer-card header .website-link {
+    grid-column: 1 / -1;
   }
 
   .nav-list {
@@ -804,7 +1631,7 @@ menu {
   }
 }
 
-    </style>
+</style>
   </head>
   <body>
     <div class="app-shell">
@@ -820,7 +1647,9 @@ menu {
         <nav class="nav-list">
           <a href="#dashboard" class="active">Dashboard</a>
           <a href="#lenders">Lenders</a>
+          <a href="#packages">Packages</a>
           <a href="#programs">Programs</a>
+          <a href="#insurers">Insurers</a>
           <a href="#contacts">BDM Contacts</a>
           <a href="#compliance">Compliance</a>
         </nav>
@@ -875,6 +1704,107 @@ menu {
           </article>
         </section>
 
+        <section class="band landing-rate-board" id="best-rates">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Best 5-year rates</p>
+              <h3>High-ratio and conventional rate board</h3>
+            </div>
+            <div class="desk-badges">
+              <span>High ratio</span>
+              <span>Conventional</span>
+              <span>Bank-wise</span>
+            </div>
+          </div>
+
+          <div class="best-rate-layout">
+            <div>
+              <p class="contact-line">Compare the best available 5-year fixed high-ratio and conventional rates by lender category.</p>
+              <div class="best-rate-grid" id="bestRateGrid"></div>
+            </div>
+
+            <aside class="preferred-lender-panel">
+              <div>
+                <p class="eyebrow">Preferred lender</p>
+                <h4>Let the broker choose</h4>
+              </div>
+              <label class="search-box">
+                <span>Select preferred lender</span>
+                <select id="preferredLenderSelect"></select>
+              </label>
+              <div id="preferredLenderCard"></div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="band package-band" id="packages">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Platform access</p>
+              <h3>Broker packages</h3>
+            </div>
+            <span class="live-pill">Basic package is free</span>
+          </div>
+
+          <div class="package-layout">
+            <article class="package-card featured">
+              <p class="eyebrow">Starter</p>
+              <h4>Basic</h4>
+              <div class="price-line">
+                <strong>Free</strong>
+                <span>for every broker</span>
+              </div>
+              <ul class="feature-list">
+                <li>Access to prime, alternative, and private lender categories</li>
+                <li>Underwriting guideline summaries</li>
+                <li>English and French support-ready layout</li>
+              </ul>
+            </article>
+
+            <article class="package-card">
+              <p class="eyebrow">Pro workspace</p>
+              <h4>Deal Desk Plus</h4>
+              <div class="price-line">
+                <strong>$9</strong>
+                <span>per month</span>
+              </div>
+              <ul class="feature-list">
+                <li>Preferred lender selection for each broker</li>
+                <li>Granular policy breakdown by product and program</li>
+                <li>MIC and MIE private lender visibility</li>
+              </ul>
+            </article>
+          </div>
+
+          <div class="capability-grid" aria-label="Platform capabilities">
+            <article>
+              <span>01</span>
+              <strong>Prime, alt, MIC and MIE access</strong>
+              <p>Organize institutional, alternative, and private lending options in one searchable workspace.</p>
+            </article>
+            <article>
+              <span>02</span>
+              <strong>Full French / English support</strong>
+              <p>Structure content so broker teams can work with bilingual lender and borrower-facing notes.</p>
+            </article>
+            <article>
+              <span>03</span>
+              <strong>Underwriting guidelines</strong>
+              <p>Keep credit, income, property, insurer, and document notes close to the rate decision.</p>
+            </article>
+            <article>
+              <span>04</span>
+              <strong>Preferred lenders</strong>
+              <p>Help brokers prioritize lender partners and quickly compare their active programs.</p>
+            </article>
+            <article>
+              <span>05</span>
+              <strong>Granular policy breakdown</strong>
+              <p>Break policies down by product, LTV, score, documentation, property, and exception path.</p>
+            </article>
+          </div>
+        </section>
+
         <section class="workspace">
           <div class="workspace-header">
             <div>
@@ -891,8 +1821,9 @@ menu {
           <div class="control-row">
             <label class="search-box">
               <span>Search</span>
-              <input id="searchInput" type="search" placeholder="Lender, product, policy, BDM..." />
+              <input id="searchInput" type="search" placeholder="High ratio, conventional, rental worksheet, assignment..." />
             </label>
+            <button class="primary-button search-button" id="runSearch" type="button">Search</button>
 
             <div class="segmented-control" aria-label="Lender type filter">
               <button class="active" type="button" data-filter="all">All</button>
@@ -926,7 +1857,18 @@ menu {
               <h3>Program Finder</h3>
             </div>
           </div>
+          <aside class="program-detail" id="programDetail" aria-live="polite"></aside>
           <div class="program-grid" id="programGrid"></div>
+        </section>
+
+        <section class="band" id="insurers">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Default mortgage insurance</p>
+              <h3>Insurers</h3>
+            </div>
+          </div>
+          <div class="insurer-grid" id="insurerGrid"></div>
         </section>
 
         <section class="band" id="contacts">
@@ -1013,6 +1955,8 @@ const demoLenders = [
     id: "first-national",
     name: "First National",
     type: "monoline",
+    brandColor: "#005DAA",
+    brandAccent: "#00A3E0",
     website: "https://www6.firstnational.ca/",
     portal: "MERLIN broker resources",
     region: "Ontario",
@@ -1033,6 +1977,8 @@ const demoLenders = [
     id: "mcap",
     name: "MCAP",
     type: "monoline",
+    brandColor: "#004B8D",
+    brandAccent: "#F28C28",
     website: "https://www.mcap.com/",
     portal: "MCAP broker portal",
     region: "Ontario",
@@ -1053,6 +1999,8 @@ const demoLenders = [
     id: "merix",
     name: "MERIX Financial",
     type: "monoline",
+    brandColor: "#532B88",
+    brandAccent: "#00A7C8",
     website: "https://www.merixfinancial.com/",
     portal: "MyMERIX",
     region: "Ontario",
@@ -1073,6 +2021,8 @@ const demoLenders = [
     id: "td",
     name: "TD Canada Trust",
     type: "bank",
+    brandColor: "#008A00",
+    brandAccent: "#54B948",
     website: "https://www.td.com/ca/en/personal-banking/products/mortgages",
     portal: "TD broker channel / lender desk",
     region: "Ontario",
@@ -1093,6 +2043,8 @@ const demoLenders = [
     id: "scotia",
     name: "Scotiabank",
     type: "bank",
+    brandColor: "#EC111A",
+    brandAccent: "#8A1538",
     website: "https://www.scotiabank.com/ca/en/personal/mortgages.html",
     portal: "Scotia Mortgage Authority",
     region: "Ontario",
@@ -1110,9 +2062,55 @@ const demoLenders = [
     policyNote: "Demo pricing. Replace with the daily SMA rate notice."
   },
   {
+    id: "bmo",
+    name: "BMO",
+    type: "bank",
+    brandColor: "#0079C1",
+    brandAccent: "#E31837",
+    website: "https://www.bmo.com/mortgages",
+    portal: "BMO BrokerEdge / mortgage specialist channel",
+    region: "Ontario",
+    bdm: "BMO BrokerEdge Desk",
+    email: "access@bmobrokeredge.com",
+    phone: "Use assigned BMO contact",
+    rates: { insuredFixed: 4.96, variable: 5.19, conventional: 5.16, alt: null },
+    updated: "May 31, 2026",
+    programs: ["Bank mortgage", "Insured purchase", "Conventional purchase", "Refinance", "Switch/transfer"],
+    guidelines: [
+      "Major bank option with public mortgage products and a broker registration path through BrokerEdge.",
+      "Useful for prime bank files where a borrower values branch banking, rate-hold certainty, and bank servicing.",
+      "Confirm broker-channel access, compensation, rate specials, and property/income policy with BMO before submission."
+    ],
+    policyNote: "Demo pricing. Replace with the current BMO BrokerEdge or bank-channel notice."
+  },
+  {
+    id: "national-bank",
+    name: "National Bank",
+    type: "bank",
+    brandColor: "#E31B23",
+    brandAccent: "#1F3C88",
+    website: "https://www.nationalbank.com/",
+    portal: "National Bank mortgage resources",
+    region: "Ontario",
+    bdm: "National Bank Mortgage Desk",
+    email: "Use assigned National Bank contact",
+    phone: "Use assigned National Bank phone",
+    rates: { insuredFixed: 5.01, variable: 5.22, conventional: 5.21, alt: null },
+    updated: "May 31, 2026",
+    programs: ["Bank mortgage", "Insured purchase", "Conventional purchase", "Refinance", "HELOC"],
+    guidelines: [
+      "Major Canadian bank option for prime residential lending and relationship banking.",
+      "Consider for standard bank files, refinance scenarios, and clients who value broader banking advice.",
+      "Confirm Ontario broker-channel process, product availability, fees, and current pricing with the assigned desk."
+    ],
+    policyNote: "Demo pricing. Replace with National Bank's current mortgage rate and policy bulletin."
+  },
+  {
     id: "equitable",
     name: "Equitable Bank",
     type: "alternative",
+    brandColor: "#006A6A",
+    brandAccent: "#8CC63F",
     website: "https://www.equitablebank.ca/mortgage-products",
     portal: "Equitable Bank broker resources",
     region: "Ontario",
@@ -1133,6 +2131,8 @@ const demoLenders = [
     id: "home-trust",
     name: "Home Trust",
     type: "alternative",
+    brandColor: "#D14900",
+    brandAccent: "#7A1E1E",
     website: "https://www.hometrust.ca/",
     portal: "Home Trust broker resources",
     region: "Ontario",
@@ -1153,6 +2153,8 @@ const demoLenders = [
     id: "rfa",
     name: "RFA",
     type: "monoline",
+    brandColor: "#003A70",
+    brandAccent: "#00A3AD",
     website: "https://www.admin.rfa.ca/brokers",
     portal: "RFA broker resources",
     region: "Ontario",
@@ -1168,20 +2170,963 @@ const demoLenders = [
       "Confirm registration, submission route, and current RVP coverage before placing a file."
     ],
     policyNote: "Demo pricing. Replace with the current RFA rate card."
+  },
+  {
+    id: "meridian",
+    name: "Meridian Credit Union",
+    type: "credit union",
+    brandColor: "#007A3D",
+    brandAccent: "#F4B000",
+    website: "https://www.meridiancu.ca/ready-for-what-if",
+    portal: "Meridian mortgage resources",
+    region: "Ontario",
+    bdm: "Credit Union Mortgage Desk",
+    email: "Use assigned Meridian contact",
+    phone: "1-866-592-2226",
+    rates: { insuredFixed: 4.97, variable: 5.18, conventional: 5.18, alt: null },
+    updated: "May 31, 2026",
+    programs: ["Credit union mortgage", "Insured purchase", "Conventional purchase", "HELOC", "Switch/transfer"],
+    guidelines: [
+      "Ontario credit union option for member-focused residential mortgage placement.",
+      "Review membership, branch/channel rules, appraisal requirements, and property location policy.",
+      "Confirm broker availability, service levels, and current rate hold before submission."
+    ],
+    policyNote: "Demo pricing. Replace with Meridian's current mortgage notice."
+  },
+  {
+    id: "duca",
+    name: "DUCA Credit Union",
+    type: "credit union",
+    brandColor: "#006B54",
+    brandAccent: "#F6A800",
+    website: "https://www.duca.com/personal/mortgages",
+    portal: "DUCA mortgage resources",
+    region: "Ontario",
+    bdm: "Mobile Mortgage Specialist Desk",
+    email: "Use assigned DUCA contact",
+    phone: "1-866-900-3822",
+    rates: { insuredFixed: 5.02, variable: 5.24, conventional: 5.22, alt: null },
+    updated: "May 31, 2026",
+    programs: ["Credit union mortgage", "Conventional purchase", "Refinance", "HELOC", "Self-employed"],
+    guidelines: [
+      "Ontario credit union option with mobile mortgage specialist support.",
+      "Useful for clients who prefer a member-owned institution and relationship-based servicing.",
+      "Confirm membership requirements, income documentation, fees, and geographic availability."
+    ],
+    policyNote: "Demo pricing. Replace with DUCA's current mortgage product sheet."
+  },
+  {
+    id: "icici",
+    name: "ICICI Bank Canada",
+    type: "bank",
+    brandColor: "#B02A30",
+    brandAccent: "#F58220",
+    website: "https://www.icicibank.ca/personal-banking/mortgage/mortgage-program",
+    portal: "ICICI mortgage specialist channel",
+    region: "Ontario",
+    bdm: "ICICI Mortgage Specialist Desk",
+    email: "icicibankmortgagecare@lenderservices.ca",
+    phone: "Use assigned ICICI contact",
+    rates: { insuredFixed: 5.08, variable: 5.28, conventional: 5.27, alt: null },
+    updated: "May 31, 2026",
+    programs: ["Bank mortgage", "Insured purchase", "Conventional purchase", "Refinance", "Switch/transfer", "Rental"],
+    guidelines: [
+      "Bank lender with purchase, refinance, switch, and investment-property mortgage solutions.",
+      "Useful for newcomer, international banking relationship, and conventional bank scenarios where ICICI appetite fits.",
+      "Confirm iGlobal eligibility, mortgage specialist process, income documentation, and current posted/special rates."
+    ],
+    policyNote: "Demo pricing. Replace with ICICI Bank Canada's current mortgage program sheet."
+  },
+  {
+    id: "manulife",
+    name: "Manulife Bank",
+    type: "bank",
+    brandColor: "#00A758",
+    brandAccent: "#00573F",
+    website: "https://www.manulifebank.ca/personal-banking/mortgages.html",
+    portal: "Manulife Bank mortgage resources",
+    region: "Ontario",
+    bdm: "Manulife Bank Mortgage Desk",
+    email: "manulife_bank@manulife.ca",
+    phone: "1-877-765-2265",
+    rates: { insuredFixed: 5.04, variable: 5.25, conventional: 5.24, alt: null },
+    updated: "May 31, 2026",
+    programs: ["Bank mortgage", "Conventional purchase", "Refinance", "HELOC", "Switch/transfer"],
+    guidelines: [
+      "Bank option known for Manulife One and Manulife Bank Select mortgage structures.",
+      "Useful for clients who want flexible mortgage banking, HELOC-style access, or all-in-one debt management.",
+      "Confirm suitability, collateral registration, account requirements, prepayment terms, and current pricing."
+    ],
+    policyNote: "Demo pricing. Replace with Manulife Bank's current mortgage product and rate sheet."
   }
 ];
 
 const storageKey = "ontarioBrokerRateDesk.lenders";
-let lenders = loadLenders();
+const preferredLenderStorageKey = "ontarioBrokerRateDesk.preferredLender";
+let lenders = [];
 let activeFilter = "all";
-let activeLenderId = lenders[0].id;
+let activeLenderId = "";
+let activeProgram = "Alternative A/B";
+let preferredLenderId = localStorage.getItem(preferredLenderStorageKey) || "";
+
+const programColorMap = {
+  "Alternative": "#7C3AED",
+  "Alternative A/B": "#7C3AED",
+  "Alternative lending": "#7C3AED",
+  "Bank mortgage": "#0E7490",
+  "Bruised credit": "#B45309",
+  "Conventional purchase": "#2563EB",
+  "Credit union mortgage": "#15803D",
+  "Equity-focused refinance": "#B45309",
+  "HELOC": "#0891B2",
+  "Insured purchase": "#16A34A",
+  "New construction": "#475569",
+  "New to Canada": "#DB2777",
+  "Prime": "#16A34A",
+  "Purchase plus improvements": "#0D9488",
+  "Refinance": "#EA580C",
+  "Renewal": "#64748B",
+  "Rental": "#9333EA",
+  "Reverse mortgage": "#A16207",
+  "Self-employed": "#C026D3",
+  "Switch/transfer": "#0284C7"
+};
+
+const programDetails = {
+  "Alternative A/B": {
+    summary: "Used when the borrower has a good story but does not fit prime bank or monoline policy.",
+    minScore: "Approx. 600+",
+    fit: ["Expanded income documentation", "Credit exceptions", "Higher net-worth or equity-driven files"],
+    watch: ["Lender fees", "Broker compensation disclosure", "Exit strategy", "Appraisal and max LTV"]
+  },
+  "Self-employed": {
+    summary: "For business owners where taxable income, retained earnings, or stated income needs deeper review.",
+    minScore: "Approx. 620+ prime, 580+ alternative",
+    fit: ["T1 generals and NOAs", "Business financials", "Bank-statement reasonability", "Alt-income programs"],
+    watch: ["Income add-backs", "GST/HST arrears", "Business age", "Reasonability letter requirements"]
+  },
+  "New to Canada": {
+    summary: "For newcomers building Canadian credit history or using international income/assets.",
+    minScore: "Limited credit accepted with substitutes",
+    fit: ["Permanent residents", "Work-permit borrowers", "Limited Canadian credit", "Foreign down payment sources"],
+    watch: ["Immigration status", "Down payment trail", "Credit substitutes", "Insurer and lender overlays"]
+  },
+  "Reverse mortgage": {
+    summary: "For older homeowners looking to access home equity without regular mortgage payments.",
+    minScore: "Often equity-led; confirm lender requirement",
+    fit: ["Age-qualified borrowers", "Equity-rich properties", "Debt consolidation", "Retirement cash flow planning"],
+    watch: ["Independent legal advice", "Long-term equity impact", "Occupancy", "Family/disclosure conversations"]
+  },
+  HELOC: {
+    summary: "A revolving home-equity line for flexible access to available equity.",
+    minScore: "Approx. 680+",
+    fit: ["Low-LTV owner-occupied files", "Renovation funds", "Emergency liquidity", "Debt consolidation"],
+    watch: ["Registration type", "Prime-rate changes", "Minimum payments", "Combined LTV limits"]
+  },
+  "Credit union mortgage": {
+    summary: "Member-focused lending through Ontario credit unions with relationship-based servicing.",
+    minScore: "Approx. 650+",
+    fit: ["Clients open to membership", "Local relationship banking", "Conventional and HELOC scenarios"],
+    watch: ["Membership rules", "Branch/channel availability", "Property location", "Appraisal and payout process"]
+  },
+  "Insured purchase": {
+    summary: "High-ratio purchase files backed by default mortgage insurance.",
+    minScore: "Approx. 600+ insurer minimum",
+    fit: ["Less than 20% down", "Owner-occupied purchase", "Standard income documentation"],
+    watch: ["Insurer rules", "Purchase price caps", "Amortization limits", "Down payment source"]
+  },
+  "Conventional purchase": {
+    summary: "Purchase files with at least 20% down and no default insurance requirement.",
+    minScore: "Approx. 650+",
+    fit: ["Prime borrowers", "Stronger down payment", "Flexible amortization and property options"],
+    watch: ["Appraisal", "Debt ratios", "Property type", "Rate premium versus insured pricing"]
+  },
+  Refinance: {
+    summary: "Replacing or increasing a mortgage for equity take-out, consolidation, or restructuring.",
+    minScore: "Approx. 650+ prime, 580+ alternative",
+    fit: ["Debt consolidation", "Renovations", "Investment capital", "Payment restructuring"],
+    watch: ["Max LTV", "Penalty math", "Borrower benefit", "Legal and appraisal costs"]
+  },
+  Rental: {
+    summary: "Investment property lending where rental income treatment can determine lender fit.",
+    minScore: "Approx. 680+ prime, 620+ alternative",
+    fit: ["Long-term rentals", "Portfolio borrowers", "Purchase or refinance", "Market rent support"],
+    watch: ["Rental offset/add-back", "Lease documentation", "Vacancy assumptions", "Property cash flow"]
+  },
+  "Switch/transfer": {
+    summary: "Moving an existing mortgage to a new lender without increasing principal.",
+    minScore: "Approx. 650+",
+    fit: ["Maturity transfers", "Better rate/service", "Prime clean files"],
+    watch: ["Collateral charge", "Payout statement", "Registration costs", "No new money rules"]
+  }
+};
+
+const programPolicyProfiles = {
+  "Insured purchase": {
+    minScore: "600+ insurer minimum",
+    geography: "Ontario and eligible Canadian owner-occupied markets",
+    maxLtv: "Up to 95%",
+    features: ["High-ratio default-insured purchase", "Best insured pricing tier", "Gifted down payment may be allowed"],
+    exceptions: ["New to Canada, purchase plus improvements, and limited credit may fit with insurer approval"],
+    exclusions: ["Non-owner-occupied rentals", "Unverifiable down payment", "Uninsurable property or income"]
+  },
+  "Conventional purchase": {
+    minScore: "650+ typical prime",
+    geography: "Ontario marketable residential areas",
+    maxLtv: "Up to 80%",
+    features: ["20%+ down payment", "More property and amortization flexibility", "30-year pricing may be available"],
+    exceptions: ["Stronger net worth, strong liquidity, or relationship strength may support exceptions"],
+    exclusions: ["Weak appraisal support", "Unmarketable property", "Debt-service ratios outside policy"]
+  },
+  Refinance: {
+    minScore: "650+ prime, 580+ alternative",
+    geography: "Ontario marketable residential areas",
+    maxLtv: "Up to 80% prime, often 75%-80% alternative",
+    features: ["Equity take-out", "Debt consolidation", "Renovation or restructuring purpose"],
+    exceptions: ["Alternative lenders may consider bruised credit with equity and clear exit plan"],
+    exclusions: ["No borrower benefit", "Unresolved legal/tax issues", "Property not acceptable to lender"]
+  },
+  Rental: {
+    minScore: "680+ prime, 620+ alternative",
+    geography: "Urban/suburban rental markets with market rent support",
+    maxLtv: "Up to 80%, lender-dependent",
+    features: ["Rental offset/add-back policies", "Portfolio borrower support", "Purchase or refinance placement"],
+    exceptions: ["Market rent or lease alternatives may be considered by some lenders"],
+    exclusions: ["Illegal units", "Weak cash flow", "Short-term rental reliance unless allowed"]
+  },
+  "Switch/transfer": {
+    minScore: "650+ typical prime",
+    geography: "Ontario properties acceptable to new lender",
+    maxLtv: "Usually existing approved balance; insured transfers may differ",
+    features: ["Maturity transfer", "Lower-cost move to new lender", "Often simpler than refinance"],
+    exceptions: ["Collateral charge or small new money may require refinance treatment"],
+    exclusions: ["Mortgage arrears", "Unsupported property value", "New funds beyond switch rules"]
+  },
+  "Self-employed": {
+    minScore: "620+ prime, 580+ alternative",
+    geography: "Ontario, with stronger preference for marketable urban/suburban property",
+    maxLtv: "Up to 90% insured, 80% conventional, often 75%-80% alternative",
+    features: ["Full-document BFS", "Income add-backs", "Bank-statement or reasonability review"],
+    exceptions: ["Stated-income or alternative income may fit with fees and lower LTV"],
+    exclusions: ["Unpaid tax arrears", "Business too new", "Income not reasonable for industry"]
+  },
+  "New to Canada": {
+    minScore: "Limited credit may be accepted with substitutes",
+    geography: "Ontario, subject to status and lender/insurer program rules",
+    maxLtv: "Up to 95% insured, 80% conventional",
+    features: ["Alternate credit support", "International funds review", "Newcomer-specific insurer paths"],
+    exceptions: ["Foreign credit, rental history, or bank history may support limited Canadian credit"],
+    exclusions: ["Unclear immigration status", "Unverified foreign funds", "Income not acceptable in Canada"]
+  },
+  HELOC: {
+    minScore: "680+ typical",
+    geography: "Urban/suburban Ontario properties with strong marketability",
+    maxLtv: "65% standalone, up to 80% combined where allowed",
+    features: ["Revolving access", "Prime-linked pricing", "Useful for renovations or liquidity"],
+    exceptions: ["Combined mortgage and HELOC structures can vary by bank or credit union"],
+    exclusions: ["High LTV", "Weak credit depth", "Borrower purpose or repayment capacity unclear"]
+  },
+  "Reverse mortgage": {
+    minScore: "Often equity-led; confirm lender requirement",
+    geography: "Eligible Ontario residential markets",
+    maxLtv: "Age and property driven; commonly below traditional refinance LTV",
+    features: ["No regular mortgage payment", "Equity release for older homeowners", "Retirement cash-flow support"],
+    exceptions: ["Higher age and stronger property location may improve advance amount"],
+    exclusions: ["Borrowers below age requirement", "Investment property", "No independent legal advice"]
+  },
+  "Bank mortgage": {
+    minScore: "650+ typical bank prime",
+    geography: "Ontario and lender-approved Canadian markets",
+    maxLtv: "Up to 95% insured, 80% conventional/refinance",
+    features: ["Branch ecosystem", "Bank servicing", "Potential bundled banking relationship"],
+    exceptions: ["Relationship strength or assets may support discretionary review"],
+    exclusions: ["Outside bank channel policy", "Unverified income", "Unacceptable property or debt ratios"]
+  },
+  "Credit union mortgage": {
+    minScore: "650+ typical",
+    geography: "Ontario, subject to membership and property location rules",
+    maxLtv: "Up to 95% insured, 80% conventional, 65%-80% HELOC combined",
+    features: ["Member relationship", "Local servicing", "Flexible relationship-based review"],
+    exceptions: ["Membership strength or local relationship may support manual review"],
+    exclusions: ["Outside membership field", "Unsupported location", "Unacceptable property or appraisal"]
+  },
+  Prime: {
+    minScore: "650+ typical",
+    geography: "Ontario and eligible lender markets",
+    maxLtv: "Up to 95% insured, 80% conventional/refinance",
+    features: ["Lowest rate paths", "Standard documents", "Clean debt-service placement"],
+    exceptions: ["Minor credit or income exceptions may fit with compensating strength"],
+    exclusions: ["Major credit impairment", "Unverifiable income", "No clear down payment trail"]
+  },
+  Alternative: {
+    minScore: "580+-620+ depending lender",
+    geography: "Marketable Ontario urban/suburban areas preferred",
+    maxLtv: "Often 75%-80%",
+    features: ["Expanded credit and income review", "BFS and stated-income reasonability", "Equity-focused placement"],
+    exceptions: ["Bruised credit, recent self-employment, or non-prime debt ratios may fit"],
+    exclusions: ["No exit strategy", "Poor property marketability", "Unacceptable arrears or fraud risk"]
+  },
+  "Alternative lending": {
+    minScore: "580+-620+ depending lender",
+    geography: "Marketable Ontario urban/suburban areas preferred",
+    maxLtv: "Often 75%-80%",
+    features: ["Expanded credit and income review", "BFS and stated-income reasonability", "Equity-focused placement"],
+    exceptions: ["Bruised credit, recent self-employment, or non-prime debt ratios may fit"],
+    exclusions: ["No exit strategy", "Poor property marketability", "Unacceptable arrears or fraud risk"]
+  },
+  "Alternative A/B": {
+    minScore: "600+ guide; lower may need strong equity",
+    geography: "Marketable Ontario residential areas",
+    maxLtv: "Often 75%-80%",
+    features: ["A/B credit placement", "Expanded income", "Manual story-based underwriting"],
+    exceptions: ["Credit events may fit if explained and repayment path is clear"],
+    exclusions: ["Active bankruptcy", "Weak exit plan", "Property or income outside lender appetite"]
+  },
+  "Bruised credit": {
+    minScore: "560+-600+ with equity",
+    geography: "Urban/suburban Ontario property preferred",
+    maxLtv: "Often 65%-75%, sometimes 80% with strength",
+    features: ["Credit story review", "Debt cleanup", "Short-term bridge back to prime"],
+    exceptions: ["Paid collections, discharged proposal, or recent life event may be explainable"],
+    exclusions: ["Active insolvency without lender appetite", "No repayment plan", "Ongoing arrears"]
+  },
+  "Equity-focused refinance": {
+    minScore: "Equity-led; often 560+-600+ minimum",
+    geography: "Strong Ontario marketability preferred",
+    maxLtv: "Usually 65%-75%, sometimes 80%",
+    features: ["Debt consolidation", "Arrears cleanup", "Short-term alternative solution"],
+    exceptions: ["Low score may fit when equity, income, and exit strategy are strong"],
+    exclusions: ["No income support", "Weak exit plan", "Property not financeable", "Fraud or title concerns"]
+  },
+  "Purchase plus improvements": {
+    minScore: "600+ insurer minimum",
+    geography: "Eligible Ontario owner-occupied purchase markets",
+    maxLtv: "Up to 95% on eligible as-improved value",
+    features: ["Renovation/improvement holdback", "Insured purchase plus eligible upgrades", "Improvement value support"],
+    exceptions: ["Lender-controlled holdbacks and post-completion inspection may support scope changes"],
+    exclusions: ["Unapproved renovations", "No contractor quote", "Major structural risk outside policy"]
+  },
+  "New construction": {
+    minScore: "680+ typical prime",
+    geography: "Approved serviced areas with acceptable build/property support",
+    maxLtv: "Up to 80% conventional, insured/progress rules vary",
+    features: ["Builder purchase", "Progress advance review", "New-build completion support"],
+    exceptions: ["Insured or progress-advance paths may be possible with approved lender process"],
+    exclusions: ["No permits", "Cost overrun risk", "Unapproved builder or incomplete project support"]
+  },
+  Renewal: {
+    minScore: "Confirm lender; 650+ for transfer review",
+    geography: "Existing lender/property area or new lender's approved region",
+    maxLtv: "Usually existing balance unless refinance/new money requested",
+    features: ["Maturity review", "Retention pricing", "Potential transfer opportunity"],
+    exceptions: ["Minor documentation refresh may be enough if no material changes"],
+    exclusions: ["Arrears", "Material credit deterioration", "New funds without refinance qualification"]
+  },
+  "Private / MIC / MIE": {
+    minScore: "Equity-led; often 550+ guide",
+    geography: "Strong Ontario urban/suburban property preferred",
+    maxLtv: "Usually 65%-75%, rarely 80%",
+    features: ["Short-term bridge", "Flexible income/credit", "Fast exception-based review"],
+    exceptions: ["Lower score or complex income may fit with equity and clear exit"],
+    exclusions: ["No exit strategy", "Remote/rural specialty property", "Fraud/title/tax concerns"]
+  }
+};
+
+const policyResourceLinks = [
+  {
+    label: "CMHC rental income guide",
+    description: "Insurer reference for owner-occupied and non-owner-occupied rental income treatment.",
+    href: "https://www.cmhc-schl.gc.ca/professionals/project-funding-and-mortgage-financing/mortgage-loan-insurance/homeowner-mortgage-loan-insurance/rental-income"
+  },
+  {
+    label: "CMHC rental income PDF",
+    description: "Downloadable rental-income policy reference for mortgage loan insurance.",
+    href: "https://assets.cmhc-schl.gc.ca/sf/project/cmhc/pubsandreports/mortgage-loan-insurance/mli-homeowner-rental-income-en.pdf"
+  },
+  {
+    label: "Sagen underwriting documentation",
+    description: "Documents and worksheets often used for insured submissions and rental scenarios.",
+    href: "https://www.sagen.ca/ups/underwriting-documentation/"
+  },
+  {
+    label: "Canada Guaranty Rental Advantage",
+    description: "Insured rental program reference and rental treatment guidance.",
+    href: "https://www.canadaguaranty.ca/wp-content/uploads/2021/04/CG-Rental-Advantage-July_2025-Eng.pdf"
+  },
+  {
+    label: "CMLS prime rental worksheet",
+    description: "Public lender worksheet for prime rental calculations.",
+    href: "https://www.cmls.ca/brokers/prime-rental-worksheet"
+  },
+  {
+    label: "CRA rental income guide",
+    description: "Tax reporting reference for rental income, expenses, and T776 support.",
+    href: "https://www.canada.ca/en/revenue-agency/services/forms-publications/publications/t4036.html"
+  }
+];
+
+const rentalAssignmentPolicy = {
+  rentalTreatment: [
+    "Subject owner-occupied rental income may be considered differently from non-subject rental income; confirm whether the lender uses gross add-back, offset, or net-income treatment.",
+    "Existing rental properties usually require lease support, tax documents such as T776 or statement of real estate rentals, mortgage/property tax/condo fee details, and sometimes a market-rent appraisal schedule.",
+    "Unauthorized suites, short-term rentals, rooming houses, or properties with weak marketability may be excluded or treated with reduced income credit."
+  ],
+  switchTransfer: [
+    "Switch/transfer normally means no new money beyond permitted costs; new funds, debt consolidation, or title changes may push the file into refinance policy.",
+    "Collateral-charge transfers, insurer transfers, payout timing, and legal/registration requirements must be confirmed before quoting.",
+    "Typical documents include mortgage statement, payout statement, property tax status, insurance, income refresh if required, and current property valuation support."
+  ],
+  assignment: [
+    "Assignment of Agreement of Purchase and Sale files should include original APS, assignment agreement, deposit trail, builder/seller consent where applicable, and clear explanation of any assignment profit or fee.",
+    "Assignment of rents and leases may be required for rental or investment properties so the lender can claim rents after default.",
+    "Rapid value increases, non-arm's-length assignment, missing deposit trail, or unclear beneficial ownership should be escalated before submission."
+  ]
+};
+
+const aggressiveSearchAliases = {
+  conventional: ["conventional purchase", "20% down", "20 down", "80 ltv", "uninsurable", "conventional product"],
+  "high ratio": ["insured purchase", "high-ratio", "highratio", "95 ltv", "default insured"],
+  highratio: ["insured purchase", "high ratio", "default insured"],
+  insured: ["high ratio", "insured purchase", "default insured"],
+  newcomer: ["new to canada", "limited credit", "foreign funds", "work permit", "permanent resident"],
+  "new canada": ["new to canada", "newcomer", "limited credit", "foreign funds"],
+  rental: ["rental income", "rental worksheet", "lease", "t776", "offset", "add-back", "assignment of rents", "investment property"],
+  worksheet: ["rental worksheet", "prime rental worksheet", "cmhc rental income", "cmls prime rental worksheet"],
+  switch: ["switch/transfer", "transfer", "swtich", "payout statement", "collateral charge", "maturity transfer"],
+  swtich: ["switch/transfer", "switch", "transfer", "payout statement"],
+  transfer: ["switch/transfer", "switch", "payout statement", "maturity transfer"],
+  assignment: ["assignment policy", "assignment of purchase", "assignment of rents", "assignment of leases", "rental assignment"],
+  assigment: ["assignment", "assignment policy", "assignment of purchase", "assignment of rents"],
+  assisgmenent: ["assignment", "assignment policy", "assignment of purchase", "assignment of rents"],
+  guiedlines: ["guidelines", "underwriting guidelines", "policy breakdown"],
+  guidelines: ["underwriting", "policy", "exceptions", "exclusions", "minimum score", "max ltv"],
+  ltv: ["loan to value", "maximum ltv", "max ltv"],
+  mic: ["private lender", "mie", "private / mic / mie"],
+  mie: ["private lender", "mic", "private / mic / mie"]
+};
+
+const rateColorMap = {
+  insuredFixed: "#16A34A",
+  variable: "#0284C7",
+  conventional: "#2563EB",
+  alt: "#7C3AED"
+};
+
+const underwritingGuidelines = {
+  "first-national": {
+    credit: "Prime credit profile preferred; confirm beacon depth, mortgage history, and insurer overlays for high-ratio files.",
+    income: "Strong fit for salaried, hourly, pension, and well-documented self-employed income with standard documents.",
+    property: "Standard residential properties, switches, rentals, and conventional purchases; confirm rental offset and property type limits.",
+    ltv: "Insured, insurable, conventional, refinance, and rental categories are shown in the deal desk rate grid.",
+    documents: "Application, credit bureau, income documents, down payment trail, purchase agreement, appraisal when required, and payout for switches.",
+    watch: "Confirm rate hold, rental treatment, exception policy, and prepayment privileges in Merlin before submission."
+  },
+  mcap: {
+    credit: "Prime credit expected; review score, tradeline depth, mortgage repayment history, and insurer requirements.",
+    income: "Best for clean income documentation, salaried borrowers, established self-employed files, and standard debt-service cases.",
+    property: "Good placement path for owner-occupied, switch, refinance, and rental files where property is marketable.",
+    ltv: "Use insured, insurable, uninsurable, refinance, rental, and 30-year categories from the rate sheet.",
+    documents: "Income package, down payment/source of funds, MLS/purchase contract, appraisal if required, and rental support where applicable.",
+    watch: "Check feature restrictions, rate hold window, rental policy, and product-specific prepayment terms."
+  },
+  merix: {
+    credit: "Prime credit profile with clean bureau and reasonable debt servicing; confirm score overlays for insured tiers.",
+    income: "Standard salaried, hourly, pension, and full-document self-employed files are the cleanest fit.",
+    property: "Owner-occupied, refinance, and rental scenarios can fit subject to product and property guidelines.",
+    ltv: "Deal desk rates show insured, insurable, uninsurable, refinance, rental, and variable options.",
+    documents: "Income verification, down payment trail, property details, appraisal if required, and payout statement for transfers.",
+    watch: "Confirm MyMERIX conditions, compensation, servicing features, and any no-frills restrictions."
+  },
+  td: {
+    credit: "Bank-prime credit preferred; review bureau strength, total relationship, revolving utilization, and debt-service fit.",
+    income: "Salaried, hourly, pension, incorporated, and self-employed files may fit with bank-specific documentation.",
+    property: "Standard bank mortgage, refinance, switch, and construction/new-build cases subject to TD policy.",
+    ltv: "Compare insured, insurable, conventional, refinance, rental, 30-year, and HELOC/prime-linked categories.",
+    documents: "Bank income package, down payment trail, property documents, appraisal if required, and branch/channel conditions.",
+    watch: "Confirm collateral charge implications, broker-channel eligibility, rate discretion, and TD prime-linked pricing."
+  },
+  scotia: {
+    credit: "Prime bank borrower profile; confirm bureau depth, repayment conduct, and insurer/lender overlays.",
+    income: "Works for standard employment, pension, and documented self-employed income within bank policy.",
+    property: "Bank mortgage placement for purchases, switches, refinance, purchase plus improvements, and rentals where eligible.",
+    ltv: "Use the sheet categories for insured, insurable, uninsurable, refinance, rental, and longer amortization pricing.",
+    documents: "Income verification, source of funds, property contract, appraisal as required, and payout for switches.",
+    watch: "Check Scotia Mortgage Authority requirements, bundle pricing conditions, and collateral/registration rules."
+  },
+  bmo: {
+    credit: "Prime bank credit preferred; review score, credit depth, unsecured debt usage, and mortgage repayment history.",
+    income: "Good for standard bank income, salaried borrowers, professional files, and documented self-employed borrowers.",
+    property: "Owner-occupied, conventional, insured, refinance, switch, and rental cases subject to BMO channel policy.",
+    ltv: "Deal desk rates include insured, insurable, uninsurable, refinance, rental, 30-year, and HELOC availability.",
+    documents: "Income documents, down payment/source, purchase agreement, appraisal where needed, and BMO channel conditions.",
+    watch: "Confirm BrokerEdge access, rate hold, compensation, appraisal requirements, and HELOC/collateral structure."
+  },
+  "national-bank": {
+    credit: "Prime bank credit profile; confirm minimum score, credit depth, and debt-ratio policy with the desk.",
+    income: "Standard employment, pension, and documented business income files are strongest.",
+    property: "Bank mortgage, refinance, HELOC, and conventional purchase scenarios subject to Ontario channel availability.",
+    ltv: "Use current desk pricing and confirm insured, insurable, refinance, rental, and HELOC limits before quoting.",
+    documents: "Income verification, down payment trail, purchase/property documents, appraisal, and payout statement where applicable.",
+    watch: "Confirm Ontario broker process, branch involvement, fees, and current rate specials."
+  },
+  equitable: {
+    credit: "Alternative and prime-adjacent credit accepted by scenario; equity, repayment story, and exit strategy matter.",
+    income: "Useful for business-for-self, stated-income reasonability, net-worth, and broader documentation files.",
+    property: "Marketable urban/suburban properties, alternative refinances, HELOC, and reverse mortgage scenarios may fit.",
+    ltv: "Confirm max LTV by program, property, occupancy, credit score, and documentation strength.",
+    documents: "Expanded income package, bank statements or business docs, appraisal, mortgage statement, tax status, and exit strategy.",
+    watch: "Disclose lender fees, broker fees, suitability, appraisal limits, and renewal/exit plan clearly."
+  },
+  "home-trust": {
+    credit: "Alternative credit stories may be considered; repayment history, equity, and reason for bruised credit are important.",
+    income: "Self-employed, equity-focused, and non-prime income cases can fit when reasonability is strong.",
+    property: "Alternative lending on marketable residential property; location, condition, and exit strategy are key.",
+    ltv: "Confirm maximum LTV by credit, property type, location, income strength, and product.",
+    documents: "Application story, income support, appraisal, mortgage statement, property taxes, and debt payout details.",
+    watch: "Review fees, legal costs, appraisal rules, borrower benefit, and clear path back to prime."
+  },
+  rfa: {
+    credit: "Prime and alternative paths exist; confirm whether the file belongs in prime, alt, or exception pricing.",
+    income: "Standard income for prime files; expanded documentation may fit through alternative programs.",
+    property: "Prime, rental, refinance, switch, and alternative scenarios subject to channel and product rules.",
+    ltv: "Use insured, insurable, refinance, rental, and variable categories from the deal desk sheet.",
+    documents: "Income documents, down payment trail, appraisal if required, rental support, and clear submission notes.",
+    watch: "Confirm RVP coverage, product lane, alternative fees, compensation, and rate-hold details."
+  },
+  meridian: {
+    credit: "Credit union underwriting with member relationship focus; confirm score, bureau depth, and conduct requirements.",
+    income: "Standard employment and business-for-self files may fit with member and product requirements.",
+    property: "Ontario property focus with mortgage, HELOC, purchase, refinance, and switch opportunities.",
+    ltv: "Confirm insured/conventional/HELOC LTV limits, membership requirements, and appraisal policy.",
+    documents: "Income verification, membership documents, down payment trail, property details, and appraisal where required.",
+    watch: "Check membership rules, geographic availability, branch involvement, and funding timelines."
+  },
+  duca: {
+    credit: "Credit union profile with attention to score, credit depth, relationship, and overall story.",
+    income: "Standard employment, self-employed, and relationship-based files may fit with full documentation.",
+    property: "Ontario property, conventional purchase, refinance, HELOC, and self-employed scenarios subject to DUCA policy.",
+    ltv: "Rate grid includes insured, insurable, refinance, rental, and 30-year categories where available.",
+    documents: "Income package, membership requirements, source of funds, appraisal, and property details.",
+    watch: "Confirm member eligibility, property location, appraisal process, and any credit union-specific conditions."
+  },
+  icici: {
+    credit: "Bank credit expected; newcomer and international relationship context may support the overall file where eligible.",
+    income: "Standard income, newcomer, rental, and international banking relationship files may need extra verification.",
+    property: "Purchase, refinance, switch, and rental scenarios subject to ICICI Bank Canada policy.",
+    ltv: "Confirm insured, conventional, refinance, rental, and program-specific LTV rules before quoting.",
+    documents: "Income verification, immigration/newcomer documents if applicable, down payment trail, and appraisal.",
+    watch: "Confirm current iGlobal/newcomer conditions, documentation depth, and mortgage specialist workflow."
+  },
+  manulife: {
+    credit: "Prime bank credit preferred; suitability is important for flexible mortgage/HELOC-style structures.",
+    income: "Best for standard income and borrowers who benefit from flexible banking and debt-management features.",
+    property: "Manulife Bank Select, Manulife One, refinance, switch, and HELOC-style cases subject to product fit.",
+    ltv: "Confirm Manulife One and Bank Select LTV, registration, and amortization rules before advising.",
+    documents: "Income package, property documents, appraisal as needed, debt list, and suitability notes.",
+    watch: "Explain collateral registration, account requirements, variable-rate exposure, and payment flexibility clearly."
+  },
+  "b2b-bank": {
+    credit: "Bank-prime credit expected; confirm score, tradelines, debt-service ratios, and broker-channel overlays.",
+    income: "Standard employment and documented self-employed income are strongest fits.",
+    property: "Prime purchase, refinance, rental, and HELOC scenarios subject to B2B policy.",
+    ltv: "Rate sheet includes insured, insurable, uninsurable, refinance, rental, 30-year, and HELOC categories.",
+    documents: "Income documents, source of funds, purchase/property details, appraisal if required, and payout statement.",
+    watch: "Confirm current channel conditions, rate hold, lender fees, and HELOC requirements."
+  },
+  cmls: {
+    credit: "Prime credit expected; review insured score overlays, tradeline depth, and mortgage repayment history.",
+    income: "Clean salaried, hourly, pension, and full-document self-employed income are best fits.",
+    property: "Monoline placement for insured, insurable, refinance, rental, switch, and no-frills scenarios where eligible.",
+    ltv: "Use insured, insurable, uninsurable, refinance, rental, and HELOC categories shown in the grid.",
+    documents: "Income package, down payment trail, property details, appraisal if needed, and switch documents.",
+    watch: "Confirm no-frills restrictions, prepayment terms, portability, and rate hold before submitting."
+  },
+  highclere: {
+    credit: "Prime or near-prime profile depending on product; confirm minimum score and insured overlays.",
+    income: "Standard documented income is preferred; confirm any self-employed or exception-income policy.",
+    property: "Use for standard eligible residential properties where Highclere appetite and product availability fit.",
+    ltv: "Rate grid availability varies by term and category; confirm missing categories directly with the desk.",
+    documents: "Income documents, down payment trail, property details, appraisal if required, and lender conditions.",
+    watch: "Confirm availability, underwriting appetite, rate hold, and feature restrictions before placement."
+  },
+  neo: {
+    credit: "Prime profile preferred; confirm score, debt service, bureau depth, and product-specific overlays.",
+    income: "Best suited to clearly documented income and straightforward borrower profiles.",
+    property: "Standard purchase, refinance, and switch scenarios subject to Neo product availability.",
+    ltv: "Use the available insured, insurable, refinance, and variable categories; unavailable categories should be confirmed.",
+    documents: "Income package, property documents, source of funds, appraisal if needed, and payout for transfers.",
+    watch: "Confirm submission channel, rate hold, prepayment features, and product limitations."
+  },
+  rmg: {
+    credit: "Prime credit expected; review score overlays and repayment conduct for insured and conventional tiers.",
+    income: "Standard income documentation and clean debt-service files fit best.",
+    property: "Monoline options for insured, conventional, refinance, rental, switch, and low-rate-basic products.",
+    ltv: "Rate grid includes insured, insurable, refinance, rental, and 30-year categories where available.",
+    documents: "Income, down payment, property details, appraisal if required, rental support, and switch payout.",
+    watch: "Confirm low-rate-basic restrictions, prepayment, portability, and lender condition timing."
+  },
+  strive: {
+    credit: "Prime and alternative paths may exist; confirm whether the file is being placed under prime or alt policy.",
+    income: "Standard documented income for prime; alternative files need clear story, reasonability, and exit strategy.",
+    property: "Prime, alternative, rental, refinance, and switch scenarios subject to product lane.",
+    ltv: "Use the deal desk rate categories and confirm alternative/private overlays where applicable.",
+    documents: "Income package, appraisal, source of funds, mortgage statement, rental support, and file narrative.",
+    watch: "Clarify product lane, fees, compensation, rate hold, and suitability for non-prime cases."
+  },
+  desjardins: {
+    credit: "Strong credit profile preferred; the sheet notes a 720+ FICO overlay, so confirm before quoting.",
+    income: "Standard employment and documented business income files are strongest.",
+    property: "Regional credit union/bank-style lender for Ontario mortgage and HELOC scenarios where available.",
+    ltv: "Rate grid includes insured, insurable, refinance, rental, 30-year, and HELOC categories.",
+    documents: "Income documents, property details, source of funds, appraisal as needed, and membership/channel requirements.",
+    watch: "Confirm score overlay, Ontario availability, membership or channel requirements, and rate-hold policy."
+  }
+};
+
+const dealDeskSource = {
+  name: "MortgageBOSS Rate Sheet",
+  effectiveDate: "June 1, 2026",
+  benchmarkRate: "5.25%",
+  primeRate: "4.45%",
+  note: "Confidential internal rate sheet. O.A.C.; rates subject to change without notice; rate hold varies by lender."
+};
+
+const dealDeskExtraLenders = [
+  {
+    id: "b2b-bank",
+    name: "B2B Bank",
+    type: "bank",
+    brandColor: "#004B8D",
+    brandAccent: "#6BA43A",
+    website: "https://b2bbank.com/",
+    portal: "B2B Bank broker channel",
+    region: "Ontario",
+    bdm: "B2B Bank Mortgage Desk",
+    email: "Use assigned B2B Bank contact",
+    phone: "Use assigned B2B Bank phone",
+    rates: { insuredFixed: 0, variable: null, conventional: 0, alt: null },
+    updated: "MortgageBOSS",
+    programs: ["Bank mortgage", "Insured purchase", "Conventional purchase", "Refinance", "Rental", "HELOC"],
+    guidelines: ["Broker-channel bank lender with rate categories shown on the MortgageBOSS sheet.", "Confirm submission route, compensation, and current conditions before placement."],
+    policyNote: "Updated from MortgageBOSS rate sheet."
+  },
+  {
+    id: "cmls",
+    name: "CMLS",
+    type: "monoline",
+    brandColor: "#003C71",
+    brandAccent: "#00A3E0",
+    website: "https://www.cmls.ca/",
+    portal: "CMLS broker resources",
+    region: "Ontario",
+    bdm: "CMLS Broker Desk",
+    email: "Use assigned CMLS contact",
+    phone: "Use assigned CMLS phone",
+    rates: { insuredFixed: 0, variable: null, conventional: 0, alt: null },
+    updated: "MortgageBOSS",
+    programs: ["Insured purchase", "Conventional purchase", "Refinance", "Rental", "Switch/transfer"],
+    guidelines: ["Monoline lender with standard and no-frills rate categories shown on MortgageBOSS.", "Confirm rate-hold, prepayment, and feature restrictions before submission."],
+    policyNote: "Updated from MortgageBOSS rate sheet."
+  },
+  {
+    id: "highclere",
+    name: "Highclere",
+    type: "monoline",
+    brandColor: "#334155",
+    brandAccent: "#94A3B8",
+    website: "https://www.highcleremortgages.com/",
+    portal: "Highclere broker resources",
+    region: "Ontario",
+    bdm: "Highclere Mortgage Desk",
+    email: "Use assigned Highclere contact",
+    phone: "Use assigned Highclere phone",
+    rates: { insuredFixed: 0, variable: null, conventional: 0, alt: null },
+    updated: "MortgageBOSS",
+    programs: ["Insured purchase", "Conventional purchase", "Refinance", "Switch/transfer"],
+    guidelines: ["Rate-sheet lender entry from MortgageBOSS.", "Confirm availability, underwriting appetite, and current desk notes before placement."],
+    policyNote: "Updated from MortgageBOSS rate sheet."
+  },
+  {
+    id: "neo",
+    name: "Neo",
+    type: "monoline",
+    brandColor: "#111827",
+    brandAccent: "#22C55E",
+    website: "https://www.neomortgage.ca/",
+    portal: "Neo mortgage resources",
+    region: "Ontario",
+    bdm: "Neo Mortgage Desk",
+    email: "Use assigned Neo contact",
+    phone: "Use assigned Neo phone",
+    rates: { insuredFixed: 0, variable: null, conventional: 0, alt: null },
+    updated: "MortgageBOSS",
+    programs: ["Insured purchase", "Conventional purchase", "Refinance", "Switch/transfer"],
+    guidelines: ["Rate-sheet lender entry from MortgageBOSS.", "Confirm submission channel and current product availability."],
+    policyNote: "Updated from MortgageBOSS rate sheet."
+  },
+  {
+    id: "rmg",
+    name: "RMG",
+    type: "monoline",
+    brandColor: "#003DA5",
+    brandAccent: "#00A3E0",
+    website: "https://www.rmgmortgages.ca/",
+    portal: "RMG broker resources",
+    region: "Ontario",
+    bdm: "RMG Broker Desk",
+    email: "Use assigned RMG contact",
+    phone: "Use assigned RMG phone",
+    rates: { insuredFixed: 0, variable: null, conventional: 0, alt: null },
+    updated: "MortgageBOSS",
+    programs: ["Insured purchase", "Conventional purchase", "Refinance", "Rental", "Switch/transfer"],
+    guidelines: ["Broker-focused monoline lender with standard and low-rate-basic categories.", "Confirm feature restrictions and penalty/prepayment details before placement."],
+    policyNote: "Updated from MortgageBOSS rate sheet."
+  },
+  {
+    id: "strive",
+    name: "Strive",
+    type: "monoline",
+    brandColor: "#121826",
+    brandAccent: "#D6A84F",
+    website: "https://www.strivecapital.ca/",
+    portal: "Strive broker resources",
+    region: "Ontario",
+    bdm: "Strive Broker Desk",
+    email: "Use assigned Strive contact",
+    phone: "Use assigned Strive phone",
+    rates: { insuredFixed: 0, variable: null, conventional: 0, alt: null },
+    updated: "MortgageBOSS",
+    programs: ["Prime", "Alternative", "Insured purchase", "Conventional purchase", "Refinance", "Rental"],
+    guidelines: ["Prime and alternative lender with rates shown in the MortgageBOSS sheet.", "Confirm whether product is prime, alternative, or exception-priced before submission."],
+    policyNote: "Updated from MortgageBOSS rate sheet."
+  },
+  {
+    id: "desjardins",
+    name: "Desjardins",
+    type: "credit union",
+    brandColor: "#00843D",
+    brandAccent: "#78BE20",
+    website: "https://www.desjardins.com/",
+    portal: "Desjardins Ontario mortgage resources",
+    region: "Ontario",
+    bdm: "Desjardins Mortgage Desk",
+    email: "Use assigned Desjardins contact",
+    phone: "Use assigned Desjardins phone",
+    rates: { insuredFixed: 0, variable: null, conventional: 0, alt: null },
+    updated: "MortgageBOSS",
+    programs: ["Credit union mortgage", "Insured purchase", "Conventional purchase", "Refinance", "HELOC"],
+    guidelines: ["Regional lender entry from MortgageBOSS with noted 720+ FICO on the sheet.", "Confirm membership/channel requirements and current credit-score overlay."],
+    policyNote: "Updated from MortgageBOSS rate sheet."
+  }
+];
+
+demoLenders.push(...dealDeskExtraLenders);
+
+const dealDeskRateRows = {
+  "b2b-bank": { sheetDate: "5/20", values: ["4.44", "4.84", "4.84", "4.84", "4.84", "4.84", "4.84", "4.84", "4.84", "5.09", "P-0.65", "P-0.25", "P-0.25", "P-0.25", "P-0.25", "P-0.25", "P-0.25", "P-0.25", "P-0.25", "P-0.00", "4.99", "5.09", "5.09", "4.54", "4.69", "4.69", "4.44", "4.69", "4.69", "4.39", "4.74", "4.74", "-", "6.39", "6.39", "-", "6.49", "6.49", "P+0.50"] },
+  bmo: { sheetDate: "3/27", values: ["4.69", "5.09", "5.09", "5.09", "5.09", "5.09", "5.19", "5.09", "5.19", "5.34", "P-0.33", "P-0.15", "P-0.15", "P-0.15", "P-0.15", "P-0.15", "P-0.15", "P-0.15", "P-0.15", "P-0.00", "5.33", "5.37", "5.37", "4.73", "4.75", "4.75", "4.54", "4.69", "4.69", "4.50", "4.69", "4.69", "5.44", "5.54", "5.54", "5.90", "5.62", "5.62", "-"] },
+  cmls: { sheetDate: "5/30", values: ["4.39", "4.39", "4.54", "4.59", "4.64", "4.84", "4.84", "4.84", "4.84", "-", "P-0.75", "P-0.75", "P-0.60", "P-0.55", "P-0.50", "P-0.26", "P-0.26", "P-0.26", "P-0.26", "-", "-", "-", "-", "4.69", "-", "-", "4.34", "4.64", "4.84", "-", "-", "-", "-", "-", "-", "-", "-", "-", "P+0.50"] },
+  "first-national": { sheetDate: "5/23", values: ["4.49", "4.54", "4.64", "4.74", "4.79", "4.84", "4.84", "4.84", "4.84", "4.99", "P-0.75", "P-0.70", "P-0.50", "P-0.45", "P-0.40", "P-0.26", "P-0.26", "P-0.26", "P-0.26", "P-0.11", "5.14", "5.14", "5.14", "4.74", "4.74", "4.74", "4.84", "4.84", "4.84", "4.79", "4.79", "4.79", "5.09", "5.09", "5.09", "5.44", "5.44", "5.44", "-"] },
+  highclere: { sheetDate: "5/16", values: ["4.49", "4.49", "4.64", "4.69", "4.74", "-", "-", "-", "-", "-", "P-0.75", "P-0.75", "P-0.60", "P-0.55", "P-0.50", "-", "-", "-", "-", "-", "5.39", "5.64", "-", "5.19", "5.44", "-", "4.49", "4.74", "-", "4.79", "5.04", "-", "-", "-", "-", "-", "-", "-", "-"] },
+  merix: { sheetDate: "5/20", values: ["4.49", "4.49", "4.64", "4.64", "4.69", "4.84", "4.84", "4.84", "4.84", "5.14", "P-0.75", "P-0.75", "P-0.55", "P-0.50", "P-0.45", "P-0.25", "P-0.25", "P-0.25", "P-0.25", "P+0.05", "-", "-", "-", "-", "-", "-", "4.39", "4.74", "4.84", "4.49", "4.74", "4.84", "-", "-", "-", "-", "-", "-", "-"] },
+  manulife: { sheetDate: "4/9", values: ["4.39", "4.69", "4.69", "4.69", "4.69", "-", "-", "-", "-", "-", "P-0.70", "P-0.40", "P-0.40", "P-0.40", "P-0.40", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "4.34", "4.54", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"] },
+  mcap: { sheetDate: "5/20", values: ["4.49", "4.49", "4.64", "4.64", "4.69", "4.84", "4.84", "4.84", "4.84", "5.14", "P-0.75", "P-0.75", "P-0.55", "P-0.50", "P-0.45", "P-0.25", "P-0.25", "P-0.25", "P-0.25", "P+0.05", "5.29", "5.59", "5.59", "4.64", "4.89", "4.99", "4.39", "4.74", "4.84", "4.49", "4.74", "4.84", "6.54", "6.74", "6.84", "6.64", "6.84", "6.94", "P+0.50"] },
+  neo: { sheetDate: "5/26", values: ["4.39", "4.39", "4.49", "4.59", "4.64", "4.89", "4.89", "4.89", "4.89", "-", "P-0.85", "P-0.85", "P-0.75", "P-0.65", "P-0.60", "P-0.10", "P-0.10", "P-0.10", "P-0.10", "-", "5.09", "6.19", "-", "4.69", "6.09", "-", "4.49", "4.74", "-", "4.49", "4.69", "-", "-", "-", "-", "-", "-", "-", "-"] },
+  rfa: { sheetDate: "5/16", values: ["4.49", "4.49", "4.64", "4.64", "4.69", "4.84", "4.84", "4.84", "4.84", "5.54", "P-0.75", "P-0.75", "P-0.55", "P-0.45", "P-0.45", "P-0.20", "P-0.20", "P-0.20", "P-0.20", "-", "5.09", "5.44", "-", "4.54", "4.84", "-", "4.49", "4.74", "-", "4.54", "4.84", "-", "-", "-", "-", "-", "-", "-", "-"] },
+  rmg: { sheetDate: "5/20", values: ["4.49", "4.49", "4.64", "4.64", "4.69", "4.84", "4.84", "4.84", "4.84", "-", "P-0.75", "P-0.75", "P-0.55", "P-0.50", "P-0.45", "P-0.25", "P-0.25", "P-0.25", "P-0.25", "-", "5.29", "5.59", "5.59", "4.64", "4.89", "4.99", "4.39", "4.74", "4.84", "4.49", "4.74", "4.84", "-", "-", "-", "-", "-", "-", "-"] },
+  scotia: { sheetDate: "5/12", values: ["4.34", "4.59", "4.59", "4.59", "4.59", "4.59", "4.69", "4.59", "4.69", "4.99", "P-0.70", "P-0.45", "P-0.45", "P-0.45", "P-0.45", "P-0.45", "P-0.35", "P-0.45", "P-0.35", "P-0.05", "4.69", "4.94", "4.94", "4.09", "4.34", "4.34", "4.14", "4.39", "4.39", "4.29", "4.54", "4.54", "5.05", "5.30", "5.30", "5.45", "5.70", "5.70", "P+0.50"] },
+  strive: { sheetDate: "5/16", values: ["4.49", "4.49", "4.64", "4.64", "4.69", "4.84", "4.84", "4.84", "4.84", "-", "P-0.75", "P-0.75", "P-0.55", "P-0.45", "P-0.45", "P-0.35", "P-0.35", "P-0.35", "P-0.35", "-", "4.94", "5.34", "-", "4.64", "4.99", "-", "4.49", "4.84", "4.84", "4.49", "4.79", "-", "-", "-", "-", "-", "-", "-", "-"] },
+  td: { sheetDate: "5/29", values: ["4.44", "4.74", "4.74", "4.74", "4.74", "4.74", "4.79", "4.74", "4.79", "4.89", "P-0.61", "P-0.46", "P-0.46", "P-0.46", "P-0.46", "P-0.46", "P-0.41", "P-0.46", "P-0.41", "P-0.31", "5.59", "5.59", "5.59", "4.54", "4.54", "4.54", "4.59", "4.59", "4.59", "4.69", "4.69", "4.69", "5.44", "5.44", "5.44", "5.54", "5.54", "5.54", "P+0.50"] },
+  desjardins: { sheetDate: "5/1", values: ["4.19", "4.34", "4.34", "4.34", "4.34", "4.34", "4.44", "4.34", "4.44", "4.59", "P-0.55", "P-0.55", "P-0.55", "P-0.55", "P-0.55", "P-0.55", "P-0.45", "P-0.55", "P-0.45", "P-0.30", "5.49", "5.49", "5.49", "5.04", "5.04", "5.04", "4.19", "4.24", "4.24", "4.19", "4.29", "4.29", "4.54", "4.69", "4.69", "5.24", "5.24", "5.24", "P+0.50"] },
+  duca: { sheetDate: "5/26", values: ["4.39", "4.49", "4.59", "4.69", "4.69", "4.69", "4.79", "4.69", "4.79", "4.94", "P-0.75", "P-0.50", "P-0.45", "P-0.35", "P-0.35", "P-0.35", "P-0.25", "P-0.35", "P-0.25", "-", "5.14", "5.44", "5.44", "5.04", "5.34", "5.34", "4.49", "4.79", "4.89", "4.69", "4.99", "4.99", "-", "-", "-", "-", "-", "-", "-"] }
+};
+
+applyDealDeskUpdates(demoLenders);
+lenders = loadLenders();
+activeLenderId = lenders[0]?.id || "";
+
+const insurers = [
+  {
+    id: "cmhc",
+    name: "CMHC",
+    fullName: "Canada Mortgage and Housing Corporation",
+    brandColor: "#C8102E",
+    brandAccent: "#1F2937",
+    website: "https://www.cmhc-schl.gc.ca/professionals/project-funding-and-mortgage-financing/mortgage-loan-insurance/contact-mortgage-loan-insurance",
+    contactName: "Ontario and Atlantic Client Relations / Homeowner Underwriting Centre",
+    phone: "1-888-GO-emili (1-888-463-6454)",
+    email: "Use CMHC regional/client relations contact",
+    minScore: "Approx. 600+ insurer minimum",
+    programs: ["CMHC Purchase", "CMHC Improvement", "CMHC Newcomers", "CMHC Self-Employed", "CMHC Portability", "CMHC Income Property", "MLI Select"],
+    policies: [
+      "High-ratio mortgage default insurance for eligible approved-lender submissions.",
+      "Program fit depends on borrower, property, loan purpose, LTV, amortization, insurer rules, and lender overlays.",
+      "Use emili and CMHC underwriting guidance for application status, policy questions, and documentation expectations."
+    ],
+    watch: ["GDS/TDS limits", "Down payment source", "Purchase price and amortization limits", "Property eligibility", "Fraud/misrepresentation review"]
+  },
+  {
+    id: "sagen",
+    name: "Sagen",
+    fullName: "Sagen Mortgage Insurance Canada",
+    brandColor: "#542E91",
+    brandAccent: "#00A7B5",
+    website: "https://www.sagen.ca/contact/",
+    contactName: "Sagen Underwriting",
+    phone: "1-800-511-8888",
+    email: "customer.service@sagen.ca",
+    minScore: "Approx. 600+ insurer minimum",
+    programs: ["Purchase Plus Improvements", "New to Canada", "Self-Employed", "Vacation / Second Home", "Portability", "Homeowner Assistance"],
+    policies: [
+      "Private mortgage insurer supporting lender and broker high-ratio mortgage submissions across Canada.",
+      "Useful for insured purchases, borrower assistance, and insurer scenarios where lender preference or policy fit points to Sagen.",
+      "Confirm current underwriting policy, documentation, premium treatment, and lender-specific overlays before advising."
+    ],
+    watch: ["Credit history depth", "Income reasonability", "Borrower assistance eligibility", "Property type", "Premium and portability rules"]
+  },
+  {
+    id: "canada-guaranty",
+    name: "Canada Guaranty",
+    fullName: "Canada Guaranty Mortgage Insurance Company",
+    brandColor: "#005E7C",
+    brandAccent: "#A7A9AC",
+    website: "https://www.canadaguaranty.ca/contact-us/",
+    contactName: "Regional Account Executive / Mortgage Insurance Support",
+    phone: "1-877-244-8422",
+    email: "Use regional Canada Guaranty contact",
+    minScore: "Approx. 600+ insurer minimum",
+    programs: ["Purchase Advantage", "Purchase Plus Improvements", "New to Canada", "Self-Employed", "Portability", "Progress Advance"],
+    policies: [
+      "Private mortgage default insurer for eligible high-ratio residential mortgage applications.",
+      "Program availability and underwriting appetite can differ by lender, borrower profile, property, and loan purpose.",
+      "Contact a regional account executive for product guidance, policy interpretation, and current insurer requirements."
+    ],
+    watch: ["Insurable purpose", "Borrower qualification", "Down payment confirmation", "Construction/progress advances", "Lender-specific submission rules"]
+  }
+];
+
+const insurerProgramDetails = {
+  "CMHC Purchase": {
+    insurer: "CMHC",
+    purpose: "Mortgage loan insurance for eligible home purchases where the borrower has less than 20% down payment.",
+    eligibility: ["Owner-occupied purchase", "Approved lender submission", "Borrower qualification under current insurer and lender rules", "Down payment and closing cost verification"],
+    documents: ["Agreement of purchase and sale", "Income confirmation", "Down payment history", "Property details", "Credit bureau and liabilities"],
+    watch: ["Purchase price caps", "Maximum amortization", "GDS/TDS limits", "Non-traditional down payment restrictions"]
+  },
+  "CMHC Improvement": {
+    insurer: "CMHC",
+    purpose: "Insured financing that can include eligible improvements or renovations connected to the purchase.",
+    eligibility: ["Purchase with eligible improvements", "Quotes or cost estimates", "Lender-approved improvement holdback process", "Post-improvement value support where required"],
+    documents: ["Contractor quotes", "Improvement details", "Purchase documents", "Income and down payment proof"],
+    watch: ["Holdback release process", "Appraisal requirements", "Eligible improvement scope", "Completion timelines"]
+  },
+  "CMHC Newcomers": {
+    insurer: "CMHC",
+    purpose: "Supports eligible borrowers who are new to Canada and may have limited Canadian credit history.",
+    eligibility: ["Permanent resident or eligible work-permit status", "Acceptable income and employment", "Canadian or alternative credit support", "Down payment source confirmation"],
+    documents: ["Immigration/status documents", "Employment confirmation", "Credit substitutes if needed", "Down payment trail"],
+    watch: ["Residency status", "Foreign funds documentation", "Limited credit depth", "Insurer/lender overlays"]
+  },
+  "CMHC Self-Employed": {
+    insurer: "CMHC",
+    purpose: "Mortgage insurance path for eligible self-employed borrowers using documented income support.",
+    eligibility: ["Established self-employment", "Reasonable income support", "Acceptable credit profile", "Approved lender submission"],
+    documents: ["T1 generals", "NOAs", "Business financials or income support", "Business registration where applicable"],
+    watch: ["Income add-backs", "Tax arrears", "Business tenure", "Reasonability and industry consistency"]
+  },
+  "CMHC Portability": {
+    insurer: "CMHC",
+    purpose: "Allows eligible existing insured mortgage borrowers to transfer insurance benefits to a new property or loan scenario.",
+    eligibility: ["Existing insured loan", "Approved portability scenario", "Lender and insurer approval", "Borrower remains qualified"],
+    documents: ["Existing mortgage/insurance details", "New purchase documents", "Updated income and credit", "Payout or transfer information"],
+    watch: ["Increase to loan amount", "Premium top-up", "Timing rules", "Original insurance eligibility"]
+  },
+  "CMHC Income Property": {
+    insurer: "CMHC",
+    purpose: "Mortgage loan insurance for eligible small rental/income-property scenarios.",
+    eligibility: ["Eligible property type", "Rental income support", "Borrower qualification", "Approved lender submission"],
+    documents: ["Lease or market rent support", "Property details", "Income confirmation", "Appraisal if required"],
+    watch: ["Rental offset treatment", "Vacancy assumptions", "Property units", "Owner-occupied versus non-owner-occupied rules"]
+  },
+  "MLI Select": {
+    insurer: "CMHC",
+    purpose: "CMHC multi-unit mortgage loan insurance program focused on affordability, accessibility, and climate compatibility outcomes.",
+    eligibility: ["Multi-unit residential property", "Approved lender submission", "Project scoring/criteria", "Borrower and property underwriting"],
+    documents: ["Project details", "Rent roll and operating statements", "Affordability/accessibility/climate support", "Appraisal and environmental items"],
+    watch: ["Program scoring", "Affordability commitments", "Multi-unit underwriting", "Servicing and reporting requirements"]
+  },
+  "Purchase Plus Improvements": {
+    insurer: "Sagen / Canada Guaranty",
+    purpose: "Insured purchase financing that can include eligible improvements or renovations after closing.",
+    eligibility: ["Eligible purchase transaction", "Approved improvement scope", "Lender holdback process", "Borrower qualifies using insured mortgage guidelines"],
+    documents: ["Purchase agreement", "Contractor quotes or written estimates", "Income and down payment proof", "Appraisal or post-improvement value support if required"],
+    watch: ["Holdback release timing", "Eligible renovation scope", "Completion verification", "Premium treatment and lender overlays"]
+  },
+  "New to Canada": {
+    insurer: "Sagen / Canada Guaranty",
+    purpose: "Supports eligible newcomers who may have limited Canadian credit but can demonstrate income, status, and repayment strength.",
+    eligibility: ["Eligible immigration or work status", "Acceptable employment and income", "Canadian or alternate credit support", "Verified down payment source"],
+    documents: ["Status documentation", "Employment letter and pay support", "Alternative credit or bureau history", "Down payment trail"],
+    watch: ["Limited credit depth", "Foreign funds documentation", "Residency timing", "Insurer and lender overlays"]
+  },
+  "Self-Employed": {
+    insurer: "Sagen / Canada Guaranty",
+    purpose: "Insured mortgage path for qualified self-employed borrowers with documented income support.",
+    eligibility: ["Established self-employment", "Reasonable income documentation", "Acceptable credit profile", "Approved lender submission"],
+    documents: ["T1 generals", "NOAs", "Business financials or accountant support", "Business registration if applicable"],
+    watch: ["Income add-backs", "Tax arrears", "Business tenure", "Reasonability by industry"]
+  },
+  "Vacation / Second Home": {
+    insurer: "Sagen",
+    purpose: "Insured financing option for eligible second homes or vacation properties.",
+    eligibility: ["Eligible second-home property", "Borrower qualifies carrying all obligations", "Acceptable occupancy/use", "Approved lender and insurer submission"],
+    documents: ["Property details", "Income confirmation", "Down payment source", "Existing mortgage and debt obligations"],
+    watch: ["Property type and location", "Seasonal access", "Rental use restrictions", "LTV and premium rules"]
+  },
+  Portability: {
+    insurer: "Sagen / Canada Guaranty",
+    purpose: "Allows eligible borrowers to transfer existing mortgage insurance benefits to a new mortgage scenario.",
+    eligibility: ["Existing insured loan", "Eligible new property/loan", "Borrower remains qualified", "Lender and insurer approval"],
+    documents: ["Existing insured mortgage details", "New purchase or transfer documents", "Updated credit and income", "Payout/transfer details"],
+    watch: ["Premium top-up", "Loan increase rules", "Timing requirements", "Original insurance eligibility"]
+  },
+  "Homeowner Assistance": {
+    insurer: "Sagen",
+    purpose: "Borrower assistance pathway for insured mortgages where the homeowner is experiencing financial hardship.",
+    eligibility: ["Existing insured mortgage", "Payment difficulty or hardship", "Lender/servicer involvement", "Borrower assistance review"],
+    documents: ["Hardship explanation", "Income and budget information", "Mortgage/arrears details", "Servicer or lender documentation"],
+    watch: ["Early lender contact", "Workout options", "Borrower consent", "Impact on credit and repayment plan"]
+  },
+  "Purchase Advantage": {
+    insurer: "Canada Guaranty",
+    purpose: "Canada Guaranty's insured purchase program for eligible high-ratio homebuyers.",
+    eligibility: ["Eligible purchase", "Approved lender submission", "Borrower and property qualification", "Verified down payment"],
+    documents: ["Purchase agreement", "Income confirmation", "Down payment proof", "Property details"],
+    watch: ["Insurer rules", "Lender overlays", "Premium treatment", "Purchase and amortization limits"]
+  },
+  "Progress Advance": {
+    insurer: "Canada Guaranty",
+    purpose: "Insured financing support for eligible construction or progress-advance scenarios.",
+    eligibility: ["Eligible build or progress-advance structure", "Approved lender process", "Borrower qualification", "Property/construction support"],
+    documents: ["Construction contract", "Draw schedule", "Appraisal or plans/specs", "Income and down payment support"],
+    watch: ["Draw inspections", "Cost overruns", "Completion risk", "Lender construction policy"]
+  }
+};
+let activeInsurerProgram = "CMHC Purchase";
 
 const lenderList = document.querySelector("#lenderList");
 const detailPanel = document.querySelector("#detailPanel");
 const searchInput = document.querySelector("#searchInput");
+const runSearchButton = document.querySelector("#runSearch");
+const bestRateGrid = document.querySelector("#bestRateGrid");
+const preferredLenderSelect = document.querySelector("#preferredLenderSelect");
+const preferredLenderCard = document.querySelector("#preferredLenderCard");
 const filterButtons = document.querySelectorAll("[data-filter]");
 const rateDialog = document.querySelector("#rateDialog");
 const rateLenderSelect = document.querySelector("#rateLenderSelect");
+const programDetail = document.querySelector("#programDetail");
+const programGrid = document.querySelector("#programGrid");
+const insurerGrid = document.querySelector("#insurerGrid");
 
 document.querySelector("#todayLabel").textContent = new Intl.DateTimeFormat("en-CA", {
   weekday: "short",
@@ -1220,8 +3165,69 @@ filterButtons.forEach((button) => {
 });
 
 searchInput.addEventListener("input", render);
+runSearchButton.addEventListener("click", () => {
+  render();
+  document.querySelector("#lenders").scrollIntoView({ behavior: "smooth", block: "start" });
+});
+preferredLenderSelect.addEventListener("change", () => {
+  preferredLenderId = preferredLenderSelect.value;
+  localStorage.setItem(preferredLenderStorageKey, preferredLenderId);
+  activeLenderId = preferredLenderId;
+  render();
+});
 
 rateLenderSelect.addEventListener("change", () => populateRateEditor(rateLenderSelect.value));
+
+document.addEventListener("click", (event) => {
+  const insurerProgramLink = event.target.closest("[data-insurer-program]");
+  if (insurerProgramLink) {
+    event.preventDefault();
+    event.stopPropagation();
+    activeInsurerProgram = insurerProgramLink.dataset.insurerProgram;
+    renderInsurers();
+    document.querySelector("#insurers").scrollIntoView({ behavior: "smooth", block: "start" });
+    return;
+  }
+
+  const lenderLink = event.target.closest("[data-lender]");
+  if (lenderLink) {
+    event.preventDefault();
+    event.stopPropagation();
+    activeLenderId = lenderLink.dataset.lender;
+    render();
+    document.querySelector("#lenders").scrollIntoView({ behavior: "smooth", block: "start" });
+    return;
+  }
+
+  const programLink = event.target.closest("[data-program-link]");
+  if (!programLink) return;
+
+  event.preventDefault();
+  event.stopPropagation();
+  activeProgram = programLink.dataset.programLink;
+  renderPrograms();
+  document.querySelector("#programs").scrollIntoView({ behavior: "smooth", block: "start" });
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key !== "Enter" && event.key !== " ") return;
+  const insurerProgramLink = event.target.closest("[data-insurer-program]");
+  if (insurerProgramLink) {
+    event.preventDefault();
+    activeInsurerProgram = insurerProgramLink.dataset.insurerProgram;
+    renderInsurers();
+    document.querySelector("#insurers").scrollIntoView({ behavior: "smooth", block: "start" });
+    return;
+  }
+
+  const programLink = event.target.closest("[data-program-link]");
+  if (!programLink) return;
+
+  event.preventDefault();
+  activeProgram = programLink.dataset.programLink;
+  renderPrograms();
+  document.querySelector("#programs").scrollIntoView({ behavior: "smooth", block: "start" });
+});
 
 document.querySelector("#saveRates").addEventListener("click", () => {
   const lender = lenders.find((item) => item.id === rateLenderSelect.value);
@@ -1247,15 +3253,83 @@ document.querySelector("#resetDemoData").addEventListener("click", () => {
   render();
 });
 
+function applyDealDeskUpdates(items) {
+  items.forEach((lender) => {
+    const row = dealDeskRateRows[lender.id];
+    if (!row) return;
+
+    lender.dealDesk = buildDealDeskRates(row);
+    lender.updated = `BOSS ${row.sheetDate}`;
+    lender.policyNote = `Updated from ${dealDeskSource.name}, effective ${dealDeskSource.effectiveDate}. ${dealDeskSource.note}`;
+    lender.rates.insuredFixed = parseRateValue(row.values[0]);
+    lender.rates.variable = parseRateValue(row.values[10]);
+    lender.rates.conventional = parseRateValue(row.values[4]);
+  });
+}
+
+function buildDealDeskRates(row) {
+  const standardLabels = [
+    "Insured",
+    "Insurable <=65%",
+    "Insurable 65%-70%",
+    "Insurable 70%-75%",
+    "Insurable 75%-80%",
+    "Uninsurable 25yr",
+    "Refinance 25yr",
+    "Rentals",
+    "Uninsurable 30yr",
+    "Refinance 30yr"
+  ];
+  const termLabels = ["Insured", "Insurable 80%", "Uninsurable & Refi"];
+  const values = row.values;
+
+  return {
+    source: dealDeskSource.name,
+    effectiveDate: dealDeskSource.effectiveDate,
+    sheetDate: row.sheetDate,
+    benchmarkRate: dealDeskSource.benchmarkRate,
+    primeRate: dealDeskSource.primeRate,
+    note: dealDeskSource.note,
+    sections: [
+      { title: "5 Year Fixed", items: standardLabels.map((label, index) => ({ label, value: values[index] })) },
+      { title: "5 Year Variable", items: standardLabels.map((label, index) => ({ label, value: values[10 + index] })) },
+      { title: "1 Year Fixed", items: termLabels.map((label, index) => ({ label, value: values[20 + index] })) },
+      { title: "2 Year Fixed", items: termLabels.map((label, index) => ({ label, value: values[23 + index] })) },
+      { title: "3 Year Fixed", items: termLabels.map((label, index) => ({ label, value: values[26 + index] })) },
+      { title: "4 Year Fixed", items: termLabels.map((label, index) => ({ label, value: values[29 + index] })) },
+      { title: "7 Year Fixed", items: termLabels.map((label, index) => ({ label, value: values[32 + index] })) },
+      { title: "10 Year Fixed", items: termLabels.map((label, index) => ({ label, value: values[35 + index] })) },
+      { title: "Line of Credit", items: [{ label: "HELOC", value: values[38] }] }
+    ]
+  };
+}
+
+function parseRateValue(value) {
+  if (!value || value === "-") return null;
+  const numericValue = Number(value);
+  return Number.isFinite(numericValue) ? numericValue : value;
+}
+
 function loadLenders() {
   const stored = localStorage.getItem(storageKey);
   if (!stored) return structuredClone(demoLenders);
 
   try {
-    return JSON.parse(stored);
+    return normalizeLenders(JSON.parse(stored));
   } catch {
     return structuredClone(demoLenders);
   }
+}
+
+function normalizeLenders(items) {
+  const merged = items.map((item) => {
+    const demo = demoLenders.find((lender) => lender.id === item.id);
+    return demo ? { ...demo, ...item, rates: { ...demo.rates, ...item.rates } } : item;
+  });
+  const existingIds = new Set(merged.map((item) => item.id));
+  const normalized = [...merged, ...demoLenders.filter((item) => !existingIds.has(item.id))];
+  applyDealDeskUpdates(normalized);
+  return normalized;
 }
 
 function saveLenders() {
@@ -1263,21 +3337,34 @@ function saveLenders() {
 }
 
 function rate(value) {
-  return typeof value === "number" ? `${value.toFixed(2)}%` : "N/A";
+  if (typeof value === "number" && Number.isFinite(value)) return `${value.toFixed(2)}%`;
+  if (typeof value === "string" && value.trim() && value !== "-") return value;
+  return "N/A";
 }
 
 function numberOrNull(selector) {
   const value = document.querySelector(selector).value;
-  return value === "" ? null : Number(value);
+  if (value === "") return null;
+  const numericValue = Number(value);
+  return Number.isFinite(numericValue) ? numericValue : value;
 }
 
 function filteredLenders() {
-  const query = searchInput.value.trim().toLowerCase();
+  const query = searchInput.value.trim();
   return lenders.filter((lender) => {
     const matchesType = activeFilter === "all" || lender.type === activeFilter;
-    const haystack = [
+    return matchesType && matchesAggressiveSearch(buildSearchHaystack(lender), query);
+  });
+}
+
+function buildSearchHaystack(lender) {
+  const underwriting = underwritingGuidelines[lender.id] || defaultUnderwritingGuidelines(lender);
+  const productPolicies = lender.programs.map((program) => getProgramPolicy(program, lender));
+  return normalizeSearchText(
+    [
       lender.name,
       lender.type,
+      lender.region,
       lender.website,
       lender.portal,
       lender.bdm,
@@ -1285,13 +3372,47 @@ function filteredLenders() {
       lender.phone,
       lender.programs.join(" "),
       lender.guidelines.join(" "),
-      lender.policyNote
-    ]
-      .join(" ")
-      .toLowerCase();
+      lender.policyNote,
+      Object.values(underwriting).join(" "),
+      productPolicies
+        .map((policy) => [policy.minScore, policy.geography, policy.maxLtv, policy.features.join(" "), policy.exceptions.join(" "), policy.exclusions.join(" ")].join(" "))
+        .join(" "),
+      rentalAssignmentPolicy.rentalTreatment.join(" "),
+      rentalAssignmentPolicy.switchTransfer.join(" "),
+      rentalAssignmentPolicy.assignment.join(" "),
+      "rental worksheet rental worksheet link policy worksheet"
+    ].join(" ")
+  );
+}
 
-    return matchesType && (!query || haystack.includes(query));
+function matchesAggressiveSearch(haystack, query) {
+  const normalizedQuery = normalizeSearchText(query);
+  if (!normalizedQuery) return true;
+
+  const tokens = normalizedQuery.split(" ").filter((token) => token.length > 1);
+  const expandedTerms = expandSearchTerms(normalizedQuery);
+
+  return haystack.includes(normalizedQuery) || tokens.every((token) => haystack.includes(token)) || expandedTerms.some((term) => haystack.includes(term));
+}
+
+function expandSearchTerms(query) {
+  const terms = new Set([query]);
+  Object.entries(aggressiveSearchAliases).forEach(([key, values]) => {
+    if (query.includes(key)) {
+      values.forEach((value) => terms.add(normalizeSearchText(value)));
+    }
   });
+  return [...terms].filter(Boolean);
+}
+
+function normalizeSearchText(value) {
+  return String(value || "")
+    .toLowerCase()
+    .replace(/&/g, " and ")
+    .replace(/[^a-z0-9+%/. -]+/g, " ")
+    .replace(/[-/]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 function render() {
@@ -1302,9 +3423,11 @@ function render() {
   }
 
   renderMetrics();
+  renderBestRateDashboard();
   renderLenderList(results);
   renderDetails(lenders.find((lender) => lender.id === activeLenderId) || results[0]);
   renderPrograms();
+  renderInsurers();
   renderContacts();
   renderRateSelect();
 }
@@ -1319,6 +3442,116 @@ function renderMetrics() {
   document.querySelector("#bdmCount").textContent = lenders.filter((item) => item.bdm).length;
 }
 
+function renderBestRateDashboard() {
+  const bestOverall = findBestRate(lenders, "insuredFixed") || findBestRate(lenders, "conventional");
+  if (!preferredLenderId || !lenders.some((lender) => lender.id === preferredLenderId)) {
+    preferredLenderId = bestOverall?.lender.id || lenders[0]?.id || "";
+  }
+
+  const groups = [
+    { label: "Overall", description: "Best across every lender", items: lenders },
+    { label: "Banks", description: "Major bank and bank-channel lenders", items: lenders.filter((lender) => lender.type === "bank") },
+    { label: "Monolines", description: "Broker-channel prime lenders", items: lenders.filter((lender) => lender.type === "monoline") },
+    { label: "Credit unions", description: "Member and regional lenders", items: lenders.filter((lender) => lender.type === "credit union") },
+    { label: "Alternative", description: "Alt and private-style placement", items: lenders.filter((lender) => lender.type === "alternative") }
+  ];
+
+  bestRateGrid.innerHTML = groups
+    .map((group) => {
+      const highRatio = findBestRate(group.items, "insuredFixed");
+      const conventional = findBestRate(group.items, "conventional");
+      const targetLender = highRatio?.lender || conventional?.lender;
+      return `
+        <article class="best-rate-card">
+          <header>
+            <div>
+              <h4>${group.label}</h4>
+              <p>${group.description}</p>
+            </div>
+            ${targetLender ? `<button class="secondary-button" type="button" data-lender="${targetLender.id}">View</button>` : ""}
+          </header>
+          <div class="best-rate-pair">
+            ${bestRateCell("5yr high ratio", highRatio)}
+            ${bestRateCell("5yr conventional", conventional)}
+          </div>
+        </article>
+      `;
+    })
+    .join("");
+
+  renderPreferredLender();
+}
+
+function renderPreferredLender() {
+  preferredLenderSelect.innerHTML = lenders.map((lender) => `<option value="${lender.id}">${lender.name}</option>`).join("");
+  const lender = lenders.find((item) => item.id === preferredLenderId) || lenders[0];
+  if (!lender) {
+    preferredLenderCard.innerHTML = `<p class="contact-line">No lender selected.</p>`;
+    return;
+  }
+
+  preferredLenderId = lender.id;
+  preferredLenderSelect.value = lender.id;
+  preferredLenderCard.innerHTML = `
+    <article class="preferred-lender-card" style="--lender-color: ${lender.brandColor}; --lender-accent: ${lender.brandAccent};">
+      <header>
+        <span class="lender-logo" aria-hidden="true">${initials(lender.name)}</span>
+        <div>
+          <h5>${lender.name}</h5>
+          <p>${titleCase(lender.type)} · ${lender.updated}</p>
+        </div>
+      </header>
+      <div class="best-rate-pair">
+        ${preferredRateCell("5yr high ratio", lender.rates.insuredFixed)}
+        ${preferredRateCell("5yr conventional", lender.rates.conventional)}
+      </div>
+      <div class="badge-row">${lender.programs.slice(0, 4).map((program) => programBadge(program, program, true)).join("")}</div>
+      <button class="primary-button" type="button" data-lender="${lender.id}">Open lender profile</button>
+    </article>
+  `;
+}
+
+function findBestRate(items, rateKey) {
+  return items
+    .map((lender) => ({ lender, value: numericRate(lender.rates[rateKey]) }))
+    .filter((item) => item.value !== null)
+    .sort((a, b) => a.value - b.value)[0];
+}
+
+function numericRate(value) {
+  return typeof value === "number" && Number.isFinite(value) ? value : null;
+}
+
+function bestRateCell(label, result) {
+  if (!result) {
+    return `
+      <div class="best-rate-cell empty">
+        <span>${label}</span>
+        <strong>N/A</strong>
+        <small>No eligible rate</small>
+      </div>
+    `;
+  }
+
+  return `
+    <button class="best-rate-cell" type="button" data-lender="${result.lender.id}">
+      <span>${label}</span>
+      <strong>${rate(result.value)}</strong>
+      <small>${result.lender.name}</small>
+    </button>
+  `;
+}
+
+function preferredRateCell(label, value) {
+  return `
+    <div class="best-rate-cell">
+      <span>${label}</span>
+      <strong>${rate(value)}</strong>
+      <small>Preferred lender</small>
+    </div>
+  `;
+}
+
 function renderLenderList(results) {
   lenderList.innerHTML = "";
 
@@ -1330,7 +3563,9 @@ function renderLenderList(results) {
   results.forEach((lender) => {
     const card = document.createElement("button");
     card.type = "button";
-    card.className = `lender-card lender-${lender.type.replace(" ", "-")} ${lender.id === activeLenderId ? "active" : ""}`;
+    card.className = `lender-card lender-${lender.type.replace(" ", "-")} ${lender.id === activeLenderId ? "active" : ""} ${lender.id === preferredLenderId ? "preferred" : ""}`;
+    card.style.setProperty("--lender-color", lender.brandColor);
+    card.style.setProperty("--lender-accent", lender.brandAccent);
     card.innerHTML = `
       <header>
         <div class="lender-logo" aria-hidden="true">${initials(lender.name)}</div>
@@ -1338,15 +3573,15 @@ function renderLenderList(results) {
           <h4>${lender.name}</h4>
           <p class="lender-meta">${titleCase(lender.type)} · ${lender.portal}</p>
         </div>
-        <span class="badge">${lender.updated}</span>
+        <span class="badge ${lender.id === preferredLenderId ? "preferred-badge" : ""}">${lender.id === preferredLenderId ? "Preferred · " : ""}${lender.updated}</span>
       </header>
       <div class="rate-row">
-        <div class="rate-pill"><span>Insured fixed</span><strong>${rate(lender.rates.insuredFixed)}</strong></div>
-        <div class="rate-pill"><span>Variable</span><strong>${rate(lender.rates.variable)}</strong></div>
-        <div class="rate-pill"><span>Conventional</span><strong>${rate(lender.rates.conventional)}</strong></div>
-        <div class="rate-pill"><span>Alt</span><strong>${rate(lender.rates.alt)}</strong></div>
+        ${ratePill("Insured fixed", lender.rates.insuredFixed, "insuredFixed")}
+        ${ratePill("Variable", lender.rates.variable, "variable")}
+        ${ratePill("Conventional", lender.rates.conventional, "conventional")}
+        ${ratePill("Alt", lender.rates.alt, "alt")}
       </div>
-      <div class="badge-row">${lender.programs.slice(0, 4).map((program) => `<span class="badge">${program}</span>`).join("")}</div>
+      <div class="badge-row">${lender.programs.slice(0, 4).map((program) => programBadge(program, program, true)).join("")}</div>
     `;
 
     card.addEventListener("click", () => {
@@ -1365,7 +3600,7 @@ function renderDetails(lender) {
   }
 
   detailPanel.innerHTML = `
-    <div class="detail-title">
+    <div class="detail-title" style="--lender-color: ${lender.brandColor}; --lender-accent: ${lender.brandAccent};">
       <div>
         <p class="eyebrow">${titleCase(lender.type)} · ${lender.region}</p>
         <h4><span class="lender-logo detail-logo" aria-hidden="true">${initials(lender.name)}</span>${lender.name}</h4>
@@ -1374,11 +3609,13 @@ function renderDetails(lender) {
     </div>
 
     <div class="rate-row">
-      <div class="rate-pill"><span>Insured fixed</span><strong>${rate(lender.rates.insuredFixed)}</strong></div>
-      <div class="rate-pill"><span>Variable</span><strong>${rate(lender.rates.variable)}</strong></div>
-      <div class="rate-pill"><span>Conventional</span><strong>${rate(lender.rates.conventional)}</strong></div>
-      <div class="rate-pill"><span>Alt</span><strong>${rate(lender.rates.alt)}</strong></div>
+      ${ratePill("Insured fixed", lender.rates.insuredFixed, "insuredFixed")}
+      ${ratePill("Variable", lender.rates.variable, "variable")}
+      ${ratePill("Conventional", lender.rates.conventional, "conventional")}
+      ${ratePill("Alt", lender.rates.alt, "alt")}
     </div>
+
+    ${renderDealDeskSection(lender)}
 
     <div>
       <p class="eyebrow">Guidelines and policy watch</p>
@@ -1387,9 +3624,15 @@ function renderDetails(lender) {
       </ul>
     </div>
 
+    ${renderUnderwritingSection(lender)}
+
+    ${renderProductPolicyMatrix(lender)}
+
+    ${renderRentalAssignmentPanel()}
+
     <div>
       <p class="eyebrow">Programs</p>
-      <div class="badge-row">${lender.programs.map((program) => `<span class="badge">${program}</span>`).join("")}</div>
+      <div class="badge-row">${lender.programs.map((program) => programBadge(program, program, true)).join("")}</div>
     </div>
 
     <div>
@@ -1405,6 +3648,263 @@ function renderDetails(lender) {
   `;
 }
 
+function renderProductPolicyMatrix(lender) {
+  const cards = lender.programs
+    .map((program) => {
+      const policy = getProgramPolicy(program, lender);
+      return `
+        <article class="product-policy-card" style="--program-color: ${programColorMap[program] || "#64748B"};">
+          <header>
+            <h6>${program}</h6>
+            ${programBadge(policy.maxLtv, program)}
+          </header>
+          <div class="policy-stat-grid">
+            <span><small>Minimum score</small><strong>${policy.minScore}</strong></span>
+            <span><small>Geographic area</small><strong>${policy.geography}</strong></span>
+            <span><small>Max LTV</small><strong>${policy.maxLtv}</strong></span>
+          </div>
+          <div class="policy-breakdown">
+            <div>
+              <strong>Special features</strong>
+              <ul>${policy.features.map((item) => `<li>${item}</li>`).join("")}</ul>
+            </div>
+            <div>
+              <strong>Exceptions</strong>
+              <ul>${policy.exceptions.map((item) => `<li>${item}</li>`).join("")}</ul>
+            </div>
+            <div>
+              <strong>Exclusions</strong>
+              <ul>${policy.exclusions.map((item) => `<li>${item}</li>`).join("")}</ul>
+            </div>
+          </div>
+        </article>
+      `;
+    })
+    .join("");
+
+  return `
+    <section class="product-policy-panel">
+      <div class="underwriting-header">
+        <div>
+          <p class="eyebrow">Product lending guidelines</p>
+          <h5>Score, area, LTV, exceptions and exclusions</h5>
+        </div>
+        <span class="badge">${lender.programs.length} products</span>
+      </div>
+      <div class="product-policy-list">${cards}</div>
+      <p class="contact-line">Values are placement guides for triage. Final limits depend on current lender bulletin, insurer decision, property, income, and approval conditions.</p>
+    </section>
+  `;
+}
+
+function getProgramPolicy(program, lender) {
+  const base = programPolicyProfiles[program] || {
+    minScore: "Confirm with lender",
+    geography: "Ontario, subject to lender-approved property area",
+    maxLtv: "Confirm by product",
+    features: ["Lender-specific product with policy-dependent features"],
+    exceptions: ["Manual review may be available with compensating strength"],
+    exclusions: ["Unsupported income, property, credit, or compliance concerns"]
+  };
+  const policy = {
+    ...base,
+    features: [...base.features],
+    exceptions: [...base.exceptions],
+    exclusions: [...base.exclusions]
+  };
+
+  if (!lender) return policy;
+
+  if (lender.type === "credit union") {
+    policy.geography = `${lender.region}, subject to membership and property-location rules`;
+  } else if (lender.type === "alternative") {
+    policy.geography = "Marketable Ontario urban/suburban areas preferred";
+    if (["Alternative A/B", "Alternative lending", "Bruised credit", "Equity-focused refinance", "Self-employed"].includes(program)) {
+      policy.maxLtv = policy.maxLtv.includes("75") ? policy.maxLtv : "Often 75%-80%";
+      policy.exceptions.push("Lower score may be considered where equity, story, and exit strategy are strong");
+      policy.exclusions.push("No credible exit strategy or borrower benefit");
+    }
+  } else if (lender.region) {
+    policy.geography = policy.geography.replace("Ontario", lender.region);
+  }
+
+  if (lender.id === "desjardins") {
+    policy.minScore = "720+ overlay noted on sheet; confirm exceptions";
+  }
+
+  return policy;
+}
+
+function renderRentalAssignmentPanel() {
+  return `
+    <section class="rental-assignment-panel">
+      <div class="underwriting-header">
+        <div>
+          <p class="eyebrow">Rental, switch and assignment policies</p>
+          <h5>Income treatment, transfer rules and worksheet links</h5>
+        </div>
+        <span class="badge">Broker checklist</span>
+      </div>
+      <div class="policy-breakdown">
+        <div>
+          <strong>Rental income treatment</strong>
+          <ul>${rentalAssignmentPolicy.rentalTreatment.map((item) => `<li>${item}</li>`).join("")}</ul>
+        </div>
+        <div>
+          <strong>Switch / transfer</strong>
+          <ul>${rentalAssignmentPolicy.switchTransfer.map((item) => `<li>${item}</li>`).join("")}</ul>
+        </div>
+        <div>
+          <strong>Assignment policies</strong>
+          <ul>${rentalAssignmentPolicy.assignment.map((item) => `<li>${item}</li>`).join("")}</ul>
+        </div>
+      </div>
+      ${renderPolicyResourceLinks()}
+    </section>
+  `;
+}
+
+function renderPolicyResourceLinks() {
+  return `
+    <div class="policy-resource-links">
+      <p class="eyebrow">Rental worksheet links</p>
+      <div>
+        ${policyResourceLinks
+          .map(
+            (resource) => `
+              <a href="${resource.href}" target="_blank" rel="noreferrer">
+                <strong>${resource.label}</strong>
+                <span>${resource.description}</span>
+              </a>
+            `
+          )
+          .join("")}
+      </div>
+    </div>
+  `;
+}
+
+function renderUnderwritingSection(lender) {
+  const guidelines = underwritingGuidelines[lender.id] || defaultUnderwritingGuidelines(lender);
+  const rows = [
+    ["Credit", guidelines.credit],
+    ["Income", guidelines.income],
+    ["Property", guidelines.property],
+    ["LTV / product", guidelines.ltv],
+    ["Documents", guidelines.documents],
+    ["Watch points", guidelines.watch]
+  ];
+
+  return `
+    <section class="underwriting-panel">
+      <div class="underwriting-header">
+        <div>
+          <p class="eyebrow">Underwriting guidelines</p>
+          <h5>${lender.name} placement notes</h5>
+        </div>
+        <span class="badge">${titleCase(lender.type)}</span>
+      </div>
+      <div class="underwriting-grid">
+        ${rows
+          .map(
+            ([label, text]) => `
+              <article>
+                <strong>${label}</strong>
+                <p>${text}</p>
+              </article>
+            `
+          )
+          .join("")}
+      </div>
+      <p class="contact-line">Broker guide only. Confirm the current lender policy, insurer overlays, and commitment conditions before advising or submitting.</p>
+    </section>
+  `;
+}
+
+function defaultUnderwritingGuidelines(lender) {
+  const typeNotes = {
+    bank: {
+      credit: "Prime credit profile preferred; confirm minimum score, tradeline depth, and debt-service limits.",
+      income: "Standard employment, pension, and documented self-employed income are the strongest fit.",
+      property: "Standard residential mortgage files subject to bank channel, property, and appraisal policy.",
+      ltv: "Confirm insured, conventional, refinance, rental, 30-year, and HELOC limits directly with the lender.",
+      documents: "Income package, source of funds, property documents, appraisal if required, and payout statement where applicable.",
+      watch: "Confirm rate hold, registration type, channel availability, compensation, and lender-specific conditions."
+    },
+    monoline: {
+      credit: "Prime credit profile generally preferred; confirm insured and insurable score overlays.",
+      income: "Clean salaried, hourly, pension, and full-document self-employed files are the best fit.",
+      property: "Owner-occupied, rental, switch, and refinance files may fit depending on the product.",
+      ltv: "Confirm insured, insurable, uninsurable, refinance, rental, and 30-year categories before quoting.",
+      documents: "Income verification, down payment trail, property details, appraisal if required, and switch documents.",
+      watch: "Check no-frills restrictions, prepayment privileges, portability, rate hold, and lender condition timing."
+    },
+    alternative: {
+      credit: "Broader credit may be considered; story, equity, repayment conduct, and exit strategy matter.",
+      income: "Expanded documentation, self-employed, stated-income reasonability, or equity-focused files may fit.",
+      property: "Marketable residential property is important; location, condition, and appraisal support drive placement.",
+      ltv: "Confirm max LTV by credit, income, location, property type, and borrower strength.",
+      documents: "Income story, appraisal, mortgage statement, property taxes, source of funds, and debt payout details.",
+      watch: "Disclose lender fees, broker fees, renewal risk, suitability, and path back to prime."
+    },
+    "credit union": {
+      credit: "Credit union underwriting with focus on credit conduct, member relationship, and overall borrower story.",
+      income: "Standard employment and business-for-self files may fit with full documentation.",
+      property: "Ontario property and membership/channel rules may affect availability.",
+      ltv: "Confirm insured, conventional, HELOC, refinance, and appraisal requirements before quoting.",
+      documents: "Income verification, membership requirements, source of funds, property details, and appraisal where required.",
+      watch: "Check membership rules, branch involvement, geographic availability, funding timeline, and fees."
+    }
+  };
+
+  return typeNotes[lender.type] || typeNotes.monoline;
+}
+
+function renderDealDeskSection(lender) {
+  if (!lender.dealDesk) return "";
+
+  const sectionCards = lender.dealDesk.sections
+    .map(
+      (section) => `
+        <article class="deal-desk-card">
+          <h5>${section.title}</h5>
+          <div class="deal-rate-chips">
+            ${section.items
+              .map(
+                (item) => `
+                  <span class="deal-rate-chip ${!parseRateValue(item.value) ? "empty" : ""}">
+                    <small>${item.label}</small>
+                    <strong>${rate(parseRateValue(item.value))}</strong>
+                  </span>
+                `
+              )
+              .join("")}
+          </div>
+        </article>
+      `
+    )
+    .join("");
+
+  return `
+    <section class="deal-desk-panel">
+      <div class="deal-desk-header">
+        <div>
+          <p class="eyebrow">Deal desk rates</p>
+          <h5>${lender.dealDesk.source}</h5>
+        </div>
+        <span class="badge">Lender update ${lender.dealDesk.sheetDate}</span>
+      </div>
+      <div class="deal-desk-meta">
+        <span>Effective ${lender.dealDesk.effectiveDate}</span>
+        <span>Benchmark ${lender.dealDesk.benchmarkRate}</span>
+        <span>Prime ${lender.dealDesk.primeRate}</span>
+      </div>
+      <div class="deal-desk-grid">${sectionCards}</div>
+      <p class="contact-line">${lender.dealDesk.note}</p>
+    </section>
+  `;
+}
+
 function renderPrograms() {
   const programMap = new Map();
   lenders.forEach((lender) => {
@@ -1414,20 +3914,122 @@ function renderPrograms() {
     });
   });
 
-  document.querySelector("#programGrid").innerHTML = [...programMap.entries()]
+  renderProgramDetail(programMap);
+
+  programGrid.innerHTML = [...programMap.entries()]
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([program, lenderNames]) => {
       const displayed = lenderNames.slice(0, 4).join(", ");
       const extra = lenderNames.length > 4 ? ` +${lenderNames.length - 4}` : "";
       return `
-        <article class="program-card">
+        <button class="program-card ${activeProgram === program ? "active" : ""}" type="button" data-program="${program}" style="--program-color: ${programColorMap[program] || "#64748B"};">
           <h4>${program}</h4>
           <p>${displayed}${extra}</p>
-          <span class="badge">${lenderNames.length} lender${lenderNames.length === 1 ? "" : "s"}</span>
-        </article>
+          ${programBadge(`${lenderNames.length} lender${lenderNames.length === 1 ? "" : "s"}`, program)}
+        </button>
       `;
     })
     .join("");
+
+  programGrid.querySelectorAll("[data-program]").forEach((button) => {
+    button.addEventListener("click", () => {
+      activeProgram = button.dataset.program;
+      renderPrograms();
+      document.querySelector("#programs").scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  });
+}
+
+function renderProgramDetail(programMap) {
+  if (!programMap.has(activeProgram)) {
+    activeProgram = programMap.keys().next().value || "";
+  }
+
+  const detail = programDetails[activeProgram] || {
+    summary: "Review lender-specific criteria, documentation, compensation, and policy exceptions before placing this file.",
+    minScore: "Confirm with lender",
+    fit: ["Compare lender appetite", "Check documentation", "Confirm pricing"],
+    watch: ["Rate hold", "Lender fees", "Policy overlays", "Submission route"]
+  };
+  const lenderNames = programMap.get(activeProgram) || [];
+  const matchingLenders = lenders.filter((lender) => lender.programs.includes(activeProgram));
+  const policy = getProgramPolicy(activeProgram);
+  const lenderRows = matchingLenders.length
+    ? matchingLenders
+        .map(
+          (lender) => `
+            <button class="program-lender" type="button" data-lender="${lender.id}" style="--lender-color: ${lender.brandColor}; --lender-accent: ${lender.brandAccent};">
+              <span class="lender-logo" aria-hidden="true">${initials(lender.name)}</span>
+              <span><strong>${lender.name}</strong><small>${titleCase(lender.type)} · ${rate(lender.rates.insuredFixed || lender.rates.conventional || lender.rates.alt)}</small></span>
+            </button>
+          `
+        )
+        .join("")
+    : `<p class="contact-line">No lenders are currently tagged to this program.</p>`;
+
+  programDetail.innerHTML = `
+    <div class="program-detail-main" style="--program-color: ${programColorMap[activeProgram] || "#64748B"};">
+      <div>
+        <p class="eyebrow">Program detail</p>
+        <h4>${activeProgram}</h4>
+        <p>${detail.summary}</p>
+        <div class="credit-score-box">
+          <span>Minimum credit score</span>
+          <strong>${detail.minScore}</strong>
+          <small>Placement guide only. Confirm current lender and insurer policy before advising clients.</small>
+        </div>
+        ${renderProgramPolicySummary(activeProgram, policy)}
+      </div>
+      <div class="program-columns">
+        <div>
+          <strong>Best fit</strong>
+          <ul>${detail.fit.map((item) => `<li>${item}</li>`).join("")}</ul>
+        </div>
+        <div>
+          <strong>Watch points</strong>
+          <ul>${detail.watch.map((item) => `<li>${item}</li>`).join("")}</ul>
+        </div>
+      </div>
+    </div>
+    <div class="program-lender-list">
+      <p class="eyebrow">Matching lenders · ${lenderNames.length}</p>
+      ${lenderRows}
+    </div>
+  `;
+
+  programDetail.querySelectorAll("[data-lender]").forEach((button) => {
+    button.addEventListener("click", () => {
+      activeLenderId = button.dataset.lender;
+      render();
+      document.querySelector("#lenders").scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  });
+}
+
+function renderProgramPolicySummary(program, policy) {
+  return `
+    <div class="program-policy-summary">
+      <div class="policy-stat-grid">
+        <span><small>Geographic area</small><strong>${policy.geography}</strong></span>
+        <span><small>Maximum LTV</small><strong>${policy.maxLtv}</strong></span>
+      </div>
+      <div class="policy-breakdown">
+        <div>
+          <strong>Special features</strong>
+          <ul>${policy.features.map((item) => `<li>${item}</li>`).join("")}</ul>
+        </div>
+        <div>
+          <strong>Exceptions</strong>
+          <ul>${policy.exceptions.map((item) => `<li>${item}</li>`).join("")}</ul>
+        </div>
+        <div>
+          <strong>Exclusions</strong>
+          <ul>${policy.exclusions.map((item) => `<li>${item}</li>`).join("")}</ul>
+        </div>
+      </div>
+      ${["Rental", "Switch/transfer", "New to Canada", "Self-employed", "Conventional purchase", "Insured purchase"].includes(program) ? renderPolicyResourceLinks() : ""}
+    </div>
+  `;
 }
 
 function renderContacts() {
@@ -1441,6 +4043,79 @@ function renderContacts() {
           <td>${lender.phone}</td>
           <td><a class="website-link" href="${lender.website}" target="_blank" rel="noreferrer">Open</a></td>
         </tr>
+      `
+    )
+    .join("");
+}
+
+function renderInsurers() {
+  const activeDetail = insurerProgramDetails[activeInsurerProgram] || insurerProgramDetails["CMHC Purchase"];
+  insurerGrid.innerHTML = `
+    <aside class="insurer-program-detail" style="--insurer-color: ${insurers.find((item) => item.name === activeDetail.insurer)?.brandColor || "#64748B"};">
+      <div>
+        <p class="eyebrow">Insurer program detail</p>
+        <h4>${activeInsurerProgram}</h4>
+        <p>${activeDetail.purpose}</p>
+      </div>
+      <div class="insurer-detail-columns">
+        <div>
+          <strong>Eligibility focus</strong>
+          <ul>${activeDetail.eligibility.map((item) => `<li>${item}</li>`).join("")}</ul>
+        </div>
+        <div>
+          <strong>Typical documents</strong>
+          <ul>${activeDetail.documents.map((item) => `<li>${item}</li>`).join("")}</ul>
+        </div>
+        <div>
+          <strong>Watch points</strong>
+          <ul>${activeDetail.watch.map((item) => `<li>${item}</li>`).join("")}</ul>
+        </div>
+      </div>
+      <small>Program summaries are broker placement notes only. Confirm current insurer guides and lender overlays before advising clients.</small>
+    </aside>
+  `;
+
+  insurerGrid.innerHTML += insurers
+    .map(
+      (insurer) => `
+        <article class="insurer-card" style="--insurer-color: ${insurer.brandColor}; --insurer-accent: ${insurer.brandAccent};">
+          <header>
+            <div class="insurer-logo">${initials(insurer.name)}</div>
+            <div>
+              <p class="eyebrow">${insurer.fullName}</p>
+              <h4>${insurer.name}</h4>
+            </div>
+            <a class="website-link" href="${insurer.website}" target="_blank" rel="noreferrer">Website</a>
+          </header>
+
+          <div class="credit-score-box insurer-score">
+            <span>Minimum credit score</span>
+            <strong>${insurer.minScore}</strong>
+            <small>Insurer and lender overlays may differ. Confirm current policy before advising clients.</small>
+          </div>
+
+          <div>
+            <p class="eyebrow">Programs</p>
+            <div class="badge-row">${insurer.programs.map((program) => `<span class="badge insurer-program ${activeInsurerProgram === program ? "active" : ""}" role="button" tabindex="0" data-insurer-program="${program}">${program}</span>`).join("")}</div>
+          </div>
+
+          <div class="insurer-columns">
+            <div>
+              <p class="eyebrow">Policy notes</p>
+              <ul class="policy-list">${insurer.policies.map((item) => `<li>${item}</li>`).join("")}</ul>
+            </div>
+            <div>
+              <p class="eyebrow">Watch points</p>
+              <ul class="policy-list">${insurer.watch.map((item) => `<li>${item}</li>`).join("")}</ul>
+            </div>
+          </div>
+
+          <footer>
+            <strong>${insurer.contactName}</strong>
+            <span>${insurer.phone}</span>
+            <span>${insurer.email}</span>
+          </footer>
+        </article>
       `
     )
     .join("");
@@ -1465,6 +4140,23 @@ function titleCase(value) {
   return value.replace(/\b\w/g, (letter) => letter.toUpperCase());
 }
 
+function ratePill(label, value, key) {
+  return `
+    <div class="rate-pill" style="--product-color: ${rateColorMap[key]};">
+      <span>${label}</span>
+      <strong>${rate(value)}</strong>
+    </div>
+  `;
+}
+
+function programBadge(label, colorKey = label, clickable = false) {
+  const color = programColorMap[colorKey] || "#64748B";
+  if (!clickable) {
+    return `<span class="badge program-badge" style="--program-color: ${color};">${label}</span>`;
+  }
+  return `<span class="badge program-badge program-link" role="button" tabindex="0" data-program-link="${colorKey}" style="--program-color: ${color};">${label}</span>`;
+}
+
 function initials(value) {
   return value
     .split(/\s+/)
@@ -1477,6 +4169,6 @@ function initials(value) {
 
 render();
 
-    </script>
+</script>
   </body>
 </html>
