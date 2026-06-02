@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ontario Broker Rate Desk</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Portal navigation">
+        <a class="brand-lockup logo-lockup" href="#dashboard" aria-label="New Portal Ontario Broker Rate Desk home">
+          <img class="site-logo" src="assets/logo-maple-leaf.png" alt="New Portal Ontario Broker Rate Desk" />
+        </a>
+
+        <nav class="nav-list">
+          <a href="#dashboard" class="active" title="Partner portals"><span class="nav-icon">▦</span><span class="nav-text">Portals</span></a>
+          <a href="#best-rates" title="Rates"><span class="nav-icon">$</span><span class="nav-text">Rates</span></a>
+          <a href="#lenders" title="Lenders"><span class="nav-icon">⌕</span><span class="nav-text">Lenders</span></a>
+          <a href="#programs" title="Programs"><span class="nav-icon">▥</span><span class="nav-text">Programs</span></a>
+          <a href="#contacts" title="Contacts"><span class="nav-icon">☏</span><span class="nav-text">Contacts</span></a>
+          <a href="#compliance" title="Compliance"><span class="nav-icon">✓</span><span class="nav-text">Compliance</span></a>
+        </nav>
+
+        <section class="sidebar-panel">
+          <p class="panel-label">Today</p>
+          <strong id="todayLabel"></strong>
+          <span>Rate data is managed by your brokerage.</span>
+        </section>
+      </aside>
+
+      <main>
+        <section class="portal-board" id="dashboard" aria-label="Partner portals">
+          <div class="portal-command-row">
+            <div>
+              <p class="eyebrow">Broker workspace</p>
+              <h2>Ontario Broker Rate Desk</h2>
+            </div>
+            <div class="topbar-actions">
+              <button class="primary-button" id="openRateEditor" type="button">+ Update Rates</button>
+              <a class="secondary-button action-link" href="#contacts">+ Contact</a>
+              <label class="boss-search">
+                <span>Search</span>
+                <input id="portalSearchInput" type="search" placeholder="Search lenders" />
+              </label>
+              <button class="icon-button" id="themeToggle" type="button" title="Toggle theme" aria-label="Toggle theme">
+                <span>◐</span>
+              </button>
+            </div>
+          </div>
+
+          <section class="market-brief" aria-label="Mortgage news and local weather">
+            <article class="news-brief-card">
+              <div class="brief-heading">
+                <div>
+                  <p class="eyebrow">Top mortgage news</p>
+                  <h3>Broker market brief</h3>
+                </div>
+                <a class="brief-link" href="https://news.google.com/search?q=Canada%20mortgage%20rates%20mortgage%20brokers" target="_blank" rel="noreferrer">Live news</a>
+              </div>
+              <div class="news-feed" id="mortgageNewsFeed">
+                <p class="brief-loading">Loading mortgage headlines...</p>
+              </div>
+            </article>
+
+            <article class="weather-brief-card">
+              <div class="brief-heading">
+                <div>
+                  <p class="eyebrow">Local weather</p>
+                  <h3 id="weatherCity">Detecting city</h3>
+                </div>
+                <button class="brief-link weather-refresh" id="refreshWeather" type="button">Use my city</button>
+              </div>
+              <div class="weather-reading">
+                <strong id="weatherTemp">--</strong>
+                <span id="weatherSummary">Checking local conditions...</span>
+              </div>
+              <p id="weatherDetails">Weather helps brokers plan client meetings, showings, and office days.</p>
+            </article>
+          </section>
+
+          <div class="portal-hero">
+            <div class="portal-hero-copy">
+              <p class="eyebrow">Built for mortgage brokers and agents</p>
+              <h2>A professional rate desk for faster lender decisions and cleaner client advice.</h2>
+              <p>Give your team one polished workspace for daily rates, insurer programs, lender portals, BDM contacts, and policy notes before a file is submitted.</p>
+              <div class="hero-actions">
+                <a class="primary-button action-link" href="#best-rates">View Rates</a>
+                <a class="secondary-button action-link" href="#packages">Platform Access</a>
+              </div>
+            </div>
+            <figure class="hero-meeting-card">
+              <img src="assets/mortgage-broker-meeting.png" alt="Professional mortgage brokers and agents meeting in a boardroom" />
+            </figure>
+            <div class="hero-proof-grid" aria-label="Portal highlights">
+              <article>
+                <span>01</span>
+                <strong>Rate desk confidence</strong>
+                <small>Compare prime, alternative, credit union, and private lender options quickly.</small>
+              </article>
+              <article>
+                <span>02</span>
+                <strong>Agent-ready guidance</strong>
+                <small>Keep CMHC, Sagen, Canada Guaranty, and underwriting notes close to the deal.</small>
+              </article>
+              <article>
+                <span>03</span>
+                <strong>Professional workflow</strong>
+                <small>Give brokers and agents direct partner access, contacts, and document paths.</small>
+              </article>
+            </div>
+          </div>
+
+          <div class="portal-title-bar">Partner Portals</div>
+          <div class="portal-grid" id="portalGrid"></div>
+        </section>
+
+        <section class="band package-band" id="packages">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Platform access</p>
+              <h3>Broker packages</h3>
+            </div>
+            <span class="live-pill">Basic access · $9/month + admin fee + HST</span>
+          </div>
+
+          <div class="package-layout">
+            <article class="package-card featured">
+              <p class="eyebrow">Starter</p>
+              <h4>Basic</h4>
+              <div class="price-line">
+                <strong>$9</strong>
+                <span>per month + one-time admin fee + HST</span>
+              </div>
+              <ul class="feature-list">
+                <li>Access to prime, alternative, and private lender categories</li>
+                <li>Underwriting guideline summaries</li>
+                <li>English and French support-ready layout</li>
+              </ul>
+            </article>
+
+            <article class="package-card">
+              <p class="eyebrow">Pro workspace</p>
+              <h4>Deal Desk Plus</h4>
+              <div class="price-line">
+                <strong>$9</strong>
+                <span>per month</span>
+              </div>
+              <ul class="feature-list">
+                <li>Preferred lender selection for each broker</li>
+                <li>Granular policy breakdown by product and program</li>
+                <li>MIC and MIE private lender visibility</li>
+              </ul>
+            </article>
+          </div>
+
+          <div class="capability-grid" aria-label="Platform capabilities">
+            <article>
+              <span>01</span>
+              <strong>Prime, alt, MIC and MIE access</strong>
+              <p>Organize institutional, alternative, and private lending options in one searchable workspace.</p>
+            </article>
+            <article>
+              <span>02</span>
+              <strong>Full French / English support</strong>
+              <p>Structure content so broker teams can work with bilingual lender and borrower-facing notes.</p>
+            </article>
+            <article>
+              <span>03</span>
+              <strong>Underwriting guidelines</strong>
+              <p>Keep credit, income, property, insurer, and document notes close to the rate decision.</p>
+            </article>
+            <article>
+              <span>04</span>
+              <strong>Preferred lenders</strong>
+              <p>Help brokers prioritize lender partners and quickly compare their active programs.</p>
+            </article>
+            <article>
+              <span>05</span>
+              <strong>Granular policy breakdown</strong>
+              <p>Break policies down by product, LTV, score, documentation, property, and exception path.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="metric-grid" aria-label="Portal summary">
+          <article>
+            <small>01</small>
+            <span>Tracked lenders</span>
+            <strong id="lenderCount">0</strong>
+          </article>
+          <article>
+            <small>02</small>
+            <span>Lowest insured fixed</span>
+            <strong id="lowestFixed">0.00%</strong>
+          </article>
+          <article>
+            <small>03</small>
+            <span>Alt lending range</span>
+            <strong id="altRange">0</strong>
+          </article>
+          <article>
+            <small>04</small>
+            <span>BDM contacts</span>
+            <strong id="bdmCount">0</strong>
+          </article>
+        </section>
+
+        <section class="band landing-rate-board" id="best-rates">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Best 5-year rates</p>
+              <h3>High-ratio and conventional rate board</h3>
+            </div>
+            <div class="desk-badges">
+              <span>High ratio</span>
+              <span>Conventional</span>
+              <span>Bank-wise</span>
+            </div>
+          </div>
+
+          <div class="best-rate-layout">
+            <div>
+              <p class="contact-line">Compare the best available 5-year fixed high-ratio and conventional rates by lender category.</p>
+              <div class="best-rate-grid" id="bestRateGrid"></div>
+            </div>
+
+            <aside class="preferred-lender-panel">
+              <div>
+                <p class="eyebrow">Preferred lender</p>
+                <h4>Let the broker choose</h4>
+              </div>
+              <label class="search-box">
+                <span>Select preferred lender</span>
+                <select id="preferredLenderSelect"></select>
+              </label>
+              <div id="preferredLenderCard"></div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="workspace">
+          <div class="workspace-header">
+            <div>
+              <p class="eyebrow">Pipeline triage</p>
+              <h3>Find the right lender before you submit.</h3>
+            </div>
+            <div class="desk-badges">
+              <span>Prime</span>
+              <span>Alternative</span>
+              <span>Rental</span>
+              <span>Switch</span>
+            </div>
+          </div>
+          <div class="control-row">
+            <label class="search-box">
+              <span>Search</span>
+              <input id="searchInput" type="search" placeholder="High ratio, conventional, rental worksheet, assignment..." />
+            </label>
+            <button class="primary-button search-button" id="runSearch" type="button">Search</button>
+
+            <div class="segmented-control" aria-label="Lender type filter">
+              <button class="active" type="button" data-filter="all">All</button>
+              <button type="button" data-filter="bank">Bank</button>
+              <button type="button" data-filter="monoline">Monoline</button>
+              <button type="button" data-filter="alternative">Alternative</button>
+              <button type="button" data-filter="credit union">Credit Union</button>
+              <button type="button" data-filter="private lender">Private / MIC</button>
+            </div>
+          </div>
+
+          <section class="split-view" id="lenders">
+            <div>
+              <div class="section-heading">
+                <div>
+                  <p class="eyebrow">Lender sheet</p>
+                  <h3>Daily Rate Board</h3>
+                </div>
+                <button class="secondary-button" id="clearFilters" type="button">Clear</button>
+              </div>
+              <div class="lender-list" id="lenderList"></div>
+              <div class="pagination-row" id="lenderPagination" aria-label="Lender pagination"></div>
+            </div>
+
+            <aside class="detail-panel" id="detailPanel" aria-live="polite"></aside>
+          </section>
+        </section>
+
+        <section class="band" id="programs">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Broker placement</p>
+              <h3>Program Finder</h3>
+            </div>
+          </div>
+          <aside class="program-detail" id="programDetail" aria-live="polite"></aside>
+          <div class="program-grid" id="programGrid"></div>
+        </section>
+
+        <section class="band" id="insurers">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Default mortgage insurance</p>
+              <h3>Insurer Program Library</h3>
+            </div>
+          </div>
+          <div class="insurer-grid" id="insurerGrid"></div>
+        </section>
+
+        <section class="band" id="contacts">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Relationship desk</p>
+              <h3>BDM Contact Directory</h3>
+            </div>
+          </div>
+          <div class="contact-table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Lender</th>
+                  <th>BDM / Region</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Website</th>
+                </tr>
+              </thead>
+              <tbody id="contactTable"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="band compliance" id="compliance">
+          <div>
+            <p class="eyebrow">Compliance note</p>
+            <h3>Built for internal broker use</h3>
+          </div>
+          <p>
+            Sample rates and guidelines are placeholders for your brokerage operations team to replace with current lender notices.
+            Brokers should confirm pricing, eligibility, compensation, and policies with each lender before advising a borrower.
+          </p>
+        </section>
+      </main>
+    </div>
+
+    <dialog id="rateDialog">
+      <form method="dialog" class="dialog-card">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Desk admin</p>
+            <h3>Update Sample Rates</h3>
+          </div>
+          <button class="icon-button" value="cancel" type="submit" title="Close" aria-label="Close">×</button>
+        </div>
+        <label>
+          Lender
+          <select id="rateLenderSelect"></select>
+        </label>
+        <div class="form-grid">
+          <label>
+            Insured 5-year fixed
+            <input id="insuredFixedInput" type="number" min="0" step="0.01" />
+          </label>
+          <label>
+            Insured variable
+            <input id="variableInput" type="number" min="0" step="0.01" />
+          </label>
+          <label>
+            Conventional 5-year fixed
+            <input id="conventionalInput" type="number" min="0" step="0.01" />
+          </label>
+          <label>
+            Alt stated-income
+            <input id="altInput" type="number" min="0" step="0.01" />
+          </label>
+        </div>
+        <label>
+          Desk note
+          <textarea id="noteInput" rows="3"></textarea>
+        </label>
+        <menu>
+          <button class="secondary-button" id="resetDemoData" type="button">Reset Demo Data</button>
+          <button class="primary-button" id="saveRates" value="default" type="submit">Save Update</button>
+        </menu>
+      </form>
+    </dialog>
+
+    <script src="script.js"></script>
+  </body>
+</html>
