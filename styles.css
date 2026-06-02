@@ -1043,12 +1043,6 @@ body.dark .price-line strong {
   justify-content: flex-end;
 }
 
-.control-row {
-  align-items: end;
-  margin-bottom: 24px;
-  flex-wrap: wrap;
-}
-
 .search-box {
   flex: 1 1 330px;
   display: grid;
@@ -1103,6 +1097,86 @@ textarea:focus {
   border-color: var(--accent);
   color: var(--accent-strong);
   box-shadow: var(--shadow-soft);
+}
+
+.lender-workbench {
+  display: grid;
+  grid-template-columns: minmax(260px, 320px) minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.robust-search-panel {
+  position: sticky;
+  top: 98px;
+  border: 1px solid color-mix(in srgb, var(--accent) 20%, var(--line));
+  border-radius: 10px;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--accent) 6%, var(--surface)), var(--surface));
+  box-shadow: var(--shadow-soft);
+  padding: 16px;
+  display: grid;
+  gap: 14px;
+}
+
+.robust-search-panel h4 {
+  margin: 0;
+  font-size: 1.18rem;
+}
+
+.filter-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.filter-block {
+  display: grid;
+  gap: 8px;
+}
+
+.filter-block-label {
+  color: var(--muted);
+  font-size: 0.84rem;
+  font-weight: 800;
+}
+
+.filter-chip-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.filter-chip-grid button {
+  min-height: 32px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface-strong);
+  color: var(--text);
+  padding: 0 10px;
+  font-size: 0.8rem;
+  font-weight: 850;
+}
+
+.filter-chip-grid button.active,
+.filter-chip-grid button:hover {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+}
+
+.search-panel-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.search-result-count {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.84rem;
+  font-weight: 800;
+  line-height: 1.4;
 }
 
 .split-view {
@@ -2240,6 +2314,16 @@ menu {
   }
 }
 
+@media (max-width: 900px) {
+  .lender-workbench {
+    grid-template-columns: 1fr;
+  }
+
+  .robust-search-panel {
+    position: static;
+  }
+}
+
 @media (max-width: 1080px) {
   html {
     scroll-padding-top: 320px;
@@ -2352,6 +2436,7 @@ menu {
   .best-rate-pair,
   .package-layout,
   .capability-grid,
+  .filter-grid,
   .underwriting-grid,
   .special-offer-grid,
   .feature-tile-grid,

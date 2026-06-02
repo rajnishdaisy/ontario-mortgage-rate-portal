@@ -10,7 +10,7 @@
     <div class="app-shell">
       <aside class="sidebar" aria-label="Portal navigation">
         <a class="brand-lockup logo-lockup" href="#dashboard" aria-label="New Portal Ontario Broker Rate Desk home">
-          <img class="site-logo" src="assets/logo-maple-leaf.png" alt="New Portal Ontario Broker Rate Desk" />
+          <img class="site-logo" src="assets/logo-broker-rate-desk.svg" alt="New Portal Ontario Broker Rate Desk" />
         </a>
 
         <nav class="nav-list">
@@ -121,7 +121,7 @@
               <p class="eyebrow">Platform access</p>
               <h3>Broker packages</h3>
             </div>
-            <span class="live-pill">Basic access · $9/month + admin fee + HST</span>
+            <span class="live-pill">Starter Basic · $9/month + $10 admin fee + HST</span>
           </div>
 
           <div class="package-layout">
@@ -130,12 +130,12 @@
               <h4>Basic</h4>
               <div class="price-line">
                 <strong>$9</strong>
-                <span>per month + one-time admin fee + HST</span>
+                <span>per month + one-time admin fee $10 + HST</span>
               </div>
               <ul class="feature-list">
                 <li>Access to prime, alternative, and private lender categories</li>
                 <li>Underwriting guideline summaries</li>
-                <li>English and French support-ready layout</li>
+                <li>English and French support-ready layout and pro workspace access</li>
               </ul>
             </article>
 
@@ -143,8 +143,8 @@
               <p class="eyebrow">Pro workspace</p>
               <h4>Deal Desk Plus</h4>
               <div class="price-line">
-                <strong>$9</strong>
-                <span>per month</span>
+                <strong>Email</strong>
+                <span><a href="mailto:info@dealdesk.ca">info@dealdesk.ca</a> for monthly pricing</span>
               </div>
               <ul class="feature-list">
                 <li>Preferred lender selection for each broker</li>
@@ -252,37 +252,107 @@
               <span>Switch</span>
             </div>
           </div>
-          <div class="control-row">
-            <label class="search-box">
-              <span>Search</span>
-              <input id="searchInput" type="search" placeholder="High ratio, conventional, rental worksheet, assignment..." />
-            </label>
-            <button class="primary-button search-button" id="runSearch" type="button">Search</button>
+          <section class="lender-workbench" id="lenders">
+            <aside class="robust-search-panel" aria-label="Robust lender search filters">
+              <div>
+                <p class="eyebrow">Robust search</p>
+                <h4>Match by file fit</h4>
+              </div>
 
-            <div class="segmented-control" aria-label="Lender type filter">
-              <button class="active" type="button" data-filter="all">All</button>
-              <button type="button" data-filter="bank">Bank</button>
-              <button type="button" data-filter="monoline">Monoline</button>
-              <button type="button" data-filter="alternative">Alternative</button>
-              <button type="button" data-filter="credit union">Credit Union</button>
-              <button type="button" data-filter="private lender">Private / MIC</button>
-            </div>
-          </div>
+              <label class="search-box">
+                <span>Keyword search</span>
+                <input id="searchInput" type="search" placeholder="Lender, product, guideline, rental worksheet..." />
+              </label>
 
-          <section class="split-view" id="lenders">
-            <div>
+              <label class="search-box">
+                <span>Lender type</span>
+                <select id="lenderTypeFilter">
+                  <option value="all">All lender types</option>
+                  <option value="bank">Bank</option>
+                  <option value="monoline">Monoline</option>
+                  <option value="alternative">Alternative</option>
+                  <option value="credit union">Credit Union</option>
+                  <option value="private lender">MIC / Private</option>
+                </select>
+              </label>
+
+              <div class="filter-grid">
+                <label class="search-box">
+                  <span>Credit score</span>
+                  <select id="creditScoreFilter">
+                    <option value="all">Any score</option>
+                    <option value="720">720+</option>
+                    <option value="680">680+</option>
+                    <option value="650">650+</option>
+                    <option value="620">620+</option>
+                    <option value="600">600+</option>
+                    <option value="580">580+</option>
+                    <option value="550">550+ / equity-led</option>
+                  </select>
+                </label>
+
+                <label class="search-box">
+                  <span>Loan to value</span>
+                  <select id="ltvFilter">
+                    <option value="all">Any LTV</option>
+                    <option value="95">Up to 95%</option>
+                    <option value="90">Up to 90%</option>
+                    <option value="80">Up to 80%</option>
+                    <option value="75">Up to 75%</option>
+                    <option value="65">Up to 65%</option>
+                  </select>
+                </label>
+              </div>
+
+              <label class="search-box">
+                <span>Purpose</span>
+                <select id="purposeFilter">
+                  <option value="all">Any purpose</option>
+                  <option value="purchase">Purchase</option>
+                  <option value="refinance">Refinance</option>
+                  <option value="transfer-switch">Transfer / Switch</option>
+                  <option value="rental">Rental</option>
+                  <option value="private-mic">Private / MIC</option>
+                </select>
+              </label>
+
+              <div class="filter-block">
+                <span class="filter-block-label">Categories</span>
+                <div class="filter-chip-grid" aria-label="Program category filters">
+                  <button class="active" type="button" data-category-filter="all">All</button>
+                  <button type="button" data-category-filter="insured">Insured</button>
+                  <button type="button" data-category-filter="conventional">Conventional</button>
+                  <button type="button" data-category-filter="rental">Rental</button>
+                  <button type="button" data-category-filter="self-employed">Self-employed</button>
+                  <button type="button" data-category-filter="new-to-canada">New to Canada</button>
+                  <button type="button" data-category-filter="heloc">HELOC</button>
+                  <button type="button" data-category-filter="private-mic">MIC / Private</button>
+                </div>
+              </div>
+
+              <div class="search-panel-actions">
+                <button class="primary-button search-button" id="runSearch" type="button">Search</button>
+                <button class="secondary-button" id="clearFilters" type="button">Clear</button>
+              </div>
+
+              <p class="search-result-count" id="searchResultCount">Showing all lenders</p>
+            </aside>
+
+            <section class="split-view">
+              <div>
               <div class="section-heading">
                 <div>
                   <p class="eyebrow">Lender sheet</p>
                   <h3>Daily Rate Board</h3>
                 </div>
-                <button class="secondary-button" id="clearFilters" type="button">Clear</button>
+                <span class="live-pill" id="lenderResultPill">All lenders</span>
               </div>
               <div class="lender-list" id="lenderList"></div>
               <div class="pagination-row" id="lenderPagination" aria-label="Lender pagination"></div>
             </div>
 
             <aside class="detail-panel" id="detailPanel" aria-live="polite"></aside>
+            </section>
           </section>
         </section>
 

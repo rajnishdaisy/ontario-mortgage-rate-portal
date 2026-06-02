@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">New Portal Ontario Broker Rate Desk</title>
+  <desc id="desc">Broker Rate Desk logo with New Portal Ontario text and maple leaf tagline.</desc>
+  <defs>
+    <linearGradient id="logoBlueDark" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#061958" />
+      <stop offset="100%" stop-color="#0a2c79" />
+    </linearGradient>
+    <linearGradient id="logoBlueLight" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#11a9f4" />
+      <stop offset="100%" stop-color="#077ee5" />
+    </linearGradient>
+    <filter id="softShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="10" stdDeviation="11" flood-color="#001b4f" flood-opacity="0.12" />
+    </filter>
+  </defs>
+  <rect width="1600" height="900" rx="30" fill="#ffffff" />
+  <g filter="url(#softShadow)">
+    <text x="800" y="210" text-anchor="middle" font-size="70" font-weight="850" font-family="Inter, Arial, Helvetica, sans-serif">
+      <tspan fill="#168be6">NEW PORTAL</tspan>
+      <tspan fill="#082160" dx="34">|</tspan>
+      <tspan fill="#c71322" dx="34">ONTARIO</tspan>
+    </text>
+    <text x="338" y="475" fill="url(#logoBlueDark)" font-size="284" font-weight="950" letter-spacing="-10" font-family="Inter, Arial, Helvetica, sans-serif">Broker</text>
+    <text x="348" y="655" fill="url(#logoBlueLight)" font-size="188" font-weight="780" letter-spacing="-5" font-family="Inter, Arial, Helvetica, sans-serif">Rate Desk</text>
+  </g>
+  <g>
+    <text x="360" y="760" fill="#071b59" font-size="39" font-weight="850" letter-spacing="5" font-family="Inter, Arial, Helvetica, sans-serif">ONE PORTAL.</text>
+    <text x="610" y="760" fill="#118ee9" font-size="39" font-weight="850" letter-spacing="5" font-family="Inter, Arial, Helvetica, sans-serif">BETTER RATES.</text>
+    <path d="M951 704 L970 737 L1006 725 L993 760 L1026 778 L988 783 L990 822 L956 802 L929 829 L924 790 L886 797 L910 768 L887 740 L926 742 Z" fill="#d71920" />
+    <text x="1018" y="760" fill="#c71322" font-size="39" font-weight="850" letter-spacing="4" font-family="Inter, Arial, Helvetica, sans-serif">STRONGER TOGETHER.</text>
+  </g>
+</svg>

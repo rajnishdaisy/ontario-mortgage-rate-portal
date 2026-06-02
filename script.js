@@ -364,7 +364,29 @@ let activeLenderId = "";
 let activeProgram = "Alternative A/B";
 let preferredLenderId = localStorage.getItem(preferredLenderStorageKey) || "";
 let activeLenderPage = 1;
+let activeCreditScore = "all";
+let activeLtv = "all";
+let activePurpose = "all";
+let activeCategory = "all";
 const lendersPerPage = 4;
+
+const purposeProgramMap = {
+  purchase: ["Insured purchase", "Conventional purchase", "Purchase plus improvements", "New construction", "New to Canada", "Bank mortgage", "Credit union mortgage", "Prime"],
+  refinance: ["Refinance", "Equity-focused refinance", "HELOC", "Alternative lending", "Reverse mortgage", "Residential Seconds"],
+  "transfer-switch": ["Switch/transfer", "Renewal"],
+  rental: ["Rental", "Residential Rentals"],
+  "private-mic": ["Private / MIC / MIE", "No Doc", "Verifiable Income", "Residential Seconds", "Residential Rentals"]
+};
+
+const categoryProgramMap = {
+  insured: ["Insured purchase", "High ratio", "CMHC Purchase", "Sagen Homebuyer 95"],
+  conventional: ["Conventional purchase", "Bank mortgage", "Prime"],
+  rental: ["Rental", "Residential Rentals"],
+  "self-employed": ["Self-employed", "Alternative A/B", "Alternative lending"],
+  "new-to-canada": ["New to Canada"],
+  heloc: ["HELOC"],
+  "private-mic": ["Private / MIC / MIE", "No Doc", "Verifiable Income", "Residential Seconds"]
+};
 
 const programColorMap = {
   "Alternative": "#7C3AED",
@@ -2348,11 +2370,17 @@ const detailPanel = document.querySelector("#detailPanel");
 const searchInput = document.querySelector("#searchInput");
 const portalSearchInput = document.querySelector("#portalSearchInput");
 const runSearchButton = document.querySelector("#runSearch");
+const lenderTypeFilter = document.querySelector("#lenderTypeFilter");
+const creditScoreFilter = document.querySelector("#creditScoreFilter");
+const ltvFilter = document.querySelector("#ltvFilter");
+const purposeFilter = document.querySelector("#purposeFilter");
+const categoryFilterButtons = document.querySelectorAll("[data-category-filter]");
+const searchResultCount = document.querySelector("#searchResultCount");
+const lenderResultPill = document.querySelector("#lenderResultPill");
 const bestRateGrid = document.querySelector("#bestRateGrid");
 const portalGrid = document.querySelector("#portalGrid");
 const preferredLenderSelect = document.querySelector("#preferredLenderSelect");
 const preferredLenderCard = document.querySelector("#preferredLenderCard");
-const filterButtons = document.querySelectorAll("[data-filter]");
 const rateDialog = document.querySelector("#rateDialog");
 const rateLenderSelect = document.querySelector("#rateLenderSelect");
 const programDetail = document.querySelector("#programDetail");
@@ -2413,18 +2441,37 @@ document.querySelector("#openRateEditor").addEventListener("click", () => {
 
 document.querySelector("#clearFilters").addEventListener("click", () => {
   activeFilter = "all";
+  activeCreditScore = "all";
+  activeLtv = "all";
+  activePurpose = "all";
+  activeCategory = "all";
   activeLenderPage = 1;
   searchInput.value = "";
   portalSearchInput.value = "";
-  filterButtons.forEach((button) => button.classList.toggle("active", button.dataset.filter === "all"));
+  lenderTypeFilter.value = "all";
+  creditScoreFilter.value = "all";
+  ltvFilter.value = "all";
+  purposeFilter.value = "all";
+  categoryFilterButtons.forEach((button) => button.classList.toggle("active", button.dataset.categoryFilter === "all"));
   render();
 });
 
-filterButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    activeFilter = button.dataset.filter;
+[lenderTypeFilter, creditScoreFilter, ltvFilter, purposeFilter].forEach((control) => {
+  control.addEventListener("change", () => {
+    activeFilter = lenderTypeFilter.value;
+    activeCreditScore = creditScoreFilter.value;
+    activeLtv = ltvFilter.value;
+    activePurpose = purposeFilter.value;
     activeLenderPage = 1;
-    filterButtons.forEach((item) => item.classList.toggle("active", item === button));
+    render();
+  });
+});
+
+categoryFilterButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    activeCategory = button.dataset.categoryFilter;
+    activeLenderPage = 1;
+    categoryFilterButtons.forEach((item) => item.classList.toggle("active", item === button));
     render();
   });
 });
@@ -2802,8 +2849,55 @@ function filteredLenders() {
   const query = searchInput.value.trim();
   return lenders.filter((lender) => {
     const matchesType = activeFilter === "all" || lender.type === activeFilter;
-    return matchesType && matchesAggressiveSearch(buildSearchHaystack(lender), query);
+    return (
+      matchesType &&
+      matchesCreditScore(lender, activeCreditScore) &&
+      matchesLtv(lender, activeLtv) &&
+      matchesProgramSet(lender, activePurpose, purposeProgramMap) &&
+      matchesProgramSet(lender, activeCategory, categoryProgramMap) &&
+      matchesAggressiveSearch(buildSearchHaystack(lender), query)
+    );
   });
+}
+
+function matchesProgramSet(lender, activeValue, programMap) {
+  if (activeValue === "all") return true;
+  const targetPrograms = programMap[activeValue] || [];
+  return lender.programs.some((program) => targetPrograms.includes(program));
+}
+
+function matchesCreditScore(lender, selectedScore) {
+  if (selectedScore === "all") return true;
+  const borrowerScore = Number(selectedScore);
+  return lender.programs.some((program) => {
+    const policy = getProgramPolicy(program, lender);
+    const minimumScore = extractMinimumScore(policy.minScore);
+    return minimumScore === null || minimumScore <= borrowerScore;
+  });
+}
+
+function matchesLtv(lender, selectedLtv) {
+  if (selectedLtv === "all") return true;
+  const requestedLtv = Number(selectedLtv);
+  return lender.programs.some((program) => {
+    const policy = getProgramPolicy(program, lender);
+    const maximumLtv = extractMaximumLtv(policy.maxLtv);
+    return maximumLtv === null || maximumLtv >= requestedLtv;
+  });
+}
+
+function extractMinimumScore(value) {
+  const text = normalizeSearchText(value);
+  if (text.includes("equity led") || text.includes("limited credit") || text.includes("confirm")) return null;
+  const scores = [...text.matchAll(/\b(5[0-9]{2}|6[0-9]{2}|7[0-9]{2})\b/g)].map((match) => Number(match[1]));
+  return scores.length ? Math.min(...scores) : null;
+}
+
+function extractMaximumLtv(value) {
+  const text = normalizeSearchText(value);
+  if (text.includes("confirm") || text.includes("existing approved balance")) return null;
+  const percentages = [...text.matchAll(/\b(6[0-9]|7[0-9]|8[0-9]|9[0-5])\s*%?/g)].map((match) => Number(match[1]));
+  return percentages.length ? Math.max(...percentages) : null;
 }
 
 function buildSearchHaystack(lender) {
@@ -2873,6 +2967,7 @@ function render() {
 
   renderMetrics();
   renderPortalGrid(results);
+  renderSearchSummary(results.length);
   renderBestRateDashboard();
   renderLenderList(results);
   renderDetails(lenders.find((lender) => lender.id === activeLenderId) || results[0]);
@@ -2880,6 +2975,21 @@ function render() {
   renderInsurers();
   renderContacts();
   renderRateSelect();
+}
+
+function renderSearchSummary(resultCount) {
+  const activeLabels = [
+    activeFilter !== "all" ? titleCase(activeFilter) : "",
+    activeCreditScore !== "all" ? `${activeCreditScore}+ score` : "",
+    activeLtv !== "all" ? `up to ${activeLtv}% LTV` : "",
+    activePurpose !== "all" ? titleCase(activePurpose.replace(/-/g, " / ")) : "",
+    activeCategory !== "all" ? titleCase(activeCategory.replace(/-/g, " ")) : ""
+  ].filter(Boolean);
+  const summary = activeLabels.length ? activeLabels.join(" · ") : "All filters open";
+  const countText = `${resultCount} lender${resultCount === 1 ? "" : "s"}`;
+
+  searchResultCount.textContent = `${countText} matched · ${summary}`;
+  lenderResultPill.textContent = countText;
 }
 
 function renderPortalGrid(results) {
