@@ -9,17 +9,18 @@
   <body>
     <div class="app-shell">
       <aside class="sidebar" aria-label="Portal navigation">
-        <a class="brand-lockup logo-lockup" href="#dashboard" aria-label="New Portal Ontario Broker Rate Desk home">
+        <a class="brand-lockup logo-lockup" href="#lenders" aria-label="New Portal Ontario Broker Rate Desk home">
           <img class="site-logo" src="assets/logo-broker-rate-desk.svg" alt="New Portal Ontario Broker Rate Desk" />
         </a>
 
         <nav class="nav-list">
-          <a href="#dashboard" class="active" title="Partner portals"><span class="nav-icon">▦</span><span class="nav-text">Portals</span></a>
-          <a href="#best-rates" title="Rates"><span class="nav-icon">$</span><span class="nav-text">Rates</span></a>
-          <a href="#lenders" title="Lenders"><span class="nav-icon">⌕</span><span class="nav-text">Lenders</span></a>
+          <a href="#dashboard" title="Partner portals"><span class="nav-icon">▦</span><span class="nav-text">Portals</span></a>
+          <a href="#daily-rates" title="Rates"><span class="nav-icon">$</span><span class="nav-text">Rates</span></a>
+          <a href="#lenders" class="active" title="Lenders"><span class="nav-icon">⌕</span><span class="nav-text">Lenders</span></a>
+          <a href="#ai-match" title="AI match"><span class="nav-icon">◎</span><span class="nav-text">AI Match</span></a>
+          <a href="#broker-tools" title="Tools"><span class="nav-icon">◧</span><span class="nav-text">Tools</span></a>
           <a href="#programs" title="Programs"><span class="nav-icon">▥</span><span class="nav-text">Programs</span></a>
-          <a href="#contacts" title="Contacts"><span class="nav-icon">☏</span><span class="nav-text">Contacts</span></a>
-          <a href="#compliance" title="Compliance"><span class="nav-icon">✓</span><span class="nav-text">Compliance</span></a>
+          <a href="#admin-center" title="Admin"><span class="nav-icon">✓</span><span class="nav-text">Admin</span></a>
         </nav>
 
         <section class="sidebar-panel">
@@ -356,6 +357,276 @@
           </section>
         </section>
 
+        <section class="band intelligence-overview" id="daily-rates">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Daily rates dashboard</p>
+              <h3>Canadian mortgage rates, policy fit, and lender intelligence in one workspace.</h3>
+            </div>
+            <span class="live-pill" id="rateLastUpdated">Last updated today</span>
+          </div>
+
+          <div class="rate-filter-bar">
+            <label class="search-box">
+              <span>Lender</span>
+              <select id="dashboardLenderFilter"></select>
+            </label>
+            <label class="search-box">
+              <span>Product type</span>
+              <select id="dashboardProductFilter">
+                <option value="all">All products</option>
+                <option value="insuredFixed">Insured fixed</option>
+                <option value="variable">Variable</option>
+                <option value="conventional">Conventional</option>
+                <option value="alt">Alternative</option>
+                <option value="rental">Rental</option>
+                <option value="heloc">HELOC</option>
+                <option value="private">Private</option>
+                <option value="commercial">Commercial</option>
+              </select>
+            </label>
+            <label class="search-box">
+              <span>Province</span>
+              <select id="dashboardProvinceFilter">
+                <option value="all">All provinces</option>
+                <option value="Ontario">Ontario</option>
+                <option value="British Columbia">British Columbia</option>
+                <option value="Alberta">Alberta</option>
+                <option value="Quebec">Quebec</option>
+              </select>
+            </label>
+            <label class="search-box">
+              <span>Closing speed</span>
+              <select id="dashboardClosingFilter">
+                <option value="all">Any speed</option>
+                <option value="fast">Fast closing</option>
+                <option value="standard">Standard closing</option>
+                <option value="manual">Manual review</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="dashboard-kpi-grid" id="dashboardKpiGrid"></div>
+          <div class="rate-dashboard-layout">
+            <div class="rate-table-wrap">
+              <table class="rate-table">
+                <thead>
+                  <tr>
+                    <th>Compare</th>
+                    <th>Lender</th>
+                    <th>Product</th>
+                    <th>Term</th>
+                    <th>Rate</th>
+                    <th>LTV</th>
+                    <th>Beacon</th>
+                    <th>Closing</th>
+                    <th>Updated</th>
+                  </tr>
+                </thead>
+                <tbody id="dailyRateTable"></tbody>
+              </table>
+            </div>
+            <aside class="comparison-panel">
+              <div>
+                <p class="eyebrow">Comparison view</p>
+                <h4>Selected lenders</h4>
+              </div>
+              <div id="comparisonOutput"></div>
+              <button class="secondary-button" id="clearComparison" type="button">Clear comparison</button>
+            </aside>
+          </div>
+          <p class="compliance-strip">Rates, policies, and guidelines are for information only and subject to lender confirmation. Final approval is subject to lender underwriting.</p>
+        </section>
+
+        <section class="band ai-match-band" id="ai-match">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">AI-ready deal matching</p>
+              <h3>Scenario intake that recommends lender options, documents, and risk points.</h3>
+            </div>
+            <span class="live-pill">Rules engine now · AI automation ready</span>
+          </div>
+
+          <div class="deal-match-layout">
+            <form class="deal-form" id="dealMatchForm">
+              <label>
+                Deal type
+                <select id="dealPurpose">
+                  <option value="purchase">Purchase</option>
+                  <option value="refinance">Refinance</option>
+                  <option value="transfer-switch">Transfer / Switch</option>
+                </select>
+              </label>
+              <label>
+                Property value
+                <input id="propertyValueInput" type="number" min="0" value="850000" />
+              </label>
+              <label>
+                Mortgage amount
+                <input id="mortgageAmountInput" type="number" min="0" value="680000" />
+              </label>
+              <label>
+                Down payment
+                <input id="downPaymentInput" type="number" min="0" value="170000" />
+              </label>
+              <label>
+                Income type
+                <select id="incomeTypeInput">
+                  <option value="salaried">Salaried</option>
+                  <option value="bfs">Business for self</option>
+                  <option value="stated">Stated income</option>
+                  <option value="rental">Rental income</option>
+                </select>
+              </label>
+              <label>
+                Credit score
+                <input id="dealCreditScoreInput" type="number" min="300" max="900" value="680" />
+              </label>
+              <label>
+                Property type
+                <select id="propertyTypeInput">
+                  <option value="detached">Detached</option>
+                  <option value="condo">Condo</option>
+                  <option value="rental">Rental</option>
+                  <option value="rural">Rural</option>
+                </select>
+              </label>
+              <label>
+                Occupancy
+                <select id="occupancyInput">
+                  <option value="owner">Owner occupied</option>
+                  <option value="rental">Rental</option>
+                  <option value="second-home">Second home</option>
+                </select>
+              </label>
+              <label>
+                Province
+                <select id="dealProvinceInput">
+                  <option value="Ontario">Ontario</option>
+                  <option value="British Columbia">British Columbia</option>
+                  <option value="Alberta">Alberta</option>
+                  <option value="Quebec">Quebec</option>
+                </select>
+              </label>
+              <label>
+                Closing date
+                <input id="closingDateInput" type="date" />
+              </label>
+              <button class="primary-button" type="submit">Match Deal</button>
+            </form>
+            <aside class="match-results" id="dealMatchResults"></aside>
+          </div>
+        </section>
+
+        <section class="band" id="policy-search">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Policy search engine</p>
+              <h3>Ask lender policy questions in broker language.</h3>
+            </div>
+          </div>
+          <div class="policy-search-layout">
+            <form class="policy-query" id="policySearchForm">
+              <label class="search-box">
+                <span>Policy question</span>
+                <input id="policySearchInput" type="search" value="Which lender allows rental income at 80% LTV?" />
+              </label>
+              <button class="primary-button" type="submit">Search Policies</button>
+            </form>
+            <div class="policy-results" id="policySearchResults"></div>
+          </div>
+        </section>
+
+        <section class="band" id="broker-tools">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Broker tools</p>
+              <h3>Calculators, worksheets, checklists, and export-ready comparison notes.</h3>
+            </div>
+          </div>
+          <div class="tools-grid">
+            <article class="tool-card">
+              <h4>Affordability + Stress Test</h4>
+              <div class="tool-form">
+                <label>Annual income <input id="toolIncome" type="number" value="125000" /></label>
+                <label>Monthly debts <input id="toolDebts" type="number" value="650" /></label>
+                <label>Rate <input id="toolRate" type="number" step="0.01" value="4.79" /></label>
+                <label>Amortization <input id="toolAmortization" type="number" value="25" /></label>
+              </div>
+              <button class="secondary-button" id="runAffordability" type="button">Calculate</button>
+              <div class="tool-output" id="affordabilityOutput"></div>
+            </article>
+            <article class="tool-card">
+              <h4>Refinance Calculator</h4>
+              <div class="tool-form">
+                <label>Property value <input id="refiValue" type="number" value="900000" /></label>
+                <label>Current mortgage <input id="refiMortgage" type="number" value="520000" /></label>
+                <label>Penalty / costs <input id="refiCosts" type="number" value="7500" /></label>
+              </div>
+              <button class="secondary-button" id="runRefinance" type="button">Calculate</button>
+              <div class="tool-output" id="refinanceOutput"></div>
+            </article>
+            <article class="tool-card">
+              <h4>Rental Worksheet</h4>
+              <div class="tool-form">
+                <label>Monthly rent <input id="rentalIncomeTool" type="number" value="3200" /></label>
+                <label>Mortgage payment <input id="rentalMortgageTool" type="number" value="2700" /></label>
+                <label>Taxes / condo / heat <input id="rentalCostsTool" type="number" value="850" /></label>
+              </div>
+              <button class="secondary-button" id="runRentalWorksheet" type="button">Calculate</button>
+              <div class="tool-output" id="rentalOutput"></div>
+            </article>
+            <article class="tool-card">
+              <h4>Checklist Generator</h4>
+              <label class="search-box">
+                <span>File type</span>
+                <select id="checklistType">
+                  <option value="purchase">Purchase</option>
+                  <option value="refinance">Refinance</option>
+                  <option value="bfs">BFS</option>
+                  <option value="rental">Rental</option>
+                  <option value="private">Private</option>
+                </select>
+              </label>
+              <button class="secondary-button" id="generateChecklist" type="button">Generate</button>
+              <div class="tool-output" id="checklistOutput"></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="band operations-grid" id="admin-center">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Control center</p>
+              <h3>Admin, lender portal, broker account, and revenue workflow.</h3>
+            </div>
+          </div>
+          <div class="operations-cards">
+            <article class="ops-card">
+              <h4>Admin Dashboard</h4>
+              <div id="adminDashboard"></div>
+            </article>
+            <article class="ops-card">
+              <h4>Lender / BDM Portal</h4>
+              <form id="lenderPortalForm" class="ops-form">
+                <label>Lender <select id="lenderPortalSelect"></select></label>
+                <label>Promotion <input id="lenderPromotionInput" value="Featured 5-year insured special" /></label>
+                <label>Policy update <textarea id="lenderPolicyInput" rows="3">Updated rental and BFS policy pending admin approval.</textarea></label>
+                <button class="secondary-button" type="submit">Submit Update</button>
+              </form>
+              <div id="lenderPortalFeed"></div>
+            </article>
+            <article class="ops-card">
+              <h4>Broker Account</h4>
+              <div id="brokerAccountPanel"></div>
+            </article>
+            <article class="ops-card">
+              <h4>Revenue Features</h4>
+              <div id="revenuePanel"></div>
+            </article>
+          </div>
+        </section>
+
         <section class="band" id="programs">
           <div class="section-heading">
             <div>
@@ -406,8 +677,7 @@
             <h3>Built for internal broker use</h3>
           </div>
           <p>
-            Sample rates and guidelines are placeholders for your brokerage operations team to replace with current lender notices.
-            Brokers should confirm pricing, eligibility, compensation, and policies with each lender before advising a borrower.
+            Rates, policies, and guidelines are for information only and subject to lender confirmation. Final approval is subject to lender underwriting.
           </p>
         </section>
       </main>

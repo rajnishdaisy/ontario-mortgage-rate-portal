@@ -369,6 +369,10 @@ let activeLtv = "all";
 let activePurpose = "all";
 let activeCategory = "all";
 const lendersPerPage = 4;
+const comparisonStorageKey = "dealDeskDailyRates.comparison";
+const brokerProfileStorageKey = "dealDeskDailyRates.brokerProfile";
+const lenderUpdateStorageKey = "dealDeskDailyRates.lenderUpdates";
+let selectedComparisonIds = JSON.parse(localStorage.getItem(comparisonStorageKey) || "[]");
 
 const purposeProgramMap = {
   purchase: ["Insured purchase", "Conventional purchase", "Purchase plus improvements", "New construction", "New to Canada", "Bank mortgage", "Credit union mortgage", "Prime"],
@@ -2392,6 +2396,19 @@ const weatherTemp = document.querySelector("#weatherTemp");
 const weatherSummary = document.querySelector("#weatherSummary");
 const weatherDetails = document.querySelector("#weatherDetails");
 const refreshWeatherButton = document.querySelector("#refreshWeather");
+const dashboardLenderFilter = document.querySelector("#dashboardLenderFilter");
+const dashboardProductFilter = document.querySelector("#dashboardProductFilter");
+const dashboardProvinceFilter = document.querySelector("#dashboardProvinceFilter");
+const dashboardClosingFilter = document.querySelector("#dashboardClosingFilter");
+const dailyRateTable = document.querySelector("#dailyRateTable");
+const comparisonOutput = document.querySelector("#comparisonOutput");
+const dealMatchForm = document.querySelector("#dealMatchForm");
+const dealMatchResults = document.querySelector("#dealMatchResults");
+const policySearchForm = document.querySelector("#policySearchForm");
+const policySearchInput = document.querySelector("#policySearchInput");
+const policySearchResults = document.querySelector("#policySearchResults");
+const lenderPortalSelect = document.querySelector("#lenderPortalSelect");
+const lenderPortalForm = document.querySelector("#lenderPortalForm");
 
 const fallbackMortgageNews = [
   {
@@ -2417,6 +2434,40 @@ const weatherFallbackLocation = {
   longitude: -79.3832,
   source: "Default Ontario view"
 };
+
+const platformDataModel = {
+  collections: [
+    "lenders",
+    "dailyRates",
+    "policies",
+    "brokerScenarios",
+    "brokerSavedLenders",
+    "rateAlerts",
+    "lenderUpdates",
+    "adminApprovals",
+    "ads",
+    "webinars",
+    "analyticsEvents"
+  ],
+  aiReadyFields: ["scenario", "eligibilitySignals", "policyEvidence", "missingDocuments", "riskFlags", "recommendedLenders"]
+};
+
+const brokerToolsChecklist = {
+  purchase: ["Application", "Credit bureau", "Purchase agreement", "MLS listing", "Income documents", "Down payment trail", "ID", "Property insurance"],
+  refinance: ["Mortgage statement", "Property tax bill", "Income documents", "Debt payout list", "Appraisal order", "Borrower benefit notes"],
+  bfs: ["T1 generals", "NOAs", "Business financials", "Articles of incorporation", "Bank statements", "Accountant letter where required"],
+  rental: ["Lease or market rent", "T776 or rental worksheet", "Property tax", "Condo fees", "Insurance", "Rental offset notes"],
+  private: ["Appraisal", "Mortgage statement", "Property tax status", "Exit strategy", "Purpose of funds", "Fee disclosure", "Independent legal advice notes"]
+};
+
+const revenueFeatures = [
+  ["Featured lender placement", "Homepage and rate board promotion with admin approval."],
+  ["Sponsored rate", "Clearly labelled rate placement with compliance disclaimer."],
+  ["Lender banner ads", "Targeted by province, lender type, and product category."],
+  ["Webinar sponsorship", "Lender education events and broker registration tracking."],
+  ["Premium broker subscription", "Saved scenarios, alerts, PDFs, and advanced tools."],
+  ["Brokerage team plan", "Team dashboards, admin seats, and shared preferred lenders."]
+];
 
 document.querySelector("#todayLabel").textContent = new Intl.DateTimeFormat("en-CA", {
   weekday: "short",
@@ -2502,6 +2553,47 @@ preferredLenderSelect.addEventListener("change", () => {
 refreshWeatherButton?.addEventListener("click", () => initializeWeather(true));
 
 rateLenderSelect.addEventListener("change", () => populateRateEditor(rateLenderSelect.value));
+
+[dashboardLenderFilter, dashboardProductFilter, dashboardProvinceFilter, dashboardClosingFilter].forEach((control) => {
+  control?.addEventListener("change", renderDailyRatesDashboard);
+});
+
+document.querySelector("#clearComparison")?.addEventListener("click", () => {
+  selectedComparisonIds = [];
+  localStorage.setItem(comparisonStorageKey, JSON.stringify(selectedComparisonIds));
+  renderDailyRatesDashboard();
+});
+
+dealMatchForm?.addEventListener("submit", (event) => {
+  event.preventDefault();
+  renderDealMatchResults();
+});
+
+policySearchForm?.addEventListener("submit", (event) => {
+  event.preventDefault();
+  renderPolicySearchResults(policySearchInput.value);
+});
+
+document.querySelector("#runAffordability")?.addEventListener("click", renderAffordabilityTool);
+document.querySelector("#runRefinance")?.addEventListener("click", renderRefinanceTool);
+document.querySelector("#runRentalWorksheet")?.addEventListener("click", renderRentalWorksheetTool);
+document.querySelector("#generateChecklist")?.addEventListener("click", renderChecklistTool);
+
+lenderPortalForm?.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const updates = JSON.parse(localStorage.getItem(lenderUpdateStorageKey) || "[]");
+  const lender = lenders.find((item) => item.id === lenderPortalSelect.value);
+  updates.unshift({
+    lenderId: lender?.id,
+    lenderName: lender?.name,
+    promotion: document.querySelector("#lenderPromotionInput").value,
+    policy: document.querySelector("#lenderPolicyInput").value,
+    status: "Pending admin approval",
+    submittedAt: new Date().toLocaleString("en-CA")
+  });
+  localStorage.setItem(lenderUpdateStorageKey, JSON.stringify(updates.slice(0, 8)));
+  renderOperationsCenter();
+});
 
 document.addEventListener("click", (event) => {
   const insurerProgramLink = event.target.closest("[data-insurer-program]");
@@ -2975,6 +3067,11 @@ function render() {
   renderInsurers();
   renderContacts();
   renderRateSelect();
+  renderDailyRatesDashboard();
+  renderDealMatchResults();
+  renderPolicySearchResults(policySearchInput?.value || "");
+  renderBrokerToolsDefaults();
+  renderOperationsCenter();
 }
 
 function renderSearchSummary(resultCount) {
@@ -3267,12 +3364,13 @@ function renderDetails(lender) {
         <a class="website-link" href="${lender.website}" target="_blank" rel="noreferrer">Website</a>
       </div>
 
-      ${renderLenderPageSection("1", "Products", renderLenderProducts(lender))}
-      ${renderLenderPageSection("2", "Policies", renderLenderPolicies(lender))}
-      ${renderLenderPageSection("3", "Underwriting Guidelines", renderUnderwritingContent(lender))}
-      ${renderLenderPageSection("4", "Special Offers", renderSpecialOffers(lender))}
-      ${renderLenderPageSection("5", "Special Features", renderSpecialFeatures(lender))}
-      ${renderLenderPageSection("6", "BDM Contact Information", renderBdmContactInfo(lender))}
+      ${renderLenderPageSection("1", "Lender Profile", renderLenderProfileSummary(lender))}
+      ${renderLenderPageSection("2", "Products", renderLenderProducts(lender))}
+      ${renderLenderPageSection("3", "Policies", renderLenderPolicies(lender))}
+      ${renderLenderPageSection("4", "Underwriting Guidelines", renderUnderwritingContent(lender))}
+      ${renderLenderPageSection("5", "Special Offers", renderSpecialOffers(lender))}
+      ${renderLenderPageSection("6", "Special Features", renderSpecialFeatures(lender))}
+      ${renderLenderPageSection("7", "BDM Contact Information", renderBdmContactInfo(lender))}
     </article>
   `;
 }
@@ -3286,6 +3384,30 @@ function renderLenderPageSection(number, title, content) {
       </div>
       ${content}
     </section>
+  `;
+}
+
+function renderLenderProfileSummary(lender) {
+  const policy = getProgramPolicy(lender.programs[0], lender);
+  const guidelines = underwritingGuidelines[lender.id] || defaultUnderwritingGuidelines(lender);
+  const turnaround = lender.type === "private lender" ? "Same day to 48 hours by file" : lender.type === "alternative" ? "2-5 business days with full package" : "24-72 hours after complete submission";
+  const restrictions = lender.type === "private lender" ? "Marketable property, clear title, exit strategy, and location appetite are critical." : "Confirm condo, rural, acreage, unique property, rental, and insurer overlays before submission.";
+
+  return `
+    <div class="profile-intel-grid">
+      <article><span>About lender</span><strong>${titleCase(lender.type)} lender serving ${lender.region}</strong><p>${lender.guidelines[0]}</p></article>
+      <article><span>Lending areas</span><strong>${policy.geography}</strong><p>Province and property-location rules should be confirmed with the lender desk.</p></article>
+      <article><span>Minimum credit score</span><strong>${policy.minScore}</strong><p>${guidelines.credit}</p></article>
+      <article><span>Max LTV</span><strong>${policy.maxLtv}</strong><p>${guidelines.ltv}</p></article>
+      <article><span>Income rules</span><strong>Document by product</strong><p>${guidelines.income}</p></article>
+      <article><span>Rental rules</span><strong>${lender.programs.includes("Rental") || lender.programs.includes("Residential Rentals") ? "Rental path tagged" : "Confirm rental appetite"}</strong><p>Use lender worksheet, lease, market rent, T776, and offset/add-back policy where required.</p></article>
+      <article><span>BFS rules</span><strong>${lender.programs.includes("Self-employed") ? "BFS tagged" : "Confirm BFS policy"}</strong><p>Review T1/NOA, business financials, add-backs, bank statements, and stated-income reasonability.</p></article>
+      <article><span>Property restrictions</span><strong>Review before submit</strong><p>${restrictions}</p></article>
+      <article><span>Turnaround time</span><strong>${turnaround}</strong><p>Complete packages and clean notes improve speed.</p></article>
+      <article><span>Escalation contact</span><strong>${lender.bdm}</strong><p>${lender.email} · ${lender.phone}</p></article>
+      <article><span>Documents required</span><strong>File-type checklist</strong><p>${guidelines.documents}</p></article>
+      <article><span>Submission notes</span><strong>${lender.portal}</strong><p>${guidelines.watch}</p></article>
+    </div>
   `;
 }
 
@@ -3830,6 +3952,354 @@ function renderContacts() {
       `
     )
     .join("");
+}
+
+function buildDailyRateRows() {
+  return lenders.flatMap((lender) => {
+    const policy = getProgramPolicy(lender.programs[0], lender);
+    const speed = lender.type === "private lender" ? "fast" : lender.type === "alternative" ? "manual" : "standard";
+    const rows = [
+      { key: "insuredFixed", product: "Insured fixed", rate: lender.rates.insuredFixed, term: "5-year", ltv: "Up to 95%", beacon: "600+", province: lender.region, speed },
+      { key: "variable", product: "Variable", rate: lender.rates.variable, term: "Prime-linked", ltv: "Up to 80%-95%", beacon: "650+", province: lender.region, speed },
+      { key: "conventional", product: "Conventional", rate: lender.rates.conventional, term: "5-year", ltv: "Up to 80%", beacon: extractMinimumScore(policy.minScore) ? `${extractMinimumScore(policy.minScore)}+` : "Confirm", province: lender.region, speed },
+      { key: "alt", product: lender.type === "private lender" ? "Private / MIC" : "Alternative", rate: lender.rates.alt, term: "1-5 year", ltv: policy.maxLtv, beacon: policy.minScore, province: lender.region, speed }
+    ];
+
+    if (lender.programs.includes("Rental") || lender.programs.includes("Residential Rentals")) {
+      rows.push({ key: "rental", product: "Rental", rate: lender.rates.conventional || lender.rates.alt, term: "5-year", ltv: "Up to 80%", beacon: "620+", province: lender.region, speed });
+    }
+    if (lender.programs.includes("HELOC")) {
+      rows.push({ key: "heloc", product: "HELOC", rate: lender.rates.variable, term: "Revolving", ltv: "65%-80%", beacon: "680+", province: lender.region, speed });
+    }
+    if (lender.type === "private lender") {
+      rows.push({ key: "private", product: "Private", rate: lender.rates.alt, term: "6-24 months", ltv: "65%-75%", beacon: "Equity-led", province: lender.region, speed: "fast" });
+    }
+    if (["bank", "credit union"].includes(lender.type)) {
+      rows.push({ key: "commercial", product: "Commercial", rate: null, term: "By file", ltv: "Confirm", beacon: "Confirm", province: lender.region, speed: "manual" });
+    }
+
+    return rows.map((row, index) => ({
+      ...row,
+      id: `${lender.id}-${row.key}-${index}`,
+      lenderId: lender.id,
+      lenderName: lender.name,
+      lenderType: lender.type,
+      color: lender.brandColor,
+      updated: lender.dealDesk?.sheetDate ? `Rate desk ${lender.dealDesk.sheetDate}` : lender.updated,
+      change: rateChangeDirection(lender.id, row.key)
+    }));
+  });
+}
+
+function rateChangeDirection(lenderId, key) {
+  const seed = [...`${lenderId}-${key}`].reduce((total, char) => total + char.charCodeAt(0), 0);
+  return ["decreased", "unchanged", "increased"][seed % 3];
+}
+
+function renderDailyRatesDashboard() {
+  if (!dailyRateTable) return;
+  const previousLender = dashboardLenderFilter.value || "all";
+  dashboardLenderFilter.innerHTML = `<option value="all">All lenders</option>${lenders.map((lender) => `<option value="${lender.id}">${lender.name}</option>`).join("")}`;
+  dashboardLenderFilter.value = lenders.some((lender) => lender.id === previousLender) ? previousLender : "all";
+  const selectedLender = dashboardLenderFilter.value || "all";
+  const selectedProduct = dashboardProductFilter.value || "all";
+  const selectedProvince = dashboardProvinceFilter.value || "all";
+  const selectedSpeed = dashboardClosingFilter.value || "all";
+  const rows = buildDailyRateRows().filter((row) => {
+    return (
+      (selectedLender === "all" || row.lenderId === selectedLender) &&
+      (selectedProduct === "all" || row.key === selectedProduct || normalizeSearchText(row.product).includes(selectedProduct)) &&
+      (selectedProvince === "all" || row.province === selectedProvince) &&
+      (selectedSpeed === "all" || row.speed === selectedSpeed)
+    );
+  });
+
+  document.querySelector("#rateLastUpdated").textContent = `Last updated ${new Date().toLocaleString("en-CA", { dateStyle: "medium", timeStyle: "short" })}`;
+  document.querySelector("#dashboardKpiGrid").innerHTML = [
+    ["Rate products", rows.length],
+    ["Tracked lenders", new Set(rows.map((row) => row.lenderId)).size],
+    ["Fast closers", rows.filter((row) => row.speed === "fast").length],
+    ["Policy sources", platformDataModel.collections.length]
+  ]
+    .map(([label, value]) => `<article><span>${label}</span><strong>${value}</strong></article>`)
+    .join("");
+
+  dailyRateTable.innerHTML = rows
+    .slice(0, 80)
+    .map(
+      (row) => `
+        <tr>
+          <td><input type="checkbox" data-compare-rate="${row.id}" ${selectedComparisonIds.includes(row.id) ? "checked" : ""} /></td>
+          <td><strong>${row.lenderName}</strong><br /><span class="contact-line">${titleCase(row.lenderType)}</span></td>
+          <td>${row.product}</td>
+          <td>${row.term}</td>
+          <td><span class="rate-change ${row.change}">${rate(row.rate)}</span></td>
+          <td>${row.ltv}</td>
+          <td>${row.beacon}</td>
+          <td>${titleCase(row.speed)}</td>
+          <td>${row.updated}</td>
+        </tr>
+      `
+    )
+    .join("");
+
+  dailyRateTable.querySelectorAll("[data-compare-rate]").forEach((checkbox) => {
+    checkbox.addEventListener("change", () => {
+      const id = checkbox.dataset.compareRate;
+      selectedComparisonIds = checkbox.checked ? [...new Set([...selectedComparisonIds, id])] : selectedComparisonIds.filter((item) => item !== id);
+      localStorage.setItem(comparisonStorageKey, JSON.stringify(selectedComparisonIds.slice(0, 6)));
+      renderDailyRatesDashboard();
+    });
+  });
+
+  renderComparisonOutput(rows);
+}
+
+function renderComparisonOutput(rows) {
+  const allRows = buildDailyRateRows();
+  const selectedRows = selectedComparisonIds.map((id) => allRows.find((row) => row.id === id)).filter(Boolean);
+  if (!selectedRows.length) {
+    comparisonOutput.innerHTML = `<p class="contact-line">Select rates from the table to compare lenders side by side.</p>`;
+    return;
+  }
+  comparisonOutput.innerHTML = selectedRows
+    .map(
+      (row) => `
+        <article class="comparison-card" style="--lender-color: ${row.color};">
+          <strong>${row.lenderName}</strong>
+          <span>${row.product} · ${row.term}</span>
+          <b>${rate(row.rate)}</b>
+          <small>${row.ltv} · ${row.beacon} · ${titleCase(row.speed)}</small>
+        </article>
+      `
+    )
+    .join("");
+}
+
+function readDealScenario() {
+  const propertyValue = Number(document.querySelector("#propertyValueInput")?.value || 0);
+  const mortgageAmount = Number(document.querySelector("#mortgageAmountInput")?.value || 0);
+  return {
+    purpose: document.querySelector("#dealPurpose")?.value || "purchase",
+    propertyValue,
+    mortgageAmount,
+    downPayment: Number(document.querySelector("#downPaymentInput")?.value || 0),
+    incomeType: document.querySelector("#incomeTypeInput")?.value || "salaried",
+    creditScore: Number(document.querySelector("#dealCreditScoreInput")?.value || 650),
+    propertyType: document.querySelector("#propertyTypeInput")?.value || "detached",
+    occupancy: document.querySelector("#occupancyInput")?.value || "owner",
+    province: document.querySelector("#dealProvinceInput")?.value || "Ontario",
+    closingDate: document.querySelector("#closingDateInput")?.value,
+    ltv: propertyValue ? Math.round((mortgageAmount / propertyValue) * 100) : 0
+  };
+}
+
+function renderDealMatchResults() {
+  if (!dealMatchResults) return;
+  const scenario = readDealScenario();
+  const matches = lenders
+    .map((lender) => scoreLenderForScenario(lender, scenario))
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 5);
+
+  dealMatchResults.innerHTML = `
+    <div class="match-summary">
+      <p class="eyebrow">Scenario summary</p>
+      <h4>${titleCase(scenario.purpose.replace(/-/g, " / "))} · ${scenario.ltv}% LTV · ${scenario.creditScore} beacon</h4>
+      <p>Prototype matching uses lender policy rules and rate desk data now. The structure is ready for future AI scoring and admin approval.</p>
+    </div>
+    <div class="match-card-list">
+      ${matches
+        .map(
+          (match) => `
+            <article class="match-card" style="--lender-color: ${match.lender.brandColor};">
+              <div>
+                <span class="match-score">${match.score}% fit</span>
+                <h4>${match.lender.name}</h4>
+                <p>${rate(match.lender.rates.insuredFixed || match.lender.rates.conventional || match.lender.rates.alt)} possible starting point · ${titleCase(match.lender.type)}</p>
+              </div>
+              <div class="program-columns">
+                <div><strong>Why it fits</strong><ul>${match.reasons.map((item) => `<li>${item}</li>`).join("")}</ul></div>
+                <div><strong>Missing / risk</strong><ul>${match.risks.map((item) => `<li>${item}</li>`).join("")}</ul></div>
+              </div>
+              <p class="contact-line"><strong>Documents:</strong> ${match.documents.join(", ")}</p>
+            </article>
+          `
+        )
+        .join("")}
+    </div>
+  `;
+}
+
+function scoreLenderForScenario(lender, scenario) {
+  const programText = normalizeSearchText(lender.programs.join(" "));
+  const reasons = [];
+  const risks = [];
+  let score = 40;
+
+  if (scenario.province === lender.region || lender.region === "Ontario") {
+    score += 10;
+    reasons.push(`Lending area includes ${lender.region}`);
+  }
+  if (scenario.creditScore >= 680 && ["bank", "monoline", "credit union"].includes(lender.type)) {
+    score += 18;
+    reasons.push("Prime credit profile supports bank, monoline, or credit union review");
+  }
+  if (scenario.creditScore < 640 && ["alternative", "private lender"].includes(lender.type)) {
+    score += 18;
+    reasons.push("Alternative/private path can handle broader credit stories");
+  }
+  if (scenario.ltv <= 80) {
+    score += 12;
+    reasons.push("LTV is within conventional/refinance range");
+  } else if (programText.includes("insured")) {
+    score += 12;
+    reasons.push("High-ratio insured purchase path may fit");
+  }
+  if (scenario.incomeType === "bfs" && programText.includes("self employed")) {
+    score += 14;
+    reasons.push("Tagged for self-employed / BFS files");
+  }
+  if (scenario.incomeType === "stated" && (programText.includes("alternative") || lender.type === "private lender")) {
+    score += 14;
+    reasons.push("Stated or reasonability income path may be available");
+  }
+  if (scenario.occupancy === "rental" && programText.includes("rental")) {
+    score += 14;
+    reasons.push("Rental program or rental worksheet support is tagged");
+  }
+  if (scenario.ltv > 80 && !programText.includes("insured")) risks.push("High LTV may need insurer approval or a different lender");
+  if (scenario.creditScore < 600) risks.push("Beacon score may require alternative/private review and stronger exit strategy");
+  if (scenario.incomeType === "stated") risks.push("Income reasonability, fees, and borrower benefit need careful disclosure");
+  if (!risks.length) risks.push("Confirm current rate hold, underwriting overlays, and documents before submission");
+
+  const docs = checklistForScenario(scenario);
+  return { lender, score: Math.min(score, 96), reasons: reasons.slice(0, 4), risks: risks.slice(0, 4), documents: docs.slice(0, 6) };
+}
+
+function checklistForScenario(scenario) {
+  if (scenario.incomeType === "bfs") return brokerToolsChecklist.bfs;
+  if (scenario.occupancy === "rental") return brokerToolsChecklist.rental;
+  if (scenario.creditScore < 600) return brokerToolsChecklist.private;
+  return brokerToolsChecklist[scenario.purpose === "purchase" ? "purchase" : "refinance"];
+}
+
+function renderPolicySearchResults(query = "") {
+  if (!policySearchResults) return;
+  const normalized = normalizeSearchText(query);
+  const terms = expandSearchTerms(normalized);
+  const results = lenders
+    .map((lender) => {
+      const policies = lender.programs.map((program) => ({ program, policy: getProgramPolicy(program, lender) }));
+      const matchingPolicies = policies.filter(({ program, policy }) => {
+        const text = normalizeSearchText([program, policy.minScore, policy.maxLtv, policy.features.join(" "), policy.exceptions.join(" "), policy.exclusions.join(" ")].join(" "));
+        return !normalized || terms.some((term) => text.includes(term)) || normalized.split(" ").some((token) => text.includes(token));
+      });
+      return { lender, matchingPolicies };
+    })
+    .filter((item) => item.matchingPolicies.length)
+    .slice(0, 8);
+
+  policySearchResults.innerHTML = results.length
+    ? results
+        .map(
+          ({ lender, matchingPolicies }) => `
+            <article class="policy-result-card" style="--lender-color: ${lender.brandColor};">
+              <strong>${lender.name}</strong>
+              <span>${titleCase(lender.type)} · Source: internal policy profile · Last updated ${lender.updated}</span>
+              ${matchingPolicies
+                .slice(0, 2)
+                .map(({ program, policy }) => `<p><b>${program}:</b> ${policy.maxLtv}; ${policy.minScore}. ${policy.features[0]}</p>`)
+                .join("")}
+            </article>
+          `
+        )
+        .join("")
+    : `<p class="contact-line">No policy match found. Try rental income, 80% LTV, BFS, stated income, HELOC, private, or switch.</p>`;
+}
+
+function renderBrokerToolsDefaults() {
+  renderAffordabilityTool();
+  renderRefinanceTool();
+  renderRentalWorksheetTool();
+  renderChecklistTool();
+}
+
+function renderAffordabilityTool() {
+  const income = Number(document.querySelector("#toolIncome")?.value || 0);
+  const debts = Number(document.querySelector("#toolDebts")?.value || 0);
+  const rateValue = Number(document.querySelector("#toolRate")?.value || 0) + 2;
+  const monthlyIncome = income / 12;
+  const maxHousing = monthlyIncome * 0.39 - debts;
+  const maxTotalDebt = monthlyIncome * 0.44 - debts;
+  document.querySelector("#affordabilityOutput").innerHTML = `
+    <strong>Stress-test rate: ${rateValue.toFixed(2)}%</strong>
+    <span>Estimated max housing payment: ${currency(Math.max(maxHousing, 0))}</span>
+    <span>Estimated max total debt room: ${currency(Math.max(maxTotalDebt, 0))}</span>
+  `;
+}
+
+function renderRefinanceTool() {
+  const value = Number(document.querySelector("#refiValue")?.value || 0);
+  const mortgage = Number(document.querySelector("#refiMortgage")?.value || 0);
+  const costs = Number(document.querySelector("#refiCosts")?.value || 0);
+  const maxRefi = value * 0.8;
+  document.querySelector("#refinanceOutput").innerHTML = `
+    <strong>80% refinance limit: ${currency(maxRefi)}</strong>
+    <span>Estimated equity available after costs: ${currency(Math.max(maxRefi - mortgage - costs, 0))}</span>
+  `;
+}
+
+function renderRentalWorksheetTool() {
+  const rent = Number(document.querySelector("#rentalIncomeTool")?.value || 0);
+  const mortgage = Number(document.querySelector("#rentalMortgageTool")?.value || 0);
+  const costs = Number(document.querySelector("#rentalCostsTool")?.value || 0);
+  const offset = rent * 0.8 - mortgage - costs;
+  document.querySelector("#rentalOutput").innerHTML = `
+    <strong>80% rental offset: ${currency(rent * 0.8)}</strong>
+    <span>${offset >= 0 ? "Positive" : "Shortfall"} cash-flow estimate: ${currency(Math.abs(offset))}</span>
+  `;
+}
+
+function renderChecklistTool() {
+  const type = document.querySelector("#checklistType")?.value || "purchase";
+  document.querySelector("#checklistOutput").innerHTML = `<ul>${brokerToolsChecklist[type].map((item) => `<li>${item}</li>`).join("")}</ul>`;
+}
+
+function renderOperationsCenter() {
+  const updates = JSON.parse(localStorage.getItem(lenderUpdateStorageKey) || "[]");
+  const profile = JSON.parse(localStorage.getItem(brokerProfileStorageKey) || "{}");
+  if (lenderPortalSelect) lenderPortalSelect.innerHTML = lenders.map((lender) => `<option value="${lender.id}">${lender.name}</option>`).join("");
+  document.querySelector("#adminDashboard").innerHTML = `
+    <div class="ops-metric-grid">
+      <span><b>${lenders.length}</b> lenders</span>
+      <span><b>${buildDailyRateRows().length}</b> rate rows</span>
+      <span><b>${updates.length}</b> pending updates</span>
+      <span><b>${selectedComparisonIds.length}</b> comparisons</span>
+    </div>
+    <ul class="policy-list">
+      <li>Add/edit lenders and upload rate sheets.</li>
+      <li>Approve AI/lender changes before publishing.</li>
+      <li>Manage users, ads, featured posts, alerts, and analytics.</li>
+    </ul>
+  `;
+  document.querySelector("#lenderPortalFeed").innerHTML = updates.length
+    ? updates.map((item) => `<article class="mini-feed"><strong>${item.lenderName}</strong><span>${item.status} · ${item.submittedAt}</span><p>${item.promotion}</p></article>`).join("")
+    : `<p class="contact-line">No lender updates submitted yet.</p>`;
+  document.querySelector("#brokerAccountPanel").innerHTML = `
+    <ul class="policy-list">
+      <li>Saved lenders: ${preferredLenderId ? lenders.find((item) => item.id === preferredLenderId)?.name : "Choose a preferred lender"}</li>
+      <li>Saved scenarios: ${profile.savedScenarios || 0}</li>
+      <li>Saved comparisons: ${selectedComparisonIds.length}</li>
+      <li>Favourite BDMs and province preferences ready for account storage.</li>
+      <li>Email preferences and rate alerts can use the local data model now.</li>
+    </ul>
+  `;
+  document.querySelector("#revenuePanel").innerHTML = revenueFeatures.map(([title, text]) => `<article class="revenue-row"><strong>${title}</strong><span>${text}</span></article>`).join("");
+}
+
+function currency(value) {
+  return new Intl.NumberFormat("en-CA", { style: "currency", currency: "CAD", maximumFractionDigits: 0 }).format(value || 0);
 }
 
 function normalizeInsurerProgram(program) {
