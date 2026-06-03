@@ -2410,6 +2410,7 @@ const policySearchInput = document.querySelector("#policySearchInput");
 const policySearchResults = document.querySelector("#policySearchResults");
 const lenderPortalSelect = document.querySelector("#lenderPortalSelect");
 const lenderPortalForm = document.querySelector("#lenderPortalForm");
+const runScenarioLabButton = document.querySelector("#runScenarioLab");
 
 const fallbackMortgageNews = [
   {
@@ -2621,6 +2622,7 @@ document.querySelector("#runAffordability")?.addEventListener("click", renderAff
 document.querySelector("#runRefinance")?.addEventListener("click", renderRefinanceTool);
 document.querySelector("#runRentalWorksheet")?.addEventListener("click", renderRentalWorksheetTool);
 document.querySelector("#generateChecklist")?.addEventListener("click", renderChecklistTool);
+runScenarioLabButton?.addEventListener("click", renderScenarioLab);
 
 lenderPortalForm?.addEventListener("submit", (event) => {
   event.preventDefault();
@@ -3112,6 +3114,7 @@ function render() {
   renderRateSelect();
   renderDailyRatesDashboard();
   renderDealMatchResults();
+  renderScenarioLab();
   renderPolicySearchResults(policySearchInput?.value || "");
   renderBrokerToolsDefaults();
   renderPartnerPlacements();
@@ -4219,6 +4222,132 @@ function scoreLenderForScenario(lender, scenario) {
 
   const docs = checklistForScenario(scenario);
   return { lender, score: Math.min(score, 96), reasons: reasons.slice(0, 4), risks: risks.slice(0, 4), documents: docs.slice(0, 6) };
+}
+
+function readScenarioLabInputs() {
+  const propertyValue = Number(document.querySelector("#scenarioPropertyValue")?.value || 0);
+  const equity = Number(document.querySelector("#scenarioEquity")?.value || 0);
+  return {
+    propertyValue,
+    equity,
+    creditScore: Number(document.querySelector("#scenarioBeacon")?.value || 650),
+    incomeType: document.querySelector("#scenarioIncomeType")?.value || "salaried",
+    province: document.querySelector("#scenarioProvince")?.value || "Ontario"
+  };
+}
+
+function buildScenarioVariants(base) {
+  const purchaseMortgage = Math.max(base.propertyValue - base.equity, 0);
+  const refinanceMortgage = Math.min(base.propertyValue * 0.8, Math.max(base.propertyValue - base.equity * 0.45, 0));
+  const rentalMortgage = Math.min(base.propertyValue * 0.8, purchaseMortgage);
+  const privateMortgage = Math.min(base.propertyValue * 0.75, purchaseMortgage);
+  return [
+    {
+      id: "prime-purchase",
+      label: "Prime Purchase",
+      purpose: "purchase",
+      occupancy: "owner",
+      propertyType: "detached",
+      incomeType: base.incomeType,
+      creditScore: base.creditScore,
+      propertyValue: base.propertyValue,
+      mortgageAmount: purchaseMortgage,
+      province: base.province,
+      strategy: "Best when income is clean, credit is strong, and insured/conventional policy fits."
+    },
+    {
+      id: "refinance-consolidation",
+      label: "Refinance / Consolidation",
+      purpose: "refinance",
+      occupancy: "owner",
+      propertyType: "detached",
+      incomeType: base.incomeType,
+      creditScore: base.creditScore,
+      propertyValue: base.propertyValue,
+      mortgageAmount: refinanceMortgage,
+      province: base.province,
+      strategy: "Tests available equity, borrower benefit, penalty math, and debt cleanup potential."
+    },
+    {
+      id: "rental-investor",
+      label: "Rental / Investor",
+      purpose: "purchase",
+      occupancy: "rental",
+      propertyType: "rental",
+      incomeType: base.incomeType === "salaried" ? "rental" : base.incomeType,
+      creditScore: base.creditScore,
+      propertyValue: base.propertyValue,
+      mortgageAmount: rentalMortgage,
+      province: base.province,
+      strategy: "Compares rental worksheet, offset/add-back, cash flow, and investor lender appetite."
+    },
+    {
+      id: "alt-private-bridge",
+      label: "Alt / Private Bridge",
+      purpose: "refinance",
+      occupancy: "owner",
+      propertyType: "detached",
+      incomeType: base.incomeType === "salaried" ? "stated" : base.incomeType,
+      creditScore: Math.min(base.creditScore, 620),
+      propertyValue: base.propertyValue,
+      mortgageAmount: privateMortgage,
+      province: base.province,
+      strategy: "Explores a short-term solution when timing, credit, income, or documents do not fit prime."
+    }
+  ].map((scenario) => ({
+    ...scenario,
+    downPayment: Math.max(scenario.propertyValue - scenario.mortgageAmount, 0),
+    ltv: scenario.propertyValue ? Math.round((scenario.mortgageAmount / scenario.propertyValue) * 100) : 0
+  }));
+}
+
+function renderScenarioLab() {
+  const grid = document.querySelector("#scenarioCardGrid");
+  const insightPanel = document.querySelector("#scenarioInsightPanel");
+  if (!grid || !insightPanel) return;
+  const base = readScenarioLabInputs();
+  const variants = buildScenarioVariants(base).map((scenario) => {
+    const matches = lenders.map((lender) => scoreLenderForScenario(lender, scenario)).sort((a, b) => b.score - a.score);
+    return { scenario, best: matches[0], alternates: matches.slice(1, 3) };
+  });
+  const strongest = variants.reduce((best, item) => (item.best.score > best.best.score ? item : best), variants[0]);
+  const fastest = variants.find((item) => item.best.lender.type === "private lender") || variants[variants.length - 1];
+
+  grid.innerHTML = variants
+    .map(
+      ({ scenario, best, alternates }) => `
+        <article class="scenario-card">
+          <span class="scenario-label">${scenario.label}</span>
+          <h4>${best.score}% fit · ${best.lender.name}</h4>
+          <div class="scenario-stats">
+            <span><small>LTV</small><strong>${scenario.ltv}%</strong></span>
+            <span><small>Mortgage</small><strong>${currency(scenario.mortgageAmount)}</strong></span>
+            <span><small>Beacon</small><strong>${scenario.creditScore}</strong></span>
+          </div>
+          <p>${scenario.strategy}</p>
+          <div class="badge-row">${alternates.map((item) => programBadge(`${item.lender.name} ${item.score}%`, item.lender.programs[0])).join("")}</div>
+        </article>
+      `
+    )
+    .join("");
+
+  insightPanel.innerHTML = `
+    <article class="novelty-insight-card">
+      <p class="eyebrow">Audience hook</p>
+      <h4>Scenario Switchboard</h4>
+      <p>Show a client how the lender path changes when the same file becomes a purchase, refinance, rental, or short-term bridge. This is designed as a memorable broker-facing feature, not another static rate sheet.</p>
+    </article>
+    <article class="novelty-insight-card">
+      <p class="eyebrow">Best path now</p>
+      <h4>${strongest.scenario.label} · ${strongest.best.lender.name}</h4>
+      <p>${strongest.best.reasons[0] || "Strongest current fit based on policy signals and lender category."}</p>
+    </article>
+    <article class="novelty-insight-card">
+      <p class="eyebrow">Speed option</p>
+      <h4>${fastest.scenario.label}</h4>
+      <p>Use this when closing speed, document gaps, credit story, or exit strategy matters more than lowest headline rate.</p>
+    </article>
+  `;
 }
 
 function checklistForScenario(scenario) {

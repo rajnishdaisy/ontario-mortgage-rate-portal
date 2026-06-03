@@ -886,16 +886,20 @@ button.best-rate-cell:hover {
   order: -7;
 }
 
-#policy-search {
+#scenario-lab {
   order: -6;
 }
 
-#broker-tools {
+#policy-search {
   order: -5;
 }
 
-#admin-center {
+#broker-tools {
   order: -4;
+}
+
+#admin-center {
+  order: -3;
 }
 
 #featured-partners {
@@ -1046,8 +1050,14 @@ button.best-rate-cell:hover {
 }
 
 .intelligence-overview,
-.ai-match-band {
+.ai-match-band,
+.scenario-lab-band {
   border-color: color-mix(in srgb, var(--accent) 24%, var(--line));
+}
+
+.scenario-lab-band {
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--green) 8%, var(--surface)), color-mix(in srgb, var(--accent) 6%, var(--surface)));
 }
 
 .rate-filter-bar {
@@ -1140,6 +1150,8 @@ button.best-rate-cell:hover {
 .comparison-panel,
 .deal-form,
 .match-results,
+.scenario-controls,
+.scenario-results,
 .policy-query,
 .policy-results,
 .tool-card,
@@ -1187,6 +1199,7 @@ button.best-rate-cell:hover {
 }
 
 .deal-match-layout,
+.scenario-lab-layout,
 .policy-search-layout {
   display: grid;
   grid-template-columns: minmax(320px, 0.42fr) minmax(0, 0.58fr);
@@ -1196,6 +1209,7 @@ button.best-rate-cell:hover {
 }
 
 .deal-form,
+.scenario-controls,
 .policy-query,
 .tool-card,
 .ops-card {
@@ -1209,6 +1223,7 @@ button.best-rate-cell:hover {
 }
 
 .deal-form label,
+.scenario-controls label,
 .tool-form label,
 .ops-form label {
   display: grid;
@@ -1223,6 +1238,7 @@ button.best-rate-cell:hover {
 }
 
 .match-results,
+.scenario-results,
 .policy-results {
   padding: 14px;
   display: grid;
@@ -1261,6 +1277,85 @@ button.best-rate-cell:hover {
   border: 1px solid color-mix(in srgb, var(--green) 28%, var(--line));
   font-size: 0.78rem;
   font-weight: 900;
+}
+
+.scenario-card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.scenario-card,
+.novelty-insight-card {
+  border: 1px solid color-mix(in srgb, var(--accent) 20%, var(--line));
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: var(--shadow-soft);
+  padding: 14px;
+  display: grid;
+  gap: 10px;
+}
+
+.scenario-card {
+  border-left: 5px solid var(--accent);
+}
+
+.scenario-label {
+  width: max-content;
+  min-height: 28px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0 10px;
+  background: color-mix(in srgb, var(--accent) 10%, var(--surface));
+  color: var(--accent-strong);
+  border: 1px solid color-mix(in srgb, var(--accent) 24%, var(--line));
+  font-size: 0.76rem;
+  font-weight: 900;
+}
+
+.scenario-card h4,
+.novelty-insight-card h4 {
+  margin: 0;
+}
+
+.scenario-card p,
+.novelty-insight-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.scenario-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.scenario-stats span {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface-strong);
+  padding: 9px;
+  display: grid;
+  gap: 3px;
+}
+
+.scenario-stats small {
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.scenario-stats strong {
+  color: var(--accent-strong);
+}
+
+.scenario-insight-panel {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
 }
 
 .tools-grid,
@@ -2781,6 +2876,9 @@ menu {
   .dashboard-kpi-grid,
   .rate-dashboard-layout,
   .deal-match-layout,
+  .scenario-lab-layout,
+  .scenario-card-grid,
+  .scenario-insight-panel,
   .policy-search-layout,
   .tools-grid,
   .operations-cards,

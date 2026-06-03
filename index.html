@@ -529,6 +529,61 @@
           </div>
         </section>
 
+        <section class="band scenario-lab-band" id="scenario-lab">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Scenario Lab</p>
+              <h3>Compare deal paths before choosing the lender strategy.</h3>
+            </div>
+            <span class="live-pill">Novelty broker feature</span>
+          </div>
+
+          <div class="scenario-lab-layout">
+            <aside class="scenario-controls">
+              <div>
+                <p class="eyebrow">Client scenario</p>
+                <h4>What should we compare?</h4>
+              </div>
+              <label>
+                Base property value
+                <input id="scenarioPropertyValue" type="number" min="0" value="850000" />
+              </label>
+              <label>
+                Available down payment / equity
+                <input id="scenarioEquity" type="number" min="0" value="170000" />
+              </label>
+              <label>
+                Beacon score
+                <input id="scenarioBeacon" type="number" min="300" max="900" value="680" />
+              </label>
+              <label>
+                Income story
+                <select id="scenarioIncomeType">
+                  <option value="salaried">Salaried</option>
+                  <option value="bfs">Business for self</option>
+                  <option value="stated">Stated income</option>
+                  <option value="rental">Rental income</option>
+                </select>
+              </label>
+              <label>
+                Province
+                <select id="scenarioProvince">
+                  <option value="Ontario">Ontario</option>
+                  <option value="British Columbia">British Columbia</option>
+                  <option value="Alberta">Alberta</option>
+                  <option value="Quebec">Quebec</option>
+                </select>
+              </label>
+              <button class="primary-button" id="runScenarioLab" type="button">Compare Scenarios</button>
+            </aside>
+
+            <div class="scenario-results">
+              <div class="scenario-card-grid" id="scenarioCardGrid"></div>
+              <div class="scenario-insight-panel" id="scenarioInsightPanel"></div>
+            </div>
+          </div>
+        </section>
+
         <section class="band" id="policy-search">
           <div class="section-heading">
             <div>
