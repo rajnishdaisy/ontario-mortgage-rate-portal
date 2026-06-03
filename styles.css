@@ -945,6 +945,20 @@ button.best-rate-cell:hover {
   border-color: color-mix(in srgb, var(--accent) 30%, var(--line));
 }
 
+.real-estate-partner-card {
+  border-color: color-mix(in srgb, var(--green) 32%, var(--line));
+}
+
+.real-estate-partner-card::before {
+  background: linear-gradient(180deg, var(--green), var(--accent));
+}
+
+.real-estate-partner-card .partner-badge {
+  background: color-mix(in srgb, var(--green) 12%, var(--surface));
+  border-color: color-mix(in srgb, var(--green) 34%, var(--line));
+  color: color-mix(in srgb, var(--green) 76%, var(--text));
+}
+
 .partner-logo {
   width: clamp(70px, 10vw, 112px);
   aspect-ratio: 1;

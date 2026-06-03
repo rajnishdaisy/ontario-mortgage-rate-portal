@@ -2496,6 +2496,19 @@ const defaultPartnerPlacements = [
     href: "https://www.dashsign.ca",
     profileTitle: "DashSign Partner Offer",
     profileNotes: ["E-signature workflow for broker documentation", "Annual Deal Desk subscription partner benefit", "External offer details confirmed by partner"]
+  },
+  {
+    id: "akash-sharma-real-estate",
+    type: "real-estate-partner",
+    enabled: true,
+    badge: "Preferred Real Estate Partner",
+    headline: "Akash Sharma",
+    logoText: "Akash",
+    description: "Helping homebuyers, investors, and families navigate the Ontario real estate market with confidence. Specializing in residential purchases, investment properties, first-time homebuyers, and strategic real estate planning.",
+    ctaLabel: "View Partner Profile",
+    href: "#akash-sharma-profile",
+    profileTitle: "Akash Sharma Real Estate Partner Profile",
+    profileNotes: ["Buy", "Sell", "Invest", "First-Time Home Buyers", "Pre-Construction", "Investment Properties"]
   }
 ];
 
@@ -4372,9 +4385,10 @@ function renderPartnerPlacements() {
 
 function renderPartnerPlacementCard(placement) {
   const isBrokerage = placement.type === "featured-brokerage";
+  const isRealEstate = placement.type === "real-estate-partner";
   const target = placement.href.startsWith("http") ? `target="_blank" rel="noreferrer"` : "";
   return `
-    <article class="partner-card ${isBrokerage ? "featured-brokerage-card" : "partner-offer-card"}" id="${placement.id === "aasra-mortgage-brokerage" ? "aasra-profile" : ""}">
+    <article class="partner-card ${isBrokerage ? "featured-brokerage-card" : ""} ${isRealEstate ? "real-estate-partner-card" : ""} ${!isBrokerage && !isRealEstate ? "partner-offer-card" : ""}" id="${placement.href.startsWith("#") ? placement.href.slice(1) : ""}">
       <div class="partner-logo" aria-hidden="true">${placement.logoText}</div>
       <div class="partner-card-body">
         <span class="partner-badge">${placement.badge}</span>
