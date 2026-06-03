@@ -2697,6 +2697,8 @@ const policySearchResults = document.querySelector("#policySearchResults");
 const lenderPortalSelect = document.querySelector("#lenderPortalSelect");
 const lenderPortalForm = document.querySelector("#lenderPortalForm");
 const runScenarioLabButton = document.querySelector("#runScenarioLab");
+const radarFocus = document.querySelector("#radarFocus");
+const radarFileType = document.querySelector("#radarFileType");
 
 const fallbackMortgageNews = [
   {
@@ -2909,6 +2911,8 @@ document.querySelector("#runRefinance")?.addEventListener("click", renderRefinan
 document.querySelector("#runRentalWorksheet")?.addEventListener("click", renderRentalWorksheetTool);
 document.querySelector("#generateChecklist")?.addEventListener("click", renderChecklistTool);
 runScenarioLabButton?.addEventListener("click", renderScenarioLab);
+document.querySelector("#refreshRadar")?.addEventListener("click", renderBrokerEdgeRadar);
+[radarFocus, radarFileType].forEach((control) => control?.addEventListener("change", renderBrokerEdgeRadar));
 
 lenderPortalForm?.addEventListener("submit", (event) => {
   event.preventDefault();
@@ -3399,6 +3403,7 @@ function render() {
   renderContacts();
   renderRateSelect();
   renderDailyRatesDashboard();
+  renderBrokerEdgeRadar();
   renderDealMatchResults();
   renderScenarioLab();
   renderPolicySearchResults(policySearchInput?.value || "");
@@ -4407,6 +4412,105 @@ function renderComparisonOutput(rows) {
       `
     )
     .join("");
+}
+
+function buildBrokerEdgeRadarItems() {
+  const rows = buildDailyRateRows();
+  const lowestPrime = rows
+    .filter((row) => ["insuredFixed", "conventional"].includes(row.key) && typeof row.rate === "number")
+    .sort((a, b) => a.rate - b.rate)
+    .slice(0, 4);
+  const privateLenders = lenders.filter((lender) => lender.type === "private lender").slice(0, 6);
+  const alternativeLenders = lenders.filter((lender) => lender.type === "alternative").slice(0, 5);
+  const rentalLenders = lenders.filter((lender) => lender.programs.includes("Rental") || lender.programs.includes("Residential Rentals")).slice(0, 5);
+  const fastClosers = buildDailyRateRows().filter((row) => row.speed === "fast").slice(0, 5);
+
+  return [
+    ...lowestPrime.map((row) => ({
+      type: "rate",
+      badge: row.change === "decreased" ? "Rate drop watch" : "Rate move",
+      title: `${row.lenderName} ${row.product} at ${rate(row.rate)}`,
+      detail: `${row.term} pricing with ${row.ltv}. Use this for clean prime files where speed and headline rate matter.`,
+      action: "Add to comparison and confirm rate hold before quoting.",
+      lenderId: row.lenderId
+    })),
+    ...alternativeLenders.map((lender) => ({
+      type: "policy",
+      badge: "B-side appetite",
+      title: `${lender.name} for alternative income or credit`,
+      detail: lender.guidelines[0],
+      action: "Check income reasonability, score tier, LTV, fees, and exit path.",
+      lenderId: lender.id
+    })),
+    ...rentalLenders.map((lender) => ({
+      type: "policy",
+      badge: "Rental fit",
+      title: `${lender.name} rental worksheet opportunity`,
+      detail: "Tagged for rental/investor review. Compare offset/add-back, lease support, and T776 requirements.",
+      action: "Open lender profile and pull rental policy notes before submission.",
+      lenderId: lender.id
+    })),
+    ...fastClosers.map((row) => ({
+      type: "speed",
+      badge: "Fast closing lane",
+      title: `${row.lenderName} can be positioned for speed`,
+      detail: `${row.product} path with ${row.ltv}. Useful when closing date or documents are tight.`,
+      action: "Confirm appraisal/legal timing and prepare a clean exit-strategy note.",
+      lenderId: row.lenderId
+    })),
+    ...privateLenders.map((lender) => ({
+      type: "private",
+      badge: "Private / MIC signal",
+      title: `${lender.name} for equity-led solutions`,
+      detail: "Good for short-term bridge, stated-income, bruised-credit, or second mortgage comparison.",
+      action: "Disclose fees, term risk, borrower benefit, and exit strategy early.",
+      lenderId: lender.id
+    }))
+  ];
+}
+
+function renderBrokerEdgeRadar() {
+  const grid = document.querySelector("#brokerEdgeRadarGrid");
+  if (!grid) return;
+  const focus = radarFocus?.value || "all";
+  const fileType = radarFileType?.value || "purchase";
+  const fileTerms = {
+    purchase: ["rate", "policy"],
+    refinance: ["rate", "policy", "private"],
+    rental: ["policy", "private"],
+    bfs: ["policy", "private"],
+    private: ["private", "speed"]
+  };
+  const items = buildBrokerEdgeRadarItems()
+    .filter((item) => (focus === "all" ? fileTerms[fileType].includes(item.type) || item.type === "speed" : item.type === focus))
+    .slice(0, 9);
+
+  grid.innerHTML = items
+    .map((item) => {
+      const lender = lenders.find((entry) => entry.id === item.lenderId);
+      return `
+        <article class="radar-card ${item.type}" style="--lender-color: ${lender?.brandColor || "var(--accent)"};">
+          <span class="radar-badge">${item.badge}</span>
+          <h4>${item.title}</h4>
+          <p>${item.detail}</p>
+          <div class="radar-action">
+            <strong>Broker action</strong>
+            <span>${item.action}</span>
+          </div>
+          <button class="secondary-button" type="button" data-radar-lender="${item.lenderId}">Open Profile</button>
+        </article>
+      `;
+    })
+    .join("");
+
+  grid.querySelectorAll("[data-radar-lender]").forEach((button) => {
+    button.addEventListener("click", () => {
+      activeLenderId = button.dataset.radarLender;
+      activeLenderPage = getPageForLender(filteredLenders(), activeLenderId);
+      render();
+      document.querySelector("#lenders").scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  });
 }
 
 function readDealScenario() {

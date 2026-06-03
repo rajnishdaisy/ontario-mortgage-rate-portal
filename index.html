@@ -449,6 +449,42 @@
           <p class="compliance-strip">Rates, policies, and guidelines are for information only and subject to lender confirmation. Final approval is subject to lender underwriting.</p>
         </section>
 
+        <section class="band broker-edge-radar" id="broker-edge-radar">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Competitive edge</p>
+              <h3>Broker Edge Radar: spot rate moves, lender appetite, and next-best actions fast.</h3>
+            </div>
+            <span class="live-pill">Built to beat static portals</span>
+          </div>
+
+          <div class="radar-control-row">
+            <label class="search-box">
+              <span>Radar focus</span>
+              <select id="radarFocus">
+                <option value="all">All opportunities</option>
+                <option value="rate">Rate movement</option>
+                <option value="policy">Policy appetite</option>
+                <option value="speed">Fast closings</option>
+                <option value="private">Private / B-side</option>
+              </select>
+            </label>
+            <label class="search-box">
+              <span>Broker file type</span>
+              <select id="radarFileType">
+                <option value="purchase">Purchase</option>
+                <option value="refinance">Refinance</option>
+                <option value="rental">Rental / investor</option>
+                <option value="bfs">BFS / stated income</option>
+                <option value="private">Private bridge</option>
+              </select>
+            </label>
+            <button class="primary-button" id="refreshRadar" type="button">Refresh Radar</button>
+          </div>
+
+          <div class="radar-grid" id="brokerEdgeRadarGrid"></div>
+        </section>
+
         <section class="band ai-match-band" id="ai-match">
           <div class="section-heading">
             <div>
