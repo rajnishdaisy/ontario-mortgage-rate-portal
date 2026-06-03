@@ -6,7 +6,7 @@
     <title>Ontario Broker Rate Desk</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
-  <body>
+  <body class="progressive-mode">
     <div class="app-shell">
       <aside class="sidebar" aria-label="Portal navigation">
         <a class="brand-lockup logo-lockup" href="#lenders" aria-label="New Portal Ontario Broker Rate Desk home">
@@ -15,8 +15,9 @@
 
         <nav class="nav-list">
           <a href="#dashboard" title="Partner portals"><span class="nav-icon">▦</span><span class="nav-text">Portals</span></a>
+          <a href="#account-access" title="Sign in"><span class="nav-icon">◉</span><span class="nav-text">Sign In</span></a>
           <a href="#daily-rates" title="Rates"><span class="nav-icon">$</span><span class="nav-text">Rates</span></a>
-          <a href="#lenders" class="active" title="Lenders"><span class="nav-icon">⌕</span><span class="nav-text">Lenders</span></a>
+          <a href="#lender-workspace" title="Lenders"><span class="nav-icon">⌕</span><span class="nav-text">Lenders</span></a>
           <a href="#ai-match" title="AI match"><span class="nav-icon">◎</span><span class="nav-text">AI Match</span></a>
           <a href="#broker-tools" title="Tools"><span class="nav-icon">◧</span><span class="nav-text">Tools</span></a>
           <a href="#programs" title="Programs"><span class="nav-icon">▥</span><span class="nav-text">Programs</span></a>
@@ -26,12 +27,63 @@
         <section class="sidebar-panel">
           <p class="panel-label">Today</p>
           <strong id="todayLabel"></strong>
-          <span>Rate data is managed by your brokerage.</span>
+          <span id="sidebarAccountStatus">Broker access ready.</span>
         </section>
       </aside>
 
       <main>
-        <section class="portal-board" id="dashboard" aria-label="Partner portals">
+        <section class="account-access step-section" id="account-access" data-step="Access" aria-label="Broker account access">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Broker account</p>
+              <h3>Sign in or register for first-time access.</h3>
+            </div>
+            <span class="live-pill" id="accountStatusPill">Not signed in</span>
+          </div>
+          <div class="account-access-grid">
+            <article class="account-card account-summary-card" id="accountSummaryCard">
+              <span class="account-avatar" id="accountAvatar">DD</span>
+              <div>
+                <p class="eyebrow">Current access</p>
+                <h4 id="accountSummaryName">Guest broker</h4>
+                <p id="accountSummaryDetails">Register once with your firm code, then sign in with your email and firm code.</p>
+              </div>
+              <button class="secondary-button" id="signOutAccount" type="button">Sign Out</button>
+            </article>
+
+            <form class="account-card account-form" id="registrationForm">
+              <div>
+                <p class="eyebrow">First time</p>
+                <h4>Create broker access</h4>
+              </div>
+              <div class="account-form-grid">
+                <label>First name <input id="registerFirstName" autocomplete="given-name" required /></label>
+                <label>Last name <input id="registerLastName" autocomplete="family-name" required /></label>
+                <label>Phone number <input id="registerPhone" type="tel" autocomplete="tel" required /></label>
+                <label>Email ID <input id="registerEmail" type="email" autocomplete="email" required /></label>
+                <label>Firm code <input id="registerFirmCode" autocomplete="organization" required /></label>
+                <label>Password <input id="registerPassword" type="password" autocomplete="new-password" minlength="8" required /></label>
+              </div>
+              <button class="primary-button" type="submit">Register First-Time Access</button>
+              <p class="password-rule">Password must be 8+ characters with one lowercase, one uppercase, one number, and one special character.</p>
+              <p class="form-note" id="registrationMessage">Use your brokerage or team firm code to personalize the portal.</p>
+            </form>
+
+            <form class="account-card account-form" id="signInForm">
+              <div>
+                <p class="eyebrow">Returning broker</p>
+                <h4>Sign in</h4>
+              </div>
+              <label>Email ID <input id="signInEmail" type="email" autocomplete="email" required /></label>
+              <label>Firm code <input id="signInFirmCode" autocomplete="organization" required /></label>
+              <label>Password <input id="signInPassword" type="password" autocomplete="current-password" required /></label>
+              <button class="secondary-button" type="submit">Sign In</button>
+              <p class="form-note" id="signInMessage">For this local demo, sign-in checks the saved email, firm code, and password on this device.</p>
+            </form>
+          </div>
+        </section>
+
+        <section class="portal-board step-section" id="dashboard" aria-label="Partner portals" data-step="Start">
           <div class="portal-command-row">
             <div>
               <p class="eyebrow">Broker workspace</p>
@@ -86,7 +138,7 @@
               <h2>A professional rate desk for faster lender decisions and cleaner client advice.</h2>
               <p>Give your team one polished workspace for daily rates, insurer programs, lender portals, BDM contacts, and policy notes before a file is submitted.</p>
               <div class="hero-actions">
-                <a class="primary-button action-link" href="#best-rates">View Rates</a>
+                <a class="primary-button action-link" href="#daily-rates">View Rates</a>
                 <a class="secondary-button action-link" href="#packages">Platform Access</a>
               </div>
             </div>
@@ -116,7 +168,26 @@
           <div class="portal-grid" id="portalGrid"></div>
         </section>
 
-        <section class="band package-band" id="packages">
+        <section class="workflow-strip step-section" id="workflow-guide" aria-label="Broker workflow guide" data-step="Guide">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Easy scroll setup</p>
+              <h3>Work through the portal step by step.</h3>
+            </div>
+            <span class="live-pill">Professional broker workflow</span>
+          </div>
+          <div class="workflow-step-grid">
+            <a href="#featured-partners" data-reveal-target="#featured-partners"><span>01</span><strong>Review Partners</strong><small>Featured brokerage, partner offers, and referral network.</small></a>
+            <a href="#daily-rates" data-reveal-target="#daily-rates"><span>02</span><strong>Check Rates</strong><small>Daily rate board, filters, and lender comparison.</small></a>
+            <a href="#lender-workspace" data-reveal-target="#lender-workspace"><span>03</span><strong>Search Lenders</strong><small>Filter by lender type, credit score, LTV, purpose, and category.</small></a>
+            <a href="#ai-match" data-reveal-target="#ai-match"><span>04</span><strong>Match Deal</strong><small>Enter the scenario and review lender-fit logic.</small></a>
+            <a href="#policy-search" data-reveal-target="#policy-search"><span>05</span><strong>Confirm Policy</strong><small>Search rental, BFS, stated income, and exception rules.</small></a>
+            <a href="#broker-tools" data-reveal-target="#broker-tools"><span>06</span><strong>Run Tools</strong><small>Affordability, refinance, rental worksheet, and checklist.</small></a>
+            <a href="#admin-center" data-reveal-target="#admin-center"><span>07</span><strong>Manage Portal</strong><small>Admin approvals, lender portal, analytics, and API planning.</small></a>
+          </div>
+        </section>
+
+        <section class="band package-band step-section" id="packages" data-step="Plan">
           <div class="section-heading">
             <div>
               <p class="eyebrow">Platform access</p>
@@ -184,7 +255,7 @@
           </div>
         </section>
 
-        <section class="metric-grid" aria-label="Portal summary">
+        <section class="metric-grid step-section" aria-label="Portal summary" data-step="Snapshot">
           <article>
             <small>01</small>
             <span>Tracked lenders</span>
@@ -207,7 +278,7 @@
           </article>
         </section>
 
-        <section class="band landing-rate-board" id="best-rates">
+        <section class="band landing-rate-board step-section" id="best-rates" data-step="Rate Picks">
           <div class="section-heading">
             <div>
               <p class="eyebrow">Best 5-year rates</p>
@@ -240,7 +311,7 @@
           </div>
         </section>
 
-        <section class="workspace">
+        <section class="workspace" id="lender-workspace">
           <div class="workspace-header">
             <div>
               <p class="eyebrow">Pipeline triage</p>
@@ -253,7 +324,7 @@
               <span>Switch</span>
             </div>
           </div>
-          <section class="lender-workbench" id="lenders">
+          <section class="lender-workbench step-section" id="lenders" data-step="03">
             <aside class="robust-search-panel" aria-label="Robust lender search filters">
               <div>
                 <p class="eyebrow">Robust search</p>
@@ -357,7 +428,7 @@
           </section>
         </section>
 
-        <section class="band partner-showcase" id="featured-partners">
+        <section class="band partner-showcase step-section" id="featured-partners" data-step="01">
           <div class="section-heading">
             <div>
               <p class="eyebrow">Featured placement</p>
@@ -368,7 +439,7 @@
           <div class="partner-placement-grid" id="partnerPlacementGrid"></div>
         </section>
 
-        <section class="band intelligence-overview" id="daily-rates">
+        <section class="band intelligence-overview step-section" id="daily-rates" data-step="02">
           <div class="section-heading">
             <div>
               <p class="eyebrow">Daily rates dashboard</p>
@@ -449,7 +520,7 @@
           <p class="compliance-strip">Rates, policies, and guidelines are for information only and subject to lender confirmation. Final approval is subject to lender underwriting.</p>
         </section>
 
-        <section class="band broker-edge-radar" id="broker-edge-radar">
+        <section class="band broker-edge-radar step-section" id="broker-edge-radar" data-step="Signal">
           <div class="section-heading">
             <div>
               <p class="eyebrow">Competitive edge</p>
@@ -485,7 +556,7 @@
           <div class="radar-grid" id="brokerEdgeRadarGrid"></div>
         </section>
 
-        <section class="band ai-match-band" id="ai-match">
+        <section class="band ai-match-band step-section" id="ai-match" data-step="04">
           <div class="section-heading">
             <div>
               <p class="eyebrow">AI-ready deal matching</p>
@@ -565,7 +636,7 @@
           </div>
         </section>
 
-        <section class="band scenario-lab-band" id="scenario-lab">
+        <section class="band scenario-lab-band step-section" id="scenario-lab" data-step="Compare">
           <div class="section-heading">
             <div>
               <p class="eyebrow">Scenario Lab</p>
@@ -620,7 +691,7 @@
           </div>
         </section>
 
-        <section class="band" id="policy-search">
+        <section class="band step-section" id="policy-search" data-step="05">
           <div class="section-heading">
             <div>
               <p class="eyebrow">Policy search engine</p>
@@ -639,7 +710,7 @@
           </div>
         </section>
 
-        <section class="band" id="broker-tools">
+        <section class="band step-section" id="broker-tools" data-step="06">
           <div class="section-heading">
             <div>
               <p class="eyebrow">Broker tools</p>
@@ -696,24 +767,50 @@
           </div>
         </section>
 
-        <section class="band operations-grid" id="admin-center">
+        <section class="band operations-grid step-section" id="admin-center" data-step="07">
           <div class="section-heading">
             <div>
               <p class="eyebrow">Control center</p>
               <h3>Admin, lender portal, broker account, and revenue workflow.</h3>
             </div>
           </div>
+          <section class="founding-lender-module" aria-label="Founding Lender Program">
+            <div class="founding-lender-intro">
+              <span class="partner-badge">Founding Lender Program</span>
+              <h3>Bring the first 20 lender partners into a managed rate and policy workflow.</h3>
+              <p>Secure lender access, AI-assisted email intake, admin approval, version history, analytics, and API-ready data paths for rates, policies, products, documents, and contacts.</p>
+              <div class="founding-lender-actions">
+                <a class="primary-button action-link" href="#lenderPortalCard">Open Lender Portal</a>
+                <a class="secondary-button action-link" href="#foundingApiPanel">View API Framework</a>
+              </div>
+            </div>
+            <div class="founding-lender-grid" id="foundingLenderProgram"></div>
+          </section>
           <div class="operations-cards">
             <article class="ops-card">
               <h4>Admin Dashboard</h4>
               <div id="adminDashboard"></div>
             </article>
-            <article class="ops-card">
+            <article class="ops-card" id="lenderPortalCard">
               <h4>Lender / BDM Portal</h4>
               <form id="lenderPortalForm" class="ops-form">
                 <label>Lender <select id="lenderPortalSelect"></select></label>
+                <label>Portal email <input id="lenderPortalEmail" readonly /></label>
+                <label>Access role
+                  <select id="lenderPortalRole">
+                    <option>BDM admin</option>
+                    <option>Rate manager</option>
+                    <option>Policy manager</option>
+                    <option>Document manager</option>
+                  </select>
+                </label>
+                <label>Rate update <input id="lenderRateUpdateInput" value="5-year insured 4.39%; conventional 4.79%" /></label>
+                <label>Product update <input id="lenderProductInput" value="Insured purchase, refinance, rental, HELOC" /></label>
                 <label>Promotion <input id="lenderPromotionInput" value="Featured 5-year insured special" /></label>
                 <label>Policy update <textarea id="lenderPolicyInput" rows="3">Updated rental and BFS policy pending admin approval.</textarea></label>
+                <label>Document upload <input id="lenderDocumentInput" type="file" multiple accept=".pdf,.xlsx,.xls,.doc,.docx,.txt,.csv" /></label>
+                <label>BDM contact <input id="lenderBdmInput" value="Assigned BDM / desk contact" /></label>
+                <label>Email body / attachment notes <textarea id="lenderEmailBodyInput" rows="3">Please extract rates and policy changes from this update for admin review.</textarea></label>
                 <button class="secondary-button" type="submit">Submit Update</button>
               </form>
               <div id="lenderPortalFeed"></div>
@@ -726,10 +823,22 @@
               <h4>Revenue Features</h4>
               <div id="revenuePanel"></div>
             </article>
+            <article class="ops-card wide-ops-card">
+              <h4>Email Automation & Approval Queue</h4>
+              <div id="emailAutomationPanel"></div>
+            </article>
+            <article class="ops-card wide-ops-card">
+              <h4>Version Control & Analytics</h4>
+              <div id="versionAnalyticsPanel"></div>
+            </article>
+            <article class="ops-card wide-ops-card" id="foundingApiPanel">
+              <h4>Future API Framework</h4>
+              <div id="apiFrameworkPanel"></div>
+            </article>
           </div>
         </section>
 
-        <section class="band" id="programs">
+        <section class="band step-section" id="programs" data-step="Programs">
           <div class="section-heading">
             <div>
               <p class="eyebrow">Broker placement</p>
@@ -740,7 +849,7 @@
           <div class="program-grid" id="programGrid"></div>
         </section>
 
-        <section class="band" id="insurers">
+        <section class="band step-section" id="insurers" data-step="Insurers">
           <div class="section-heading">
             <div>
               <p class="eyebrow">Default mortgage insurance</p>
@@ -750,7 +859,7 @@
           <div class="insurer-grid" id="insurerGrid"></div>
         </section>
 
-        <section class="band" id="contacts">
+        <section class="band step-section" id="contacts" data-step="Contacts">
           <div class="section-heading">
             <div>
               <p class="eyebrow">Relationship desk</p>

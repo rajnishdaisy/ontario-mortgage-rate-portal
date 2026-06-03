@@ -242,7 +242,259 @@ main > section,
   scroll-margin-top: 96px;
 }
 
+body.progressive-mode main > section:not(#account-access):not(#dashboard):not(#workflow-guide) {
+  display: none;
+}
+
+body.progressive-mode main > section.progressive-panel-active {
+  display: grid !important;
+  animation: panelReveal 0.2s ease both;
+}
+
+body.progressive-mode main > section:target,
+body.progressive-mode main > section:has(:target) {
+  display: grid !important;
+  animation: panelReveal 0.2s ease both;
+}
+
+body.progressive-mode .workflow-step-grid a.active,
+body.progressive-mode .workflow-step-grid a:target,
+body.progressive-mode .nav-list a.active-reveal {
+  border-color: color-mix(in srgb, var(--gold) 44%, var(--accent));
+  background: color-mix(in srgb, var(--gold) 16%, var(--surface));
+  color: var(--accent-strong);
+}
+
+.progressive-panel-note {
+  margin: 0 0 12px;
+  border: 1px solid color-mix(in srgb, var(--accent) 18%, var(--line));
+  border-radius: 8px;
+  background: var(--surface-strong);
+  color: var(--muted);
+  padding: 10px 12px;
+  font-size: 0.9rem;
+}
+
+@keyframes panelReveal {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.step-section {
+  position: relative;
+}
+
+.step-section > .section-heading {
+  position: relative;
+  padding-left: 64px;
+}
+
+.step-section > .section-heading::before {
+  content: attr(data-step);
+  position: absolute;
+  left: 0;
+  top: 0;
+  min-width: 46px;
+  height: 34px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid color-mix(in srgb, var(--accent) 28%, var(--line));
+  background: color-mix(in srgb, var(--accent) 10%, var(--surface));
+  color: var(--accent-strong);
+  font-weight: 950;
+  font-size: 0.82rem;
+}
+
+.portal-board.step-section::before {
+  content: attr(data-step);
+  position: absolute;
+  top: 16px;
+  right: clamp(18px, 3vw, 34px);
+  z-index: 2;
+  min-height: 30px;
+  border: 1px solid color-mix(in srgb, var(--accent) 26%, var(--line));
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  display: inline-flex;
+  align-items: center;
+  padding: 0 12px;
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.workflow-strip {
+  order: -10;
+  border: 1px solid color-mix(in srgb, var(--accent) 24%, var(--line));
+  border-radius: 12px;
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--accent) 8%, var(--surface)), color-mix(in srgb, var(--green) 6%, var(--surface)));
+  box-shadow: var(--shadow-soft);
+}
+
+.workflow-step-grid {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.workflow-step-grid a {
+  min-height: 142px;
+  border: 1px solid color-mix(in srgb, var(--accent) 18%, var(--line));
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow-soft);
+  padding: 14px;
+  text-align: left;
+  text-decoration: none;
+  display: grid;
+  gap: 8px;
+  align-content: start;
+  transition: transform 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.workflow-step-grid a:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--accent) 38%, var(--line));
+  box-shadow: var(--shadow);
+}
+
+.workflow-step-grid span {
+  width: 34px;
+  height: 30px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  font-weight: 950;
+  font-size: 0.78rem;
+}
+
+.workflow-step-grid strong {
+  line-height: 1.2;
+}
+
+.workflow-step-grid small {
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+.account-access {
+  order: -13;
+  border: 1px solid color-mix(in srgb, var(--accent) 24%, var(--line));
+  border-radius: 12px;
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--accent) 8%, var(--surface)), color-mix(in srgb, var(--gold) 7%, var(--surface)));
+  box-shadow: var(--shadow-soft);
+  padding: clamp(18px, 3vw, 28px);
+}
+
+.account-access-grid {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: minmax(260px, 0.7fr) minmax(360px, 1.15fr) minmax(280px, 0.75fr);
+  gap: 14px;
+  align-items: stretch;
+}
+
+.account-card {
+  border: 1px solid color-mix(in srgb, var(--accent) 18%, var(--line));
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: var(--shadow-soft);
+  padding: 16px;
+}
+
+.account-summary-card {
+  display: grid;
+  gap: 14px;
+  align-content: start;
+}
+
+.account-avatar {
+  width: 60px;
+  aspect-ratio: 1;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, var(--accent), var(--green));
+  color: #ffffff;
+  font-weight: 950;
+  font-size: 1.18rem;
+}
+
+.account-card h4,
+.account-card p {
+  margin: 0;
+}
+
+.account-card p {
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.account-form {
+  display: grid;
+  gap: 12px;
+}
+
+.account-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.account-form label {
+  display: grid;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 0.84rem;
+  font-weight: 850;
+}
+
+.account-form input {
+  min-width: 0;
+}
+
+.account-form-grid label:last-child {
+  grid-column: 1 / -1;
+}
+
+.form-note {
+  min-height: 38px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface-strong);
+  padding: 10px;
+  font-size: 0.86rem;
+}
+
+.password-rule {
+  margin: 0;
+  border: 1px solid color-mix(in srgb, var(--amber) 26%, var(--line));
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--amber) 8%, var(--surface));
+  color: color-mix(in srgb, var(--amber) 74%, var(--text));
+  padding: 10px;
+  font-size: 0.84rem;
+  font-weight: 800;
+  line-height: 1.4;
+}
+
 .portal-board {
+  order: -12;
   border: 1px solid color-mix(in srgb, var(--accent) 18%, var(--line));
   border-radius: 14px;
   background: #f7faf8;
@@ -875,7 +1127,7 @@ button.best-rate-cell:hover {
 }
 
 .workspace {
-  order: -10;
+  order: -7;
 }
 
 #daily-rates {
@@ -883,27 +1135,27 @@ button.best-rate-cell:hover {
 }
 
 #ai-match {
-  order: -7;
-}
-
-#scenario-lab {
   order: -5;
 }
 
-#policy-search {
+#scenario-lab {
   order: -4;
 }
 
-#broker-tools {
+#policy-search {
   order: -3;
 }
 
-#admin-center {
+#broker-tools {
   order: -2;
 }
 
+#admin-center {
+  order: -1;
+}
+
 #broker-edge-radar {
-  order: -7;
+  order: -6;
 }
 
 #featured-partners {
@@ -1490,6 +1742,189 @@ button.best-rate-cell:hover {
   border-radius: 8px;
   background: var(--surface-strong);
   padding: 10px;
+}
+
+.founding-lender-module {
+  margin-top: 14px;
+  border: 1px solid color-mix(in srgb, var(--gold) 34%, var(--line));
+  border-radius: 10px;
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--gold) 10%, var(--surface)), color-mix(in srgb, var(--accent) 6%, var(--surface)));
+  box-shadow: var(--shadow-soft);
+  padding: clamp(16px, 2.6vw, 24px);
+  display: grid;
+  gap: 16px;
+}
+
+.founding-lender-intro {
+  max-width: 920px;
+  display: grid;
+  gap: 10px;
+}
+
+.founding-lender-intro h3,
+.founding-lender-intro p,
+.founding-feature-card h4,
+.founding-roster h4,
+.approval-item h5,
+.version-analytics-grid h5 {
+  margin: 0;
+}
+
+.founding-lender-intro p,
+.founding-stat-card p,
+.automation-card p,
+.approval-item p {
+  color: var(--muted);
+  line-height: 1.48;
+}
+
+.founding-lender-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.founding-lender-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.founding-stat-card,
+.founding-feature-card,
+.founding-roster,
+.automation-card,
+.approval-item,
+.version-analytics-grid article,
+.version-table article,
+.analytics-grid article,
+.endpoint-list article {
+  border: 1px solid color-mix(in srgb, var(--accent) 18%, var(--line));
+  border-radius: 8px;
+  background: var(--surface);
+  padding: 14px;
+  box-shadow: var(--shadow-soft);
+}
+
+.founding-stat-card,
+.founding-feature-card {
+  display: grid;
+  gap: 8px;
+}
+
+.founding-stat-card span,
+.automation-card span,
+.analytics-grid span,
+.endpoint-list span {
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.founding-stat-card strong {
+  color: var(--accent-strong);
+  font-size: clamp(1.45rem, 2.8vw, 2.25rem);
+}
+
+.founding-roster {
+  grid-column: span 2;
+  display: grid;
+  gap: 10px;
+}
+
+.founding-roster-grid,
+.analytics-grid,
+.api-ready-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.founding-roster-grid span,
+.api-ready-grid span {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface-strong);
+  padding: 10px;
+  display: grid;
+  gap: 3px;
+}
+
+.founding-roster-grid small,
+.version-table small {
+  color: var(--muted);
+}
+
+.founding-lender-badge,
+.founding-profile-tile {
+  border-color: color-mix(in srgb, var(--gold) 42%, var(--line));
+  background: color-mix(in srgb, var(--gold) 14%, var(--surface));
+  color: color-mix(in srgb, var(--gold) 74%, var(--text));
+}
+
+.wide-ops-card {
+  grid-column: span 2;
+}
+
+.automation-layout,
+.version-analytics-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.approval-list,
+.version-table,
+.endpoint-list {
+  display: grid;
+  gap: 10px;
+}
+
+.approval-item {
+  display: grid;
+  grid-template-columns: minmax(0, 0.7fr) minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: start;
+}
+
+.approval-item dl {
+  margin: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.approval-item div,
+.approval-item dl div,
+.version-table article,
+.analytics-grid article,
+.endpoint-list article {
+  display: grid;
+  gap: 4px;
+}
+
+.approval-item dt {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.approval-item dd {
+  margin: 0;
+}
+
+.endpoint-list article {
+  grid-template-columns: 64px minmax(180px, 0.45fr) minmax(0, 1fr);
+  align-items: center;
+}
+
+.endpoint-list b {
+  color: var(--green);
+}
+
+.endpoint-list code {
+  white-space: normal;
+  word-break: break-word;
 }
 
 .profile-intel-grid {
@@ -2979,8 +3414,20 @@ menu {
   .tools-grid,
   .operations-cards,
   .partner-placement-grid,
-  .profile-intel-grid {
+  .profile-intel-grid,
+  .account-access-grid,
+  .workflow-step-grid,
+  .founding-lender-grid,
+  .automation-layout,
+  .version-analytics-grid,
+  .approval-item,
+  .endpoint-list article {
     grid-template-columns: 1fr;
+  }
+
+  .wide-ops-card,
+  .founding-roster {
+    grid-column: auto;
   }
 
   .split-view,
@@ -3166,6 +3613,23 @@ menu {
   .lender-card header .badge {
     grid-column: 1 / -1;
     width: max-content;
+  }
+
+  .step-section > .section-heading {
+    padding-left: 0;
+    padding-top: 46px;
+  }
+
+  .step-section > .section-heading::before {
+    top: 0;
+  }
+
+  .workflow-step-grid a {
+    min-height: 0;
+  }
+
+  .account-form-grid {
+    grid-template-columns: 1fr;
   }
 }
 

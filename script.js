@@ -373,6 +373,9 @@ const comparisonStorageKey = "dealDeskDailyRates.comparison";
 const brokerProfileStorageKey = "dealDeskDailyRates.brokerProfile";
 const lenderUpdateStorageKey = "dealDeskDailyRates.lenderUpdates";
 const partnerPlacementStorageKey = "dealDeskDailyRates.partnerPlacements";
+const foundingLenderStorageKey = "dealDeskDailyRates.foundingLenders";
+const lenderVersionStorageKey = "dealDeskDailyRates.lenderVersions";
+const lenderAnalyticsStorageKey = "dealDeskDailyRates.lenderAnalytics";
 let selectedComparisonIds = JSON.parse(localStorage.getItem(comparisonStorageKey) || "[]");
 
 const purposeProgramMap = {
@@ -1007,10 +1010,83 @@ const underwritingGuidelines = {
 
 const dealDeskSource = {
   name: "Internal Daily Rate Sheet",
-  effectiveDate: "June 1, 2026",
+  effectiveDate: "June 3, 2026",
   benchmarkRate: "5.25%",
   primeRate: "4.45%",
   note: "Internal brokerage rate desk. O.A.C.; rates subject to change without notice; rate hold varies by lender."
+};
+
+const nationalBankRateSheet = {
+  source: "National Bank Ontario Broker Rate Sheet",
+  effectiveDate: "May 29, 2026 (provided June 3, 2026)",
+  sheetDate: "June 3 package",
+  benchmarkRate: "5.25%",
+  primeRate: "4.45%",
+  rates: {
+    insuredFiveYear: 4.14,
+    uninsuredFiveYear: 4.24,
+    insuredVariable: "P - 0.95% (3.50%)",
+    uninsuredVariable: "P - 0.75% (3.70%)",
+    helocNoCashbackLow: "P + 1.00%",
+    helocNoCashbackHigh: "P + 0.50%",
+    helocCashback: "P + 0.75%"
+  },
+  sections: [
+    {
+      title: "Purchase Without Cashback",
+      items: [
+        { label: "Insured 1-year fixed", value: "5.09%" },
+        { label: "Insured 2-year fixed", value: "4.24%" },
+        { label: "Insured 3-year fixed", value: "3.99%" },
+        { label: "Insured 4-year fixed", value: "4.09%" },
+        { label: "Insured 5-year fixed", value: "4.14%" },
+        { label: "Insured 5-year variable", value: "P - 0.95% (3.50%)" },
+        { label: "Uninsured 1-year fixed", value: "5.09%" },
+        { label: "Uninsured 2-year fixed", value: "4.24%" },
+        { label: "Uninsured 3-year fixed", value: "4.09%" },
+        { label: "Uninsured 4-year fixed", value: "4.19%" },
+        { label: "Uninsured 5-year fixed", value: "4.24%" },
+        { label: "Uninsured 5-year variable", value: "P - 0.75% (3.70%)" }
+      ]
+    },
+    {
+      title: "Purchase With Cashback",
+      items: [
+        { label: "Insured 3-year fixed", value: "4.24%" },
+        { label: "Insured 4-year fixed", value: "4.34%" },
+        { label: "Insured 5-year fixed", value: "4.39%" },
+        { label: "Insured 5-year variable", value: "P - 0.70% (3.75%)" },
+        { label: "Insured 6-year fixed", value: "5.79%" },
+        { label: "Insured 7-year fixed", value: "5.99%" },
+        { label: "Insured 10-year fixed", value: "6.19%" },
+        { label: "Uninsured 3-year fixed", value: "4.34%" },
+        { label: "Uninsured 4-year fixed", value: "4.44%" },
+        { label: "Uninsured 5-year fixed", value: "4.49%" },
+        { label: "Uninsured 5-year variable", value: "P - 0.50% (3.95%)" },
+        { label: "Uninsured 6-year fixed", value: "5.79%" },
+        { label: "Uninsured 7-year fixed", value: "5.99%" },
+        { label: "Uninsured 10-year fixed", value: "6.19%" }
+      ]
+    },
+    {
+      title: "All-In-One HELOC",
+      items: [
+        { label: "Revolving portion under $50k", value: "P + 1.00%" },
+        { label: "Revolving portion $50k and up", value: "P + 0.50%" },
+        { label: "Cashback revolving $50k and up", value: "P + 0.75% with $750 cashback" },
+        { label: "Cashback revolving $150k and up", value: "P + 0.75% with $1,500 cashback" }
+      ]
+    },
+    {
+      title: "Cashback Promotions",
+      items: [
+        { label: "External refinancing", value: "$1,000 to $3,750" },
+        { label: "Purchase", value: "$500 to $3,250" },
+        { label: "FTHB 30-year insured", value: "Up to $2,750 additional" }
+      ]
+    }
+  ],
+  note: "Ontario broker rate sheet. Cashback, rental, amortization, TDS, property, and rate-hold conditions may apply; confirm with National Bank before quoting."
 };
 
 const dealDeskExtraLenders = [
@@ -1418,17 +1494,17 @@ const bSideAndPrivateLenders = [
 demoLenders.push(...dealDeskExtraLenders, ...bSideAndPrivateLenders);
 
 const dealDeskRateRows = {
-  "b2b-bank": { sheetDate: "5/20", values: ["4.44", "4.84", "4.84", "4.84", "4.84", "4.84", "4.84", "4.84", "4.84", "5.09", "P-0.65", "P-0.25", "P-0.25", "P-0.25", "P-0.25", "P-0.25", "P-0.25", "P-0.25", "P-0.25", "P-0.00", "4.99", "5.09", "5.09", "4.54", "4.69", "4.69", "4.44", "4.69", "4.69", "4.39", "4.74", "4.74", "-", "6.39", "6.39", "-", "6.49", "6.49", "P+0.50"] },
+  "b2b-bank": { sheetDate: "6/3", values: ["4.39", "4.79", "4.79", "4.79", "4.79", "4.79", "4.79", "4.79", "4.79", "5.04", "P-0.65", "P-0.25", "P-0.25", "P-0.25", "P-0.25", "P-0.25", "P-0.25", "P-0.25", "P-0.25", "P-0.00", "4.99", "5.09", "5.09", "4.54", "4.69", "4.69", "4.39", "4.64", "4.64", "4.39", "4.74", "4.74", "-", "6.39", "6.39", "-", "6.49", "6.49", "P+0.50"] },
   bmo: { sheetDate: "3/27", values: ["4.69", "5.09", "5.09", "5.09", "5.09", "5.09", "5.19", "5.09", "5.19", "5.34", "P-0.33", "P-0.15", "P-0.15", "P-0.15", "P-0.15", "P-0.15", "P-0.15", "P-0.15", "P-0.15", "P-0.00", "5.33", "5.37", "5.37", "4.73", "4.75", "4.75", "4.54", "4.69", "4.69", "4.50", "4.69", "4.69", "5.44", "5.54", "5.54", "5.90", "5.62", "5.62", "-"] },
-  cmls: { sheetDate: "5/30", values: ["4.39", "4.39", "4.54", "4.59", "4.64", "4.84", "4.84", "4.84", "4.84", "-", "P-0.75", "P-0.75", "P-0.60", "P-0.55", "P-0.50", "P-0.26", "P-0.26", "P-0.26", "P-0.26", "-", "-", "-", "-", "4.69", "-", "-", "4.34", "4.64", "4.84", "-", "-", "-", "-", "-", "-", "-", "-", "-", "P+0.50"] },
+  cmls: { sheetDate: "6/3", values: ["4.39", "4.39", "4.54", "4.59", "4.64", "4.84", "4.84", "4.84", "4.84", "-", "P-0.75", "P-0.75", "P-0.60", "P-0.55", "P-0.50", "P-0.26", "P-0.26", "P-0.26", "P-0.26", "-", "-", "-", "-", "4.69", "-", "-", "4.34", "4.64", "4.84", "-", "-", "-", "-", "-", "-", "-", "-", "-", "P+0.50"] },
   "first-national": { sheetDate: "5/23", values: ["4.49", "4.54", "4.64", "4.74", "4.79", "4.84", "4.84", "4.84", "4.84", "4.99", "P-0.75", "P-0.70", "P-0.50", "P-0.45", "P-0.40", "P-0.26", "P-0.26", "P-0.26", "P-0.26", "P-0.11", "5.14", "5.14", "5.14", "4.74", "4.74", "4.74", "4.84", "4.84", "4.84", "4.79", "4.79", "4.79", "5.09", "5.09", "5.09", "5.44", "5.44", "5.44", "-"] },
   highclere: { sheetDate: "5/16", values: ["4.49", "4.49", "4.64", "4.69", "4.74", "-", "-", "-", "-", "-", "P-0.75", "P-0.75", "P-0.60", "P-0.55", "P-0.50", "-", "-", "-", "-", "-", "5.39", "5.64", "-", "5.19", "5.44", "-", "4.49", "4.74", "-", "4.79", "5.04", "-", "-", "-", "-", "-", "-", "-", "-"] },
-  merix: { sheetDate: "5/20", values: ["4.49", "4.49", "4.64", "4.64", "4.69", "4.84", "4.84", "4.84", "4.84", "5.14", "P-0.75", "P-0.75", "P-0.55", "P-0.50", "P-0.45", "P-0.25", "P-0.25", "P-0.25", "P-0.25", "P+0.05", "-", "-", "-", "-", "-", "-", "4.39", "4.74", "4.84", "4.49", "4.74", "4.84", "-", "-", "-", "-", "-", "-", "-"] },
+  merix: { sheetDate: "6/3", values: ["4.49", "4.49", "4.64", "4.64", "4.69", "4.79", "4.79", "4.79", "4.79", "5.09", "P-0.75", "P-0.75", "P-0.55", "P-0.50", "P-0.45", "P-0.25", "P-0.25", "P-0.25", "P-0.25", "P+0.05", "-", "-", "-", "-", "-", "-", "4.39", "4.74", "4.79", "4.49", "4.74", "4.79", "-", "-", "-", "-", "-", "-", "-"] },
   manulife: { sheetDate: "4/9", values: ["4.39", "4.69", "4.69", "4.69", "4.69", "-", "-", "-", "-", "-", "P-0.70", "P-0.40", "P-0.40", "P-0.40", "P-0.40", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "4.34", "4.54", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"] },
-  mcap: { sheetDate: "5/20", values: ["4.49", "4.49", "4.64", "4.64", "4.69", "4.84", "4.84", "4.84", "4.84", "5.14", "P-0.75", "P-0.75", "P-0.55", "P-0.50", "P-0.45", "P-0.25", "P-0.25", "P-0.25", "P-0.25", "P+0.05", "5.29", "5.59", "5.59", "4.64", "4.89", "4.99", "4.39", "4.74", "4.84", "4.49", "4.74", "4.84", "6.54", "6.74", "6.84", "6.64", "6.84", "6.94", "P+0.50"] },
-  neo: { sheetDate: "5/26", values: ["4.39", "4.39", "4.49", "4.59", "4.64", "4.89", "4.89", "4.89", "4.89", "-", "P-0.85", "P-0.85", "P-0.75", "P-0.65", "P-0.60", "P-0.10", "P-0.10", "P-0.10", "P-0.10", "-", "5.09", "6.19", "-", "4.69", "6.09", "-", "4.49", "4.74", "-", "4.49", "4.69", "-", "-", "-", "-", "-", "-", "-", "-"] },
+  mcap: { sheetDate: "6/3", values: ["4.49", "4.49", "4.64", "4.64", "4.69", "4.79", "4.79", "4.79", "4.79", "5.09", "P-0.75", "P-0.75", "P-0.55", "P-0.50", "P-0.45", "P-0.25", "P-0.25", "P-0.25", "P-0.25", "P+0.05", "5.29", "5.59", "5.59", "4.64", "4.89", "4.99", "4.39", "4.74", "4.79", "4.49", "4.74", "4.79", "6.54", "6.74", "6.84", "6.64", "6.84", "6.94", "P+0.50"] },
+  neo: { sheetDate: "6/3", values: ["4.34", "4.34", "4.44", "4.54", "4.59", "4.89", "4.89", "4.89", "4.89", "-", "P-0.85", "P-0.85", "P-0.75", "P-0.70", "P-0.65", "P-0.10", "P-0.10", "P-0.10", "P-0.10", "-", "5.09", "6.19", "-", "4.69", "6.09", "-", "4.49", "4.74", "-", "4.49", "4.69", "-", "-", "-", "-", "-", "-", "-", "-"] },
   rfa: { sheetDate: "5/16", values: ["4.49", "4.49", "4.64", "4.64", "4.69", "4.84", "4.84", "4.84", "4.84", "5.54", "P-0.75", "P-0.75", "P-0.55", "P-0.45", "P-0.45", "P-0.20", "P-0.20", "P-0.20", "P-0.20", "-", "5.09", "5.44", "-", "4.54", "4.84", "-", "4.49", "4.74", "-", "4.54", "4.84", "-", "-", "-", "-", "-", "-", "-", "-"] },
-  rmg: { sheetDate: "5/20", values: ["4.49", "4.49", "4.64", "4.64", "4.69", "4.84", "4.84", "4.84", "4.84", "-", "P-0.75", "P-0.75", "P-0.55", "P-0.50", "P-0.45", "P-0.25", "P-0.25", "P-0.25", "P-0.25", "-", "5.29", "5.59", "5.59", "4.64", "4.89", "4.99", "4.39", "4.74", "4.84", "4.49", "4.74", "4.84", "-", "-", "-", "-", "-", "-", "-"] },
+  rmg: { sheetDate: "6/3", values: ["4.49", "4.49", "4.64", "4.64", "4.69", "4.79", "4.79", "4.79", "4.79", "-", "P-0.75", "P-0.75", "P-0.55", "P-0.50", "P-0.45", "P-0.25", "P-0.25", "P-0.25", "P-0.25", "-", "5.29", "5.59", "5.59", "4.64", "4.89", "4.99", "4.39", "4.74", "4.79", "4.49", "4.74", "4.79", "-", "-", "-", "-", "-", "-", "-"] },
   scotia: { sheetDate: "5/12", values: ["4.34", "4.59", "4.59", "4.59", "4.59", "4.59", "4.69", "4.59", "4.69", "4.99", "P-0.70", "P-0.45", "P-0.45", "P-0.45", "P-0.45", "P-0.45", "P-0.35", "P-0.45", "P-0.35", "P-0.05", "4.69", "4.94", "4.94", "4.09", "4.34", "4.34", "4.14", "4.39", "4.39", "4.29", "4.54", "4.54", "5.05", "5.30", "5.30", "5.45", "5.70", "5.70", "P+0.50"] },
   strive: { sheetDate: "5/16", values: ["4.49", "4.49", "4.64", "4.64", "4.69", "4.84", "4.84", "4.84", "4.84", "-", "P-0.75", "P-0.75", "P-0.55", "P-0.45", "P-0.45", "P-0.35", "P-0.35", "P-0.35", "P-0.35", "-", "4.94", "5.34", "-", "4.64", "4.99", "-", "4.49", "4.84", "4.84", "4.49", "4.79", "-", "-", "-", "-", "-", "-", "-", "-"] },
   td: { sheetDate: "5/29", values: ["4.44", "4.74", "4.74", "4.74", "4.74", "4.74", "4.79", "4.74", "4.79", "4.89", "P-0.61", "P-0.46", "P-0.46", "P-0.46", "P-0.46", "P-0.46", "P-0.41", "P-0.46", "P-0.41", "P-0.31", "5.59", "5.59", "5.59", "4.54", "4.54", "4.54", "4.59", "4.59", "4.59", "4.69", "4.69", "4.69", "5.44", "5.44", "5.44", "5.54", "5.54", "5.54", "P+0.50"] },
@@ -2694,6 +2770,8 @@ const dealMatchResults = document.querySelector("#dealMatchResults");
 const policySearchForm = document.querySelector("#policySearchForm");
 const policySearchInput = document.querySelector("#policySearchInput");
 const policySearchResults = document.querySelector("#policySearchResults");
+const registrationForm = document.querySelector("#registrationForm");
+const signInForm = document.querySelector("#signInForm");
 const lenderPortalSelect = document.querySelector("#lenderPortalSelect");
 const lenderPortalForm = document.querySelector("#lenderPortalForm");
 const runScenarioLabButton = document.querySelector("#runScenarioLab");
@@ -2741,6 +2819,28 @@ const platformDataModel = {
   ],
   aiReadyFields: ["scenario", "eligibilitySignals", "policyEvidence", "missingDocuments", "riskFlags", "recommendedLenders"]
 };
+
+const foundingLenderProgram = {
+  limit: 20,
+  freeParticipation: "Free 6-month participation",
+  badge: "Founding Lender Partner",
+  securePortalFeatures: ["Secure login", "Rate management", "Product management", "Policy management", "Document upload", "BDM management"],
+  automationFeatures: ["Unique lender email", "AI extraction from PDF, Excel, Word, and email body", "Admin approval queue", "One-click publish"],
+  versionFeatures: ["Previous rates", "Policy change tracking", "Effective dates", "Admin publisher history"],
+  analyticsMetrics: ["Profile views", "Rate views", "Broker clicks", "Document downloads"],
+  apiEndpoints: [
+    ["GET", "/api/v1/lenders", "List active lenders, badges, lender type, province, status"],
+    ["GET", "/api/v1/lenders/{id}/rates", "Current and historical rates with effective dates"],
+    ["POST", "/api/v1/lenders/{id}/rates", "Lender-submitted rate updates routed to admin approval"],
+    ["GET", "/api/v1/lenders/{id}/policies", "Policy matrix, source notes, and last updated date"],
+    ["POST", "/api/v1/lenders/{id}/policies", "Policy update submission with approval status"],
+    ["GET", "/api/v1/lenders/{id}/products", "Product matrix and eligibility filters"],
+    ["GET", "/api/v1/lenders/{id}/contacts", "BDM and escalation contacts by province"],
+    ["POST", "/api/v1/intake/email", "Inbound email/PDF/Excel/Word extraction queue"]
+  ]
+};
+
+const defaultFoundingLenderIds = ["national-bank", "b2b-bank", "mcap", "cmls", "first-national", "merix", "rmg", "rfa"];
 
 const brokerToolsChecklist = {
   purchase: ["Application", "Credit bureau", "Purchase agreement", "MLS listing", "Income documents", "Down payment trail", "ID", "Property insurance"],
@@ -2801,6 +2901,10 @@ const defaultPartnerPlacements = [
   }
 ];
 
+document.querySelectorAll(".step-section[data-step] > .section-heading").forEach((heading) => {
+  heading.dataset.step = heading.closest(".step-section")?.dataset.step || "";
+});
+
 document.querySelector("#todayLabel").textContent = new Intl.DateTimeFormat("en-CA", {
   weekday: "short",
   month: "short",
@@ -2816,6 +2920,136 @@ document.querySelector("#themeToggle").addEventListener("click", () => {
 if (localStorage.getItem("ontarioBrokerRateDesk.theme") === "dark") {
   document.body.classList.add("dark");
 }
+
+const landingSectionIds = new Set(["account-access", "dashboard", "workflow-guide"]);
+const progressivePanelAliases = {
+  "#best-rates": "#daily-rates"
+};
+
+function revealProgressivePanel(hash, options = {}) {
+  hash = progressivePanelAliases[hash] || hash;
+  if (!hash || !hash.startsWith("#")) return false;
+  const target = document.querySelector(hash);
+  if (!target) return false;
+
+  const panel = findTopLevelPanel(target);
+  if (!panel) return false;
+
+  document.querySelectorAll("main > section.progressive-panel-active").forEach((section) => {
+    section.classList.remove("progressive-panel-active");
+  });
+  document.querySelectorAll(".nav-list a").forEach((link) => {
+    link.classList.toggle("active-reveal", link.getAttribute("href") === hash);
+  });
+  document.querySelectorAll(".workflow-step-grid a").forEach((button) => {
+    button.classList.toggle("active", button.dataset.revealTarget === hash);
+  });
+
+  if (!landingSectionIds.has(panel.id)) {
+    panel.classList.add("progressive-panel-active");
+  }
+
+  if (options.updateHash !== false) {
+    history.pushState(null, "", hash);
+  }
+
+  if (options.scroll !== false) {
+    setTimeout(() => {
+      (landingSectionIds.has(panel.id) ? target : panel).scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 30);
+  }
+
+  return true;
+}
+
+function findTopLevelPanel(target) {
+  const main = document.querySelector("main");
+  let panel = target;
+  while (panel && panel.parentElement !== main) {
+    panel = panel.parentElement;
+  }
+  return panel?.parentElement === main ? panel : null;
+}
+
+document.addEventListener("click", (event) => {
+  const revealButton = event.target.closest("[data-reveal-target]");
+  if (revealButton) {
+    event.preventDefault();
+    revealProgressivePanel(revealButton.dataset.revealTarget);
+    return;
+  }
+
+  const link = event.target.closest("a[href^='#']");
+  if (!link) return;
+  const hash = link.getAttribute("href");
+  if (!hash || hash === "#") return;
+
+  if (revealProgressivePanel(hash)) {
+    event.preventDefault();
+  }
+}, true);
+
+window.addEventListener("popstate", () => {
+  revealProgressivePanel(window.location.hash, { updateHash: false, scroll: false });
+});
+
+registrationForm?.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const password = document.querySelector("#registerPassword").value;
+  const passwordError = getPasswordError(password);
+  if (passwordError) {
+    document.querySelector("#registrationMessage").textContent = passwordError;
+    return;
+  }
+
+  const profile = {
+    firstName: document.querySelector("#registerFirstName").value.trim(),
+    lastName: document.querySelector("#registerLastName").value.trim(),
+    phone: document.querySelector("#registerPhone").value.trim(),
+    email: document.querySelector("#registerEmail").value.trim().toLowerCase(),
+    firmCode: document.querySelector("#registerFirmCode").value.trim().toUpperCase(),
+    password,
+    accessStatus: "signed-in",
+    registeredAt: new Date().toLocaleString("en-CA"),
+    savedScenarios: 0
+  };
+
+  localStorage.setItem(brokerProfileStorageKey, JSON.stringify(profile));
+  document.querySelector("#registrationMessage").textContent = "Registration complete. Your broker portal access is active on this device.";
+  document.querySelector("#signInMessage").textContent = "Signed in successfully.";
+  registrationForm.reset();
+  renderAccountAccess();
+  renderOperationsCenter();
+});
+
+signInForm?.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const savedProfile = loadBrokerProfile();
+  const email = document.querySelector("#signInEmail").value.trim().toLowerCase();
+  const firmCode = document.querySelector("#signInFirmCode").value.trim().toUpperCase();
+  const password = document.querySelector("#signInPassword").value;
+  const message = document.querySelector("#signInMessage");
+
+  if (savedProfile.email === email && savedProfile.firmCode === firmCode && savedProfile.password === password) {
+    localStorage.setItem(brokerProfileStorageKey, JSON.stringify({ ...savedProfile, accessStatus: "signed-in", lastLoginAt: new Date().toLocaleString("en-CA") }));
+    message.textContent = "Signed in successfully.";
+    signInForm.reset();
+    renderAccountAccess();
+    renderOperationsCenter();
+    return;
+  }
+
+  message.textContent = "No matching local account found. Please check email, firm code, and password.";
+});
+
+document.querySelector("#signOutAccount")?.addEventListener("click", () => {
+  const profile = loadBrokerProfile();
+  if (profile.email) {
+    localStorage.setItem(brokerProfileStorageKey, JSON.stringify({ ...profile, accessStatus: "signed-out" }));
+  }
+  renderAccountAccess();
+  renderOperationsCenter();
+});
 
 document.querySelector("#openRateEditor").addEventListener("click", () => {
   populateRateEditor(activeLenderId);
@@ -2906,6 +3140,14 @@ policySearchForm?.addEventListener("submit", (event) => {
   renderPolicySearchResults(policySearchInput.value);
 });
 
+function syncLenderPortalIdentity() {
+  const lender = lenders.find((item) => item.id === lenderPortalSelect?.value) || lenders[0];
+  const emailInput = document.querySelector("#lenderPortalEmail");
+  if (emailInput && lender) emailInput.value = getLenderPortalEmail(lender);
+}
+
+lenderPortalSelect?.addEventListener("change", syncLenderPortalIdentity);
+
 document.querySelector("#runAffordability")?.addEventListener("click", renderAffordabilityTool);
 document.querySelector("#runRefinance")?.addEventListener("click", renderRefinanceTool);
 document.querySelector("#runRentalWorksheet")?.addEventListener("click", renderRentalWorksheetTool);
@@ -2918,14 +3160,27 @@ lenderPortalForm?.addEventListener("submit", (event) => {
   event.preventDefault();
   const updates = JSON.parse(localStorage.getItem(lenderUpdateStorageKey) || "[]");
   const lender = lenders.find((item) => item.id === lenderPortalSelect.value);
+  const documentInput = document.querySelector("#lenderDocumentInput");
+  const documents = documentInput ? [...documentInput.files].map((file) => file.name) : [];
+  const submittedAt = new Date().toLocaleString("en-CA");
   updates.unshift({
+    id: `update-${Date.now()}`,
     lenderId: lender?.id,
     lenderName: lender?.name,
+    portalEmail: lender ? getLenderPortalEmail(lender) : "",
+    role: document.querySelector("#lenderPortalRole")?.value,
+    rates: document.querySelector("#lenderRateUpdateInput")?.value,
+    products: document.querySelector("#lenderProductInput")?.value,
     promotion: document.querySelector("#lenderPromotionInput").value,
     policy: document.querySelector("#lenderPolicyInput").value,
+    documents,
+    bdm: document.querySelector("#lenderBdmInput")?.value,
+    emailBody: document.querySelector("#lenderEmailBodyInput")?.value,
+    extraction: "AI extraction ready: rates, policies, products, BDM, and document names parsed for admin review.",
     status: "Pending admin approval",
-    submittedAt: new Date().toLocaleString("en-CA")
+    submittedAt
   });
+  addLenderVersion(lender, "Pending lender portal submission", submittedAt);
   localStorage.setItem(lenderUpdateStorageKey, JSON.stringify(updates.slice(0, 8)));
   renderOperationsCenter();
 });
@@ -2949,6 +3204,13 @@ document.addEventListener("click", (event) => {
     activeLenderPage = getPageForLender(filteredLenders(), activeLenderId);
     render();
     document.querySelector("#lenders").scrollIntoView({ behavior: "smooth", block: "start" });
+    return;
+  }
+
+  const publishUpdateButton = event.target.closest("[data-publish-update]");
+  if (publishUpdateButton) {
+    event.preventDefault();
+    publishLenderUpdate(publishUpdateButton.dataset.publishUpdate);
     return;
   }
 
@@ -3008,6 +3270,12 @@ document.querySelector("#resetDemoData").addEventListener("click", () => {
 
 function applyDealDeskUpdates(items) {
   items.forEach((lender) => {
+    if (lender.id === "national-bank") {
+      applyNationalBankRateSheet(lender);
+      scrubLenderSourceText(lender);
+      return;
+    }
+
     const row = dealDeskRateRows[lender.id];
     if (!row) {
       scrubLenderSourceText(lender);
@@ -3022,6 +3290,23 @@ function applyDealDeskUpdates(items) {
     lender.rates.conventional = parseRateValue(row.values[4]);
     scrubLenderSourceText(lender);
   });
+}
+
+function applyNationalBankRateSheet(lender) {
+  lender.dealDesk = {
+    source: nationalBankRateSheet.source,
+    effectiveDate: nationalBankRateSheet.effectiveDate,
+    sheetDate: nationalBankRateSheet.sheetDate,
+    benchmarkRate: nationalBankRateSheet.benchmarkRate,
+    primeRate: nationalBankRateSheet.primeRate,
+    note: nationalBankRateSheet.note,
+    sections: nationalBankRateSheet.sections
+  };
+  lender.updated = "National Bank sheet May 29";
+  lender.policyNote = `Updated from ${nationalBankRateSheet.source}, ${nationalBankRateSheet.effectiveDate}. ${nationalBankRateSheet.note}`;
+  lender.rates.insuredFixed = nationalBankRateSheet.rates.insuredFiveYear;
+  lender.rates.variable = nationalBankRateSheet.rates.insuredVariable;
+  lender.rates.conventional = nationalBankRateSheet.rates.uninsuredFiveYear;
 }
 
 function scrubLenderSourceText(lender) {
@@ -3392,6 +3677,7 @@ function render() {
     activeLenderId = results[0].id;
   }
 
+  renderAccountAccess();
   renderMetrics();
   renderPortalGrid(results);
   renderSearchSummary(results.length);
@@ -3549,7 +3835,7 @@ function renderPreferredLender() {
         ${preferredRateCell("5yr high ratio", lender.rates.insuredFixed)}
         ${preferredRateCell("5yr conventional", lender.rates.conventional)}
       </div>
-      <div class="badge-row">${lender.programs.slice(0, 4).map((program) => programBadge(program, program, true)).join("")}</div>
+      <div class="badge-row">${renderFoundingLenderBadge(lender)}${lender.programs.slice(0, 4).map((program) => programBadge(program, program, true)).join("")}</div>
       <button class="primary-button" type="button" data-lender="${lender.id}">Open lender profile</button>
     </article>
   `;
@@ -3596,6 +3882,14 @@ function preferredRateCell(label, value) {
   `;
 }
 
+function isFoundingLender(lender) {
+  return loadFoundingLenderIds().includes(lender?.id);
+}
+
+function renderFoundingLenderBadge(lender) {
+  return isFoundingLender(lender) ? `<span class="badge founding-lender-badge">${foundingLenderProgram.badge}</span>` : "";
+}
+
 function renderLenderList(results) {
   lenderList.innerHTML = "";
   lenderPagination.innerHTML = "";
@@ -3631,7 +3925,7 @@ function renderLenderList(results) {
         ${ratePill("Conventional", lender.rates.conventional, "conventional")}
         ${ratePill("Alt", lender.rates.alt, "alt")}
       </div>
-      <div class="badge-row">${lender.programs.slice(0, 4).map((program) => programBadge(program, program, true)).join("")}</div>
+      <div class="badge-row">${renderFoundingLenderBadge(lender)}${lender.programs.slice(0, 4).map((program) => programBadge(program, program, true)).join("")}</div>
     `;
 
     card.addEventListener("click", () => {
@@ -3733,6 +4027,7 @@ function renderLenderProfileSummary(lender) {
 
   return `
     <div class="profile-intel-grid">
+      ${isFoundingLender(lender) ? `<article class="founding-profile-tile"><span>${foundingLenderProgram.badge}</span><strong>${foundingLenderProgram.freeParticipation}</strong><p>Portal email: ${getLenderPortalEmail(lender)}</p></article>` : ""}
       <article><span>About lender</span><strong>${titleCase(lender.type)} lender serving ${lender.region}</strong><p>${lender.guidelines[0]}</p></article>
       <article><span>Lending areas</span><strong>${policy.geography}</strong><p>Province and property-location rules should be confirmed with the lender desk.</p></article>
       <article><span>Minimum credit score</span><strong>${policy.minScore}</strong><p>${guidelines.credit}</p></article>
@@ -4831,9 +5126,13 @@ function renderChecklistTool() {
 
 function renderOperationsCenter() {
   const updates = JSON.parse(localStorage.getItem(lenderUpdateStorageKey) || "[]");
-  const profile = JSON.parse(localStorage.getItem(brokerProfileStorageKey) || "{}");
+  const profile = loadBrokerProfile();
   const placements = loadPartnerPlacements();
-  if (lenderPortalSelect) lenderPortalSelect.innerHTML = lenders.map((lender) => `<option value="${lender.id}">${lender.name}</option>`).join("");
+  if (lenderPortalSelect) {
+    lenderPortalSelect.innerHTML = lenders.map((lender) => `<option value="${lender.id}">${lender.name}</option>`).join("");
+    syncLenderPortalIdentity();
+  }
+  renderFoundingLenderProgram();
   document.querySelector("#adminDashboard").innerHTML = `
     <div class="ops-metric-grid">
       <span><b>${lenders.length}</b> lenders</span>
@@ -4855,6 +5154,11 @@ function renderOperationsCenter() {
     : `<p class="contact-line">No lender updates submitted yet.</p>`;
   document.querySelector("#brokerAccountPanel").innerHTML = `
     <ul class="policy-list">
+      <li>Broker: ${profile.firstName ? `${profile.firstName} ${profile.lastName}` : "Not registered yet"}</li>
+      <li>Email ID: ${profile.email || "Add broker email"}</li>
+      <li>Phone: ${profile.phone || "Add phone number"}</li>
+      <li>Firm code: ${profile.firmCode || "Add firm code"}</li>
+      <li>Status: ${profile.accessStatus === "signed-in" ? "Signed in" : "Signed out / pending"}</li>
       <li>Saved lenders: ${preferredLenderId ? lenders.find((item) => item.id === preferredLenderId)?.name : "Choose a preferred lender"}</li>
       <li>Saved scenarios: ${profile.savedScenarios || 0}</li>
       <li>Saved comparisons: ${selectedComparisonIds.length}</li>
@@ -4863,6 +5167,9 @@ function renderOperationsCenter() {
     </ul>
   `;
   document.querySelector("#revenuePanel").innerHTML = revenueFeatures.map(([title, text]) => `<article class="revenue-row"><strong>${title}</strong><span>${text}</span></article>`).join("");
+  renderEmailAutomationPanel(updates);
+  renderVersionAnalyticsPanel();
+  renderApiFrameworkPanel();
   document.querySelectorAll("[data-partner-toggle]").forEach((checkbox) => {
     checkbox.addEventListener("change", () => updatePartnerPlacement(checkbox.dataset.partnerToggle, { enabled: checkbox.checked }));
   });
@@ -4872,6 +5179,255 @@ function renderOperationsCenter() {
       updatePartnerPlacement(id, { [field]: input.value });
     });
   });
+}
+
+function loadBrokerProfile() {
+  return JSON.parse(localStorage.getItem(brokerProfileStorageKey) || "{}");
+}
+
+function getPasswordError(password) {
+  if (password.length < 8) return "Password must be at least 8 characters.";
+  if (!/[a-z]/.test(password)) return "Password must include at least one lowercase letter.";
+  if (!/[A-Z]/.test(password)) return "Password must include at least one uppercase letter.";
+  if (!/[0-9]/.test(password)) return "Password must include at least one number.";
+  if (!/[^A-Za-z0-9]/.test(password)) return "Password must include at least one special character.";
+  return "";
+}
+
+function renderAccountAccess() {
+  const profile = loadBrokerProfile();
+  const signedIn = profile.accessStatus === "signed-in" && profile.email;
+  const fullName = [profile.firstName, profile.lastName].filter(Boolean).join(" ");
+  const initialsValue = fullName ? initials(fullName) : "DD";
+
+  const avatar = document.querySelector("#accountAvatar");
+  const name = document.querySelector("#accountSummaryName");
+  const details = document.querySelector("#accountSummaryDetails");
+  const status = document.querySelector("#accountStatusPill");
+  const sidebarStatus = document.querySelector("#sidebarAccountStatus");
+  const signOutButton = document.querySelector("#signOutAccount");
+
+  if (avatar) avatar.textContent = initialsValue;
+  if (name) name.textContent = signedIn ? fullName : profile.email ? `${fullName || "Broker"} signed out` : "Guest broker";
+  if (details) {
+    details.textContent = signedIn
+      ? `${profile.email} · ${profile.phone || "Phone not added"} · Firm ${profile.firmCode}`
+      : profile.email
+        ? `Saved account: ${profile.email}. Sign in with firm code ${profile.firmCode}.`
+        : "Register once with your firm code, then sign in with your email and firm code.";
+  }
+  if (status) status.textContent = signedIn ? "Signed in" : profile.email ? "Saved account" : "Not signed in";
+  if (sidebarStatus) sidebarStatus.textContent = signedIn ? `${fullName || profile.email} · ${profile.firmCode}` : "Broker access ready.";
+  if (signOutButton) signOutButton.disabled = !profile.email;
+
+  const signInEmail = document.querySelector("#signInEmail");
+  if (signInEmail && profile.email && !signInEmail.value) signInEmail.value = profile.email;
+}
+
+function renderFoundingLenderProgram() {
+  const container = document.querySelector("#foundingLenderProgram");
+  if (!container) return;
+  const foundingIds = loadFoundingLenderIds();
+  const foundingLenders = foundingIds.map((id) => lenders.find((lender) => lender.id === id)).filter(Boolean);
+  const remaining = Math.max(foundingLenderProgram.limit - foundingLenders.length, 0);
+  container.innerHTML = `
+    <article class="founding-stat-card">
+      <span>Founding seats</span>
+      <strong>${foundingLenders.length}/${foundingLenderProgram.limit}</strong>
+      <p>${remaining} first-partner seats remaining. ${foundingLenderProgram.freeParticipation}.</p>
+    </article>
+    <article class="founding-stat-card">
+      <span>Badge</span>
+      <strong>${foundingLenderProgram.badge}</strong>
+      <p>Displayed on lender profiles and partner-ready admin records for the first 20 lenders.</p>
+    </article>
+    <article class="founding-feature-card">
+      <h4>Lender Portal</h4>
+      <ul>${renderListItems(foundingLenderProgram.securePortalFeatures)}</ul>
+    </article>
+    <article class="founding-feature-card">
+      <h4>Email Automation</h4>
+      <ul>${renderListItems(foundingLenderProgram.automationFeatures)}</ul>
+    </article>
+    <article class="founding-roster">
+      <h4>Current founding lender partners</h4>
+      <div class="founding-roster-grid">
+        ${foundingLenders.map((lender) => `
+          <span>
+            <b>${lender.name}</b>
+            <small>${getLenderPortalEmail(lender)}</small>
+          </span>
+        `).join("")}
+      </div>
+    </article>
+  `;
+}
+
+function renderEmailAutomationPanel(updates) {
+  const panel = document.querySelector("#emailAutomationPanel");
+  if (!panel) return;
+  panel.innerHTML = `
+    <div class="automation-layout">
+      <article class="automation-card">
+        <span>Inbound email pattern</span>
+        <strong>lender-name@updates.dealdeskdailyrates.ca</strong>
+        <p>Each lender receives a unique email address for rate sheets, policy bulletins, Excel grids, Word docs, PDFs, and free-form email updates.</p>
+      </article>
+      <article class="automation-card">
+        <span>AI extraction path</span>
+        <strong>Extract -> review -> approve -> publish</strong>
+        <p>Parsed fields are held in the admin queue before brokers see the update.</p>
+      </article>
+    </div>
+    <div class="approval-list">
+      ${updates.length ? updates.map(renderApprovalQueueItem).join("") : `<p class="contact-line">No pending lender email or portal updates yet.</p>`}
+    </div>
+  `;
+}
+
+function renderApprovalQueueItem(item) {
+  return `
+    <article class="approval-item">
+      <div>
+        <span class="partner-badge">${item.status}</span>
+        <h5>${item.lenderName || "Lender update"}</h5>
+        <p>${item.extraction || "Ready for admin review."}</p>
+      </div>
+      <dl>
+        <div><dt>Email</dt><dd>${item.portalEmail || "Unique lender email pending"}</dd></div>
+        <div><dt>Rates</dt><dd>${item.rates || "No rate text submitted"}</dd></div>
+        <div><dt>Products</dt><dd>${item.products || "No product update submitted"}</dd></div>
+        <div><dt>Policy</dt><dd>${item.policy || "No policy text submitted"}</dd></div>
+        <div><dt>Documents</dt><dd>${item.documents?.length ? item.documents.join(", ") : "No documents attached"}</dd></div>
+      </dl>
+      <button class="primary-button" type="button" data-publish-update="${item.id || item.submittedAt}">One-click publish</button>
+    </article>
+  `;
+}
+
+function renderVersionAnalyticsPanel() {
+  const panel = document.querySelector("#versionAnalyticsPanel");
+  if (!panel) return;
+  const versions = loadLenderVersions();
+  const analytics = loadLenderAnalytics();
+  panel.innerHTML = `
+    <div class="version-analytics-grid">
+      <article>
+        <h5>Version Control</h5>
+        <ul>${renderListItems(foundingLenderProgram.versionFeatures)}</ul>
+      </article>
+      <article>
+        <h5>Analytics</h5>
+        <ul>${renderListItems(foundingLenderProgram.analyticsMetrics)}</ul>
+      </article>
+    </div>
+    <div class="version-table">
+      ${versions.slice(0, 6).map((item) => `
+        <article>
+          <strong>${item.lenderName}</strong>
+          <span>${item.action} · ${item.effectiveDate}</span>
+          <small>Previous: insured ${rate(item.previousRates?.insuredFixed)}, variable ${rate(item.previousRates?.variable)}, conventional ${rate(item.previousRates?.conventional)}</small>
+        </article>
+      `).join("") || `<p class="contact-line">Version entries will appear when lender updates are submitted or published.</p>`}
+    </div>
+    <div class="analytics-grid">
+      ${analytics.slice(0, 6).map((item) => `
+        <article>
+          <strong>${item.lenderName}</strong>
+          <span>${item.profileViews} profile views</span>
+          <span>${item.rateViews} rate views</span>
+          <span>${item.brokerClicks} broker clicks</span>
+          <span>${item.documentDownloads} downloads</span>
+        </article>
+      `).join("")}
+    </div>
+  `;
+}
+
+function renderApiFrameworkPanel() {
+  const panel = document.querySelector("#apiFrameworkPanel");
+  if (!panel) return;
+  panel.innerHTML = `
+    <div class="api-ready-grid">
+      ${platformDataModel.collections.map((collection) => `<span>${collection}</span>`).join("")}
+    </div>
+    <div class="endpoint-list">
+      ${foundingLenderProgram.apiEndpoints.map(([method, path, purpose]) => `
+        <article>
+          <b>${method}</b>
+          <code>${path}</code>
+          <span>${purpose}</span>
+        </article>
+      `).join("")}
+    </div>
+  `;
+}
+
+function loadFoundingLenderIds() {
+  const saved = JSON.parse(localStorage.getItem(foundingLenderStorageKey) || "[]");
+  return saved.length ? saved.slice(0, foundingLenderProgram.limit) : defaultFoundingLenderIds.slice(0, foundingLenderProgram.limit);
+}
+
+function getLenderPortalEmail(lender) {
+  const slug = String(lender?.id || "lender").replace(/[^a-z0-9-]/gi, "").toLowerCase();
+  return `${slug}@updates.dealdeskdailyrates.ca`;
+}
+
+function loadLenderVersions() {
+  const saved = JSON.parse(localStorage.getItem(lenderVersionStorageKey) || "[]");
+  if (saved.length) return saved;
+  return loadFoundingLenderIds().slice(0, 4).map((id, index) => {
+    const lender = lenders.find((item) => item.id === id);
+    return {
+      lenderId: id,
+      lenderName: lender?.name || "Lender",
+      action: index === 0 ? "Initial founding partner record" : "Rate and policy baseline",
+      effectiveDate: lender?.updated || "June 3, 2026",
+      previousRates: lender?.rates || {}
+    };
+  });
+}
+
+function addLenderVersion(lender, action, effectiveDate) {
+  if (!lender) return;
+  const versions = loadLenderVersions();
+  versions.unshift({
+    lenderId: lender.id,
+    lenderName: lender.name,
+    action,
+    effectiveDate,
+    previousRates: { ...lender.rates }
+  });
+  localStorage.setItem(lenderVersionStorageKey, JSON.stringify(versions.slice(0, 20)));
+}
+
+function loadLenderAnalytics() {
+  const saved = JSON.parse(localStorage.getItem(lenderAnalyticsStorageKey) || "[]");
+  if (saved.length) return saved;
+  return loadFoundingLenderIds().map((id, index) => {
+    const lender = lenders.find((item) => item.id === id);
+    return {
+      lenderId: id,
+      lenderName: lender?.name || "Lender",
+      profileViews: 420 - index * 21,
+      rateViews: 980 - index * 37,
+      brokerClicks: 140 - index * 8,
+      documentDownloads: 72 - index * 4
+    };
+  });
+}
+
+function publishLenderUpdate(updateId) {
+  const updates = JSON.parse(localStorage.getItem(lenderUpdateStorageKey) || "[]");
+  const nextUpdates = updates.map((item) => {
+    const id = item.id || item.submittedAt;
+    if (id !== updateId) return item;
+    const lender = lenders.find((entry) => entry.id === item.lenderId);
+    addLenderVersion(lender, "Published admin-approved update", new Date().toLocaleString("en-CA"));
+    return { ...item, status: "Published", publishedAt: new Date().toLocaleString("en-CA") };
+  });
+  localStorage.setItem(lenderUpdateStorageKey, JSON.stringify(nextUpdates));
+  renderOperationsCenter();
 }
 
 function loadPartnerPlacements() {
@@ -5113,5 +5669,8 @@ function initials(value) {
 }
 
 render();
+if (window.location.hash) {
+  revealProgressivePanel(window.location.hash, { updateHash: false, scroll: false });
+}
 initializeMortgageNews();
 initializeWeather(true);
