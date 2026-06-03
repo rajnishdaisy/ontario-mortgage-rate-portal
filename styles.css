@@ -879,23 +879,156 @@ button.best-rate-cell:hover {
 }
 
 #daily-rates {
-  order: -9;
-}
-
-#ai-match {
   order: -8;
 }
 
-#policy-search {
+#ai-match {
   order: -7;
 }
 
-#broker-tools {
+#policy-search {
   order: -6;
 }
 
-#admin-center {
+#broker-tools {
   order: -5;
+}
+
+#admin-center {
+  order: -4;
+}
+
+#featured-partners {
+  order: -9;
+}
+
+.partner-showcase {
+  border-color: color-mix(in srgb, var(--gold) 34%, var(--line));
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--gold) 10%, var(--surface)), var(--surface));
+}
+
+.partner-placement-grid {
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+  gap: 14px;
+}
+
+.partner-card {
+  border: 1px solid color-mix(in srgb, var(--accent) 22%, var(--line));
+  border-radius: 10px;
+  background: var(--surface);
+  box-shadow: var(--shadow-soft);
+  padding: clamp(16px, 2.4vw, 24px);
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+  position: relative;
+  overflow: hidden;
+}
+
+.partner-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 6px;
+  background: linear-gradient(180deg, var(--accent), var(--gold));
+}
+
+.featured-brokerage-card {
+  border-color: color-mix(in srgb, var(--gold) 42%, var(--line));
+}
+
+.partner-offer-card {
+  border-color: color-mix(in srgb, var(--accent) 30%, var(--line));
+}
+
+.partner-logo {
+  width: clamp(70px, 10vw, 112px);
+  aspect-ratio: 1;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--accent) 92%, #ffffff), color-mix(in srgb, var(--gold) 80%, #ffffff));
+  color: #ffffff;
+  font-weight: 950;
+  text-align: center;
+  line-height: 1.05;
+  box-shadow: 0 16px 32px color-mix(in srgb, var(--accent) 18%, transparent);
+}
+
+.partner-card-body {
+  display: grid;
+  gap: 10px;
+}
+
+.partner-badge {
+  width: max-content;
+  min-height: 28px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0 10px;
+  background: color-mix(in srgb, var(--gold) 16%, var(--surface));
+  border: 1px solid color-mix(in srgb, var(--gold) 42%, var(--line));
+  color: color-mix(in srgb, var(--gold) 72%, var(--text));
+  font-size: 0.76rem;
+  font-weight: 900;
+}
+
+.partner-card h4 {
+  margin: 0;
+  font-size: clamp(1.22rem, 2vw, 1.8rem);
+}
+
+.partner-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.partner-card ul {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.partner-card .primary-button {
+  width: max-content;
+  min-width: 0;
+}
+
+.partner-admin-list {
+  display: grid;
+  gap: 10px;
+}
+
+.partner-admin-row {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface-strong);
+  padding: 10px;
+  display: grid;
+  gap: 8px;
+}
+
+.partner-admin-row label,
+.toggle-row {
+  display: grid;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 850;
+}
+
+.toggle-row {
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  color: var(--text);
 }
 
 .intelligence-overview,
@@ -2637,6 +2770,7 @@ menu {
   .policy-search-layout,
   .tools-grid,
   .operations-cards,
+  .partner-placement-grid,
   .profile-intel-grid {
     grid-template-columns: 1fr;
   }
@@ -2777,6 +2911,7 @@ menu {
   .capability-grid,
   .filter-grid,
   .deal-form,
+  .partner-card,
   .underwriting-grid,
   .special-offer-grid,
   .feature-tile-grid,

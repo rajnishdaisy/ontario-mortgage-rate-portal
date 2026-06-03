@@ -372,6 +372,7 @@ const lendersPerPage = 4;
 const comparisonStorageKey = "dealDeskDailyRates.comparison";
 const brokerProfileStorageKey = "dealDeskDailyRates.brokerProfile";
 const lenderUpdateStorageKey = "dealDeskDailyRates.lenderUpdates";
+const partnerPlacementStorageKey = "dealDeskDailyRates.partnerPlacements";
 let selectedComparisonIds = JSON.parse(localStorage.getItem(comparisonStorageKey) || "[]");
 
 const purposeProgramMap = {
@@ -2469,6 +2470,35 @@ const revenueFeatures = [
   ["Brokerage team plan", "Team dashboards, admin seats, and shared preferred lenders."]
 ];
 
+const defaultPartnerPlacements = [
+  {
+    id: "aasra-mortgage-brokerage",
+    type: "featured-brokerage",
+    enabled: true,
+    badge: "Premier Partner",
+    headline: "Aasra Mortgage Brokerage",
+    logoText: "Aasra",
+    description: "A professional mortgage brokerage partner for Canadian borrowers, brokers, and real estate referral relationships.",
+    ctaLabel: "Contact Brokerage",
+    href: "#aasra-profile",
+    profileTitle: "Aasra Mortgage Brokerage Profile",
+    profileNotes: ["Brokerage-first service experience", "Canadian mortgage placement support", "Referral-ready contact workflow"]
+  },
+  {
+    id: "dashsign",
+    type: "partner-offer",
+    enabled: true,
+    badge: "Partner Offer",
+    headline: "DashSign E-Signature Portal",
+    logoText: "DashSign",
+    description: "Get 1 month free DashSign access with an annual Deal Desk Daily Rates subscription.",
+    ctaLabel: "Claim Partner Offer",
+    href: "https://www.dashsign.ca",
+    profileTitle: "DashSign Partner Offer",
+    profileNotes: ["E-signature workflow for broker documentation", "Annual Deal Desk subscription partner benefit", "External offer details confirmed by partner"]
+  }
+];
+
 document.querySelector("#todayLabel").textContent = new Intl.DateTimeFormat("en-CA", {
   weekday: "short",
   month: "short",
@@ -3071,6 +3101,7 @@ function render() {
   renderDealMatchResults();
   renderPolicySearchResults(policySearchInput?.value || "");
   renderBrokerToolsDefaults();
+  renderPartnerPlacements();
   renderOperationsCenter();
 }
 
@@ -4269,13 +4300,17 @@ function renderChecklistTool() {
 function renderOperationsCenter() {
   const updates = JSON.parse(localStorage.getItem(lenderUpdateStorageKey) || "[]");
   const profile = JSON.parse(localStorage.getItem(brokerProfileStorageKey) || "{}");
+  const placements = loadPartnerPlacements();
   if (lenderPortalSelect) lenderPortalSelect.innerHTML = lenders.map((lender) => `<option value="${lender.id}">${lender.name}</option>`).join("");
   document.querySelector("#adminDashboard").innerHTML = `
     <div class="ops-metric-grid">
       <span><b>${lenders.length}</b> lenders</span>
       <span><b>${buildDailyRateRows().length}</b> rate rows</span>
       <span><b>${updates.length}</b> pending updates</span>
-      <span><b>${selectedComparisonIds.length}</b> comparisons</span>
+      <span><b>${placements.filter((item) => item.enabled).length}</b> active partners</span>
+    </div>
+    <div class="partner-admin-list">
+      ${placements.map((placement) => renderPartnerAdminRow(placement)).join("")}
     </div>
     <ul class="policy-list">
       <li>Add/edit lenders and upload rate sheets.</li>
@@ -4296,6 +4331,74 @@ function renderOperationsCenter() {
     </ul>
   `;
   document.querySelector("#revenuePanel").innerHTML = revenueFeatures.map(([title, text]) => `<article class="revenue-row"><strong>${title}</strong><span>${text}</span></article>`).join("");
+  document.querySelectorAll("[data-partner-toggle]").forEach((checkbox) => {
+    checkbox.addEventListener("change", () => updatePartnerPlacement(checkbox.dataset.partnerToggle, { enabled: checkbox.checked }));
+  });
+  document.querySelectorAll("[data-partner-field]").forEach((input) => {
+    input.addEventListener("change", () => {
+      const [id, field] = input.dataset.partnerField.split(":");
+      updatePartnerPlacement(id, { [field]: input.value });
+    });
+  });
+}
+
+function loadPartnerPlacements() {
+  const saved = JSON.parse(localStorage.getItem(partnerPlacementStorageKey) || "[]");
+  if (!saved.length) return defaultPartnerPlacements.map((item) => ({ ...item }));
+  const merged = defaultPartnerPlacements.map((placement) => ({ ...placement, ...(saved.find((item) => item.id === placement.id) || {}) }));
+  const custom = saved.filter((item) => !defaultPartnerPlacements.some((placement) => placement.id === item.id));
+  return [...merged, ...custom];
+}
+
+function savePartnerPlacements(placements) {
+  localStorage.setItem(partnerPlacementStorageKey, JSON.stringify(placements));
+}
+
+function updatePartnerPlacement(id, updates) {
+  const placements = loadPartnerPlacements().map((placement) => (placement.id === id ? { ...placement, ...updates } : placement));
+  savePartnerPlacements(placements);
+  renderPartnerPlacements();
+  renderOperationsCenter();
+}
+
+function renderPartnerPlacements() {
+  const grid = document.querySelector("#partnerPlacementGrid");
+  if (!grid) return;
+  const placements = loadPartnerPlacements().filter((placement) => placement.enabled);
+  grid.innerHTML = placements.length
+    ? placements.map((placement) => renderPartnerPlacementCard(placement)).join("")
+    : `<p class="contact-line">No featured partner placements are currently active.</p>`;
+}
+
+function renderPartnerPlacementCard(placement) {
+  const isBrokerage = placement.type === "featured-brokerage";
+  const target = placement.href.startsWith("http") ? `target="_blank" rel="noreferrer"` : "";
+  return `
+    <article class="partner-card ${isBrokerage ? "featured-brokerage-card" : "partner-offer-card"}" id="${placement.id === "aasra-mortgage-brokerage" ? "aasra-profile" : ""}">
+      <div class="partner-logo" aria-hidden="true">${placement.logoText}</div>
+      <div class="partner-card-body">
+        <span class="partner-badge">${placement.badge}</span>
+        <h4>${placement.headline}</h4>
+        <p>${placement.description}</p>
+        <ul>${placement.profileNotes.map((note) => `<li>${note}</li>`).join("")}</ul>
+        <a class="primary-button action-link" href="${placement.href}" ${target}>${placement.ctaLabel}</a>
+      </div>
+    </article>
+  `;
+}
+
+function renderPartnerAdminRow(placement) {
+  return `
+    <article class="partner-admin-row">
+      <label class="toggle-row">
+        <input type="checkbox" data-partner-toggle="${placement.id}" ${placement.enabled ? "checked" : ""} />
+        <span>${placement.headline}</span>
+      </label>
+      <label>Badge <input data-partner-field="${placement.id}:badge" value="${placement.badge}" /></label>
+      <label>Headline <input data-partner-field="${placement.id}:headline" value="${placement.headline}" /></label>
+      <label>CTA <input data-partner-field="${placement.id}:ctaLabel" value="${placement.ctaLabel}" /></label>
+    </article>
+  `;
 }
 
 function currency(value) {
