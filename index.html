@@ -1159,6 +1159,391 @@ body.dark .lender-logo {
   border-color: var(--line);
 }
 
+.full-deal-desk {
+  background:
+    radial-gradient(circle at top left, color-mix(in srgb, var(--accent) 12%, transparent), transparent 34%),
+    linear-gradient(180deg, #fff, var(--surface));
+}
+
+.deal-command-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(300px, 0.92fr);
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.deal-command-card,
+.rate-access-card,
+.deal-roadmap-card {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: var(--shadow-soft);
+  padding: 18px;
+}
+
+.deal-command-card h4,
+.rate-access-card h4,
+.deal-roadmap-card h4 {
+  margin: 0;
+  letter-spacing: -0.035em;
+}
+
+.deal-command-card p,
+.rate-access-card p,
+.deal-roadmap-card p {
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.deal-stage-list,
+.rate-access-list,
+.deal-roadmap-list {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.deal-stage,
+.rate-access-row,
+.deal-roadmap-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface-strong);
+  padding: 12px;
+}
+
+.deal-stage span,
+.rate-access-row span,
+.deal-roadmap-row span {
+  min-width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: var(--text);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 900;
+}
+
+.deal-stage strong,
+.rate-access-row strong,
+.deal-roadmap-row strong {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.deal-stage small,
+.rate-access-row small,
+.deal-roadmap-row small {
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.rate-access-card.priority {
+  border-color: color-mix(in srgb, var(--accent) 28%, var(--line));
+  background: color-mix(in srgb, var(--accent) 5%, #fff);
+}
+
+.deal-command-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+
+.deal-command-actions a {
+  text-decoration: none;
+}
+
+.rate-access-sources {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.rate-access-sources article {
+  border: 1px dashed var(--line);
+  border-radius: 14px;
+  padding: 12px;
+  background: #fff;
+}
+
+.rate-access-sources strong {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.rate-access-sources small {
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+
+.deal-builder-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin-top: 18px;
+  align-items: start;
+}
+
+.deal-intake-card {
+  max-width: 760px;
+}
+
+.deal-pipeline-card {
+  width: 100%;
+}
+
+.deal-intake-card,
+.deal-pipeline-card {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: var(--shadow-soft);
+  padding: 18px;
+}
+
+.deal-intake-card h4,
+.deal-pipeline-card h4 {
+  margin: 0;
+  letter-spacing: -0.035em;
+}
+
+.deal-intake-card p,
+.deal-pipeline-card p,
+.deal-form-help {
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.deal-intake-form {
+  display: grid;
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.deal-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.deal-field {
+  display: grid;
+  gap: 6px;
+}
+
+.deal-field.full {
+  grid-column: 1 / -1;
+}
+
+.deal-field span {
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.deal-field input,
+.deal-field select,
+.deal-field textarea {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text);
+  padding: 11px 12px;
+  min-height: 44px;
+}
+
+.deal-field textarea {
+  min-height: 96px;
+  resize: vertical;
+}
+
+.deal-form-actions,
+.pipeline-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.pipeline-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 14px 0;
+}
+
+
+.supabase-status-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0 10px;
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 900;
+}
+
+.supabase-status-pill.connected {
+  border-color: color-mix(in srgb, var(--green) 28%, var(--line));
+  color: var(--green);
+  background: color-mix(in srgb, var(--green) 8%, var(--surface));
+}
+
+.supabase-status-pill.error {
+  border-color: color-mix(in srgb, var(--amber) 28%, var(--line));
+  color: var(--amber);
+  background: color-mix(in srgb, var(--amber) 8%, var(--surface));
+}
+
+.pipeline-count-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  border-radius: 999px;
+  padding: 0 10px;
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.pipeline-board {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.pipeline-column {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface-strong);
+  min-height: 180px;
+  padding: 10px;
+}
+
+.pipeline-column header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.pipeline-column h5,
+.deal-card h6 {
+  margin: 0;
+}
+
+.pipeline-column header span {
+  min-width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--accent-strong);
+  font-weight: 900;
+  font-size: 0.78rem;
+}
+
+.deal-card {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  padding: 12px;
+  display: grid;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.deal-card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.deal-card small,
+.deal-card-meta,
+.recommendation-list small {
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+.deal-chip-row,
+.recommendation-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.deal-chip {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 5px 8px;
+  background: var(--surface-strong);
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.recommendation-list article {
+  flex: 1 1 150px;
+  border: 1px solid color-mix(in srgb, var(--accent) 20%, var(--line));
+  border-radius: 10px;
+  padding: 9px;
+  background: color-mix(in srgb, var(--accent) 5%, var(--surface));
+}
+
+.recommendation-list strong {
+  display: block;
+  font-size: 0.86rem;
+}
+
+.deal-card .pipeline-actions button {
+  min-height: 34px;
+  border-radius: 8px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.deal-card .pipeline-actions button.primary-mini {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+}
+
+.empty-pipeline {
+  border: 1px dashed var(--line);
+  border-radius: 12px;
+  padding: 18px;
+  color: var(--muted);
+  background: var(--surface);
+  text-align: center;
+}
+
 .program-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1528,6 +1913,11 @@ menu {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
+  .deal-command-grid,
+  .deal-builder-grid {
+    grid-template-columns: 1fr;
+  }
+
   .best-rate-layout {
     grid-template-columns: 1fr;
   }
@@ -1595,6 +1985,11 @@ menu {
   .best-rate-pair,
   .package-layout,
   .capability-grid,
+  .deal-command-grid,
+  .deal-builder-grid,
+  .deal-form-grid,
+  .pipeline-board,
+  .rate-access-sources,
   .underwriting-grid,
   .policy-stat-grid,
   .policy-breakdown,
@@ -1631,6 +2026,822 @@ menu {
   }
 }
 
+
+/* 2026 UX refresh: premium broker command desk */
+:root {
+  --bg: #e9eff1;
+  --surface: #fbfdfc;
+  --surface-strong: #f2f7f7;
+  --surface-tint: #e1f1ef;
+  --text: #0f1a21;
+  --muted: #5a6b76;
+  --line: #cfdbde;
+  --accent: #067887;
+  --accent-strong: #035f69;
+  --accent-soft: #d8f1ef;
+  --gold: #c78b37;
+  --nav: #0c1b22;
+  --shadow: 0 24px 70px rgba(15, 31, 42, 0.12);
+  --shadow-soft: 0 12px 30px rgba(15, 31, 42, 0.08);
+  --radius: 18px;
+}
+
+body {
+  font-family: Aptos, "Aptos Display", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background:
+    radial-gradient(circle at 87% 3%, rgba(6, 120, 135, 0.18), transparent 30rem),
+    radial-gradient(circle at 18% 82%, rgba(199, 139, 55, 0.12), transparent 25rem),
+    linear-gradient(180deg, #f7faf9 0, var(--bg) 34rem);
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.34;
+  background-image:
+    linear-gradient(rgba(12, 27, 34, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(12, 27, 34, 0.045) 1px, transparent 1px);
+  background-size: 34px 34px;
+  mask-image: linear-gradient(180deg, #000, transparent 72%);
+  z-index: -1;
+}
+
+.app-shell {
+  grid-template-columns: 272px minmax(0, 1fr);
+}
+
+.sidebar {
+  padding: 26px 22px;
+  background:
+    radial-gradient(circle at 30% 0%, rgba(105, 199, 212, 0.20), transparent 18rem),
+    linear-gradient(180deg, #102832 0%, #0b1920 64%, #071116 100%);
+  border-right: 1px solid rgba(255,255,255,0.08);
+}
+
+.brand-mark {
+  width: 44px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #d8eee9 0%, #c79a4a 100%);
+  box-shadow: 0 16px 34px rgba(0,0,0,0.22), inset 0 0 0 1px rgba(255,255,255,0.5);
+}
+
+.brand-lockup h1 { font-size: 1.16rem; letter-spacing: -0.02em; }
+.nav-list { gap: 6px; }
+.nav-list a {
+  border-radius: 14px;
+  padding: 11px 13px;
+  font-weight: 760;
+  letter-spacing: -0.01em;
+}
+.nav-list a.active,
+.nav-list a:hover {
+  background: rgba(255, 255, 255, 0.11);
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow: inset 3px 0 0 #7bd4df;
+}
+.sidebar-panel {
+  border-radius: 16px;
+  padding: 15px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.045));
+}
+
+main {
+  padding: 28px clamp(22px, 3vw, 38px) 42px;
+  gap: 18px;
+}
+
+.topbar {
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto 310px;
+  align-items: start;
+  border-radius: var(--radius);
+  padding: clamp(24px, 3vw, 34px);
+  background:
+    linear-gradient(135deg, rgba(6, 120, 135, 0.15), transparent 42%),
+    radial-gradient(circle at 78% 20%, rgba(199, 139, 55, 0.14), transparent 16rem),
+    rgba(251, 253, 252, 0.90);
+  position: relative;
+  isolation: isolate;
+}
+.topbar::after {
+  content: "";
+  position: absolute;
+  right: 330px;
+  bottom: -52px;
+  width: 190px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(6,120,135,.16), rgba(199,139,55,.16));
+  filter: blur(4px);
+  z-index: -1;
+}
+.topbar h2 {
+  max-width: 780px;
+  font-size: clamp(2.8rem, 6vw, 5.7rem);
+  letter-spacing: -0.075em;
+  line-height: 0.92;
+}
+.topbar h2 span { display: block; }
+.topbar-copy {
+  max-width: 680px;
+  margin-top: 18px;
+  font-size: 1.03rem;
+}
+.hero-proof-strip {
+  margin-top: 22px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+.hero-proof-strip span {
+  min-height: 31px;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid color-mix(in srgb, var(--accent) 22%, var(--line));
+  border-radius: 999px;
+  padding: 0 12px;
+  background: rgba(255,255,255,0.64);
+  color: var(--accent-strong);
+  font-weight: 850;
+  font-size: 0.82rem;
+}
+.topbar-actions {
+  flex-direction: column;
+  align-self: start;
+  min-width: 158px;
+}
+.topbar-actions .primary-button { width: 100%; }
+.hero-insight {
+  border: 1px solid color-mix(in srgb, var(--accent) 26%, var(--line));
+  border-radius: 20px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.92), rgba(242,247,247,0.92));
+  box-shadow: var(--shadow-soft);
+  padding: 18px;
+  display: grid;
+  gap: 10px;
+}
+.hero-insight > strong {
+  color: #057262;
+  font-size: 3rem;
+  line-height: .92;
+  letter-spacing: -0.06em;
+}
+.hero-insight > span { color: var(--muted); font-weight: 800; }
+.hero-insight dl {
+  margin: 8px 0 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.hero-insight dl div {
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  padding: 10px;
+}
+.hero-insight dt { color: var(--muted); font-size: .72rem; text-transform: uppercase; font-weight: 900; }
+.hero-insight dd { margin: 3px 0 0; font-weight: 900; color: var(--text); }
+
+.metric-grid { gap: 12px; }
+.metric-grid article,
+.best-rate-card,
+.preferred-lender-panel,
+.preferred-lender-card,
+.workspace,
+.band,
+.package-card,
+.capability-grid article,
+.lender-card,
+.detail-panel,
+.program-card,
+.insurer-card,
+.insurer-program-detail,
+.contact-table-wrap {
+  border-radius: 16px;
+}
+.metric-grid article {
+  min-height: 108px;
+  padding: 16px 18px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.96), rgba(247,250,250,.94));
+}
+.metric-grid article::after {
+  width: 38px;
+  background: radial-gradient(circle at 35% 35%, #fff, var(--accent-soft));
+}
+.metric-grid strong {
+  font-size: clamp(1.55rem, 2.5vw, 2rem);
+  letter-spacing: -0.055em;
+}
+.metric-grid article:nth-child(3) strong { font-size: clamp(1.35rem, 2.1vw, 1.7rem); }
+
+.workspace,
+.band {
+  padding: 18px;
+  background: rgba(251,253,252,.90);
+}
+.section-heading h3,
+.workspace-header h3 { letter-spacing: -0.035em; }
+.best-rate-layout { grid-template-columns: minmax(0, 1.5fr) minmax(305px, .5fr); }
+.best-rate-card { padding: 13px 14px; background: rgba(255,255,255,.86); }
+.best-rate-card header { align-items: center; }
+.best-rate-card h4 { letter-spacing: -0.025em; }
+.best-rate-card p { font-size: .92rem; }
+.best-rate-cell {
+  min-height: 74px;
+  border-radius: 13px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--green) 8%, #fff), #f6faf8);
+}
+.best-rate-cell strong { font-size: 1.42rem; letter-spacing: -0.045em; }
+.preferred-lender-panel {
+  position: sticky;
+  top: 20px;
+  border-left-width: 0;
+  box-shadow: inset 4px 0 0 var(--accent), var(--shadow-soft);
+}
+
+.control-row {
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface-strong);
+}
+.search-box input,
+select,
+input,
+textarea {
+  border-radius: 13px;
+}
+.segmented-control { border-radius: 14px; }
+.segmented-control button { border-radius: 11px; }
+.lender-list { gap: 10px; }
+.lender-card { padding: 13px 14px 13px 16px; gap: 11px; }
+.lender-logo { border-radius: 13px; }
+.rate-pill { min-height: 60px; border-radius: 13px; }
+.detail-panel { top: 18px; }
+th, td { padding: 11px 12px; }
+
+body.dark .topbar,
+body.dark .workspace,
+body.dark .band,
+body.dark .hero-insight,
+body.dark .metric-grid article,
+body.dark .best-rate-card,
+body.dark .preferred-lender-card,
+body.dark .detail-panel {
+  background: rgba(21, 29, 34, 0.92);
+}
+
+@media (max-width: 1180px) {
+  .topbar { grid-template-columns: minmax(0, 1fr) auto; }
+  .hero-insight { grid-column: 1 / -1; grid-template-columns: auto minmax(0,1fr) auto; align-items: center; }
+  .hero-insight dl { min-width: 260px; }
+}
+
+@media (max-width: 760px) {
+  .app-shell { display: block; }
+  .sidebar { padding: 18px; }
+  main { padding: 14px; }
+  .topbar {
+    display: block;
+    padding: 22px;
+    overflow: hidden;
+  }
+  .topbar > div:first-child,
+  .hero-insight,
+  .hero-proof-strip,
+  .topbar-actions {
+    min-width: 0;
+    width: 100%;
+  }
+  .topbar-actions {
+    display: flex;
+    flex-direction: row;
+    margin-top: 18px;
+  }
+  .topbar-actions .primary-button {
+    min-width: 0;
+    flex: 0 0 220px;
+    width: 220px;
+    max-width: calc(100vw - 104px);
+    display: inline-flex;
+    justify-content: center;
+  }
+  .topbar-actions .icon-button { width: 44px; }
+  .topbar h2 {
+    max-width: 100%;
+    font-size: clamp(2.05rem, 9.7vw, 2.72rem);
+    letter-spacing: -0.052em;
+    overflow-wrap: normal;
+    word-break: normal;
+  }
+  .topbar-copy { font-size: .98rem; max-width: 304px; }
+  .hero-insight { grid-template-columns: 1fr; }
+  .hero-insight { margin-top: 16px; }
+  .hero-insight > span { max-width: 286px; }
+  .hero-insight dl { min-width: 0; }
+  .hero-proof-strip { display: none; }
+  .hero-proof-strip span {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+    white-space: normal;
+    min-height: 0;
+    padding: 8px 10px;
+    line-height: 1.2;
+    font-size: .78rem;
+  }
+  .control-row { align-items: stretch; }
+  .segmented-control { width: 100%; }
+}
+
+
+/* Minimal page mode: one clean workspace per nav item */
+:root {
+  --bg: #f6f7f5;
+  --surface: #ffffff;
+  --surface-strong: #f8f9f7;
+  --surface-tint: #eef4f1;
+  --text: #151a18;
+  --muted: #66716c;
+  --line: #e3e6e2;
+  --accent: #0b6f68;
+  --accent-strong: #064d49;
+  --accent-soft: #e5f2ef;
+  --green: #15715b;
+  --amber: #a96e2a;
+  --nav: #111614;
+  --shadow: none;
+  --shadow-soft: none;
+  --radius: 14px;
+}
+
+body,
+body.dark {
+  background: var(--bg);
+  color: var(--text);
+}
+
+body::before,
+.topbar::after,
+.metric-grid article::after {
+  display: none;
+}
+
+.sidebar {
+  background: var(--surface);
+  color: var(--text);
+  border-right: 1px solid var(--line);
+}
+
+.sidebar .eyebrow,
+.sidebar .panel-label,
+.sidebar-panel,
+.nav-list a {
+  color: var(--muted);
+}
+
+.brand-mark {
+  background: var(--text);
+  color: #fff;
+  border-radius: 10px;
+  box-shadow: none;
+}
+
+.nav-list a.active,
+.nav-list a:hover {
+  background: var(--surface-strong);
+  border-color: var(--line);
+  box-shadow: inset 3px 0 0 var(--accent);
+  color: var(--text);
+}
+
+.sidebar-panel,
+.topbar,
+.workspace,
+.band,
+.metric-grid article,
+.best-rate-card,
+.preferred-lender-panel,
+.preferred-lender-card,
+.package-card,
+.capability-grid article,
+.lender-card,
+.detail-panel,
+.program-card,
+.insurer-card,
+.insurer-program-detail,
+.contact-table-wrap,
+.rate-pill,
+.best-rate-cell,
+.control-row {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: none;
+}
+
+main {
+  max-width: 1280px;
+  width: 100%;
+  gap: 14px;
+  align-content: start;
+}
+
+.app-page-hidden {
+  display: none !important;
+}
+
+.app-page-active {
+  animation: pageFade 140ms ease-out;
+}
+
+@keyframes pageFade {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.topbar {
+  grid-template-columns: minmax(0, 1fr) auto 260px;
+  padding: clamp(22px, 4vw, 44px);
+  min-height: auto;
+}
+
+.topbar h2 {
+  font-size: clamp(2.4rem, 5.2vw, 4.8rem);
+  letter-spacing: -0.07em;
+}
+
+.hero-proof-strip span,
+.live-pill,
+.desk-badges span,
+.badge {
+  background: var(--surface-strong);
+  border-color: var(--line);
+  color: var(--muted);
+}
+
+.metric-grid article,
+.best-rate-card,
+.lender-card,
+.package-card,
+.program-card,
+.insurer-card {
+  transition: border-color 140ms ease, background 140ms ease;
+}
+
+.metric-grid article:hover,
+.best-rate-card:hover,
+.lender-card:hover,
+.package-card:hover,
+.program-card:hover,
+.insurer-card:hover {
+  transform: none;
+  border-color: color-mix(in srgb, var(--accent) 32%, var(--line));
+  background: #fbfcfa;
+}
+
+.preferred-lender-panel,
+.detail-panel {
+  position: static;
+}
+
+.workspace,
+.band {
+  min-height: calc(100vh - 56px);
+}
+
+@media (max-width: 1080px) {
+  .sidebar {
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+}
+
+@media (max-width: 760px) {
+  .topbar { display: block; }
+  .workspace,
+  .band { min-height: auto; }
+}
+
+.resource-heading {
+  align-items: stretch;
+}
+
+.section-copy {
+  max-width: 760px;
+  margin: 12px 0 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.resource-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  min-width: min(100%, 520px);
+}
+
+.resource-stats article {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: #fff;
+  padding: 16px;
+}
+
+.resource-stats strong {
+  display: block;
+  font-size: 1.45rem;
+  letter-spacing: -0.04em;
+}
+
+.resource-stats span {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 760;
+}
+
+.resource-toolbar {
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) 190px 190px 190px;
+  gap: 12px;
+  margin: 24px 0;
+}
+
+.resource-toolbar input,
+.resource-toolbar select {
+  min-height: 48px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: #fff;
+  color: var(--text);
+  padding: 0 14px;
+}
+
+.resource-shell {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  gap: 18px;
+}
+
+.resource-sidebar,
+.resource-card {
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: #fff;
+}
+
+.resource-sidebar {
+  align-self: start;
+  padding: 20px;
+}
+
+.resource-sidebar h4,
+.resource-card h4 {
+  margin: 0;
+  letter-spacing: -0.035em;
+}
+
+.resource-sidebar p {
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.resource-summary {
+  display: grid;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.resource-summary button {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface-strong);
+  color: var(--text);
+  padding: 10px 12px;
+  text-align: left;
+}
+
+.resource-results {
+  display: grid;
+  gap: 16px;
+}
+
+.resource-lender-group {
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.resource-lender-group > summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: start;
+  padding: 18px;
+  background: linear-gradient(180deg, #fff, var(--surface-strong));
+  cursor: pointer;
+  list-style: none;
+}
+
+.resource-lender-group[open] > summary {
+  border-bottom: 1px solid var(--line);
+}
+
+.resource-lender-group > summary::-webkit-details-marker {
+  display: none;
+}
+
+.resource-lender-group > summary::after {
+  content: "Open";
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--text);
+  padding: 5px 10px;
+  font-size: 0.72rem;
+  font-weight: 850;
+}
+
+.resource-lender-group[open] > summary::after {
+  content: "Close";
+}
+
+.resource-lender-group > summary h4 {
+  margin: 0;
+  letter-spacing: -0.035em;
+}
+
+.resource-download-list {
+  display: grid;
+}
+
+.resource-download-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: center;
+  padding: 14px 18px;
+  border-top: 1px solid var(--line);
+}
+
+.resource-download-row:first-child {
+  border-top: 0;
+}
+
+.resource-download-row h5 {
+  margin: 0;
+  font-size: 0.98rem;
+  letter-spacing: -0.025em;
+  overflow-wrap: anywhere;
+}
+
+.resource-download-row p {
+  margin: 7px 0 0;
+  color: var(--muted);
+  font-size: 0.86rem;
+  line-height: 1.45;
+}
+
+.resource-download-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 10px;
+}
+
+.resource-download-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.download-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  border-radius: 999px;
+  border: 1px solid var(--text);
+  background: var(--text);
+  color: #fff;
+  padding: 0 14px;
+  text-decoration: none;
+  font-size: 0.78rem;
+  font-weight: 850;
+  white-space: nowrap;
+}
+
+.download-button.secondary-download {
+  background: #fff;
+  color: var(--text);
+  border-color: var(--line);
+}
+
+.resource-card {
+  padding: 18px;
+}
+
+.resource-card header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: start;
+}
+
+.resource-card p {
+  color: var(--muted);
+  line-height: 1.58;
+}
+
+.resource-meta,
+.resource-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.resource-pill,
+.resource-tags span {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface-strong);
+  color: var(--muted);
+  padding: 5px 9px;
+  font-size: 0.74rem;
+  font-weight: 820;
+}
+
+.resource-card mark {
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+  color: var(--text);
+  padding: 0 2px;
+}
+
+.resource-empty {
+  padding: 24px;
+  color: var(--muted);
+}
+
+@media (max-width: 900px) {
+  .resource-toolbar,
+  .resource-shell,
+  .resource-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .resource-heading,
+  .resource-shell,
+  .resource-results,
+  .resource-lender-group,
+  .resource-download-row,
+  .resource-card,
+  .resource-sidebar {
+    min-width: 0;
+  }
+
+  .resource-download-row {
+    grid-template-columns: 1fr;
+  }
+
+  .resource-lender-group > summary {
+    flex-direction: column;
+  }
+
+  .resource-download-row {
+    align-items: stretch;
+  }
+
+  .resource-download-actions {
+    justify-content: stretch;
+  }
+
+  .download-button {
+    flex: 1;
+  }
+
+  .section-copy,
+  .resource-card p,
+  .resource-card h4,
+  .resource-download-row p,
+  .resource-download-row h5,
+  .resource-pill {
+    overflow-wrap: anywhere;
+  }
+}
+
 </style>
   </head>
   <body>
@@ -1646,11 +2857,15 @@ menu {
 
         <nav class="nav-list">
           <a href="#dashboard" class="active">Dashboard</a>
+          <a href="ai.html">AI Desk</a>
+          <a href="#best-rates">Best Rates</a>
+          <a href="#deal-desk">Deal Desk</a>
           <a href="#lenders">Lenders</a>
           <a href="#packages">Packages</a>
           <a href="#programs">Programs</a>
           <a href="#insurers">Insurers</a>
           <a href="#contacts">BDM Contacts</a>
+          <a href="#resources">Broker Kits</a>
           <a href="#compliance">Compliance</a>
         </nav>
 
@@ -1668,10 +2883,15 @@ menu {
               <p class="eyebrow">Daily lender intelligence</p>
               <span class="live-pill">Broker desk live</span>
             </div>
-            <h2>Ontario mortgage lender command center.</h2>
+            <h2><span>Ontario</span><span>broker rate desk.</span></h2>
             <p class="topbar-copy">
-              Compare daily rates, match programs, review policy notes, and reach the right lender contact from one focused workspace.
+              Live rate comparison, lender fit, underwriting notes, and BDM contacts in one broker-ready command surface.
             </p>
+            <div class="hero-proof-strip" aria-label="Desk highlights">
+              <span>5-year fixed leaders</span>
+              <span>Prime / Alt / Private</span>
+              <span>Policy notes beside rates</span>
+            </div>
           </div>
           <div class="topbar-actions">
             <button class="icon-button" id="themeToggle" type="button" title="Toggle theme" aria-label="Toggle theme">
@@ -1679,6 +2899,21 @@ menu {
             </button>
             <button class="primary-button" id="openRateEditor" type="button">Update Rates</button>
           </div>
+          <aside class="hero-insight" aria-label="Current rate snapshot">
+            <p class="panel-label">Best live snapshot</p>
+            <strong id="heroBestFixed">0.00%</strong>
+            <span id="heroBestLender">Calculating lender leader</span>
+            <dl>
+              <div>
+                <dt>Conventional</dt>
+                <dd id="heroConventional">0.00%</dd>
+              </div>
+              <div>
+                <dt>Updated</dt>
+                <dd id="heroUpdated">Today</dd>
+              </div>
+            </dl>
+          </aside>
         </header>
 
         <section class="metric-grid" aria-label="Portal summary">
@@ -1734,6 +2969,127 @@ menu {
               </label>
               <div id="preferredLenderCard"></div>
             </aside>
+          </div>
+        </section>
+
+        <section class="band full-deal-desk" id="deal-desk">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Full-fledged deal desk</p>
+              <h3>From rate lookup to lender-ready submission.</h3>
+              <p class="section-copy">Turn this from a static rate board into an operating desk: current rates, product fit, document conditions, submission notes, BDM escalation, and compliance trail in one place.</p>
+            </div>
+            <div class="desk-badges">
+              <span>Live rates</span>
+              <span>Deal triage</span>
+              <span>Conditions</span>
+              <span>Audit trail</span>
+            </div>
+          </div>
+
+          <div class="deal-command-grid">
+            <article class="deal-command-card">
+              <p class="eyebrow">Operating flow</p>
+              <h4>The broker command center</h4>
+              <p>Every file should move through the same decision path, so a junior agent, broker, or AI assistant can explain why a lender was selected and what is still missing.</p>
+              <div class="deal-stage-list">
+                <div class="deal-stage"><span>01</span><div><strong>Intake</strong><small>Borrower goal, purchase/refi/switch, occupancy, property type, closing date, income type, credit score, down payment source.</small></div></div>
+                <div class="deal-stage"><span>02</span><div><strong>Rate + product match</strong><small>Compare insured, insurable, conventional, alt, private, rental, BFS, newcomer, medical professional, and improvement paths.</small></div></div>
+                <div class="deal-stage"><span>03</span><div><strong>Policy screen</strong><small>Flag LTV, score, GDS/TDS, amortization, income docs, property exceptions, insurer overlays, and lender-specific no-go rules.</small></div></div>
+                <div class="deal-stage"><span>04</span><div><strong>Document conditions</strong><small>Generate a borrower checklist and broker-side DCR package from the selected lender/product rules.</small></div></div>
+                <div class="deal-stage"><span>05</span><div><strong>Submission + escalation</strong><small>Create lender notes, track portal submission status, attach BDM contact, and log every exception request.</small></div></div>
+              </div>
+              <div class="deal-command-actions">
+                <a class="primary-button" href="#deal-intake">Create intake</a>
+                <a class="secondary-button" href="#resources">Open broker kits</a>
+              </div>
+            </article>
+
+            <article class="rate-access-card priority">
+              <p class="eyebrow">How to get new rates</p>
+              <h4>Best access path: broker-authorized rate inbox + portal sync.</h4>
+              <p>Most Canadian broker rate access is gated behind brokerage/lender credentials, network platforms, and daily rate-sheet emails. The practical build is permissioned ingestion, not scraping public websites.</p>
+              <div class="rate-access-list">
+                <div class="rate-access-row"><span>A</span><div><strong>Daily rate-sheet inbox</strong><small>Create rates@ / desk@ inbox, subscribe to lender/BDM bulletins, parse PDF/XLS/HTML attachments, and queue rate changes for approval.</small></div></div>
+                <div class="rate-access-row"><span>B</span><div><strong>Broker portal exports</strong><small>Where allowed, pull files from lender portals or save rate sheets manually into a watched folder for automatic extraction.</small></div></div>
+                <div class="rate-access-row"><span>C</span><div><strong>LOS/network platforms</strong><small>Finmo positions lender guidelines inside smart submission workflows; Velocity advertises direct lender connectivity, deal dashboard, docs, and compliance/payroll integration. These are partnership/integration targets.</small></div></div>
+                <div class="rate-access-row"><span>D</span><div><strong>Human approval layer</strong><small>Because rates expire and promos have rules, every imported rate needs effective date, source file, lender, product, insured/insurable/conventional tag, and last reviewed by.</small></div></div>
+              </div>
+            </article>
+          </div>
+
+          <div class="rate-access-sources">
+            <article><strong>Near-term MVP</strong><small>Gmail/Google Workspace ingest, attachment extraction, duplicate detection, rate diff alerts, and admin approval before rates show live.</small></article>
+            <article><strong>Partner track</strong><small>Ask brokerage/network for Finmo, Velocity, Filogix Expert, M3/BOSS, or lender-network access terms and whether exports/API/feed access is permitted.</small></article>
+            <article><strong>Compliance guardrail</strong><small>No credential sharing in code. Store source files, expiry dates, and approval notes. Show stale-rate warnings when a sheet is older than the chosen SLA.</small></article>
+          </div>
+
+          <div class="deal-builder-grid" id="deal-intake">
+            <article class="deal-intake-card">
+              <p class="eyebrow">Scenario intake</p>
+              <h4>New deal card</h4>
+              <p>Capture the facts once, then let the desk create a triage card with LTV, missing documents, first lender matches, and a next action.</p>
+              <form class="deal-intake-form" id="dealIntakeForm">
+                <div class="deal-form-grid">
+                  <label class="deal-field"><span>Client / file name</span><input id="dealClient" name="client" placeholder="e.g. Singh purchase" required /></label>
+                  <label class="deal-field"><span>Purpose</span><select id="dealPurpose" name="purpose"><option>Purchase</option><option>Refinance</option><option>Renewal / switch</option><option>Rental purchase</option><option>Private exit</option></select></label>
+                  <label class="deal-field"><span>Province</span><select id="dealProvince" name="province"><option>Ontario</option><option>British Columbia</option><option>Alberta</option><option>Other province</option></select></label>
+                  <label class="deal-field"><span>Closing date</span><input id="dealClosing" name="closing" type="date" /></label>
+                  <label class="deal-field"><span>Property value</span><input id="dealValue" name="value" type="number" min="0" step="1000" placeholder="850000" required /></label>
+                  <label class="deal-field"><span>Mortgage amount</span><input id="dealMortgage" name="mortgage" type="number" min="0" step="1000" placeholder="680000" required /></label>
+                  <label class="deal-field"><span>Credit score band</span><select id="dealCredit" name="credit"><option>760+</option><option>720-759</option><option>680-719</option><option>640-679</option><option>600-639</option><option>&lt;600</option></select></label>
+                  <label class="deal-field"><span>Income type</span><select id="dealIncome" name="income"><option>Salaried</option><option>Self-employed</option><option>Commission</option><option>Rental income</option><option>New to Canada</option><option>Stated / alternative</option></select></label>
+                  <label class="deal-field"><span>Preferred term</span><select id="dealTerm" name="term"><option>5 year fixed</option><option>5 year variable</option><option>3 year fixed</option><option>2 year fixed</option><option>HELOC / readvanceable</option></select></label>
+                  <label class="deal-field"><span>Occupancy</span><select id="dealOccupancy" name="occupancy"><option>Owner occupied</option><option>Rental</option><option>Second home</option><option>Mixed use</option></select></label>
+                  <label class="deal-field full"><span>Notes / exceptions</span><textarea id="dealNotes" name="notes" placeholder="Income docs, down payment source, property type, urgency, known exceptions..."></textarea></label>
+                </div>
+                <div class="deal-form-actions">
+                  <button class="primary-button" type="submit">Create deal card</button>
+                  <button class="secondary-button" type="button" id="seedDemoDeal">Load sample</button>
+                </div>
+                <small class="deal-form-help">MVP stores cards in this browser for demo use. Backend/Supabase can be added after the workflow is approved.</small>
+              </form>
+            </article>
+
+            <article class="deal-pipeline-card">
+              <div class="deal-card-top">
+                <div>
+                  <p class="eyebrow">Deal desk pipeline</p>
+                  <h4>Scenario board</h4>
+                </div>
+                <span class="pipeline-count-pill" id="pipelineCount">0 active</span>
+              </div>
+              <p>Move files from intake to review, submission, and approved. Each card keeps the lender rationale visible so the next person knows what to do.</p>
+              <div class="pipeline-toolbar">
+                <div class="desk-badges"><span>Auto LTV</span><span>Recommended lenders</span><span>Missing docs</span></div>
+                <span class="supabase-status-pill" id="supabaseStatus">Local demo mode</span>
+                <button class="secondary-button" type="button" id="clearDealPipeline">Clear demo cards</button>
+              </div>
+              <div class="pipeline-board" id="dealPipelineBoard" aria-live="polite"></div>
+            </article>
+          </div>
+
+          <div class="deal-command-grid">
+            <article class="deal-roadmap-card">
+              <p class="eyebrow">Build sequence</p>
+              <h4>What we should build next</h4>
+              <div class="deal-roadmap-list">
+                <div class="deal-roadmap-row"><span>1</span><div><strong>Rate ingestion lane</strong><small>Parse lender rate PDFs/XLS from email/folder, normalize products, detect changes, and require admin publish.</small></div></div>
+                <div class="deal-roadmap-row"><span>2</span><div><strong>Deal scenario wizard</strong><small>Broker enters client facts; desk ranks eligible lenders with reasons, missing docs, rate, comp, and BDM escalation.</small></div></div>
+                <div class="deal-roadmap-row"><span>3</span><div><strong>Condition checklist engine</strong><small>Auto-generate DCR/document requests from chosen lender, product, insurer, income type, and property type.</small></div></div>
+                <div class="deal-roadmap-row"><span>4</span><div><strong>Pipeline CRM</strong><small>Statuses, tasks, renewal dates, notes, files, compliance events, and Slack/Discord/email reminders.</small></div></div>
+              </div>
+            </article>
+            <article class="deal-roadmap-card">
+              <p class="eyebrow">Access checklist</p>
+              <h4>What Shiv needs to request</h4>
+              <div class="deal-roadmap-list">
+                <div class="deal-roadmap-row"><span>✓</span><div><strong>Brokerage permission</strong><small>Written permission to ingest lender rate sheets and broker-kit docs into internal tooling.</small></div></div>
+                <div class="deal-roadmap-row"><span>✓</span><div><strong>Rate-sheet recipients</strong><small>Add the desk inbox to lender/BDM daily bulletin lists for all target lenders.</small></div></div>
+                <div class="deal-roadmap-row"><span>✓</span><div><strong>Portal/export rights</strong><small>Confirm whether Finmo, Velocity, Filogix Expert, BOSS/M3, or lender portals allow export/API/report access.</small></div></div>
+                <div class="deal-roadmap-row"><span>✓</span><div><strong>Review owner</strong><small>Name who approves rate updates before publication and what stale-rate threshold triggers a warning.</small></div></div>
+              </div>
+            </article>
           </div>
         </section>
 
@@ -1894,6 +3250,46 @@ menu {
           </div>
         </section>
 
+        <section class="band" id="resources">
+          <div class="section-heading resource-heading">
+            <div>
+              <p class="eyebrow">NLD broker kit ingestion</p>
+              <h3>Broker Kits & Policy Library</h3>
+              <p class="section-copy">Download lender PDFs directly from the organized NLD broker kit package. Search by lender, form, product, or policy and jump straight to the source file.</p>
+            </div>
+            <div class="resource-stats" aria-label="Broker kit ingestion stats">
+              <article><strong id="resourceFileCount">253</strong><span>files indexed</span></article>
+              <article><strong id="resourcePdfCount">222</strong><span>PDF downloads</span></article>
+              <article><strong id="resourceLenderCount">25</strong><span>lenders / insurers</span></article>
+              <article><strong id="resourceResultCount">0</strong><span>current matches</span></article>
+            </div>
+          </div>
+          <div class="resource-toolbar" role="search">
+            <input id="resourceSearch" type="search" placeholder="Search BFS, gift letter, DCR, rental, insurer, lender…" autocomplete="off" />
+            <select id="resourceLenderFilter" aria-label="Filter broker kits by lender">
+              <option value="all">All lenders</option>
+            </select>
+            <select id="resourceCategoryFilter" aria-label="Filter broker kits by category">
+              <option value="all">All categories</option>
+            </select>
+            <select id="resourceTypeFilter" aria-label="Filter broker kit files by type">
+              <option value="pdf">PDF downloads only</option>
+              <option value="all">All file types</option>
+              <option value="support">DCR / spreadsheet support files</option>
+            </select>
+          </div>
+          <div class="resource-shell">
+            <aside class="resource-sidebar">
+              <h4>Ingested package</h4>
+              <p id="resourceSourceLabel">Loading NLD broker kits…</p>
+              <div id="resourceCategorySummary" class="resource-summary"></div>
+            </aside>
+            <div class="resource-results" id="resourceResults">
+              <article class="resource-card"><p>Loading broker kit index…</p></article>
+            </div>
+          </div>
+        </section>
+
         <section class="band compliance" id="compliance">
           <div>
             <p class="eyebrow">Compliance note</p>
@@ -1949,6 +3345,7 @@ menu {
       </form>
     </dialog>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
 const demoLenders = [
   {
@@ -2263,11 +3660,15 @@ const demoLenders = [
 
 const storageKey = "ontarioBrokerRateDesk.lenders";
 const preferredLenderStorageKey = "ontarioBrokerRateDesk.preferredLender";
+const dealPipelineStorageKey = "ontarioBrokerRateDesk.deals";
 let lenders = [];
 let activeFilter = "all";
 let activeLenderId = "";
 let activeProgram = "Alternative A/B";
 let preferredLenderId = localStorage.getItem(preferredLenderStorageKey) || "";
+let dealPipeline = loadDealPipeline();
+let supabaseClient = null;
+let supabaseReady = false;
 
 const programColorMap = {
   "Alternative": "#7C3AED",
@@ -3127,6 +4528,31 @@ const rateLenderSelect = document.querySelector("#rateLenderSelect");
 const programDetail = document.querySelector("#programDetail");
 const programGrid = document.querySelector("#programGrid");
 const insurerGrid = document.querySelector("#insurerGrid");
+const resourceSearch = document.querySelector("#resourceSearch");
+const resourceLenderFilter = document.querySelector("#resourceLenderFilter");
+const resourceCategoryFilter = document.querySelector("#resourceCategoryFilter");
+const resourceTypeFilter = document.querySelector("#resourceTypeFilter");
+const resourceResults = document.querySelector("#resourceResults");
+const dealIntakeForm = document.querySelector("#dealIntakeForm");
+const dealPipelineBoard = document.querySelector("#dealPipelineBoard");
+const pipelineCount = document.querySelector("#pipelineCount");
+const supabaseStatus = document.querySelector("#supabaseStatus");
+let resourceIndex = null;
+let resourceEntries = [];
+const pageNavLinks = document.querySelectorAll('.nav-list a[href^="#"]');
+const pageRoutes = ["dashboard", "best-rates", "deal-desk", "lenders", "packages", "programs", "insurers", "contacts", "resources", "compliance"];
+const pageGroups = {
+  dashboard: [document.querySelector("#dashboard"), document.querySelector(".metric-grid")],
+  "best-rates": [document.querySelector("#best-rates")],
+  "deal-desk": [document.querySelector("#deal-desk")],
+  lenders: [document.querySelector(".workspace")],
+  packages: [document.querySelector("#packages")],
+  programs: [document.querySelector("#programs")],
+  insurers: [document.querySelector("#insurers")],
+  contacts: [document.querySelector("#contacts")],
+  resources: [document.querySelector("#resources")],
+  compliance: [document.querySelector("#compliance")]
+};
 
 document.querySelector("#todayLabel").textContent = new Intl.DateTimeFormat("en-CA", {
   weekday: "short",
@@ -3143,6 +4569,42 @@ document.querySelector("#themeToggle").addEventListener("click", () => {
 if (localStorage.getItem("ontarioBrokerRateDesk.theme") === "dark") {
   document.body.classList.add("dark");
 }
+
+pageNavLinks.forEach((link) => {
+  link.addEventListener("click", (event) => {
+    const route = link.getAttribute("href").replace("#", "");
+    if (!pageRoutes.includes(route)) return;
+    event.preventDefault();
+    showPage(route);
+  });
+});
+
+window.addEventListener("hashchange", () => showPage(routeFromHash(), { updateHash: false }));
+resourceSearch?.addEventListener("input", renderResources);
+resourceLenderFilter?.addEventListener("change", renderResources);
+resourceCategoryFilter?.addEventListener("change", renderResources);
+resourceTypeFilter?.addEventListener("change", renderResources);
+
+dealIntakeForm?.addEventListener("submit", (event) => {
+  event.preventDefault();
+  createDealFromForm();
+});
+
+document.querySelector("#seedDemoDeal")?.addEventListener("click", seedDealForm);
+document.querySelector("#clearDealPipeline")?.addEventListener("click", async () => {
+  const ids = dealPipeline.map((deal) => deal.id);
+  dealPipeline = [];
+  saveDealPipeline();
+  renderDealPipeline();
+  if (supabaseReady && ids.length) {
+    try {
+      await supabaseClient.from("deal_desk_deals").delete().in("id", ids);
+      setSupabaseStatus("Supabase synced", "connected");
+    } catch (error) {
+      setSupabaseStatus("Supabase delete failed; local cleared", "error");
+    }
+  }
+});
 
 document.querySelector("#openRateEditor").addEventListener("click", () => {
   populateRateEditor(activeLenderId);
@@ -3167,6 +4629,7 @@ filterButtons.forEach((button) => {
 searchInput.addEventListener("input", render);
 runSearchButton.addEventListener("click", () => {
   render();
+  showPage("lenders");
   document.querySelector("#lenders").scrollIntoView({ behavior: "smooth", block: "start" });
 });
 preferredLenderSelect.addEventListener("change", () => {
@@ -3185,6 +4648,7 @@ document.addEventListener("click", (event) => {
     event.stopPropagation();
     activeInsurerProgram = insurerProgramLink.dataset.insurerProgram;
     renderInsurers();
+    showPage("insurers");
     document.querySelector("#insurers").scrollIntoView({ behavior: "smooth", block: "start" });
     return;
   }
@@ -3195,6 +4659,7 @@ document.addEventListener("click", (event) => {
     event.stopPropagation();
     activeLenderId = lenderLink.dataset.lender;
     render();
+    showPage("lenders");
     document.querySelector("#lenders").scrollIntoView({ behavior: "smooth", block: "start" });
     return;
   }
@@ -3206,6 +4671,7 @@ document.addEventListener("click", (event) => {
   event.stopPropagation();
   activeProgram = programLink.dataset.programLink;
   renderPrograms();
+  showPage("programs");
   document.querySelector("#programs").scrollIntoView({ behavior: "smooth", block: "start" });
 });
 
@@ -3216,6 +4682,7 @@ document.addEventListener("keydown", (event) => {
     event.preventDefault();
     activeInsurerProgram = insurerProgramLink.dataset.insurerProgram;
     renderInsurers();
+    showPage("insurers");
     document.querySelector("#insurers").scrollIntoView({ behavior: "smooth", block: "start" });
     return;
   }
@@ -3226,6 +4693,7 @@ document.addEventListener("keydown", (event) => {
   event.preventDefault();
   activeProgram = programLink.dataset.programLink;
   renderPrograms();
+  showPage("programs");
   document.querySelector("#programs").scrollIntoView({ behavior: "smooth", block: "start" });
 });
 
@@ -3415,6 +4883,489 @@ function normalizeSearchText(value) {
     .trim();
 }
 
+function routeFromHash() {
+  const route = window.location.hash.replace("#", "");
+  return pageRoutes.includes(route) ? route : "dashboard";
+}
+
+function showPage(route = "dashboard", options = {}) {
+  const activeRoute = pageRoutes.includes(route) ? route : "dashboard";
+  const { updateHash = true, scrollTop = true } = options;
+
+  Object.entries(pageGroups).forEach(([page, elements]) => {
+    elements.filter(Boolean).forEach((element) => {
+      const isActive = page === activeRoute;
+      element.classList.toggle("app-page-hidden", !isActive);
+      element.classList.toggle("app-page-active", isActive);
+      element.setAttribute("aria-hidden", String(!isActive));
+    });
+  });
+
+  pageNavLinks.forEach((link) => {
+    const isActive = link.getAttribute("href") === `#${activeRoute}`;
+    link.classList.toggle("active", isActive);
+    if (isActive) link.setAttribute("aria-current", "page");
+    else link.removeAttribute("aria-current");
+  });
+
+  if (updateHash && window.location.hash !== `#${activeRoute}`) {
+    history.pushState(null, "", `#${activeRoute}`);
+  }
+
+  if (scrollTop) {
+    window.scrollTo({ top: 0, behavior: "auto" });
+  }
+}
+
+function escapeHtml(value = "") {
+  return String(value).replace(/[&<>"]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[char]);
+}
+
+function highlightTerm(text = "", term = "") {
+  const safe = escapeHtml(text);
+  const query = term.trim();
+  if (!query) return safe;
+  const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return safe.replace(new RegExp(`(${escaped})`, "ig"), "<mark>$1</mark>");
+}
+
+async function loadResourceIndex() {
+  if (!resourceResults) return;
+  try {
+    const response = await fetch("data/nld-resource-index.json");
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    resourceIndex = await response.json();
+    resourceEntries = Array.isArray(resourceIndex.entries) ? resourceIndex.entries : [];
+    hydrateResourceFilters();
+    renderResourceSummary();
+    renderResources();
+  } catch (error) {
+    resourceResults.innerHTML = `<article class="resource-card"><p>Could not load broker kit index: ${escapeHtml(error.message)}</p></article>`;
+  }
+}
+
+function isPdfResource(item) {
+  return String(item?.type || "").toUpperCase() === "PDF" || String(item?.name || "").toLowerCase().endsWith(".pdf");
+}
+
+function resourceFileUrl(item) {
+  const base = "data/nld-broker-kits/NLD - Broker Kits & Resources";
+  const relativePath = String(item?.path || item?.name || "")
+    .split("/")
+    .filter(Boolean)
+    .map((part) => encodeURIComponent(part))
+    .join("/");
+  return `${base.split("/").map((part) => encodeURIComponent(part)).join("/")}/${relativePath}`;
+}
+
+function resourceSort(a, b) {
+  const pdfRank = Number(!isPdfResource(a)) - Number(!isPdfResource(b));
+  if (pdfRank) return pdfRank;
+  return `${a.category || ""} ${a.name || ""}`.localeCompare(`${b.category || ""} ${b.name || ""}`);
+}
+
+function hydrateResourceFilters() {
+  const lenders = [...new Set(resourceEntries.map((item) => item.lender).filter(Boolean))].sort();
+  const categories = [...new Set(resourceEntries.map((item) => item.category).filter(Boolean))].sort();
+  const pdfCount = resourceEntries.filter(isPdfResource).length;
+  resourceLenderFilter.innerHTML = `<option value="all">All lenders</option>` + lenders.map((name) => `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`).join("");
+  resourceCategoryFilter.innerHTML = `<option value="all">All categories</option>` + categories.map((name) => `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`).join("");
+  document.querySelector("#resourceFileCount").textContent = resourceIndex.totalFiles || resourceEntries.length;
+  document.querySelector("#resourcePdfCount").textContent = pdfCount;
+  document.querySelector("#resourceLenderCount").textContent = resourceIndex.lenderCount || lenders.length;
+  document.querySelector("#resourceSourceLabel").textContent = `${resourceIndex.source || "Broker kit package"} • ${pdfCount} downloadable PDFs organized by lender, plus DCR/spreadsheet support files when needed.`;
+}
+
+function renderResourceSummary() {
+  const counts = resourceIndex?.categoryCounts || {};
+  document.querySelector("#resourceCategorySummary").innerHTML = `<button type="button" data-resource-type="pdf"><span>PDF downloads</span><strong>${resourceEntries.filter(isPdfResource).length}</strong></button>` + Object.entries(counts)
+    .map(([category, count]) => `<button type="button" data-resource-category="${escapeHtml(category)}"><span>${escapeHtml(category)}</span><strong>${count}</strong></button>`)
+    .join("");
+  document.querySelectorAll("[data-resource-category]").forEach((button) => {
+    button.addEventListener("click", () => {
+      resourceCategoryFilter.value = button.dataset.resourceCategory;
+      resourceTypeFilter.value = "all";
+      renderResources();
+    });
+  });
+  document.querySelectorAll("[data-resource-type]").forEach((button) => {
+    button.addEventListener("click", () => {
+      resourceTypeFilter.value = button.dataset.resourceType;
+      resourceCategoryFilter.value = "all";
+      renderResources();
+    });
+  });
+}
+
+function renderResources() {
+  if (!resourceResults || !resourceEntries.length) return;
+  const query = (resourceSearch?.value || "").trim().toLowerCase();
+  const lender = resourceLenderFilter?.value || "all";
+  const category = resourceCategoryFilter?.value || "all";
+  const typeFilter = resourceTypeFilter?.value || "pdf";
+  const terms = query.split(/\s+/).filter(Boolean);
+  const results = resourceEntries
+    .filter((item) => lender === "all" || item.lender === lender)
+    .filter((item) => category === "all" || item.category === category)
+    .filter((item) => typeFilter === "all" || (typeFilter === "pdf" ? isPdfResource(item) : !isPdfResource(item)))
+    .filter((item) => {
+      if (!terms.length) return true;
+      const haystack = `${item.lender} ${item.category} ${item.name} ${(item.tags || []).join(" ")} ${item.summary} ${item.text} ${item.path}`.toLowerCase();
+      return terms.every((term) => haystack.includes(term));
+    })
+    .sort((a, b) => String(a.lender || "").localeCompare(String(b.lender || "")) || resourceSort(a, b));
+
+  document.querySelector("#resourceResultCount").textContent = results.length;
+
+  if (!results.length) {
+    resourceResults.innerHTML = `<article class="resource-card resource-empty">No broker kit files match this search.</article>`;
+    return;
+  }
+
+  const grouped = results.reduce((groups, item) => {
+    const key = item.lender || "Other";
+    if (!groups[key]) groups[key] = [];
+    groups[key].push(item);
+    return groups;
+  }, {});
+  const firstTerm = terms[0] || "";
+
+  const shouldOpenGroups = lender !== "all" || terms.length > 0 || Object.keys(grouped).length <= 3;
+  resourceResults.innerHTML = Object.entries(grouped).map(([lenderName, items], index) => {
+    const pdfCount = items.filter(isPdfResource).length;
+    const openAttr = shouldOpenGroups || index === 0 ? "open" : "";
+    return `
+      <details class="resource-lender-group" ${openAttr}>
+        <summary>
+          <div>
+            <p class="eyebrow">${escapeHtml(lenderName)}</p>
+            <h4>${pdfCount ? `${pdfCount} PDF download${pdfCount === 1 ? "" : "s"}` : `${items.length} support file${items.length === 1 ? "" : "s"}`}</h4>
+          </div>
+          <span class="resource-pill">${items.length} match${items.length === 1 ? "" : "es"}</span>
+        </summary>
+        <div class="resource-download-list">
+          ${items.map((item) => {
+            const isPdf = isPdfResource(item);
+            const summary = item.summary || item.text || item.path;
+            const tags = (item.tags || []).slice(0, 4).map((tag) => `<span class="resource-pill">${escapeHtml(tag)}</span>`).join("");
+            return `
+              <article class="resource-download-row">
+                <div>
+                  <p class="eyebrow">${escapeHtml(item.category)} • ${escapeHtml(item.type)}</p>
+                  <h5>${highlightTerm(item.name, firstTerm)}</h5>
+                  <p>${highlightTerm(summary.slice(0, 220), firstTerm)}${summary.length > 220 ? "…" : ""}</p>
+                  <div class="resource-download-meta">
+                    <span class="resource-pill">${item.sizeKb} KB</span>
+                    ${item.pagesOrSheets ? `<span class="resource-pill">${item.pagesOrSheets} pages/sheets</span>` : ""}
+                    ${tags}
+                  </div>
+                </div>
+                <div class="resource-download-actions">
+                  <a class="download-button" href="${resourceFileUrl(item)}" ${isPdf ? `download="${escapeHtml(item.name)}"` : ""}>${isPdf ? "Download PDF" : "Open file"}</a>
+                </div>
+              </article>
+            `;
+          }).join("")}
+        </div>
+      </details>
+    `;
+  }).join("");
+}
+
+
+function loadDealPipeline() {
+  const stored = localStorage.getItem(dealPipelineStorageKey);
+  if (!stored) return [];
+  try {
+    const parsed = JSON.parse(stored);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveDealPipeline() {
+  localStorage.setItem(dealPipelineStorageKey, JSON.stringify(dealPipeline));
+}
+
+function setSupabaseStatus(message, state = "") {
+  if (!supabaseStatus) return;
+  supabaseStatus.textContent = message;
+  supabaseStatus.classList.toggle("connected", state === "connected");
+  supabaseStatus.classList.toggle("error", state === "error");
+}
+
+async function initSupabase() {
+  if (!window.supabase?.createClient) {
+    setSupabaseStatus("Local demo mode", "error");
+    return;
+  }
+
+  try {
+    const response = await fetch("/api/supabase-config", { cache: "no-store" });
+    const config = response.ok ? await response.json() : {};
+    const url = config.url || localStorage.getItem("ontarioBrokerRateDesk.supabaseUrl") || "";
+    const anonKey = config.anonKey || localStorage.getItem("ontarioBrokerRateDesk.supabaseAnonKey") || "";
+
+    if (!url || !anonKey) {
+      setSupabaseStatus("Local demo mode · add Supabase env", "error");
+      return;
+    }
+
+    supabaseClient = window.supabase.createClient(url, anonKey);
+    const { data, error } = await supabaseClient
+      .from("deal_desk_deals")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    dealPipeline = (data || []).map(mapSupabaseDeal);
+    saveDealPipeline();
+    supabaseReady = true;
+    setSupabaseStatus("Supabase synced", "connected");
+    renderDealPipeline();
+  } catch (error) {
+    console.warn("Supabase sync unavailable", error);
+    setSupabaseStatus("Supabase offline · local fallback", "error");
+  }
+}
+
+function mapSupabaseDeal(row) {
+  return {
+    id: row.id,
+    client: row.client_name,
+    purpose: row.purpose,
+    province: row.province,
+    closing: row.closing_date || "",
+    value: Number(row.property_value || 0),
+    mortgage: Number(row.mortgage_amount || 0),
+    credit: row.credit_band,
+    income: row.income_type,
+    term: row.preferred_term,
+    occupancy: row.occupancy,
+    notes: row.notes || "",
+    status: row.status || "intake",
+    createdAt: row.created_at
+  };
+}
+
+function mapDealForSupabase(deal) {
+  return {
+    id: deal.id,
+    client_name: deal.client,
+    purpose: deal.purpose,
+    province: deal.province,
+    closing_date: deal.closing || null,
+    property_value: deal.value,
+    mortgage_amount: deal.mortgage,
+    credit_band: deal.credit,
+    income_type: deal.income,
+    preferred_term: deal.term,
+    occupancy: deal.occupancy,
+    notes: deal.notes || null,
+    status: deal.status,
+    created_at: deal.createdAt
+  };
+}
+
+async function upsertDealToSupabase(deal) {
+  if (!supabaseReady) return;
+  try {
+    const { error } = await supabaseClient.from("deal_desk_deals").upsert(mapDealForSupabase(deal));
+    if (error) throw error;
+    setSupabaseStatus("Supabase synced", "connected");
+  } catch (error) {
+    console.warn("Supabase upsert failed", error);
+    setSupabaseStatus("Saved locally · Supabase failed", "error");
+  }
+}
+
+function dealNumber(selector) {
+  const value = Number(document.querySelector(selector)?.value || 0);
+  return Number.isFinite(value) ? value : 0;
+}
+
+function createDealFromForm() {
+  const value = dealNumber("#dealValue");
+  const mortgage = dealNumber("#dealMortgage");
+  if (!value || !mortgage) return;
+
+  const deal = {
+    id: `deal-${Date.now()}`,
+    client: document.querySelector("#dealClient").value.trim() || "New scenario",
+    purpose: document.querySelector("#dealPurpose").value,
+    province: document.querySelector("#dealProvince").value,
+    closing: document.querySelector("#dealClosing").value,
+    value,
+    mortgage,
+    credit: document.querySelector("#dealCredit").value,
+    income: document.querySelector("#dealIncome").value,
+    term: document.querySelector("#dealTerm").value,
+    occupancy: document.querySelector("#dealOccupancy").value,
+    notes: document.querySelector("#dealNotes").value.trim(),
+    status: "intake",
+    createdAt: new Date().toISOString()
+  };
+
+  dealPipeline.unshift(deal);
+  saveDealPipeline();
+  renderDealPipeline();
+  upsertDealToSupabase(deal);
+  dealIntakeForm.reset();
+}
+
+function seedDealForm() {
+  document.querySelector("#dealClient").value = "Patel purchase";
+  document.querySelector("#dealPurpose").value = "Purchase";
+  document.querySelector("#dealProvince").value = "Ontario";
+  document.querySelector("#dealValue").value = "850000";
+  document.querySelector("#dealMortgage").value = "680000";
+  document.querySelector("#dealCredit").value = "720-759";
+  document.querySelector("#dealIncome").value = "Salaried";
+  document.querySelector("#dealTerm").value = "5 year fixed";
+  document.querySelector("#dealOccupancy").value = "Owner occupied";
+  document.querySelector("#dealNotes").value = "Fast close. Confirm down payment trail and employment letter before submission.";
+}
+
+function calculateLtv(deal) {
+  return deal.value ? Math.round((deal.mortgage / deal.value) * 1000) / 10 : 0;
+}
+
+function creditRank(band) {
+  return { "760+": 6, "720-759": 5, "680-719": 4, "640-679": 3, "600-639": 2, "<600": 1 }[band] || 3;
+}
+
+function lenderScoreForDeal(lender, deal) {
+  const ltv = calculateLtv(deal);
+  const score = creditRank(deal.credit);
+  let points = 0;
+  const programs = lender.programs.join(" ").toLowerCase();
+  const haystack = `${programs} ${lender.guidelines.join(" ")} ${lender.policyNote}`.toLowerCase();
+
+  if (deal.purpose.includes("Purchase") && haystack.includes("purchase")) points += 3;
+  if (deal.purpose.includes("Refinance") && haystack.includes("refinance")) points += 3;
+  if (deal.purpose.includes("Renewal") && (haystack.includes("switch") || haystack.includes("transfer"))) points += 3;
+  if (deal.occupancy === "Rental" && haystack.includes("rental")) points += 3;
+  if (deal.income.includes("Self") && haystack.includes("self")) points += 2;
+  if (deal.income.includes("New") && haystack.includes("newcomer")) points += 2;
+  if (deal.income.includes("alternative") || deal.income.includes("Stated")) points += lender.type === "alternative" ? 4 : 0;
+  if (score >= 4 && ["bank", "monoline", "credit union"].includes(lender.type)) points += 2;
+  if (score <= 2 && lender.type === "alternative") points += 4;
+  if (ltv <= 80 && lender.rates.conventional) points += 2;
+  if (ltv > 80 && lender.rates.insuredFixed) points += 2;
+  if (lender.id === preferredLenderId) points += 1;
+  return points;
+}
+
+function recommendLendersForDeal(deal) {
+  const rateKey = calculateLtv(deal) > 80 ? "insuredFixed" : "conventional";
+  return lenders
+    .map((lender) => ({ lender, points: lenderScoreForDeal(lender, deal), rateValue: numericRate(lender.rates[rateKey]) ?? numericRate(lender.rates.insuredFixed) ?? 99 }))
+    .filter((item) => item.points > 0)
+    .sort((a, b) => b.points - a.points || a.rateValue - b.rateValue)
+    .slice(0, 3);
+}
+
+function docsForDeal(deal) {
+  const docs = ["Credit bureau", "ID + consent", "Income confirmation", "Down payment / equity proof", "Purchase/refi details"];
+  if (deal.income.includes("Self")) docs.push("T1/NOA package", "Business financials");
+  if (deal.occupancy === "Rental" || deal.purpose.includes("Rental")) docs.push("Lease / market rent support");
+  if (calculateLtv(deal) > 80) docs.push("Insurer-ready package");
+  if (deal.notes.toLowerCase().includes("gift")) docs.push("Gift letter + source trail");
+  return docs.slice(0, 6);
+}
+
+function moveDeal(dealId, status) {
+  dealPipeline = dealPipeline.map((deal) => deal.id === dealId ? { ...deal, status } : deal);
+  saveDealPipeline();
+  renderDealPipeline();
+  const deal = dealPipeline.find((item) => item.id === dealId);
+  if (deal) upsertDealToSupabase(deal);
+}
+
+async function removeDeal(dealId) {
+  dealPipeline = dealPipeline.filter((deal) => deal.id !== dealId);
+  saveDealPipeline();
+  renderDealPipeline();
+  if (!supabaseReady) return;
+  try {
+    const { error } = await supabaseClient.from("deal_desk_deals").delete().eq("id", dealId);
+    if (error) throw error;
+    setSupabaseStatus("Supabase synced", "connected");
+  } catch (error) {
+    console.warn("Supabase delete failed", error);
+    setSupabaseStatus("Deleted locally · Supabase failed", "error");
+  }
+}
+
+function renderDealPipeline() {
+  if (!dealPipelineBoard) return;
+  const statuses = [
+    { id: "intake", label: "Intake" },
+    { id: "review", label: "Review" },
+    { id: "submit", label: "Submit" },
+    { id: "approved", label: "Approved" }
+  ];
+  pipelineCount.textContent = `${dealPipeline.length} active`;
+  dealPipelineBoard.innerHTML = statuses.map((status) => {
+    const deals = dealPipeline.filter((deal) => deal.status === status.id);
+    return `
+      <section class="pipeline-column">
+        <header><h5>${status.label}</h5><span>${deals.length}</span></header>
+        ${deals.length ? deals.map(renderDealCard).join("") : `<div class="empty-pipeline">No files here yet.</div>`}
+      </section>
+    `;
+  }).join("");
+  dealPipelineBoard.querySelectorAll("[data-move-deal]").forEach((button) => {
+    button.addEventListener("click", () => moveDeal(button.dataset.moveDeal, button.dataset.status));
+  });
+  dealPipelineBoard.querySelectorAll("[data-remove-deal]").forEach((button) => {
+    button.addEventListener("click", () => removeDeal(button.dataset.removeDeal));
+  });
+}
+
+function renderDealCard(deal) {
+  const ltv = calculateLtv(deal);
+  const recommendations = recommendLendersForDeal(deal);
+  const docs = docsForDeal(deal);
+  const statusOrder = ["intake", "review", "submit", "approved"];
+  const currentIndex = statusOrder.indexOf(deal.status);
+  const nextStatus = statusOrder[currentIndex + 1];
+  return `
+    <article class="deal-card">
+      <div class="deal-card-top">
+        <div>
+          <h6>${escapeHtml(deal.client)}</h6>
+          <small>${escapeHtml(deal.purpose)} · ${escapeHtml(deal.province)}${deal.closing ? ` · closes ${escapeHtml(deal.closing)}` : ""}</small>
+        </div>
+        <span class="deal-chip">${ltv}% LTV</span>
+      </div>
+      <div class="deal-chip-row">
+        <span class="deal-chip">${escapeHtml(deal.credit)}</span>
+        <span class="deal-chip">${escapeHtml(deal.income)}</span>
+        <span class="deal-chip">${escapeHtml(deal.term)}</span>
+        <span class="deal-chip">${escapeHtml(deal.occupancy)}</span>
+      </div>
+      <div class="recommendation-list">
+        ${recommendations.length ? recommendations.map(({ lender, rateValue }) => `
+          <article>
+            <strong>${escapeHtml(lender.name)}</strong>
+            <small>${rate(rateValue === 99 ? lender.rates.insuredFixed : rateValue)} · ${escapeHtml(titleCase(lender.type))}</small>
+          </article>
+        `).join("") : `<small>No strong matches yet. Review manually.</small>`}
+      </div>
+      <small class="deal-card-meta"><strong>Missing docs:</strong> ${docs.map(escapeHtml).join(", ")}</small>
+      ${deal.notes ? `<small class="deal-card-meta"><strong>Notes:</strong> ${escapeHtml(deal.notes)}</small>` : ""}
+      <div class="pipeline-actions">
+        ${nextStatus ? `<button class="primary-mini" type="button" data-move-deal="${deal.id}" data-status="${nextStatus}">Move to ${nextStatus}</button>` : ""}
+        ${currentIndex > 0 ? `<button type="button" data-move-deal="${deal.id}" data-status="${statusOrder[currentIndex - 1]}">Back</button>` : ""}
+        <button type="button" data-remove-deal="${deal.id}">Remove</button>
+      </div>
+    </article>
+  `;
+}
+
 function render() {
   const results = filteredLenders();
 
@@ -3430,16 +5381,23 @@ function render() {
   renderInsurers();
   renderContacts();
   renderRateSelect();
+  renderDealPipeline();
 }
 
 function renderMetrics() {
   const fixedRates = lenders.map((item) => item.rates.insuredFixed).filter((item) => typeof item === "number");
   const altRates = lenders.map((item) => item.rates.alt).filter((item) => typeof item === "number");
+  const bestFixed = findBestRate(lenders, "insuredFixed");
+  const bestConventional = findBestRate(lenders, "conventional");
 
   document.querySelector("#lenderCount").textContent = lenders.length;
   document.querySelector("#lowestFixed").textContent = fixedRates.length ? rate(Math.min(...fixedRates)) : "N/A";
   document.querySelector("#altRange").textContent = altRates.length ? `${rate(Math.min(...altRates))}–${rate(Math.max(...altRates))}` : "N/A";
   document.querySelector("#bdmCount").textContent = lenders.filter((item) => item.bdm).length;
+  document.querySelector("#heroBestFixed").textContent = bestFixed ? rate(bestFixed.value) : "N/A";
+  document.querySelector("#heroBestLender").textContent = bestFixed ? `${bestFixed.lender.name} leads insured 5-year fixed` : "No fixed rate available";
+  document.querySelector("#heroConventional").textContent = bestConventional ? rate(bestConventional.value) : "N/A";
+  document.querySelector("#heroUpdated").textContent = bestFixed?.lender.updated || "Today";
 }
 
 function renderBestRateDashboard() {
@@ -4168,6 +6126,10 @@ function initials(value) {
 }
 
 render();
+initSupabase();
+loadResourceIndex();
+showPage(routeFromHash(), { updateHash: window.location.hash !== "", scrollTop: true });
+window.addEventListener("load", () => showPage(routeFromHash(), { updateHash: false, scrollTop: true }));
 
 </script>
   </body>
