@@ -1287,6 +1287,115 @@ body.dark .lender-logo {
 }
 
 
+.deal-overview-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.deal-overview-card {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: #fff;
+  padding: 14px;
+  box-shadow: var(--shadow-soft);
+  display: grid;
+  gap: 8px;
+}
+
+.deal-overview-card strong {
+  display: block;
+  font-size: 0.94rem;
+}
+
+.deal-overview-card small {
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.deal-overview-card .status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--accent);
+  box-shadow: 0 0 0 5px color-mix(in srgb, var(--accent) 12%, transparent);
+}
+
+.deal-overview-card.warning .status-dot { background: var(--amber); box-shadow: 0 0 0 5px color-mix(in srgb, var(--amber) 12%, transparent); }
+.deal-overview-card.locked .status-dot { background: var(--text); box-shadow: 0 0 0 5px color-mix(in srgb, var(--text) 10%, transparent); }
+
+.deal-section-divider {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: end;
+  border-top: 1px solid var(--line);
+  margin-top: 26px;
+  padding-top: 22px;
+}
+
+.deal-section-divider h4 { margin: 0; letter-spacing: -0.035em; }
+.deal-section-divider p { margin: 6px 0 0; color: var(--muted); line-height: 1.45; max-width: 720px; }
+
+.deal-lane-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.deal-lane-card {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: linear-gradient(180deg, #fff, var(--surface-strong));
+  padding: 14px;
+  display: grid;
+  gap: 10px;
+}
+
+.deal-lane-card span {
+  width: 34px; height: 34px; border-radius: 999px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--text); color: #fff; font-size: 0.72rem; font-weight: 900;
+}
+
+.deal-lane-card strong { display: block; }
+.deal-lane-card small { color: var(--muted); line-height: 1.4; }
+
+.rate-path-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.rate-path-card {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: #fff;
+  padding: 14px;
+  display: grid;
+  gap: 7px;
+}
+
+.rate-path-card strong { display: flex; gap: 8px; align-items: center; }
+.rate-path-card b { color: var(--accent-strong); }
+.rate-path-card small { color: var(--muted); line-height: 1.42; }
+
+@media (max-width: 980px) {
+  .deal-overview-grid,
+  .deal-lane-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 640px) {
+  .deal-overview-grid,
+  .deal-lane-grid,
+  .rate-path-grid { grid-template-columns: 1fr; }
+  .deal-section-divider { align-items: start; flex-direction: column; }
+}
+
+
 .deal-builder-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -3043,41 +3152,61 @@ main {
             </div>
           </div>
 
-          <div class="deal-command-grid">
-            <article class="deal-command-card">
-              <p class="eyebrow">Operating flow</p>
-              <h4>The broker command center</h4>
-              <p>Every file should move through the same decision path, so a junior agent, broker, or AI assistant can explain why a lender was selected and what is still missing.</p>
-              <div class="deal-stage-list">
-                <div class="deal-stage"><span>01</span><div><strong>Intake</strong><small>Borrower goal, purchase/refi/switch, occupancy, property type, closing date, income type, credit score, down payment source.</small></div></div>
-                <div class="deal-stage"><span>02</span><div><strong>Rate + product match</strong><small>Compare insured, insurable, conventional, alt, private, rental, BFS, newcomer, medical professional, and improvement paths.</small></div></div>
-                <div class="deal-stage"><span>03</span><div><strong>Policy screen</strong><small>Flag LTV, score, GDS/TDS, amortization, income docs, property exceptions, insurer overlays, and lender-specific no-go rules.</small></div></div>
-                <div class="deal-stage"><span>04</span><div><strong>Document conditions</strong><small>Generate a borrower checklist and broker-side DCR package from the selected lender/product rules.</small></div></div>
-                <div class="deal-stage"><span>05</span><div><strong>Submission + escalation</strong><small>Create lender notes, track portal submission status, attach BDM contact, and log every exception request.</small></div></div>
-              </div>
-              <div class="deal-command-actions">
-                <a class="primary-button" href="#deal-intake">Create intake</a>
-                <a class="secondary-button" href="#resources">Open broker kits</a>
-              </div>
+          <div class="deal-overview-grid">
+            <article class="deal-overview-card">
+              <span class="status-dot"></span>
+              <strong>Live now</strong>
+              <small>Advisor login UI, protected pipeline, expanded intake, rate queue, and audit trail are deployed.</small>
             </article>
-
-            <article class="rate-access-card priority">
-              <p class="eyebrow">How to get new rates</p>
-              <h4>Best access path: broker-authorized rate inbox + portal sync.</h4>
-              <p>Most Canadian broker rate access is gated behind brokerage/lender credentials, network platforms, and daily rate-sheet emails. The practical build is permissioned ingestion, not scraping public websites.</p>
-              <div class="rate-access-list">
-                <div class="rate-access-row"><span>A</span><div><strong>Daily rate-sheet inbox</strong><small>Create rates@ / desk@ inbox, subscribe to lender/BDM bulletins, parse PDF/XLS/HTML attachments, and queue rate changes for approval.</small></div></div>
-                <div class="rate-access-row"><span>B</span><div><strong>Broker portal exports</strong><small>Where allowed, pull files from lender portals or save rate sheets manually into a watched folder for automatic extraction.</small></div></div>
-                <div class="rate-access-row"><span>C</span><div><strong>LOS/network platforms</strong><small>Finmo positions lender guidelines inside smart submission workflows; Velocity advertises direct lender connectivity, deal dashboard, docs, and compliance/payroll integration. These are partnership/integration targets.</small></div></div>
-                <div class="rate-access-row"><span>D</span><div><strong>Human approval layer</strong><small>Because rates expire and promos have rules, every imported rate needs effective date, source file, lender, product, insured/insurable/conventional tag, and last reviewed by.</small></div></div>
-              </div>
+            <article class="deal-overview-card warning">
+              <span class="status-dot"></span>
+              <strong>Needs DB hardening</strong>
+              <small>Run the second Supabase SQL in the correct project before entering real borrower data.</small>
+            </article>
+            <article class="deal-overview-card locked">
+              <span class="status-dot"></span>
+              <strong>Access model</strong>
+              <small>Signed-in advisors only. Workspace-scoped RLS controls which deals each team can see.</small>
+            </article>
+            <article class="deal-overview-card">
+              <span class="status-dot"></span>
+              <strong>Rate source</strong>
+              <small>Use broker-authorized inbox/portal exports, then approve changes before rates go live.</small>
             </article>
           </div>
 
-          <div class="rate-access-sources">
-            <article><strong>Near-term MVP</strong><small>Gmail/Google Workspace ingest, attachment extraction, duplicate detection, rate diff alerts, and admin approval before rates show live.</small></article>
-            <article><strong>Partner track</strong><small>Ask brokerage/network for Finmo, Velocity, Filogix Expert, M3/BOSS, or lender-network access terms and whether exports/API/feed access is permitted.</small></article>
-            <article><strong>Compliance guardrail</strong><small>No credential sharing in code. Store source files, expiry dates, and approval notes. Show stale-rate warnings when a sheet is older than the chosen SLA.</small></article>
+          <div class="deal-section-divider">
+            <div>
+              <p class="eyebrow">Workflow map</p>
+              <h4>One file, four clear lanes.</h4>
+              <p>Each scenario should move through the same path so the lender choice, missing documents, rate source, and compliance trail are easy to explain.</p>
+            </div>
+            <div class="deal-command-actions">
+              <a class="primary-button" href="#deal-intake">Create intake</a>
+              <a class="secondary-button" href="#resources">Open broker kits</a>
+            </div>
+          </div>
+
+          <div class="deal-lane-grid">
+            <article class="deal-lane-card"><span>01</span><div><strong>Intake</strong><small>Borrower goal, purpose, occupancy, property, closing date, income, credit, and down payment source.</small></div></article>
+            <article class="deal-lane-card"><span>02</span><div><strong>Match</strong><small>Compare product fit across bank, monoline, credit union, alt, rental, BFS, newcomer, and private paths.</small></div></article>
+            <article class="deal-lane-card"><span>03</span><div><strong>Package</strong><small>Generate condition checklist, DCR notes, missing docs, insurer flags, and lender exceptions.</small></div></article>
+            <article class="deal-lane-card"><span>04</span><div><strong>Submit</strong><small>Track submission status, selected lender/rate, BDM escalation, approvals, and audit events.</small></div></article>
+          </div>
+
+          <div class="deal-section-divider">
+            <div>
+              <p class="eyebrow">Rate access</p>
+              <h4>Permissioned rate intake, not public scraping.</h4>
+              <p>Broker rates are gated and time-sensitive. The safe operating model is to ingest authorized rate sheets, normalize them, and require human approval before publishing.</p>
+            </div>
+          </div>
+
+          <div class="rate-path-grid">
+            <article class="rate-path-card"><strong><b>A</b> Daily rate-sheet inbox</strong><small>Create rates@ / desk@, subscribe to lender and BDM bulletins, parse PDF/XLS/HTML attachments, and detect changes.</small></article>
+            <article class="rate-path-card"><strong><b>B</b> Broker portal exports</strong><small>Where allowed, save portal exports/rate sheets into a watched folder for automatic extraction and source tracking.</small></article>
+            <article class="rate-path-card"><strong><b>C</b> LOS/network platforms</strong><small>Request permitted export/API/feed options from Finmo, Velocity, Filogix Expert, M3/BOSS, and lender networks.</small></article>
+            <article class="rate-path-card"><strong><b>D</b> Approval + stale warnings</strong><small>Every imported rate needs source file, effective date, product type, reviewed by, and expiry/stale warning.</small></article>
           </div>
 
           <article class="auth-card locked" id="authCard">
