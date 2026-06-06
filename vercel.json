@@ -1,0 +1,12 @@
+{
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/ai", "destination": "/ai.html" }
+  ],
+  "crons": [
+    {
+      "path": "/api/rate-updates-cron",
+      "schedule": "0 */12 * * *"
+    }
+  ]
+}

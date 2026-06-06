@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "check": "node --check api/*.js"
+  },
+  "dependencies": {
+    "exceljs": "^4.4.0"
+  },
+  "devDependencies": {}
+}
