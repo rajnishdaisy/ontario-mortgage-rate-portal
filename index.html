@@ -3005,6 +3005,262 @@ main {
   border-color: var(--line);
 }
 
+.rate-intelligence-studio {
+  position: relative;
+  overflow: hidden;
+  border-color: color-mix(in srgb, var(--accent) 24%, var(--line));
+  background:
+    radial-gradient(circle at 10% 0%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 30%),
+    radial-gradient(circle at 92% 16%, rgba(15, 23, 42, 0.08), transparent 28%),
+    linear-gradient(135deg, var(--surface), color-mix(in srgb, var(--surface-strong) 82%, white));
+}
+
+.intelligence-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(300px, 0.7fr);
+  gap: 18px;
+  align-items: stretch;
+  margin-bottom: 18px;
+}
+
+.intelligence-hero h3 {
+  margin-bottom: 12px;
+}
+
+.intelligence-hero-copy {
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.7;
+  max-width: 820px;
+}
+
+.intelligence-command-card {
+  border: 1px solid var(--line);
+  border-radius: 26px;
+  padding: 18px;
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow: var(--shadow-soft);
+}
+
+body.dark .intelligence-command-card {
+  background: rgba(15, 23, 42, 0.72);
+}
+
+.intelligence-score {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+  gap: 16px;
+  align-items: center;
+}
+
+.score-orb {
+  width: 96px;
+  height: 96px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: conic-gradient(from 210deg, #16A34A 0 68%, #F59E0B 68% 85%, #EF4444 85% 100%);
+  box-shadow: 0 18px 38px rgba(15, 23, 42, 0.18);
+}
+
+.score-orb strong {
+  width: 72px;
+  height: 72px;
+  border-radius: inherit;
+  display: grid;
+  place-items: center;
+  background: #0F172A;
+  font-size: 1.35rem;
+}
+
+.intelligence-micro-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.intelligence-micro-grid span {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 10px;
+  background: var(--surface-strong);
+}
+
+.intelligence-micro-grid small {
+  display: block;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.62rem;
+  font-weight: 900;
+}
+
+.intelligence-micro-grid strong {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.95rem;
+}
+
+.rate-intel-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.rate-intel-card {
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  padding: 16px;
+  background: rgba(255,255,255,0.82);
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+}
+
+body.dark .rate-intel-card {
+  background: rgba(15, 23, 42, 0.74);
+}
+
+.rate-intel-card header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+  margin-bottom: 14px;
+}
+
+.rate-intel-card h4 {
+  margin: 0;
+  font-size: 1.02rem;
+}
+
+.rate-intel-card p {
+  margin: 4px 0 0;
+  color: var(--muted);
+  line-height: 1.45;
+  font-size: 0.86rem;
+}
+
+.rate-intel-number {
+  font-size: 2.4rem;
+  line-height: 1;
+  letter-spacing: -0.08em;
+  font-weight: 950;
+}
+
+.rate-intel-meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.rate-intel-meta span {
+  border-radius: 14px;
+  background: var(--surface-strong);
+  padding: 9px;
+}
+
+.rate-intel-meta small {
+  display: block;
+  color: var(--muted);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 900;
+}
+
+.rate-intel-meta strong {
+  display: block;
+  margin-top: 3px;
+  font-size: 0.84rem;
+}
+
+.source-chip,
+.freshness-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 999px;
+  padding: 6px 9px;
+  font-size: 0.68rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border: 1px solid var(--line);
+  background: var(--surface-strong);
+}
+
+.freshness-chip.fresh { color: #047857; border-color: rgba(4, 120, 87, 0.28); background: rgba(16, 185, 129, 0.1); }
+.freshness-chip.watch { color: #B45309; border-color: rgba(180, 83, 9, 0.28); background: rgba(245, 158, 11, 0.11); }
+.freshness-chip.stale { color: #B91C1C; border-color: rgba(185, 28, 28, 0.28); background: rgba(239, 68, 68, 0.1); }
+
+.policy-answer-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.policy-answer-card {
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: var(--surface);
+  padding: 14px;
+}
+
+.policy-answer-card strong {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.policy-answer-card small {
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.data-moat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.data-moat-card {
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 14px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.76), var(--surface));
+}
+
+body.dark .data-moat-card {
+  background: linear-gradient(180deg, rgba(15,23,42,0.78), rgba(15,23,42,0.54));
+}
+
+.data-moat-card b {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 10px;
+  background: var(--text);
+  color: var(--surface);
+  margin-bottom: 10px;
+}
+
+.data-moat-card strong { display: block; margin-bottom: 6px; }
+.data-moat-card small { color: var(--muted); line-height: 1.5; }
+
+@media (max-width: 980px) {
+  .intelligence-hero,
+  .rate-intel-grid,
+  .policy-answer-grid,
+  .data-moat-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
 .resource-card {
   padding: 18px;
 }
@@ -3116,6 +3372,7 @@ main {
           <a href="#dashboard" class="active">Dashboard</a>
           <a href="ai.html">AI Desk</a>
           <a href="#pricing">Pricing</a>
+          <a href="#intelligence">Rate Intelligence</a>
           <a href="#best-rates">Best Rates</a>
           <a href="#deal-desk">Deal Desk</a>
           <a href="#lenders">Lenders</a>
@@ -3195,6 +3452,68 @@ main {
               <div><span>3</span><small><strong>Brokerage layer</strong><br />Team rate approvals, internal policies, audit, permissions, and agent training.</small></div>
             </div>
           </aside>
+        </section>
+
+        <section class="band rate-intelligence-studio" id="intelligence">
+          <div class="intelligence-hero">
+            <div>
+              <p class="eyebrow">Rate Intelligence Studio</p>
+              <h3>Better than a rate sheet: source, freshness, policy, and fit in one view.</h3>
+              <p class="intelligence-hero-copy">Agents do not just need the lowest number. They need to know whether that number is fresh, who supplied it, what policy catches apply, which borrower it fits, and what to do next. This is the real product wedge.</p>
+              <div class="hero-proof-strip" aria-label="Rate intelligence pillars">
+                <span>Source tracked</span>
+                <span>Freshness scored</span>
+                <span>Policy attached</span>
+                <span>Scenario-ready</span>
+              </div>
+            </div>
+            <aside class="intelligence-command-card">
+              <div class="intelligence-score">
+                <div class="score-orb"><strong id="freshnessScore">--</strong></div>
+                <div>
+                  <p class="eyebrow">Data confidence</p>
+                  <h4 id="freshnessHeadline">Calculating freshness</h4>
+                  <p class="contact-line" id="freshnessCopy">Rates become valuable when every number has a source, effective date, and review status.</p>
+                </div>
+              </div>
+              <div class="intelligence-micro-grid">
+                <span><small>Fresh rates</small><strong id="freshRateCount">0</strong></span>
+                <span><small>Watchlist</small><strong id="watchRateCount">0</strong></span>
+                <span><small>Sources</small><strong id="sourceCount">0</strong></span>
+              </div>
+            </aside>
+          </div>
+
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Agent view</p>
+              <h3>Best current opportunities with the context agents actually need.</h3>
+            </div>
+            <div class="desk-badges"><span>Rate</span><span>Source</span><span>Policy fit</span><span>Contact</span></div>
+          </div>
+          <div class="rate-intel-grid" id="rateIntelGrid"></div>
+
+          <div class="section-heading" style="margin-top: 22px;">
+            <div>
+              <p class="eyebrow">Policy answers</p>
+              <h3>Turn broker kits into fast placement answers.</h3>
+              <p class="section-copy">This is where the product beats a normal rate page: policy, docs, BDM, and next action show beside the rate.</p>
+            </div>
+          </div>
+          <div class="policy-answer-grid" id="policyAnswerGrid"></div>
+
+          <div class="section-heading" style="margin-top: 22px;">
+            <div>
+              <p class="eyebrow">Data moat</p>
+              <h3>How we get credible rates without scraping private systems.</h3>
+            </div>
+          </div>
+          <div class="data-moat-grid">
+            <article class="data-moat-card"><b>1</b><strong>Rate-sheet inbox</strong><small>Authorized lender/BDM PDF, XLS, and email bulletins flow into an approval queue with source files attached.</small></article>
+            <article class="data-moat-card"><b>2</b><strong>Vendor/BDM portal</strong><small>Lenders can submit rate and policy updates directly. Admin approval protects trust before publishing.</small></article>
+            <article class="data-moat-card"><b>3</b><strong>Brokerage overlays</strong><small>Teams can add exclusive rates, compensation notes, preferred lender tags, and internal policy notes.</small></article>
+            <article class="data-moat-card"><b>4</b><strong>Freshness engine</strong><small>Every number gets effective date, stale warning, source, reviewer, and confidence score.</small></article>
+          </div>
         </section>
 
         <section class="band" id="pricing">
@@ -4934,10 +5253,11 @@ const auditTrailList = document.querySelector("#auditTrailList");
 let resourceIndex = null;
 let resourceEntries = [];
 const pageNavLinks = document.querySelectorAll('.nav-list a[href^="#"]');
-const pageRoutes = ["dashboard", "pricing", "best-rates", "deal-desk", "lenders", "packages", "programs", "insurers", "contacts", "resources", "compliance"];
+const pageRoutes = ["dashboard", "pricing", "intelligence", "best-rates", "deal-desk", "lenders", "packages", "programs", "insurers", "contacts", "resources", "compliance"];
 const pageGroups = {
   dashboard: [document.querySelector("#dashboard"), document.querySelector("#product-direction"), document.querySelector(".metric-grid")],
   pricing: [document.querySelector("#pricing")],
+  intelligence: [document.querySelector("#intelligence")],
   "best-rates": [document.querySelector("#best-rates")],
   "deal-desk": [document.querySelector("#deal-desk")],
   lenders: [document.querySelector(".workspace")],
@@ -5633,6 +5953,7 @@ function render() {
   }
 
   renderMetrics();
+  renderRateIntelligence();
   renderBestRateDashboard();
   renderLenderList(results);
   renderDetails(lenders.find((lender) => lender.id === activeLenderId) || results[0]);
@@ -5657,6 +5978,106 @@ function renderMetrics() {
   document.querySelector("#heroBestLender").textContent = bestFixed ? `${bestFixed.lender.name} leads insured 5-year fixed` : "No fixed rate available";
   document.querySelector("#heroConventional").textContent = bestConventional ? rate(bestConventional.value) : "N/A";
   document.querySelector("#heroUpdated").textContent = bestFixed?.lender.updated || "Today";
+}
+
+function renderRateIntelligence() {
+  const grid = document.querySelector("#rateIntelGrid");
+  const policyGrid = document.querySelector("#policyAnswerGrid");
+  if (!grid || !policyGrid || !lenders.length) return;
+
+  const scored = lenders
+    .map((lender) => ({ lender, best: numericRate(lender.rates.insuredFixed) ?? numericRate(lender.rates.conventional) ?? numericRate(lender.rates.variable) ?? numericRate(lender.rates.alt) }))
+    .filter((item) => item.best !== null)
+    .sort((a, b) => a.best - b.best);
+
+  const freshness = lenders.map((lender) => freshnessInfo(lender.updated));
+  const freshCount = freshness.filter((item) => item.tone === "fresh").length;
+  const watchCount = freshness.filter((item) => item.tone !== "fresh").length;
+  const confidence = Math.round((freshCount / Math.max(lenders.length, 1)) * 100);
+  document.querySelector("#freshnessScore").textContent = `${confidence}%`;
+  document.querySelector("#freshnessHeadline").textContent = confidence >= 80 ? "Credible beta dataset" : confidence >= 55 ? "Usable, needs review" : "Needs source refresh";
+  document.querySelector("#freshnessCopy").textContent = `${freshCount} lenders are fresh or recently reviewed. ${watchCount} need a rate-sheet confirmation before agents rely on them.`;
+  document.querySelector("#freshRateCount").textContent = freshCount;
+  document.querySelector("#watchRateCount").textContent = watchCount;
+  document.querySelector("#sourceCount").textContent = new Set(lenders.map(rateSourceLabel)).size;
+
+  grid.innerHTML = scored.slice(0, 6).map(({ lender, best }, index) => {
+    const info = freshnessInfo(lender.updated);
+    const topProgram = lender.programs[0] || "Mortgage product";
+    const policy = getProgramPolicy(topProgram, lender);
+    return `
+      <article class="rate-intel-card" style="--lender-color: ${lender.brandColor}; --lender-accent: ${lender.brandAccent};">
+        <header>
+          <div>
+            <span class="source-chip">${index === 0 ? "Leader" : titleCase(lender.type)}</span>
+            <h4>${escapeHtml(lender.name)}</h4>
+            <p>${escapeHtml(topProgram)} · ${escapeHtml(policy.maxLtv)} max LTV guide</p>
+          </div>
+          <span class="freshness-chip ${info.tone}">${info.label}</span>
+        </header>
+        <div class="rate-intel-number">${rate(best)}</div>
+        <div class="rate-intel-meta">
+          <span><small>Source</small><strong>${escapeHtml(rateSourceLabel(lender))}</strong></span>
+          <span><small>Updated</small><strong>${escapeHtml(lender.updated)}</strong></span>
+          <span><small>Policy catch</small><strong>${escapeHtml(policy.watch || policy.exclusions?.[0] || "Confirm current bulletin")}</strong></span>
+          <span><small>BDM</small><strong>${escapeHtml(lender.bdm || "Use lender desk")}</strong></span>
+        </div>
+      </article>
+    `;
+  }).join("");
+
+  const scenarios = [
+    { title: "Best clean purchase", program: "Insured purchase", copy: "Show agents the lowest insured path, insurer/document caveats, and who to call before submission." },
+    { title: "Self-employed/BFS", program: "Self-employed", copy: "Surface add-back, bank-statement, reasonability, and tax-arrears watch items before wasting a submission." },
+    { title: "Rental investor", program: "Rental", copy: "Compare rental offset/add-back policies, market rent rules, and property cash-flow sensitivity." },
+    { title: "Alt/private exit", program: "Alternative", copy: "Show fee, LTV, credit story, and exit-strategy notes beside the actual available product path." }
+  ];
+  policyGrid.innerHTML = scenarios.map((scenario) => {
+    const fit = lenders.find((lender) => lender.programs.includes(scenario.program)) || scored[0]?.lender || lenders[0];
+    const policy = getProgramPolicy(scenario.program, fit);
+    return `
+      <article class="policy-answer-card">
+        <strong>${escapeHtml(scenario.title)}</strong>
+        <small>${escapeHtml(scenario.copy)}</small>
+        <div class="rate-intel-meta" style="grid-template-columns: 1fr;">
+          <span><small>Likely fit</small><strong>${escapeHtml(fit.name)}</strong></span>
+          <span><small>Minimum score</small><strong>${escapeHtml(policy.minScore)}</strong></span>
+        </div>
+      </article>
+    `;
+  }).join("");
+}
+
+function rateSourceLabel(lender) {
+  if ((lender.type || "").includes("alternative")) return "Alt lender/vendor sheet";
+  if ((lender.type || "").includes("monoline")) return "Broker-channel rate sheet";
+  if ((lender.type || "").includes("credit")) return "Credit union bulletin";
+  return "Public + broker desk review";
+}
+
+function freshnessInfo(updated) {
+  const parsed = parseRateUpdatedDate(updated);
+  if (!Number.isFinite(parsed)) return { tone: "watch", label: "Needs date" };
+  const days = Math.max(0, Math.round((Date.now() - parsed) / 86400000));
+  if (days <= 7) return { tone: "fresh", label: `${days}d fresh` };
+  if (days <= 21) return { tone: "watch", label: `${days}d review` };
+  return { tone: "stale", label: `${days}d stale` };
+}
+
+function parseRateUpdatedDate(updated = "") {
+  const raw = String(updated).trim();
+  const direct = Date.parse(raw);
+  if (Number.isFinite(direct) && new Date(direct).getFullYear() >= 2024) return direct;
+  const match = raw.match(/(\d{1,2})\/(\d{1,2})(?:\/(\d{2,4}))?/);
+  if (match) {
+    const now = new Date();
+    let year = match[3] ? Number(match[3]) : now.getFullYear();
+    if (year < 100) year += 2000;
+    const candidate = new Date(year, Number(match[1]) - 1, Number(match[2]));
+    if (candidate.getTime() - now.getTime() > 1000 * 60 * 60 * 24 * 45) candidate.setFullYear(candidate.getFullYear() - 1);
+    return candidate.getTime();
+  }
+  return Number.NaN;
 }
 
 function renderBestRateDashboard() {
