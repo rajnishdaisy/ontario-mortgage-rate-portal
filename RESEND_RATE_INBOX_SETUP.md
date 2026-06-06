@@ -34,8 +34,8 @@ Local/preview webhook URL uses the same path on the preview domain.
 
 ## Resend setup
 
-1. In Resend, configure a receiving domain.
-2. Add the required MX records for that receiving domain.
+1. In Resend, configure a receiving domain. A Resend-managed `*.resend.app` receiving domain works when no custom domain is ready.
+2. If using a custom domain/subdomain, add the required MX records. If using the Resend-managed domain, use the generated `*.resend.app` address shown in Resend.
 3. Create a webhook endpoint:
 
 ```text
