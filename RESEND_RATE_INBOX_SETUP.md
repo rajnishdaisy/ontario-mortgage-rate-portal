@@ -11,6 +11,10 @@ Broker/lender sends email
   → API retrieves full email + attachments from Resend
   → stores raw email in Supabase Storage bucket lender-rate-emails
   → stores attachments in lender-rate-attachments
+  → checks sender against the trusted sender allowlist
+  → unapproved senders are rejected/skipped without AI analysis
+  → approved senders are queued for the 12-hour rate update cron
+  → Vercel Cron GET /api/rate-updates-cron every 12 hours
   → OpenAI extracts rates/policies/BDM contacts
   → stores extraction JSON in parsed-rate-artifacts
   → writes normalized rows to Supabase
@@ -66,11 +70,31 @@ OPENAI_API_KEY=...
 OPENAI_RATE_EXTRACTION_MODEL=gpt-4.1-mini
 RATE_AI_AUTO_PUBLISH_MIN_CONFIDENCE=0.84
 RATE_AI_WORKSPACE_ID=omrp-default
+RATE_AI_ALLOWED_SENDERS=rates@examplelender.ca,bdm@examplebank.com
+RATE_AI_CRON_BATCH_LIMIT=10
+CRON_SECRET=...
 ```
+
+`RATE_AI_ALLOWED_SENDERS` is the safety gate. Leave it empty until Shiv provides the approved sender emails; with no approved sender, the system stores inbound mail but rejects/skips AI analysis. Exact emails are preferred. Domain entries such as `examplebank.com`, `@examplebank.com`, or `*.examplebank.com` are supported but should only be used when the whole domain is trusted.
+
+You can also manage trusted senders in Supabase table `lender_email_sources` by setting `sender_email` and `trust_level` to `trusted_extract` or `trusted_publish`.
+
+## 12-hour cron
+
+`vercel.json` schedules:
+
+```json
+{
+  "path": "/api/rate-updates-cron",
+  "schedule": "0 */12 * * *"
+}
+```
+
+The cron processes queued emails only from approved senders. If `CRON_SECRET` is set, Vercel sends it as an authorization bearer header; direct unauthenticated calls are rejected.
 
 ## Auto-review / auto-update rule
 
-The endpoint does not wait for a human by default.
+The cron does not wait for a human when the sender is approved and the AI result is high-confidence.
 
 It automatically publishes extracted products to `published_rates` when:
 

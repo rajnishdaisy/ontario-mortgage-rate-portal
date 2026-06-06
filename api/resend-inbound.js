@@ -150,6 +150,75 @@ async function resendApi(path) {
   try { return text ? JSON.parse(text) : null; } catch { return text; }
 }
 
+async function getRows(table, query) {
+  return supabaseFetch(`/rest/v1/${table}?${query}`, {
+    method: 'GET',
+    headers: { Accept: 'application/json' }
+  });
+}
+
+async function downloadFromBucket(bucket, path) {
+  const urlPath = `/storage/v1/object/${encodeURIComponent(bucket)}/${path.split('/').map(encodeURIComponent).join('/')}`;
+  const url = requireEnv('SUPABASE_URL').replace(/\/$/, '');
+  const key = requireEnv('SUPABASE_SERVICE_ROLE_KEY');
+  const response = await fetch(`${url}${urlPath}`, {
+    headers: supabaseHeaders(key)
+  });
+  const arrayBuffer = await response.arrayBuffer();
+  if (!response.ok) throw new Error(`Supabase storage download failed ${response.status}: ${Buffer.from(arrayBuffer).toString('utf8')}`);
+  return Buffer.from(arrayBuffer);
+}
+
+function parseEmailAddress(value) {
+  const text = String(value || '').trim().toLowerCase();
+  const angle = text.match(/<([^>]+)>/);
+  const email = (angle ? angle[1] : text).match(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/i)?.[0] || '';
+  return email.toLowerCase();
+}
+
+function senderDomain(email) {
+  return String(email || '').split('@')[1]?.toLowerCase() || '';
+}
+
+function configuredAllowedSenders() {
+  return String(process.env.RATE_AI_ALLOWED_SENDERS || '')
+    .split(/[
+,;]/)
+    .map((item) => item.trim().toLowerCase())
+    .filter(Boolean);
+}
+
+function senderMatchesList(senderEmail, list) {
+  const domain = senderDomain(senderEmail);
+  return list.some((entry) => {
+    if (entry.startsWith('@')) return domain === entry.slice(1);
+    if (entry.startsWith('*.')) return domain === entry.slice(2) || domain.endsWith(`.${entry.slice(2)}`);
+    if (entry.includes('@')) return senderEmail === entry;
+    return domain === entry;
+  });
+}
+
+async function lookupTrustedSender(senderEmail, workspaceId) {
+  const domain = senderDomain(senderEmail);
+  const filters = [`sender_email.eq.${encodeURIComponent(senderEmail)}`];
+  if (domain) filters.push(`sender_domain.eq.${encodeURIComponent(domain)}`);
+  const rows = await getRows(
+    'lender_email_sources',
+    `select=*&workspace_id=eq.${encodeURIComponent(workspaceId)}&is_active=eq.true&or=(${filters.join(',')})&limit=10`
+  );
+  return (rows || []).find((row) => ['trusted_extract', 'trusted_publish'].includes(row.trust_level)) || null;
+}
+
+async function isAllowedSender(meta, workspaceId) {
+  const senderEmail = parseEmailAddress(meta.from);
+  if (!senderEmail) return { allowed: false, senderEmail, reason: 'missing_sender_email' };
+  const envList = configuredAllowedSenders();
+  if (senderMatchesList(senderEmail, envList)) return { allowed: true, senderEmail, source: 'env' };
+  const trustedSource = await lookupTrustedSender(senderEmail, workspaceId);
+  if (trustedSource) return { allowed: true, senderEmail, source: 'database', trustedSource };
+  return { allowed: false, senderEmail, reason: envList.length ? 'sender_not_in_allowlist' : 'allowlist_empty' };
+}
+
 async function downloadUrl(url) {
   const response = await fetch(url);
   const arrayBuffer = await response.arrayBuffer();
@@ -507,6 +576,131 @@ async function persistExtraction({ extraction, sourceDocumentId, extractionRunId
   return { shouldPublish, publishedCount, extractedCount: extractedRows.length, confidence };
 }
 
+
+async function processStoredSourceDocument(row) {
+  const workspaceId = row.workspace_id || DEFAULT_WORKSPACE_ID;
+  const emailBytes = await downloadFromBucket(row.storage_bucket, row.storage_path);
+  const snapshot = JSON.parse(emailBytes.toString('utf8'));
+  const email = snapshot.received_email || {};
+  const meta = snapshot.normalized || {
+    from: row.source_email_from,
+    to: row.source_email_to,
+    subject: row.source_email_subject,
+    emailId: row.metadata?.resend_email_id || row.source_email_message_id,
+    messageId: row.source_email_message_id
+  };
+
+  const senderAllowed = await isAllowedSender(meta, workspaceId);
+  if (!senderAllowed.allowed) {
+    await patchRows('rate_source_documents', `id=eq.${encodeURIComponent(row.id)}`, {
+      status: 'rejected',
+      metadata: { ...(row.metadata || {}), sender_allowed: false, sender_email: senderAllowed.senderEmail, reason: senderAllowed.reason }
+    });
+    if (row.ingestion_event_id) {
+      await patchRows('rate_ingestion_events', `id=eq.${encodeURIComponent(row.ingestion_event_id)}`, {
+        status: 'Rejected',
+        notes: `Skipped AI analysis for unapproved sender ${senderAllowed.senderEmail || row.source_email_from}.`
+      });
+    }
+    return { sourceDocumentId: row.id, ignored: true, reason: senderAllowed.reason, sender: senderAllowed.senderEmail };
+  }
+
+  await patchRows('rate_source_documents', `id=eq.${encodeURIComponent(row.id)}`, {
+    status: 'extracting',
+    metadata: { ...(row.metadata || {}), sender_allowed: true, sender_email: senderAllowed.senderEmail, allowlist_source: senderAllowed.source }
+  });
+
+  const attachmentRows = await getRows(
+    'rate_source_documents',
+    `select=*&workspace_id=eq.${encodeURIComponent(workspaceId)}&ingestion_event_id=eq.${encodeURIComponent(row.ingestion_event_id)}&source_kind=eq.attachment&order=created_at.asc`
+  );
+  const downloadedAttachments = [];
+  for (const attachmentRow of attachmentRows || []) {
+    const buffer = await downloadFromBucket(attachmentRow.storage_bucket, attachmentRow.storage_path);
+    downloadedAttachments.push({
+      filename: attachmentRow.file_name || 'attachment',
+      contentType: attachmentRow.mime_type || 'application/octet-stream',
+      size: attachmentRow.file_size_bytes || buffer.length,
+      buffer
+    });
+  }
+
+  const extractionRunId = safeId('rer', row.id);
+  await insertRows('rate_extraction_runs', [{
+    id: extractionRunId,
+    workspace_id: workspaceId,
+    source_document_id: row.id,
+    model_name: process.env.OPENAI_RATE_EXTRACTION_MODEL || DEFAULT_MODEL,
+    status: 'running',
+    started_at: new Date().toISOString()
+  }], 'return=minimal');
+
+  try {
+    const extraction = await runAiExtraction({ email, meta, sourceDocument: { id: row.id }, attachments: downloadedAttachments });
+    const artifactBytes = Buffer.from(JSON.stringify(extraction, null, 2));
+    const basePath = `${workspaceId}/${String(row.received_at || new Date().toISOString()).slice(0, 10)}/${cleanPathPart(row.metadata?.resend_email_id || row.id)}`;
+    const artifactPath = `${basePath}/ai-extraction.json`;
+    await uploadToBucket(ARTIFACT_BUCKET, artifactPath, artifactBytes, 'application/json');
+
+    await patchRows('rate_extraction_runs', `id=eq.${encodeURIComponent(extractionRunId)}`, {
+      status: 'succeeded',
+      completed_at: new Date().toISOString(),
+      confidence: extraction.confidence ?? averageConfidence(extraction),
+      summary: extraction.summary || null,
+      raw_extraction: extraction,
+      artifact_bucket: ARTIFACT_BUCKET,
+      artifact_path: artifactPath
+    });
+
+    const publishResult = await persistExtraction({ extraction, sourceDocumentId: row.id, extractionRunId, workspaceId });
+    await patchRows('rate_source_documents', `id=eq.${encodeURIComponent(row.id)}`, {
+      lender_name: extraction.lender_name || null,
+      status: publishResult.shouldPublish ? 'approved' : 'needs_review'
+    });
+    if (row.ingestion_event_id) {
+      await patchRows('rate_ingestion_events', `id=eq.${encodeURIComponent(row.ingestion_event_id)}`, {
+        lender: extraction.lender_name || meta.from || 'Unknown lender',
+        effective_date: validDateOrNull(extraction.effective_date),
+        status: publishResult.shouldPublish ? 'Approved' : 'Pending review',
+        notes: extraction.summary || `Processed inbound lender email: ${meta.subject || '(no subject)'}`
+      });
+    }
+    return {
+      sourceDocumentId: row.id,
+      extractionRunId,
+      autoPublished: publishResult.shouldPublish,
+      publishedCount: publishResult.publishedCount,
+      extractedCount: publishResult.extractedCount,
+      confidence: publishResult.confidence
+    };
+  } catch (error) {
+    await patchRows('rate_extraction_runs', `id=eq.${encodeURIComponent(extractionRunId)}`, {
+      status: 'failed',
+      completed_at: new Date().toISOString(),
+      error_message: error.message
+    });
+    await patchRows('rate_source_documents', `id=eq.${encodeURIComponent(row.id)}`, { status: 'failed' });
+    throw error;
+  }
+}
+
+export async function processQueuedRateEmails({ limit = 10 } = {}) {
+  const workspaceId = process.env.RATE_AI_WORKSPACE_ID || DEFAULT_WORKSPACE_ID;
+  const rows = await getRows(
+    'rate_source_documents',
+    `select=*&workspace_id=eq.${encodeURIComponent(workspaceId)}&source_kind=eq.email&status=eq.queued&order=received_at.asc&limit=${Number(limit) || 10}`
+  );
+  const results = [];
+  for (const row of rows || []) {
+    try {
+      results.push({ ok: true, ...(await processStoredSourceDocument(row)) });
+    } catch (error) {
+      results.push({ ok: false, sourceDocumentId: row.id, error: error.message });
+    }
+  }
+  return { workspaceId, checked: rows?.length || 0, results };
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') return json(res, 405, { error: 'Method not allowed' });
 
@@ -524,6 +718,7 @@ export default async function handler(req, res) {
     const workspaceId = process.env.RATE_AI_WORKSPACE_ID || DEFAULT_WORKSPACE_ID;
     const meta = normalizeEmailFromWebhook(event);
     if (!meta.emailId) throw new Error('Resend webhook missing data.email_id');
+    const senderAllowed = await isAllowedSender(meta, workspaceId);
 
     const emailResponse = await resendApi(`/emails/receiving/${encodeURIComponent(meta.emailId)}`);
     const email = emailResponse?.data || emailResponse || {};
@@ -566,8 +761,8 @@ export default async function handler(req, res) {
       file_name: 'email.json',
       file_size_bytes: emailJson.length,
       sha256: sha256Buffer(emailJson),
-      status: 'extracting',
-      metadata: { resend_email_id: meta.emailId, cc: meta.cc, bcc: meta.bcc }
+      status: 'queued',
+      metadata: { resend_email_id: meta.emailId, cc: meta.cc, bcc: meta.bcc, queued_by: 'resend-webhook' }
     }], 'return=minimal');
 
     const downloadedAttachments = [];
@@ -602,6 +797,22 @@ export default async function handler(req, res) {
         metadata: { resend_email_id: meta.emailId, resend_attachment_id: attachmentMeta.id || null }
       }], 'return=minimal');
       downloadedAttachments.push({ ...attachmentMeta, filename, contentType: mime, buffer: downloaded.buffer });
+    }
+
+    if (!senderAllowed.allowed) {
+      await patchRows('rate_source_documents', `id=eq.${encodeURIComponent(sourceDocumentId)}`, {
+        status: 'rejected',
+        metadata: { resend_email_id: meta.emailId, cc: meta.cc, bcc: meta.bcc, sender_allowed: false, sender_email: senderAllowed.senderEmail, reason: senderAllowed.reason }
+      });
+      await patchRows('rate_ingestion_events', `id=eq.${encodeURIComponent(ingestionEventId)}`, {
+        status: 'Rejected',
+        notes: `Skipped AI analysis for unapproved sender ${senderAllowed.senderEmail || meta.from}. Add the sender to RATE_AI_ALLOWED_SENDERS or lender_email_sources to process future emails.`
+      });
+      return json(res, 200, { ok: true, ignored: true, reason: senderAllowed.reason, sender: senderAllowed.senderEmail });
+    }
+
+    if (process.env.RATE_AI_PROCESS_IMMEDIATELY !== 'true') {
+      return json(res, 202, { ok: true, queued: true, resendEmailId: meta.emailId, sourceDocumentId, sender: senderAllowed.senderEmail });
     }
 
     extractionRunId = safeId('rer', meta.emailId);
