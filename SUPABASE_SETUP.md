@@ -50,10 +50,30 @@ In Supabase Dashboard:
 
 Optional multi-workspace setup: set `app_metadata.workspace_id` for each advisor. If omitted, app uses `omrp-default`.
 
-## 5) Redeploy Vercel
+## 5) Rate Intelligence Inbox / lender email intake
+
+After the Deal Desk security migration succeeds, run:
+
+```sql
+-- paste the contents of:
+supabase/migrations/202606060001_rate_email_intelligence_inbox.sql
+```
+
+This creates the private storage buckets and database tables for forwarding lender emails/rate sheets into an AI extraction + approval queue.
+
+Detailed setup guides:
+
+```text
+RESEND_RATE_INBOX_SETUP.md              # preferred: user emails Resend address and AI auto-updates
+RATE_INTELLIGENCE_INBOX_SETUP.md        # database/storage architecture reference
+```
+
+## 6) Redeploy Vercel
 
 Redeploy production after adding env vars and running SQL.
 
 ## Security note
 
 The first migration was MVP anonymous sync. The second migration removes those anonymous policies and requires Supabase Auth. Do **not** enter real borrower PII until `202606050002_secure_deal_desk.sql` has been run and advisor login is confirmed.
+
+Raw lender emails/attachments should stay private in Supabase Storage. Only approved rows from `published_rates`, `lender_policy_notes`, and `lender_contacts` should appear publicly.
