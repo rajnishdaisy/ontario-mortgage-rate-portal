@@ -771,48 +771,55 @@ export async function processQueuedRateEmails({ limit = 10 } = {}) {
   return { workspaceId, checked: rows?.length || 0, results };
 }
 
-export default async function handler(req, res) {
-  if (req.method !== 'POST') return json(res, 405, { error: 'Method not allowed' });
+function isAuthorizedInboxAdmin(req) {
+  const adminToken = process.env.RATE_INBOX_ADMIN_TOKEN;
+  const cronSecret = process.env.CRON_SECRET;
+  const auth = getHeader(req, 'authorization');
+  if (adminToken && auth === `Bearer ${adminToken}`) return true;
+  if (cronSecret && auth === `Bearer ${cronSecret}`) return true;
+  return false;
+}
 
-  let rawBody = '';
-  let sourceDocumentId = null;
-  let extractionRunId = null;
+async function listReceivedEmails(limit = 25) {
+  const query = new URLSearchParams({ limit: String(Math.max(1, Math.min(100, Number(limit) || 25))) });
+  const response = await resendApi(`/emails/receiving?${query.toString()}`);
+  const rows = response?.data || response?.emails || response || [];
+  return Array.isArray(rows) ? rows : [];
+}
+
+export async function ingestReceivedEmailEvent(event, options = {}) {
+  const workspaceId = process.env.RATE_AI_WORKSPACE_ID || DEFAULT_WORKSPACE_ID;
+  const meta = normalizeEmailFromWebhook(event);
+  if (!meta.emailId) throw new Error('Resend webhook missing data.email_id');
+  const senderAllowed = await isAllowedSender(meta, workspaceId);
+
+  let emailResponse;
+  let email;
+  let attachmentsResponse;
+  let attachmentMetas;
   try {
-    rawBody = await readRawBody(req);
-    const verification = verifyResendWebhook(rawBody, req);
-    if (!verification.ok) return json(res, 400, { error: 'Invalid webhook signature', reason: verification.reason || 'signature mismatch' });
-
-    const event = JSON.parse(rawBody || '{}');
-    if (event.type !== 'email.received') return json(res, 200, { ok: true, ignored: event.type || 'unknown' });
-
-    const workspaceId = process.env.RATE_AI_WORKSPACE_ID || DEFAULT_WORKSPACE_ID;
-    const meta = normalizeEmailFromWebhook(event);
-    if (!meta.emailId) throw new Error('Resend webhook missing data.email_id');
-    const senderAllowed = await isAllowedSender(meta, workspaceId);
-
-    const emailResponse = await resendApi(`/emails/receiving/${encodeURIComponent(meta.emailId)}`);
-    const email = emailResponse?.data || emailResponse || {};
-    const attachmentsResponse = await resendApi(`/emails/receiving/${encodeURIComponent(meta.emailId)}/attachments`);
-    const attachmentMetas = attachmentsResponse?.data || attachmentsResponse || meta.attachments || [];
-
-    const receivedAt = meta.createdAt || email.created_at || new Date().toISOString();
+    emailResponse = options.email ? { data: options.email } : await resendApi(`/emails/receiving/${encodeURIComponent(meta.emailId)}`);
+    email = emailResponse?.data || emailResponse || {};
+    attachmentsResponse = options.attachments ? { data: options.attachments } : await resendApi(`/emails/receiving/${encodeURIComponent(meta.emailId)}/attachments`);
+    attachmentMetas = attachmentsResponse?.data || attachmentsResponse || meta.attachments || [];
+  } catch (error) {
+    const receivedAt = meta.createdAt || event.created_at || new Date().toISOString();
     const basePath = `${workspaceId}/${receivedAt.slice(0, 10)}/${cleanPathPart(meta.emailId)}`;
-    const emailJson = Buffer.from(JSON.stringify(buildEmailSnapshot(event, email, meta), null, 2));
-    const emailStoragePath = `${basePath}/email.json`;
-    await uploadToBucket(RATE_EMAIL_BUCKET, emailStoragePath, emailJson, 'application/json');
-
     const ingestionEventId = stableId('rie', `${workspaceId}:${meta.emailId}`);
+    const sourceDocumentId = stableId('rsd', `${workspaceId}:${meta.emailId}:email`);
+    const fallbackEmail = { ...(event.data || {}), fetch_error: error.message };
+    const emailJson = Buffer.from(JSON.stringify(buildEmailSnapshot(event, fallbackEmail, meta), null, 2));
+    const emailStoragePath = `${basePath}/email-metadata.json`;
+    await uploadToBucket(RATE_EMAIL_BUCKET, emailStoragePath, emailJson, 'application/json');
     await insertIgnoreRows('rate_ingestion_events', [{
       id: ingestionEventId,
       workspace_id: workspaceId,
       lender: meta.from || 'Unknown lender email',
       source: 'Resend inbound email',
       effective_date: null,
-      status: 'Pending review',
-      notes: `Inbound lender email: ${meta.subject || '(no subject)'}`
+      status: 'Failed',
+      notes: `Stored inbound metadata but could not fetch Resend email content: ${error.message}`
     }], 'return=minimal');
-
-    sourceDocumentId = stableId('rsd', `${workspaceId}:${meta.emailId}:email`);
     await insertIgnoreRows('rate_source_documents', [{
       id: sourceDocumentId,
       workspace_id: workspaceId,
@@ -823,79 +830,122 @@ export default async function handler(req, res) {
       source_email_to: meta.to,
       source_email_subject: meta.subject,
       source_email_message_id: meta.messageId || meta.emailId,
-      source_email_thread_id: email.thread_id || null,
+      source_email_thread_id: null,
       received_at: receivedAt,
       storage_bucket: RATE_EMAIL_BUCKET,
       storage_path: emailStoragePath,
       mime_type: 'application/json',
-      file_name: 'email.json',
+      file_name: 'email-metadata.json',
       file_size_bytes: emailJson.length,
       sha256: sha256Buffer(emailJson),
-      status: 'queued',
-      metadata: { resend_email_id: meta.emailId, cc: meta.cc, bcc: meta.bcc, queued_by: 'resend-webhook' }
+      status: 'failed',
+      metadata: { resend_email_id: meta.emailId, cc: meta.cc, bcc: meta.bcc, queued_by: options.queuedBy || 'resend-webhook', fetch_error: error.message }
     }], 'return=minimal');
+    return { ok: false, ignored: false, fetchFailed: true, resendEmailId: meta.emailId, sourceDocumentId, sender: senderAllowed.senderEmail, error: error.message };
+  }
 
-    const downloadedAttachments = [];
-    const maxAttachments = Number(process.env.RATE_AI_MAX_ATTACHMENTS || 8);
-    for (const attachmentMeta of attachmentMetas.slice(0, maxAttachments)) {
-      const downloadUrlValue = attachmentMeta.download_url || attachmentMeta.url;
-      if (!downloadUrlValue) continue;
-      const downloaded = await downloadUrl(downloadUrlValue);
-      const filename = attachmentMeta.filename || `${attachmentMeta.id || safeId('att')}`;
-      const mime = attachmentMeta.content_type || downloaded.contentType;
-      const attachmentPath = `${basePath}/attachments/${cleanPathPart(filename)}`;
-      await uploadToBucket(ATTACHMENT_BUCKET, attachmentPath, downloaded.buffer, mime);
-      const attachmentDocId = stableId('rsdatt', `${workspaceId}:${meta.emailId}:${attachmentMeta.id || filename}`);
-      await insertIgnoreRows('rate_source_documents', [{
-        id: attachmentDocId,
-        workspace_id: workspaceId,
-        ingestion_event_id: ingestionEventId,
-        source_kind: 'attachment',
-        lender_name: null,
-        source_email_from: meta.from,
-        source_email_to: meta.to,
-        source_email_subject: meta.subject,
-        source_email_message_id: meta.messageId || meta.emailId,
-        source_email_thread_id: email.thread_id || null,
-        received_at: receivedAt,
-        storage_bucket: ATTACHMENT_BUCKET,
-        storage_path: attachmentPath,
-        mime_type: mime,
-        file_name: filename,
-        file_size_bytes: downloaded.buffer.length,
-        sha256: sha256Buffer(downloaded.buffer),
-        status: 'stored',
-        metadata: { resend_email_id: meta.emailId, resend_attachment_id: attachmentMeta.id || null }
-      }], 'return=minimal');
-      downloadedAttachments.push({ ...attachmentMeta, filename, contentType: mime, buffer: downloaded.buffer });
-    }
+  const receivedAt = meta.createdAt || email.created_at || new Date().toISOString();
+  const basePath = `${workspaceId}/${receivedAt.slice(0, 10)}/${cleanPathPart(meta.emailId)}`;
+  const emailJson = Buffer.from(JSON.stringify(buildEmailSnapshot(event, email, meta), null, 2));
+  const emailStoragePath = `${basePath}/email.json`;
+  await uploadToBucket(RATE_EMAIL_BUCKET, emailStoragePath, emailJson, 'application/json');
 
-    if (!senderAllowed.allowed) {
-      await patchRows('rate_source_documents', `id=eq.${encodeURIComponent(sourceDocumentId)}`, {
-        status: 'rejected',
-        metadata: { resend_email_id: meta.emailId, cc: meta.cc, bcc: meta.bcc, sender_allowed: false, sender_email: senderAllowed.senderEmail, reason: senderAllowed.reason }
-      });
-      await patchRows('rate_ingestion_events', `id=eq.${encodeURIComponent(ingestionEventId)}`, {
-        status: 'Rejected',
-        notes: `Skipped AI analysis for unapproved sender ${senderAllowed.senderEmail || meta.from}. Add the sender to RATE_AI_ALLOWED_SENDERS or lender_email_sources to process future emails.`
-      });
-      return json(res, 200, { ok: true, ignored: true, reason: senderAllowed.reason, sender: senderAllowed.senderEmail });
-    }
+  const ingestionEventId = stableId('rie', `${workspaceId}:${meta.emailId}`);
+  await insertIgnoreRows('rate_ingestion_events', [{
+    id: ingestionEventId,
+    workspace_id: workspaceId,
+    lender: meta.from || 'Unknown lender email',
+    source: 'Resend inbound email',
+    effective_date: null,
+    status: 'Pending review',
+    notes: `Inbound lender email: ${meta.subject || '(no subject)'}`
+  }], 'return=minimal');
 
-    if (process.env.RATE_AI_PROCESS_IMMEDIATELY !== 'true') {
-      return json(res, 202, { ok: true, queued: true, resendEmailId: meta.emailId, sourceDocumentId, sender: senderAllowed.senderEmail });
-    }
+  const sourceDocumentId = stableId('rsd', `${workspaceId}:${meta.emailId}:email`);
+  await insertIgnoreRows('rate_source_documents', [{
+    id: sourceDocumentId,
+    workspace_id: workspaceId,
+    ingestion_event_id: ingestionEventId,
+    source_kind: 'email',
+    lender_name: null,
+    source_email_from: meta.from,
+    source_email_to: meta.to,
+    source_email_subject: meta.subject,
+    source_email_message_id: meta.messageId || meta.emailId,
+    source_email_thread_id: email.thread_id || null,
+    received_at: receivedAt,
+    storage_bucket: RATE_EMAIL_BUCKET,
+    storage_path: emailStoragePath,
+    mime_type: 'application/json',
+    file_name: 'email.json',
+    file_size_bytes: emailJson.length,
+    sha256: sha256Buffer(emailJson),
+    status: 'queued',
+    metadata: { resend_email_id: meta.emailId, cc: meta.cc, bcc: meta.bcc, queued_by: options.queuedBy || 'resend-webhook' }
+  }], 'return=minimal');
 
-    extractionRunId = safeId('rer', meta.emailId);
-    await insertRows('rate_extraction_runs', [{
-      id: extractionRunId,
+  const downloadedAttachments = [];
+  const maxAttachments = Number(process.env.RATE_AI_MAX_ATTACHMENTS || 8);
+  for (const attachmentMeta of attachmentMetas.slice(0, maxAttachments)) {
+    const downloadUrlValue = attachmentMeta.download_url || attachmentMeta.url;
+    if (!downloadUrlValue) continue;
+    const downloaded = await downloadUrl(downloadUrlValue);
+    const filename = attachmentMeta.filename || `${attachmentMeta.id || safeId('att')}`;
+    const mime = attachmentMeta.content_type || downloaded.contentType;
+    const attachmentPath = `${basePath}/attachments/${cleanPathPart(filename)}`;
+    await uploadToBucket(ATTACHMENT_BUCKET, attachmentPath, downloaded.buffer, mime);
+    const attachmentDocId = stableId('rsdatt', `${workspaceId}:${meta.emailId}:${attachmentMeta.id || filename}`);
+    await insertIgnoreRows('rate_source_documents', [{
+      id: attachmentDocId,
       workspace_id: workspaceId,
-      source_document_id: sourceDocumentId,
-      model_name: process.env.OPENAI_RATE_EXTRACTION_MODEL || DEFAULT_MODEL,
-      status: 'running',
-      started_at: new Date().toISOString()
+      ingestion_event_id: ingestionEventId,
+      source_kind: 'attachment',
+      lender_name: null,
+      source_email_from: meta.from,
+      source_email_to: meta.to,
+      source_email_subject: meta.subject,
+      source_email_message_id: meta.messageId || meta.emailId,
+      source_email_thread_id: email.thread_id || null,
+      received_at: receivedAt,
+      storage_bucket: ATTACHMENT_BUCKET,
+      storage_path: attachmentPath,
+      mime_type: mime,
+      file_name: filename,
+      file_size_bytes: downloaded.buffer.length,
+      sha256: sha256Buffer(downloaded.buffer),
+      status: 'stored',
+      metadata: { resend_email_id: meta.emailId, resend_attachment_id: attachmentMeta.id || null }
     }], 'return=minimal');
+    downloadedAttachments.push({ ...attachmentMeta, filename, contentType: mime, buffer: downloaded.buffer });
+  }
 
+  if (!senderAllowed.allowed) {
+    await patchRows('rate_source_documents', `id=eq.${encodeURIComponent(sourceDocumentId)}`, {
+      status: 'rejected',
+      metadata: { resend_email_id: meta.emailId, cc: meta.cc, bcc: meta.bcc, sender_allowed: false, sender_email: senderAllowed.senderEmail, reason: senderAllowed.reason }
+    });
+    await patchRows('rate_ingestion_events', `id=eq.${encodeURIComponent(ingestionEventId)}`, {
+      status: 'Rejected',
+      notes: `Skipped AI analysis for unapproved sender ${senderAllowed.senderEmail || meta.from}. Add the sender to RATE_AI_ALLOWED_SENDERS or lender_email_sources to process future emails.`
+    });
+    return { ok: true, ignored: true, reason: senderAllowed.reason, sender: senderAllowed.senderEmail, resendEmailId: meta.emailId, sourceDocumentId };
+  }
+
+  if (process.env.RATE_AI_PROCESS_IMMEDIATELY !== 'true' && !options.processImmediately) {
+    return { ok: true, queued: true, resendEmailId: meta.emailId, sourceDocumentId, sender: senderAllowed.senderEmail };
+  }
+
+  const extractionRunId = safeId('rer', meta.emailId);
+  await insertRows('rate_extraction_runs', [{
+    id: extractionRunId,
+    workspace_id: workspaceId,
+    source_document_id: sourceDocumentId,
+    model_name: process.env.OPENAI_RATE_EXTRACTION_MODEL || DEFAULT_MODEL,
+    status: 'running',
+    started_at: new Date().toISOString()
+  }], 'return=minimal');
+
+  try {
     const extraction = await runAiExtraction({ email, meta, sourceDocument: { id: sourceDocumentId }, attachments: downloadedAttachments });
     const artifactBytes = Buffer.from(JSON.stringify(extraction, null, 2));
     const artifactPath = `${basePath}/ai-extraction.json`;
@@ -929,7 +979,7 @@ export default async function handler(req, res) {
       notes: extraction.summary || `Processed inbound lender email: ${meta.subject || '(no subject)'}`
     });
 
-    return json(res, 200, {
+    return {
       ok: true,
       resendEmailId: meta.emailId,
       sourceDocumentId,
@@ -938,20 +988,60 @@ export default async function handler(req, res) {
       publishedCount: publishResult.publishedCount,
       extractedCount: publishResult.extractedCount,
       confidence: publishResult.confidence
-    });
+    };
   } catch (error) {
-    if (extractionRunId) {
-      try {
-        await patchRows('rate_extraction_runs', `id=eq.${encodeURIComponent(extractionRunId)}`, {
-          status: 'failed',
-          completed_at: new Date().toISOString(),
-          error_message: error.message
-        });
-      } catch {}
+    await patchRows('rate_extraction_runs', `id=eq.${encodeURIComponent(extractionRunId)}`, {
+      status: 'failed',
+      completed_at: new Date().toISOString(),
+      error_message: error.message
+    });
+    await patchRows('rate_source_documents', `id=eq.${encodeURIComponent(sourceDocumentId)}`, { status: 'failed' });
+    await patchRows('rate_ingestion_events', `id=eq.${encodeURIComponent(ingestionEventId)}`, {
+      status: 'Failed',
+      notes: `AI extraction failed: ${error.message}`
+    });
+    throw error;
+  }
+}
+
+export default async function handler(req, res) {
+  if (req.method !== 'POST') return json(res, 405, { error: 'Method not allowed' });
+
+  try {
+    const rawBody = await readRawBody(req);
+    if (isAuthorizedInboxAdmin(req)) {
+      const body = rawBody ? JSON.parse(rawBody) : {};
+      const limit = Math.max(1, Math.min(100, Number(body.limit || req.query?.limit || 25)));
+      const processImmediately = body.processImmediately !== false;
+      const listed = body.emailIds?.length
+        ? body.emailIds.map((id) => ({ id, email_id: id }))
+        : await listReceivedEmails(limit);
+      const results = [];
+      for (const item of listed) {
+        const emailId = item.email_id || item.id;
+        if (!emailId) continue;
+        const event = {
+          type: 'email.received',
+          created_at: item.created_at || new Date().toISOString(),
+          data: { ...item, email_id: emailId }
+        };
+        try {
+          results.push(await ingestReceivedEmailEvent(event, { queuedBy: 'admin-sync', processImmediately }));
+        } catch (error) {
+          results.push({ ok: false, resendEmailId: emailId, error: error.message });
+        }
+      }
+      return json(res, 200, { ok: true, checked: listed.length, results });
     }
-    if (sourceDocumentId) {
-      try { await patchRows('rate_source_documents', `id=eq.${encodeURIComponent(sourceDocumentId)}`, { status: 'failed' }); } catch {}
-    }
+
+    const verification = verifyResendWebhook(rawBody, req);
+    if (!verification.ok) return json(res, 400, { error: 'Invalid webhook signature', reason: verification.reason || 'signature mismatch' });
+
+    const event = JSON.parse(rawBody || '{}');
+    if (event.type !== 'email.received') return json(res, 200, { ok: true, ignored: event.type || 'unknown' });
+    const result = await ingestReceivedEmailEvent(event);
+    return json(res, result.fetchFailed ? 202 : 200, result);
+  } catch (error) {
     console.error('resend inbound processing failed', error);
     return json(res, 500, { ok: false, error: error.message });
   }
