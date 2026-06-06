@@ -3757,7 +3757,9 @@ body.dark .data-moat-card {
                 <label><span>Status</span><select id="rateEventStatus"><option>Pending review</option><option>Approved</option><option>Rejected</option><option>Stale</option></select></label>
                 <label class="full"><span>Notes</span><textarea id="rateEventNotes" placeholder="Rate changes, product caveats, expiry, source filename..."></textarea></label>
                 <button class="primary-button" type="submit">Log rate event</button>
+                <button class="secondary-button" type="button" id="seedDemoRateIngestion">Run static demo ingestion</button>
               </form>
+              <div class="rate-ingestion-list" id="demoIngestionSummary"></div>
               <div class="rate-ingestion-list" id="rateIngestionList"></div>
             </article>
             <article class="compliance-card">
@@ -5249,6 +5251,7 @@ const signOutButton = document.querySelector("#signOutButton");
 const schemaWarning = document.querySelector("#schemaWarning");
 const rateIngestionForm = document.querySelector("#rateIngestionForm");
 const rateIngestionList = document.querySelector("#rateIngestionList");
+const demoIngestionSummary = document.querySelector("#demoIngestionSummary");
 const auditTrailList = document.querySelector("#auditTrailList");
 let resourceIndex = null;
 let resourceEntries = [];
@@ -5309,6 +5312,7 @@ document.querySelector("#seedDemoDeal")?.addEventListener("click", seedDealForm)
 sendMagicLinkButton?.addEventListener("click", signInWithMagicLink);
 signOutButton?.addEventListener("click", signOutAdvisor);
 rateIngestionForm?.addEventListener("submit", (event) => { event.preventDefault(); createRateEventFromForm(); });
+document.querySelector("#seedDemoRateIngestion")?.addEventListener("click", runStaticDemoRateIngestion);
 document.querySelector("#clearDealPipeline")?.addEventListener("click", async () => {
   const ids = dealPipeline.map((deal) => deal.id);
   dealPipeline = [];
@@ -5935,6 +5939,87 @@ function renderDealPipeline() {
 function renderDealCard(deal) {
   const ltv = calculateLtv(deal); const recommendations = recommendLendersForDeal(deal); const docs = docsForDeal(deal); const risks = riskFlagsForDeal(deal); const statusOrder = ["intake", "review", "submit", "approved"]; const currentIndex = statusOrder.indexOf(deal.status); const nextStatus = statusOrder[currentIndex + 1];
   return `<article class="deal-card"><div class="deal-card-top"><div><h6>${escapeHtml(deal.client)}</h6><small>${escapeHtml(deal.purpose)} · ${escapeHtml(deal.province)}${deal.closing ? ` · closes ${escapeHtml(deal.closing)}` : ""}</small></div><span class="deal-chip">${ltv}% LTV</span></div><div class="deal-chip-row"><span class="deal-chip">${escapeHtml(deal.credit)}</span><span class="deal-chip">${escapeHtml(deal.income)}</span><span class="deal-chip">${escapeHtml(deal.term)}</span><span class="deal-chip">${escapeHtml(deal.occupancy)}</span><span class="deal-chip">${escapeHtml(deal.propertyType || "Property")}</span>${deal.gds !== "" ? `<span class="deal-chip">GDS ${escapeHtml(deal.gds)}%</span>` : ""}${deal.tds !== "" ? `<span class="deal-chip">TDS ${escapeHtml(deal.tds)}%</span>` : ""}</div>${risks.length ? `<div>${risks.map((flag) => `<span class="deal-risk">${escapeHtml(flag)}</span>`).join(" ")}</div>` : ""}<div class="deal-card-section"><strong>Recommended lenders</strong><div class="recommendation-list">${recommendations.length ? recommendations.map(({ lender, rateValue }) => `<article><strong>${escapeHtml(lender.name)}</strong><small>${rate(rateValue === 99 ? lender.rates.insuredFixed : rateValue)} · ${escapeHtml(titleCase(lender.type))}</small></article>`).join("") : `<small>No strong matches yet. Review manually.</small>`}</div></div><div class="deal-card-section"><strong>Checklist</strong><div class="checklist-grid">${docs.map((doc) => `<div class="check-item"><strong>${escapeHtml(doc.title)}</strong><small>${escapeHtml(doc.detail)}</small></div>`).join("")}</div></div>${(deal.selectedLender || deal.selectedRate) ? `<small class="deal-card-meta"><strong>Selected:</strong> ${escapeHtml(deal.selectedLender || "Review lender")} ${deal.selectedRate ? `· ${escapeHtml(deal.selectedRate)}%` : ""}</small>` : ""}${deal.borrowerEmail || deal.borrowerPhone ? `<small class="deal-card-meta"><strong>Borrower:</strong> ${escapeHtml([deal.borrowerEmail, deal.borrowerPhone].filter(Boolean).join(" · "))}</small>` : ""}${deal.notes ? `<small class="deal-card-meta"><strong>Notes/reason:</strong> ${escapeHtml(deal.notes)}</small>` : ""}<div class="pipeline-actions">${nextStatus ? `<button class="primary-mini" type="button" data-move-deal="${deal.id}" data-status="${nextStatus}">Move to ${nextStatus}</button>` : ""}${currentIndex > 0 ? `<button type="button" data-move-deal="${deal.id}" data-status="${statusOrder[currentIndex - 1]}">Back</button>` : ""}<button type="button" data-remove-deal="${deal.id}">Remove</button></div></article>`;
+}
+
+async function runStaticDemoRateIngestion() {
+  if (!demoIngestionSummary) return;
+  demoIngestionSummary.innerHTML = `<article class="rate-event"><strong>Running static demo ingestion…</strong><small>Using data/demo-rate-sources.json only.</small></article>`;
+  try {
+    const response = await fetch("data/demo-rate-sources.json", { cache: "no-store" });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const sourceSet = await response.json();
+    const result = ingestStaticDemoSources(sourceSet);
+    const events = result.approvalQueue.map((item) => ({
+      id: `demo-${item.sourceId}`,
+      workspaceId: workspaceId(),
+      lender: item.lenderName,
+      source: item.sourceLabel,
+      effectiveDate: item.effectiveDate || "",
+      status: item.approvalStatus === "approved" ? "Approved" : item.approvalStatus === "rejected" ? "Rejected" : "Pending review",
+      notes: `${item.productName} · confidence ${Math.round(item.confidence * 100)}% · ${item.approvalReason}`,
+      createdAt: new Date().toISOString()
+    }));
+    const existingIds = new Set(rateEvents.map((event) => event.id));
+    rateEvents = [...events.filter((event) => !existingIds.has(event.id)), ...rateEvents].slice(0, 20);
+    saveRateEvents();
+    renderRateEvents();
+    demoIngestionSummary.innerHTML = `
+      <article class="rate-event">
+        <strong>Static demo ingestion complete · ${result.summary.approved} approved · ${result.summary.needs_review} review</strong>
+        <small>${result.summary.published} demo records marked publishable locally. No real credentials, gated portal scraping, or live-rate publication.</small>
+      </article>
+      ${result.publishedRates.map((item) => `<article class="rate-event"><strong>${escapeHtml(item.lenderName)} · demo publishable</strong><small>${escapeHtml(item.termLabel)} · ${rate(item.insuredRate || item.uninsuredRate || item.insurableRate)} · confidence ${Math.round(item.confidence * 100)}%</small></article>`).join("")}
+    `;
+    await logAuditEvent("demo_rate_ingestion", `Static demo ingestion: ${result.summary.approved} approved, ${result.summary.needs_review} held for review`);
+  } catch (error) {
+    demoIngestionSummary.innerHTML = `<article class="rate-event"><strong>Static demo ingestion failed</strong><small>${escapeHtml(error.message)}</small></article>`;
+  }
+}
+
+function ingestStaticDemoSources(sourceSet) {
+  const approvalQueue = (sourceSet.records || []).map(normalizeStaticDemoSource);
+  const publishedRates = approvalQueue.filter((item) => item.publishable);
+  const summary = approvalQueue.reduce((counts, item) => {
+    counts.total += 1;
+    counts[item.approvalStatus] = (counts[item.approvalStatus] || 0) + 1;
+    return counts;
+  }, { total: 0, approved: 0, needs_review: 0, rejected: 0, published: publishedRates.length });
+  summary.published = publishedRates.length;
+  return { summary, approvalQueue, publishedRates };
+}
+
+function normalizeStaticDemoSource(record) {
+  const fresh = freshnessInfo(record.effectiveDate);
+  const missing = [];
+  const hasNumericRate = [record.insuredRate, record.insurableRate, record.uninsuredRate].some((value) => Number.isFinite(Number(value)));
+  if (!record.lenderName) missing.push("lender");
+  if (!record.productName) missing.push("product");
+  if (!record.effectiveDate) missing.push("effective date");
+  if (!hasNumericRate && !record.variableDiscount) missing.push("rate");
+  if (record.mortgageType === "variable" && !record.lenderPrimeRate) missing.push("lender prime rate");
+  let confidence = 0.5 + (record.effectiveDate ? 0.12 : 0) + (record.expiryDate ? 0.06 : 0) + (record.rateHoldDays ? 0.04 : 0) + ((record.evidence || []).length >= 3 ? 0.12 : 0) + (hasNumericRate ? 0.1 : 0) - (missing.length * 0.08);
+  if (fresh.tone === "watch") confidence -= 0.12;
+  if (fresh.tone === "stale") confidence -= 0.28;
+  if (record.variableDiscount && !record.lenderPrimeRate) confidence -= 0.15;
+  confidence = Math.max(0, Math.min(1, Math.round(confidence * 100) / 100));
+  const expired = record.expiryDate && Date.parse(record.expiryDate) < Date.now();
+  const blocked = missing.length || fresh.tone === "stale" || expired;
+  const approvalStatus = blocked ? "needs_review" : confidence >= 0.88 && fresh.tone === "fresh" ? "approved" : confidence >= 0.68 ? "needs_review" : "rejected";
+  return {
+    sourceId: record.sourceId,
+    lenderName: record.lenderName || "Unnamed lender",
+    productName: record.productName || "Unnamed product",
+    sourceLabel: record.sourceLabel || "Static demo source",
+    effectiveDate: record.effectiveDate || "",
+    insuredRate: Number.isFinite(Number(record.insuredRate)) ? Number(record.insuredRate) : null,
+    insurableRate: Number.isFinite(Number(record.insurableRate)) ? Number(record.insurableRate) : null,
+    uninsuredRate: Number.isFinite(Number(record.uninsuredRate)) ? Number(record.uninsuredRate) : null,
+    termLabel: record.termLabel || "Term pending",
+    confidence,
+    approvalStatus,
+    publishable: approvalStatus === "approved",
+    approvalReason: blocked ? `Held for review: ${[...missing, expired ? "expired source" : "", fresh.tone === "stale" ? "stale source" : ""].filter(Boolean).join(", ")}` : approvalStatus === "approved" ? "Fresh complete static demo record" : "Below auto-approval threshold"
+  };
 }
 
 async function createRateEventFromForm() { if (authRequired && !currentUser) { setSupabaseStatus("Sign in before logging rate events", "error"); return; } const event = { id: `rate-${Date.now()}`, workspaceId: workspaceId(), lender: textValue("#rateEventLender"), source: document.querySelector("#rateEventSource")?.value || "Manual upload", effectiveDate: document.querySelector("#rateEventEffective")?.value || "", status: document.querySelector("#rateEventStatus")?.value || "Pending review", notes: textValue("#rateEventNotes"), createdAt: new Date().toISOString() }; rateEvents.unshift(event); saveRateEvents(); renderRateEvents(); rateIngestionForm.reset(); await upsertRateEvent(event); await logAuditEvent("rate_event_logged", `${event.lender}: ${event.status}`); }

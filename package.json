@@ -1,7 +1,8 @@
 {
   "type": "module",
   "scripts": {
-    "check": "node --check api/*.js"
+    "check": "node --check api/*.js lib/*.js scripts/*.js",
+    "verify:demo-ingestion": "node scripts/verify-demo-rate-ingestion.js"
   },
   "dependencies": {
     "exceljs": "^4.4.0"
