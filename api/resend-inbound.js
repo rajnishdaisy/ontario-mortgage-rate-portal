@@ -746,7 +746,7 @@ async function processStoredSourceDocument(row) {
     await patchRows('rate_source_documents', `id=eq.${encodeURIComponent(row.id)}`, { status: 'failed' });
     if (row.ingestion_event_id) {
       await patchRows('rate_ingestion_events', `id=eq.${encodeURIComponent(row.ingestion_event_id)}`, {
-        status: 'Failed',
+        status: 'Rejected',
         notes: `AI extraction failed: ${error.message}`
       });
     }
@@ -817,7 +817,7 @@ export async function ingestReceivedEmailEvent(event, options = {}) {
       lender: meta.from || 'Unknown lender email',
       source: 'Resend inbound email',
       effective_date: null,
-      status: 'Failed',
+      status: 'Rejected',
       notes: `Stored inbound metadata but could not fetch Resend email content: ${error.message}`
     }], 'return=minimal');
     await insertIgnoreRows('rate_source_documents', [{
@@ -1009,7 +1009,7 @@ export async function ingestReceivedEmailEvent(event, options = {}) {
     });
     await patchRows('rate_source_documents', `id=eq.${encodeURIComponent(sourceDocumentId)}`, { status: 'failed' });
     await patchRows('rate_ingestion_events', `id=eq.${encodeURIComponent(ingestionEventId)}`, {
-      status: 'Failed',
+      status: 'Rejected',
       notes: `AI extraction failed: ${error.message}`
     });
     throw error;
@@ -1028,6 +1028,53 @@ export default async function handler(req, res) {
       const listed = body.emailIds?.length
         ? body.emailIds.map((id) => ({ id, email_id: id }))
         : await listReceivedEmails(limit);
+      if (body.mode === 'inspect') {
+        const inspected = [];
+        for (const item of listed) {
+          const emailId = item.email_id || item.id;
+          if (!emailId) continue;
+          try {
+            const emailResponse = await resendApi(`/emails/receiving/${encodeURIComponent(emailId)}`);
+            const email = emailResponse?.data || emailResponse || {};
+            const meta = normalizeEmailFromWebhook({ type: 'email.received', created_at: item.created_at, data: { ...item, ...email, email_id: emailId } });
+            const attachmentsResponse = await resendApi(`/emails/receiving/${encodeURIComponent(emailId)}/attachments`);
+            const attachmentMetas = attachmentsResponse?.data || attachmentsResponse || meta.attachments || [];
+            const attachmentSummaries = [];
+            for (const attachmentMeta of attachmentMetas.slice(0, Number(body.maxAttachments || 3))) {
+              const filename = attachmentMeta.filename || `${attachmentMeta.id || 'attachment'}`;
+              const mime = attachmentMeta.content_type || 'application/octet-stream';
+              const downloadUrlValue = attachmentMeta.download_url || attachmentMeta.url;
+              let textPreview = '';
+              if (downloadUrlValue) {
+                try {
+                  const downloaded = await downloadUrl(downloadUrlValue);
+                  if (isSpreadsheetAttachment(filename, mime || downloaded.contentType)) {
+                    textPreview = (await spreadsheetToText(downloaded.buffer, filename)).slice(0, 12000);
+                  } else if ((mime || downloaded.contentType || '').startsWith('text/') || String(filename).toLowerCase().endsWith('.csv')) {
+                    textPreview = downloaded.buffer.toString('utf8').slice(0, 12000);
+                  }
+                } catch (error) {
+                  textPreview = `ATTACHMENT_PREVIEW_ERROR: ${error.message}`;
+                }
+              }
+              attachmentSummaries.push({ filename, content_type: mime, size: attachmentMeta.size || null, preview: textPreview });
+            }
+            inspected.push({
+              email_id: emailId,
+              created_at: meta.createdAt || email.created_at || item.created_at,
+              from: meta.from,
+              to: meta.to,
+              subject: meta.subject,
+              text: String(email.text || '').slice(0, 12000),
+              html_text: String(email.html || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').slice(0, 6000),
+              attachments: attachmentSummaries
+            });
+          } catch (error) {
+            inspected.push({ email_id: emailId, error: error.message });
+          }
+        }
+        return json(res, 200, { ok: true, checked: listed.length, inspected });
+      }
       const results = [];
       for (const item of listed) {
         const emailId = item.email_id || item.id;
