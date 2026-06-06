@@ -1,4 +1,5 @@
 .vercel
 .venv
+node_modules
 __pycache__
 data/nld-broker-kits/
