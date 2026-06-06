@@ -77,8 +77,10 @@ function verifyResendWebhook(rawBody, req) {
   const ageSeconds = Math.abs(Date.now() / 1000 - Number(timestamp));
   if (!Number.isFinite(ageSeconds) || ageSeconds > 300) return { ok: false, reason: 'stale timestamp' };
 
-  const secretBytes = secret.startsWith('whsec_')
-    ? Buffer.from(secret.slice('whsec_'.length), 'base64')
+  const secretPrefixes = ['whsec_', 'ewhsec_'];
+  const matchedPrefix = secretPrefixes.find((prefix) => secret.startsWith(prefix));
+  const secretBytes = matchedPrefix
+    ? Buffer.from(secret.slice(matchedPrefix.length), 'base64')
     : Buffer.from(secret, 'utf8');
   const signedPayload = `${id}.${timestamp}.${rawBody}`;
   const expected = crypto.createHmac('sha256', secretBytes).update(signedPayload).digest('base64');
