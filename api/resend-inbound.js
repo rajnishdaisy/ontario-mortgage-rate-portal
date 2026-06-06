@@ -272,6 +272,47 @@ async function downloadUrl(url) {
   };
 }
 
+function hasRateIntelligenceSignal(meta, email = {}, attachmentMetas = []) {
+  const haystack = [
+    meta.subject,
+    email.subject,
+    email.text,
+    String(email.html || '').replace(/<[^>]+>/g, ' '),
+    ...attachmentMetas.map((a) => a.filename || '')
+  ].join(' ').toLowerCase();
+
+  const positiveSignals = [
+    /\brate\s*(sheet|update|special|bulletin|change|drop|increase|decrease|card|desk)\b/,
+    /\bmortgage\s+rates?\b/,
+    /\binsured\b.*\binsurable\b.*\buninsured\b/,
+    /\b(variable|fixed)\b.*\b(rate|prime|discount)\b/,
+    /\bprime\s*(rate)?\b/,
+    /\brate\s*hold\b/,
+    /\bbps\b|\bbasis\s+points?\b/,
+    /\blender\s+(policy|update|bulletin|notice)\b/,
+    /\bbroker\s+(rate|bulletin|update|package)\b/,
+    /\b(product|pricing)\s+(sheet|update|notice)\b/,
+    /\b(mcap|first national|scotia|td|rbc|bmo|cibc|desjardins|cmls|radius|rfa|merix|haventree|equitable|home trust|strive|nesto)\b.*\b(rate|policy|broker|mortgage)\b/
+  ];
+  const negativeOnlySignals = [
+    /\bbank\s+statement\b/,
+    /\bcredit\s+report\b/,
+    /\bnotice\s+of\s+assessment\b/,
+    /\bpassport\b/,
+    /\bt4\b/,
+    /\baccepted\s+offer\b/,
+    /\bpayout\b/,
+    /\bloan\s+document\b/,
+    /\bdocuments?\b/,
+    /\bquote\b/,
+    /\binsurance\b/,
+    /\bbuilder'?s?\s+risk\b/
+  ];
+  if (positiveSignals.some((re) => re.test(haystack))) return true;
+  if (negativeOnlySignals.some((re) => re.test(haystack))) return false;
+  return false;
+}
+
 function normalizeEmailFromWebhook(event) {
   const data = event?.data || {};
   return {
@@ -896,6 +937,18 @@ export async function ingestReceivedEmailEvent(event, options = {}) {
     return { ok: true, ignored: true, reason: senderAllowed.reason, sender: senderAllowed.senderEmail, resendEmailId: meta.emailId, sourceDocumentId };
   }
 
+  if (!hasRateIntelligenceSignal(meta, email, attachmentMetas)) {
+    await patchRows('rate_source_documents', `id=eq.${encodeURIComponent(sourceDocumentId)}`, {
+      status: 'rejected',
+      metadata: { resend_email_id: meta.emailId, cc: meta.cc, bcc: meta.bcc, sender_allowed: true, skipped_reason: 'not_rate_intelligence' }
+    });
+    await patchRows('rate_ingestion_events', `id=eq.${encodeURIComponent(ingestionEventId)}`, {
+      status: 'Rejected',
+      notes: `Skipped non-rate-intelligence email: ${meta.subject || '(no subject)'}`
+    });
+    return { ok: true, ignored: true, reason: 'not_rate_intelligence', sender: senderAllowed.senderEmail, resendEmailId: meta.emailId, sourceDocumentId };
+  }
+
   const downloadedAttachments = [];
   const maxAttachments = Number(process.env.RATE_AI_MAX_ATTACHMENTS || 8);
   for (const attachmentMeta of attachmentMetas.slice(0, maxAttachments)) {
@@ -929,18 +982,6 @@ export async function ingestReceivedEmailEvent(event, options = {}) {
       metadata: { resend_email_id: meta.emailId, resend_attachment_id: attachmentMeta.id || null }
     }], 'return=minimal');
     downloadedAttachments.push({ ...attachmentMeta, filename, contentType: mime, buffer: downloaded.buffer });
-  }
-
-  if (!senderAllowed.allowed) {
-    await patchRows('rate_source_documents', `id=eq.${encodeURIComponent(sourceDocumentId)}`, {
-      status: 'rejected',
-      metadata: { resend_email_id: meta.emailId, cc: meta.cc, bcc: meta.bcc, sender_allowed: false, sender_email: senderAllowed.senderEmail, reason: senderAllowed.reason }
-    });
-    await patchRows('rate_ingestion_events', `id=eq.${encodeURIComponent(ingestionEventId)}`, {
-      status: 'Rejected',
-      notes: `Skipped AI analysis for unapproved sender ${senderAllowed.senderEmail || meta.from}. Add the sender to RATE_AI_ALLOWED_SENDERS or lender_email_sources to process future emails.`
-    });
-    return { ok: true, ignored: true, reason: senderAllowed.reason, sender: senderAllowed.senderEmail, resendEmailId: meta.emailId, sourceDocumentId };
   }
 
   if (process.env.RATE_AI_PROCESS_IMMEDIATELY !== 'true' && !options.processImmediately) {
