@@ -4375,6 +4375,8 @@ let authRequired = true;
 let hardenedSchemaReady = false;
 let rateEvents = loadRateEvents();
 let auditTrail = loadAuditTrail();
+let livePublishedRates = [];
+let liveRatesLoaded = false;
 
 const programColorMap = {
   "Alternative": "#7C3AED",
@@ -5526,6 +5528,94 @@ function saveLenders() {
   localStorage.setItem(storageKey, JSON.stringify(lenders));
 }
 
+function slugifyLenderName(value = "") {
+  return String(value)
+    .toLowerCase()
+    .replace(/&/g, " and ")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "") || "lender";
+}
+
+function displayDate(value) {
+  const parsed = Date.parse(value || "");
+  if (!Number.isFinite(parsed)) return value || "Source dated";
+  return new Intl.DateTimeFormat("en-CA", { month: "short", day: "numeric", year: "numeric" }).format(new Date(parsed));
+}
+
+function lowestNumber(...values) {
+  const numbers = values.map(Number).filter((value) => Number.isFinite(value) && value > 0);
+  return numbers.length ? Math.min(...numbers) : null;
+}
+
+function applyPublishedRatesToLenders(rows = []) {
+  const current = structuredClone(demoLenders);
+  const bySlug = new Map(current.map((lender) => [slugifyLenderName(lender.name), lender]));
+  rows.forEach((row) => {
+    const slug = slugifyLenderName(row.lender_name);
+    let lender = bySlug.get(slug);
+    if (!lender) {
+      lender = {
+        id: `live-${slug}`,
+        name: row.lender_name || "Published lender",
+        type: "monoline",
+        brandColor: "#087a8a",
+        brandAccent: "#035f6d",
+        website: "#",
+        portal: "AI-published lender email",
+        region: row.province || "Ontario",
+        bdm: "Confirm with lender desk",
+        email: "Use approved lender contact",
+        phone: "Confirm with lender desk",
+        rates: { insuredFixed: null, variable: null, conventional: null, alt: null },
+        updated: displayDate(row.effective_date || row.approved_at),
+        programs: [],
+        guidelines: ["AI-extracted from a lender email and published after trust checks.", "Confirm eligibility, rate holds, conditions, and lender approval before advising clients."],
+        policyNote: "Published from lender email intelligence."
+      };
+      bySlug.set(slug, lender);
+      current.push(lender);
+    }
+
+    const bestInsured = lowestNumber(row.insured_rate);
+    const bestConventional = lowestNumber(row.insurable_rate, row.uninsured_rate);
+    if (bestInsured !== null) lender.rates.insuredFixed = lowestNumber(lender.rates.insuredFixed, bestInsured);
+    if (bestConventional !== null) lender.rates.conventional = lowestNumber(lender.rates.conventional, bestConventional);
+    if (row.mortgage_type === "variable") lender.rates.variable = lowestNumber(lender.rates.variable, row.uninsured_rate, row.insurable_rate, row.insured_rate, row.lender_prime_rate);
+    lender.updated = displayDate(row.effective_date || row.approved_at || lender.updated);
+    lender.portal = row.source_label || lender.portal || "AI-published lender email";
+    lender.policyNote = `${row.product_name || row.term_label || "Published rate"} · ${row.source_label || "Lender email"} · confidence ${Math.round(Number(row.confidence || 0) * 100)}%. ${row.public_notes || "Subject to lender approval and eligibility."}`;
+    const program = row.purpose || (row.insured_rate ? "Insured purchase" : "Conventional purchase");
+    if (program && !lender.programs.includes(program)) lender.programs.unshift(program);
+    lender.liveRateSource = true;
+  });
+  return normalizeLenders(current);
+}
+
+async function loadPublishedRatesFromSupabase() {
+  if (!supabaseClient) return;
+  try {
+    const today = new Date().toISOString().slice(0, 10);
+    const { data, error } = await supabaseClient
+      .from("published_rates")
+      .select("lender_name,product_name,province,purpose,occupancy,mortgage_type,term_label,term_months,insured_rate,insurable_rate,uninsured_rate,variable_discount,lender_prime_rate,rate_hold_days,effective_date,expiry_date,source_label,freshness_status,confidence,public_notes,conditions,approved_at")
+      .eq("workspace_id", "omrp-default")
+      .eq("is_published", true)
+      .or(`expiry_date.is.null,expiry_date.gte.${today}`)
+      .order("effective_date", { ascending: false })
+      .limit(250);
+    if (error) throw error;
+    livePublishedRates = data || [];
+    liveRatesLoaded = true;
+    if (livePublishedRates.length) {
+      lenders = applyPublishedRatesToLenders(livePublishedRates);
+      saveLenders();
+      render();
+    }
+  } catch (error) {
+    console.warn("Published rates unavailable", error);
+  }
+}
+
 function rate(value) {
   if (typeof value === "number" && Number.isFinite(value)) return `${value.toFixed(2)}%`;
   if (typeof value === "string" && value.trim() && value !== "-") return value;
@@ -5850,6 +5940,7 @@ async function initSupabase() {
     currentUser = sessionData?.session?.user || null;
     supabaseClient.auth.onAuthStateChange((_event, session) => { currentUser = session?.user || null; setAuthUi(); loadProtectedWorkspace(); });
     supabaseReady = true;
+    await loadPublishedRatesFromSupabase();
     setAuthUi();
     await loadProtectedWorkspace();
   } catch (error) {
@@ -5888,6 +5979,7 @@ async function signOutAdvisor() { if (!supabaseClient) return; await supabaseCli
 function workspaceId() { return currentUser?.app_metadata?.workspace_id || currentUser?.user_metadata?.workspace_id || "omrp-default"; }
 function dealNumber(selector) { const value = Number(document.querySelector(selector)?.value || 0); return Number.isFinite(value) ? value : 0; }
 function textValue(selector) { return document.querySelector(selector)?.value?.trim() || ""; }
+function isProductionHost() { return !["localhost", "127.0.0.1", ""].includes(window.location.hostname); }
 
 function mapSupabaseDeal(row) {
   return { id: row.id, client: row.client_name, borrowerEmail: row.borrower_email || "", borrowerPhone: row.borrower_phone || "", purpose: row.purpose, province: row.province, closing: row.closing_date || "", propertyType: row.property_type || "Detached", value: Number(row.property_value || 0), mortgage: Number(row.mortgage_amount || 0), existingMortgage: Number(row.existing_mortgage_amount || 0), downPayment: row.down_payment_source || "Savings", credit: row.credit_band, income: row.income_type, annualIncome: Number(row.annual_income || 0), gds: row.gds == null ? "" : Number(row.gds), tds: row.tds == null ? "" : Number(row.tds), term: row.preferred_term, occupancy: row.occupancy, selectedLender: row.selected_lender || "", selectedRate: row.selected_rate == null ? "" : Number(row.selected_rate), notes: row.notes || "", status: row.status || "intake", createdAt: row.created_at, updatedAt: row.updated_at, ownerId: row.owner_id || "", workspaceId: row.workspace_id || workspaceId() };
@@ -5904,6 +5996,7 @@ async function upsertDealToSupabase(deal) {
 async function createDealFromForm() {
   const value = dealNumber("#dealValue"); const mortgage = dealNumber("#dealMortgage"); if (!value || !mortgage) return;
   if (authRequired && !currentUser) { setSupabaseStatus("Sign in before creating real deals", "error"); return; }
+  if (isProductionHost() && (!supabaseReady || !hardenedSchemaReady || !currentUser)) { setSupabaseStatus("Protected Supabase login required before entering borrower PII", "error"); return; }
   const deal = { id: `deal-${Date.now()}`, workspaceId: workspaceId(), ownerId: currentUser?.id || null, client: textValue("#dealClient") || "New scenario", borrowerEmail: textValue("#dealBorrowerEmail"), borrowerPhone: textValue("#dealBorrowerPhone"), purpose: document.querySelector("#dealPurpose").value, province: document.querySelector("#dealProvince").value, closing: document.querySelector("#dealClosing").value, propertyType: document.querySelector("#dealPropertyType").value, value, mortgage, existingMortgage: dealNumber("#dealExistingMortgage"), downPayment: document.querySelector("#dealDownPayment").value, credit: document.querySelector("#dealCredit").value, income: document.querySelector("#dealIncome").value, annualIncome: dealNumber("#dealAnnualIncome"), gds: textValue("#dealGds") ? dealNumber("#dealGds") : "", tds: textValue("#dealTds") ? dealNumber("#dealTds") : "", term: document.querySelector("#dealTerm").value, occupancy: document.querySelector("#dealOccupancy").value, selectedLender: textValue("#dealSelectedLender"), selectedRate: textValue("#dealSelectedRate") ? dealNumber("#dealSelectedRate") : "", notes: textValue("#dealNotes"), status: "intake", createdAt: new Date().toISOString() };
   dealPipeline.unshift(deal); saveDealPipeline(); renderDealPipeline(); await upsertDealToSupabase(deal); await logAuditEvent("deal_created", `Created ${deal.client}`, deal.id); dealIntakeForm.reset();
 }
@@ -6055,14 +6148,15 @@ function renderMetrics() {
   const bestFixed = findBestRate(lenders, "insuredFixed");
   const bestConventional = findBestRate(lenders, "conventional");
 
+  const liveRateCount = livePublishedRates.length;
   document.querySelector("#lenderCount").textContent = lenders.length;
   document.querySelector("#lowestFixed").textContent = fixedRates.length ? rate(Math.min(...fixedRates)) : "N/A";
   document.querySelector("#altRange").textContent = altRates.length ? `${rate(Math.min(...altRates))}–${rate(Math.max(...altRates))}` : "N/A";
   document.querySelector("#bdmCount").textContent = lenders.filter((item) => item.bdm).length;
   document.querySelector("#heroBestFixed").textContent = bestFixed ? rate(bestFixed.value) : "N/A";
-  document.querySelector("#heroBestLender").textContent = bestFixed ? `${bestFixed.lender.name} leads insured 5-year fixed` : "No fixed rate available";
+  document.querySelector("#heroBestLender").textContent = bestFixed ? `${bestFixed.lender.name} leads ${liveRateCount ? "published" : "demo"} insured 5-year fixed` : "No fixed rate available";
   document.querySelector("#heroConventional").textContent = bestConventional ? rate(bestConventional.value) : "N/A";
-  document.querySelector("#heroUpdated").textContent = bestFixed?.lender.updated || "Today";
+  document.querySelector("#heroUpdated").textContent = liveRateCount ? `${liveRateCount} AI-published rows` : (bestFixed?.lender.updated || "Demo data");
 }
 
 function renderRateIntelligence() {
@@ -6080,11 +6174,11 @@ function renderRateIntelligence() {
   const watchCount = freshness.filter((item) => item.tone !== "fresh").length;
   const confidence = Math.round((freshCount / Math.max(lenders.length, 1)) * 100);
   document.querySelector("#freshnessScore").textContent = `${confidence}%`;
-  document.querySelector("#freshnessHeadline").textContent = confidence >= 80 ? "Credible beta dataset" : confidence >= 55 ? "Usable, needs review" : "Needs source refresh";
-  document.querySelector("#freshnessCopy").textContent = `${freshCount} lenders are fresh or recently reviewed. ${watchCount} need a rate-sheet confirmation before agents rely on them.`;
-  document.querySelector("#freshRateCount").textContent = freshCount;
+  document.querySelector("#freshnessHeadline").textContent = livePublishedRates.length ? "Live published rate feed" : (confidence >= 80 ? "Credible beta dataset" : confidence >= 55 ? "Usable, needs review" : "Needs source refresh");
+  document.querySelector("#freshnessCopy").textContent = livePublishedRates.length ? `${livePublishedRates.length} approved AI-extracted lender rows are feeding the portal. Rates remain subject to lender approval, eligibility, and change without notice.` : `${freshCount} lenders are fresh or recently reviewed. ${watchCount} need a rate-sheet confirmation before agents rely on them.`;
+  document.querySelector("#freshRateCount").textContent = livePublishedRates.length || freshCount;
   document.querySelector("#watchRateCount").textContent = watchCount;
-  document.querySelector("#sourceCount").textContent = new Set(lenders.map(rateSourceLabel)).size;
+  document.querySelector("#sourceCount").textContent = livePublishedRates.length ? new Set(livePublishedRates.map((row) => row.source_label || row.lender_name)).size : new Set(lenders.map(rateSourceLabel)).size;
 
   grid.innerHTML = scored.slice(0, 6).map(({ lender, best }, index) => {
     const info = freshnessInfo(lender.updated);

@@ -12,8 +12,14 @@ function getHeader(req, name) {
 
 function isAuthorizedCron(req) {
   const cronSecret = process.env.CRON_SECRET;
-  if (!cronSecret) return true;
+  if (!cronSecret) return false;
   return getHeader(req, 'authorization') === `Bearer ${cronSecret}`;
+}
+
+function boundedLimit(value) {
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed)) return 10;
+  return Math.max(1, Math.min(25, Math.floor(parsed)));
 }
 
 export default async function handler(req, res) {
@@ -21,7 +27,7 @@ export default async function handler(req, res) {
   if (!isAuthorizedCron(req)) return json(res, 401, { error: 'Unauthorized cron request' });
 
   try {
-    const limit = Number(req.query?.limit || process.env.RATE_AI_CRON_BATCH_LIMIT || 10);
+    const limit = boundedLimit(req.query?.limit || process.env.RATE_AI_CRON_BATCH_LIMIT || 10);
     const result = await processQueuedRateEmails({ limit });
     return json(res, 200, { ok: true, ...result });
   } catch (error) {

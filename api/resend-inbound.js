@@ -29,6 +29,15 @@ function safeId(prefix, seed = '') {
   return `${prefix}_${digest}`;
 }
 
+function stableId(prefix, seed = '') {
+  const digest = crypto.createHash('sha256').update(String(seed || prefix)).digest('hex').slice(0, 24);
+  return `${prefix}_${digest}`;
+}
+
+function isProductionRuntime() {
+  return process.env.NODE_ENV === 'production' || Boolean(process.env.VERCEL_ENV);
+}
+
 function sha256Buffer(buffer) {
   return crypto.createHash('sha256').update(buffer).digest('hex');
 }
@@ -55,7 +64,10 @@ function timingSafeEqualText(a, b) {
 
 function verifyResendWebhook(rawBody, req) {
   const secret = process.env.RESEND_WEBHOOK_SECRET;
-  if (!secret) return { ok: true, skipped: true };
+  if (!secret) {
+    if (process.env.ALLOW_UNSIGNED_RESEND_WEBHOOKS === 'true' && !isProductionRuntime()) return { ok: true, skipped: true };
+    return { ok: false, reason: 'missing RESEND_WEBHOOK_SECRET' };
+  }
 
   const id = getHeader(req, 'svix-id');
   const timestamp = getHeader(req, 'svix-timestamp');
@@ -124,6 +136,17 @@ async function insertRows(table, rows, prefer = 'return=representation') {
     headers: {
       'Content-Type': 'application/json',
       Prefer: prefer
+    },
+    body: JSON.stringify(rows)
+  });
+}
+
+async function insertIgnoreRows(table, rows, prefer = 'return=representation', onConflict = 'id') {
+  return supabaseFetch(`/rest/v1/${table}?on_conflict=${encodeURIComponent(onConflict)}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Prefer: `resolution=ignore-duplicates,${prefer}`
     },
     body: JSON.stringify(rows)
   });
@@ -212,16 +235,35 @@ async function isAllowedSender(meta, workspaceId) {
   const senderEmail = parseEmailAddress(meta.from);
   if (!senderEmail) return { allowed: false, senderEmail, reason: 'missing_sender_email' };
   const envList = configuredAllowedSenders();
-  if (senderMatchesList(senderEmail, envList)) return { allowed: true, senderEmail, source: 'env' };
+  if (senderMatchesList(senderEmail, envList)) {
+    return {
+      allowed: true,
+      senderEmail,
+      source: 'env',
+      trustLevel: process.env.RATE_AI_ALLOWED_SENDERS_CAN_PUBLISH === 'true' ? 'trusted_publish' : 'trusted_extract'
+    };
+  }
   const trustedSource = await lookupTrustedSender(senderEmail, workspaceId);
-  if (trustedSource) return { allowed: true, senderEmail, source: 'database', trustedSource };
+  if (trustedSource) return { allowed: true, senderEmail, source: 'database', trustedSource, trustLevel: trustedSource.trust_level };
   return { allowed: false, senderEmail, reason: envList.length ? 'sender_not_in_allowlist' : 'allowlist_empty' };
 }
 
 async function downloadUrl(url) {
+  const parsed = new URL(url);
+  const allowedHosts = String(process.env.RATE_AI_ATTACHMENT_ALLOWED_HOSTS || 'resend.com,api.resend.com')
+    .split(',')
+    .map((host) => host.trim().toLowerCase())
+    .filter(Boolean);
+  if (allowedHosts.length && !allowedHosts.some((host) => parsed.hostname.toLowerCase() === host || parsed.hostname.toLowerCase().endsWith(`.${host}`))) {
+    throw new Error(`Attachment download host not allowed: ${parsed.hostname}`);
+  }
   const response = await fetch(url);
+  const contentLength = Number(response.headers.get('content-length') || 0);
+  const maxBytes = Number(process.env.RATE_AI_MAX_ATTACHMENT_BYTES || 12 * 1024 * 1024);
+  if (contentLength && contentLength > maxBytes) throw new Error(`Attachment too large: ${contentLength} bytes`);
   const arrayBuffer = await response.arrayBuffer();
   if (!response.ok) throw new Error(`Attachment download failed ${response.status}`);
+  if (arrayBuffer.byteLength > maxBytes) throw new Error(`Attachment too large: ${arrayBuffer.byteLength} bytes`);
   return {
     buffer: Buffer.from(arrayBuffer),
     contentType: response.headers.get('content-type') || 'application/octet-stream'
@@ -454,18 +496,33 @@ function averageConfidence(extraction) {
   return values.reduce((a, b) => a + b, 0) / values.length;
 }
 
-async function persistExtraction({ extraction, sourceDocumentId, extractionRunId, workspaceId }) {
+function realisticRateOrNull(value) {
+  if (value === null || value === undefined || value === '') return null;
+  const number = Number(value);
+  return Number.isFinite(number) && number >= 0.5 && number <= 25 ? Math.round(number * 1000) / 1000 : null;
+}
+
+function isExpiredDate(value) {
+  const date = validDateOrNull(value);
+  return Boolean(date && Date.parse(date) < Date.now() - 86400000);
+}
+
+function isPublishableProduct(product, extraction) {
+  const effectiveDate = validDateOrNull(product.effective_date) || validDateOrNull(extraction.effective_date);
+  const expiryDate = validDateOrNull(product.expiry_date) || validDateOrNull(extraction.expiry_date);
+  const hasRate = [product.insured_rate, product.insurable_rate, product.uninsured_rate, product.lender_prime_rate]
+    .some((rate) => realisticRateOrNull(rate) !== null) || Boolean(product.variable_discount);
+  return Boolean(effectiveDate && !isExpiredDate(expiryDate) && product.term_label && hasRate);
+}
+
+async function persistExtraction({ extraction, sourceDocumentId, extractionRunId, workspaceId, canAutoPublish = false }) {
   const lender = extraction.lender_name || 'Unknown lender';
   const products = Array.isArray(extraction.products) ? extraction.products : [];
   const policies = Array.isArray(extraction.policy_notes) ? extraction.policy_notes : [];
   const contacts = Array.isArray(extraction.contacts) ? extraction.contacts : [];
   const confidence = averageConfidence(extraction);
-  const hasPublishableProduct = products.some((p) => {
-    const effectiveDate = validDateOrNull(p.effective_date) || validDateOrNull(extraction.effective_date);
-    const hasRate = [p.insured_rate, p.insurable_rate, p.uninsured_rate, p.lender_prime_rate].some((rate) => typeof rate === 'number' && rate > 0) || Boolean(p.variable_discount);
-    return Boolean(lender && lender !== 'Unknown lender' && effectiveDate && p.term_label && hasRate);
-  });
-  const shouldPublish = Boolean(extraction.auto_publish_recommended) && confidence >= AUTO_PUBLISH_MIN_CONFIDENCE && hasPublishableProduct;
+  const hasPublishableProduct = products.some((p) => Boolean(lender && lender !== 'Unknown lender' && isPublishableProduct(p, extraction)));
+  const shouldPublish = Boolean(canAutoPublish && extraction.auto_publish_recommended) && confidence >= AUTO_PUBLISH_MIN_CONFIDENCE && hasPublishableProduct;
   const productStatus = shouldPublish ? 'published' : 'needs_review';
   const extractedRows = products.map((p, idx) => ({
     id: safeId('erp', `${sourceDocumentId}:${idx}`),
@@ -481,11 +538,11 @@ async function persistExtraction({ extraction, sourceDocumentId, extractionRunId
     term_label: p.term_label || null,
     term_months: p.term_months || null,
     amortization_years: p.amortization_years || null,
-    insured_rate: p.insured_rate ?? null,
-    insurable_rate: p.insurable_rate ?? null,
-    uninsured_rate: p.uninsured_rate ?? null,
+    insured_rate: realisticRateOrNull(p.insured_rate),
+    insurable_rate: realisticRateOrNull(p.insurable_rate),
+    uninsured_rate: realisticRateOrNull(p.uninsured_rate),
     variable_discount: p.variable_discount || null,
-    lender_prime_rate: p.lender_prime_rate ?? null,
+    lender_prime_rate: realisticRateOrNull(p.lender_prime_rate),
     rate_hold_days: p.rate_hold_days ?? null,
     effective_date: validDateOrNull(p.effective_date) || validDateOrNull(extraction.effective_date),
     expiry_date: validDateOrNull(p.expiry_date) || validDateOrNull(extraction.expiry_date),
@@ -502,7 +559,7 @@ async function persistExtraction({ extraction, sourceDocumentId, extractionRunId
 
   let publishedCount = 0;
   if (shouldPublish && insertedExtracted.length) {
-    const publishedRows = insertedExtracted.map((row) => ({
+    const publishedRows = insertedExtracted.filter((row) => isPublishableProduct(row, extraction)).map((row) => ({
       id: safeId('pub', row.id),
       workspace_id: workspaceId,
       extracted_rate_product_id: row.id,
@@ -651,7 +708,13 @@ async function processStoredSourceDocument(row) {
       artifact_path: artifactPath
     });
 
-    const publishResult = await persistExtraction({ extraction, sourceDocumentId: row.id, extractionRunId, workspaceId });
+    const publishResult = await persistExtraction({
+      extraction,
+      sourceDocumentId: row.id,
+      extractionRunId,
+      workspaceId,
+      canAutoPublish: senderAllowed.trustLevel === 'trusted_publish'
+    });
     await patchRows('rate_source_documents', `id=eq.${encodeURIComponent(row.id)}`, {
       lender_name: extraction.lender_name || null,
       status: publishResult.shouldPublish ? 'approved' : 'needs_review'
@@ -679,6 +742,12 @@ async function processStoredSourceDocument(row) {
       error_message: error.message
     });
     await patchRows('rate_source_documents', `id=eq.${encodeURIComponent(row.id)}`, { status: 'failed' });
+    if (row.ingestion_event_id) {
+      await patchRows('rate_ingestion_events', `id=eq.${encodeURIComponent(row.ingestion_event_id)}`, {
+        status: 'Failed',
+        notes: `AI extraction failed: ${error.message}`
+      });
+    }
     throw error;
   }
 }
@@ -730,8 +799,8 @@ export default async function handler(req, res) {
     const emailStoragePath = `${basePath}/email.json`;
     await uploadToBucket(RATE_EMAIL_BUCKET, emailStoragePath, emailJson, 'application/json');
 
-    const ingestionEventId = safeId('rie', meta.emailId);
-    await insertRows('rate_ingestion_events', [{
+    const ingestionEventId = stableId('rie', `${workspaceId}:${meta.emailId}`);
+    await insertIgnoreRows('rate_ingestion_events', [{
       id: ingestionEventId,
       workspace_id: workspaceId,
       lender: meta.from || 'Unknown lender email',
@@ -741,8 +810,8 @@ export default async function handler(req, res) {
       notes: `Inbound lender email: ${meta.subject || '(no subject)'}`
     }], 'return=minimal');
 
-    sourceDocumentId = safeId('rsd', meta.emailId);
-    await insertRows('rate_source_documents', [{
+    sourceDocumentId = stableId('rsd', `${workspaceId}:${meta.emailId}:email`);
+    await insertIgnoreRows('rate_source_documents', [{
       id: sourceDocumentId,
       workspace_id: workspaceId,
       ingestion_event_id: ingestionEventId,
@@ -765,7 +834,8 @@ export default async function handler(req, res) {
     }], 'return=minimal');
 
     const downloadedAttachments = [];
-    for (const attachmentMeta of attachmentMetas) {
+    const maxAttachments = Number(process.env.RATE_AI_MAX_ATTACHMENTS || 8);
+    for (const attachmentMeta of attachmentMetas.slice(0, maxAttachments)) {
       const downloadUrlValue = attachmentMeta.download_url || attachmentMeta.url;
       if (!downloadUrlValue) continue;
       const downloaded = await downloadUrl(downloadUrlValue);
@@ -773,8 +843,8 @@ export default async function handler(req, res) {
       const mime = attachmentMeta.content_type || downloaded.contentType;
       const attachmentPath = `${basePath}/attachments/${cleanPathPart(filename)}`;
       await uploadToBucket(ATTACHMENT_BUCKET, attachmentPath, downloaded.buffer, mime);
-      const attachmentDocId = safeId('rsdatt', `${meta.emailId}:${filename}`);
-      await insertRows('rate_source_documents', [{
+      const attachmentDocId = stableId('rsdatt', `${workspaceId}:${meta.emailId}:${attachmentMeta.id || filename}`);
+      await insertIgnoreRows('rate_source_documents', [{
         id: attachmentDocId,
         workspace_id: workspaceId,
         ingestion_event_id: ingestionEventId,
@@ -839,7 +909,13 @@ export default async function handler(req, res) {
       artifact_path: artifactPath
     });
 
-    const publishResult = await persistExtraction({ extraction, sourceDocumentId, extractionRunId, workspaceId });
+    const publishResult = await persistExtraction({
+      extraction,
+      sourceDocumentId,
+      extractionRunId,
+      workspaceId,
+      canAutoPublish: senderAllowed.trustLevel === 'trusted_publish'
+    });
     await patchRows('rate_source_documents', `id=eq.${encodeURIComponent(sourceDocumentId)}`, {
       lender_name: extraction.lender_name || null,
       status: publishResult.shouldPublish ? 'approved' : 'needs_review'
