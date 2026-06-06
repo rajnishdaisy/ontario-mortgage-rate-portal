@@ -206,7 +206,7 @@ function senderDomain(email) {
 }
 
 function configuredAllowedSenders() {
-  return String(process.env.RATE_AI_ALLOWED_SENDERS || '')
+  return String(`${process.env.RATE_AI_ALLOWED_SENDERS || ''},${process.env.RATE_AI_FORWARDER_ALLOWED_SENDERS || ''}`)
     .split(/[\r\n,;]+/)
     .map((item) => item.trim().toLowerCase())
     .filter(Boolean);
@@ -252,7 +252,7 @@ async function isAllowedSender(meta, workspaceId) {
 
 async function downloadUrl(url) {
   const parsed = new URL(url);
-  const allowedHosts = String(process.env.RATE_AI_ATTACHMENT_ALLOWED_HOSTS || 'resend.com,api.resend.com')
+  const allowedHosts = String(process.env.RATE_AI_ATTACHMENT_ALLOWED_HOSTS || 'resend.com,api.resend.com,cdn.resend.app')
     .split(',')
     .map((host) => host.trim().toLowerCase())
     .filter(Boolean);
@@ -883,6 +883,18 @@ export async function ingestReceivedEmailEvent(event, options = {}) {
     status: 'queued',
     metadata: { resend_email_id: meta.emailId, cc: meta.cc, bcc: meta.bcc, queued_by: options.queuedBy || 'resend-webhook' }
   }], 'return=minimal');
+
+  if (!senderAllowed.allowed) {
+    await patchRows('rate_source_documents', `id=eq.${encodeURIComponent(sourceDocumentId)}`, {
+      status: 'rejected',
+      metadata: { resend_email_id: meta.emailId, cc: meta.cc, bcc: meta.bcc, sender_allowed: false, sender_email: senderAllowed.senderEmail, reason: senderAllowed.reason }
+    });
+    await patchRows('rate_ingestion_events', `id=eq.${encodeURIComponent(ingestionEventId)}`, {
+      status: 'Rejected',
+      notes: `Skipped AI analysis for unapproved sender ${senderAllowed.senderEmail || meta.from}. Add the sender to RATE_AI_ALLOWED_SENDERS or lender_email_sources to process future emails.`
+    });
+    return { ok: true, ignored: true, reason: senderAllowed.reason, sender: senderAllowed.senderEmail, resendEmailId: meta.emailId, sourceDocumentId };
+  }
 
   const downloadedAttachments = [];
   const maxAttachments = Number(process.env.RATE_AI_MAX_ATTACHMENTS || 8);
