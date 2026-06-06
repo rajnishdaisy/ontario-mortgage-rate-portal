@@ -182,8 +182,7 @@ function senderDomain(email) {
 
 function configuredAllowedSenders() {
   return String(process.env.RATE_AI_ALLOWED_SENDERS || '')
-    .split(/[
-,;]/)
+    .split(/[\r\n,;]+/)
     .map((item) => item.trim().toLowerCase())
     .filter(Boolean);
 }
