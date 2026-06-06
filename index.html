@@ -4,6 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Agent Rate Desk Ontario</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;450;500;600;700;800;900&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet" />
     <style>
 :root {
   color-scheme: light;
@@ -3841,16 +3844,430 @@ body.dark {
 .pricing-price span {
   letter-spacing: 0;
 }
+
+/* 2026 ultra-minimal polish pass: faster, quieter, more executive */
+:root {
+  --bg: #f7f7f3;
+  --surface: #fffffc;
+  --surface-strong: #f1f1ec;
+  --surface-tint: #ebece4;
+  --text: #10120f;
+  --muted: #6f756d;
+  --line: #deded6;
+  --accent: #223f32;
+  --accent-strong: #12251d;
+  --accent-soft: #e7ece6;
+  --green: #245c43;
+  --amber: #9b6c31;
+  --red: #9a423a;
+  --nav: #10120f;
+  --radius: 10px;
+  --shadow: 0 1px 0 rgba(16,18,15,.05), 0 24px 70px rgba(16,18,15,.07);
+  --shadow-soft: 0 1px 0 rgba(16,18,15,.04), 0 12px 30px rgba(16,18,15,.045);
+}
+
+body,
+body.dark {
+  background:
+    linear-gradient(90deg, rgba(16,18,15,.032) 1px, transparent 1px) 0 0 / 72px 72px,
+    linear-gradient(180deg, #fbfbf7 0%, var(--bg) 440px, #f4f4ef 100%);
+  color: var(--text);
+  font-family: "Geist", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-feature-settings: "ss01" 1, "ss02" 1, "cv01" 1, "kern" 1;
+  letter-spacing: -0.011em;
+}
+
+body.dark {
+  --bg: #10120f;
+  --surface: #161914;
+  --surface-strong: #1d211b;
+  --surface-tint: #20261e;
+  --text: #f3f2ec;
+  --muted: #aaa99e;
+  --line: #2d3129;
+  --accent: #cdd8c8;
+  --accent-strong: #eef4ea;
+  --accent-soft: #263025;
+  background:
+    linear-gradient(90deg, rgba(255,255,255,.028) 1px, transparent 1px) 0 0 / 72px 72px,
+    linear-gradient(180deg, #11140f 0%, #0e110d 100%);
+}
+
+.app-shell {
+  grid-template-columns: 236px minmax(0, 1fr);
+}
+
+.sidebar {
+  padding: 22px 18px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  color: var(--text);
+  border-right: 1px solid var(--line);
+  backdrop-filter: blur(18px);
+}
+
+.brand-lockup { gap: 11px; }
+.brand-mark {
+  width: 34px;
+  border-radius: 9px;
+  background: var(--text);
+  color: var(--surface);
+  font-size: .72rem;
+  letter-spacing: -.06em;
+  box-shadow: none;
+}
+.brand-lockup h1 {
+  font-size: .98rem;
+  font-weight: 750;
+  letter-spacing: -.035em;
+}
+.eyebrow,
+.panel-label {
+  font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: .04em;
+  font-weight: 700;
+  font-size: .66rem;
+}
+.nav-list { gap: 2px; }
+.nav-list a {
+  min-height: 34px;
+  display: flex;
+  align-items: center;
+  border-radius: 8px;
+  padding: 0 10px;
+  font-size: .88rem;
+  font-weight: 560;
+  color: var(--muted);
+}
+.nav-list a.active,
+.nav-list a:hover {
+  background: var(--surface-strong);
+  border-color: transparent;
+  box-shadow: none;
+  color: var(--text);
+}
+.sidebar-panel {
+  border-radius: 12px;
+  padding: 13px;
+  background: var(--surface-strong);
+}
+.sidebar-panel strong { color: var(--text); }
+
+main {
+  max-width: 1180px;
+  padding: clamp(16px, 2.5vw, 32px);
+  gap: 12px;
+}
+
+.topbar,
+.product-direction-band,
+.band,
+.workspace,
+.metric-grid article,
+.product-direction-card,
+.market-position-card,
+.pricing-card,
+.best-rate-card,
+.preferred-lender-panel,
+.preferred-lender-card,
+.package-card,
+.capability-grid article,
+.lender-card,
+.detail-panel,
+.program-card,
+.insurer-card,
+.insurer-program-detail,
+.contact-table-wrap,
+.control-row,
+.rate-intel-card,
+.policy-answer-card,
+.data-moat-card,
+.deal-overview-card,
+.deal-lane-card,
+.rate-path-card,
+.auth-card,
+.deal-intake-card,
+.deal-card,
+.resource-stats article,
+.resource-sidebar,
+.resource-card,
+.resource-lender-group,
+.intelligence-command-card {
+  background: color-mix(in srgb, var(--surface) 96%, transparent) !important;
+  border: 1px solid var(--line) !important;
+  box-shadow: var(--shadow-soft) !important;
+}
+
+.topbar {
+  min-height: 520px;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  align-items: end;
+  border-radius: 22px;
+  padding: clamp(28px, 5.2vw, 72px);
+  overflow: hidden;
+  position: relative;
+}
+.topbar::before {
+  content: "";
+  display: block;
+  position: absolute;
+  inset: auto -120px -170px auto;
+  width: min(52vw, 580px);
+  aspect-ratio: 1;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 44% 40%, rgba(255,255,252,.92) 0 21%, transparent 22%),
+    conic-gradient(from 210deg, rgba(34,63,50,.16), rgba(155,108,49,.18), rgba(34,63,50,.08), rgba(34,63,50,.16));
+  opacity: .9;
+  filter: blur(.2px);
+  pointer-events: none;
+}
+.topbar > div:first-child,
+.hero-insight,
+.topbar-actions { position: relative; z-index: 1; }
+.topbar h2,
+.section-heading h3,
+.product-direction-card h3,
+.market-position-card h3,
+.intelligence-hero h3,
+.compliance h3,
+.workspace-header h3 {
+  font-family: "Geist", ui-sans-serif, system-ui, sans-serif;
+  font-weight: 760;
+  letter-spacing: -.075em;
+  text-wrap: balance;
+}
+.topbar h2 {
+  max-width: 760px;
+  font-size: clamp(3.4rem, 7.4vw, 7.35rem);
+  line-height: .86;
+}
+.topbar-copy {
+  max-width: 570px;
+  color: var(--muted);
+  font-size: clamp(1.02rem, 1.4vw, 1.22rem);
+  line-height: 1.48;
+  letter-spacing: -.018em;
+}
+.status-row { margin-bottom: 16px; }
+.live-pill,
+.desk-badges span,
+.hero-proof-strip span,
+.badge {
+  min-height: 27px;
+  border-radius: 999px;
+  padding: 0 10px;
+  background: var(--surface-strong) !important;
+  border-color: var(--line) !important;
+  color: var(--muted) !important;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: .67rem;
+  font-weight: 700;
+  letter-spacing: .015em;
+}
+.topbar-actions {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  flex-direction: row;
+  align-items: center;
+}
+.primary-button,
+.secondary-button,
+.icon-button,
+.segmented-control button,
+.download-button {
+  border-radius: 999px;
+  box-shadow: none !important;
+  font-size: .88rem;
+  font-weight: 680;
+  text-decoration: none;
+  transition: transform 150ms ease, background 150ms ease, border-color 150ms ease;
+}
+.primary-button {
+  background: var(--text);
+  border-color: var(--text);
+  color: var(--surface);
+}
+.secondary-button,
+.icon-button {
+  background: var(--surface);
+  border-color: var(--line);
+  color: var(--text);
+}
+.primary-button:hover,
+.secondary-button:hover,
+.icon-button:hover,
+.download-button:hover {
+  transform: translateY(-1px);
+}
+.hero-insight {
+  align-self: end;
+  max-width: 300px;
+  border-radius: 18px;
+  padding: 18px;
+  backdrop-filter: blur(16px);
+}
+.hero-insight > strong {
+  color: var(--text);
+  font-size: 3.4rem;
+  font-weight: 780;
+}
+.hero-insight dl div,
+.agent-use-card,
+.product-position-list div,
+.best-rate-cell,
+.rate-pill,
+.intelligence-micro-grid span,
+.resource-summary button {
+  background: var(--surface-strong) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 12px;
+}
+
+.product-direction-band {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, .62fr);
+  gap: 12px;
+}
+.product-direction-card,
+.market-position-card,
+.pricing-card,
+.band,
+.workspace { border-radius: 18px; }
+.section-heading h3,
+.product-direction-card h3,
+.market-position-card h3,
+.intelligence-hero h3,
+.compliance h3,
+.workspace-header h3 {
+  font-size: clamp(1.85rem, 3vw, 3.55rem);
+  line-height: .94;
+}
+.section-copy,
+.product-direction-card p,
+.market-position-card p,
+.contact-line,
+.program-card p,
+.compliance p,
+.policy-list {
+  color: var(--muted);
+}
+.metric-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.metric-grid article { min-height: 96px; border-radius: 16px; }
+.metric-grid small,
+.best-rate-card small,
+.intelligence-micro-grid small,
+.resource-stats span {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  color: var(--muted);
+}
+.metric-grid strong,
+.pricing-price,
+.best-rate-cell strong,
+.rate-pill strong {
+  font-family: "Geist", ui-sans-serif, system-ui, sans-serif;
+  font-weight: 780;
+  letter-spacing: -.065em;
+}
+.pricing-grid { gap: 12px; }
+.pricing-card { padding: 22px; }
+.pricing-card.featured {
+  background: var(--text) !important;
+  color: var(--surface) !important;
+  border-color: var(--text) !important;
+}
+.pricing-card.featured .pricing-price { color: var(--surface); }
+.pricing-card.featured .eyebrow,
+.pricing-card.featured small,
+.pricing-card.featured li,
+.pricing-card.featured .pricing-price span { color: color-mix(in srgb, var(--surface) 72%, transparent); }
+
+input,
+select,
+textarea,
+.search-box input,
+.resource-toolbar input,
+.resource-toolbar select {
+  background: var(--surface) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 10px !important;
+  color: var(--text);
+  min-height: 42px;
+}
+th, td { border-color: var(--line); }
+
+@media (max-width: 1080px) {
+  .app-shell { grid-template-columns: 1fr; }
+  .sidebar { position: static; height: auto; }
+  .nav-list { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .topbar { grid-template-columns: 1fr; min-height: auto; }
+  .hero-insight { max-width: none; margin-top: 26px; }
+}
+@media (max-width: 720px) {
+  main { padding: 10px; }
+  .sidebar { padding: 16px; }
+  .nav-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .topbar { padding: 74px 24px 26px !important; border-radius: 18px; }
+  .topbar h2 { font-size: clamp(3.1rem, 17vw, 4.9rem); }
+  .topbar-copy { max-width: none; }
+  .product-direction-band,
+  .pricing-grid,
+  .metric-grid { grid-template-columns: 1fr; }
+}
+
+/* final visual QA tightening */
+.topbar {
+  min-height: 470px;
+}
+.topbar h2 {
+  max-width: 680px;
+  font-size: clamp(3.1rem, 6.6vw, 6.35rem);
+  line-height: .89;
+}
+.topbar-copy {
+  max-width: 520px;
+}
+.icon-button {
+  width: 46px;
+  height: 46px;
+  min-height: 46px;
+  border-radius: 999px;
+  color: var(--text);
+  font-size: 0;
+}
+.icon-button span {
+  width: 9px;
+  height: 9px;
+  display: block;
+  border-radius: 999px;
+  background: currentColor;
+}
+.product-direction-card,
+.market-position-card {
+  min-height: 0;
+}
+.agent-use-grid {
+  align-items: stretch;
+}
+.agent-use-card {
+  min-height: 126px;
+}
+@media (max-width: 1080px) {
+  .topbar { min-height: auto; }
+  .topbar-actions { position: static; margin-top: 22px; }
+}
 </style>
   </head>
   <body>
     <div class="app-shell">
       <aside class="sidebar" aria-label="Portal navigation">
         <div class="brand-lockup">
-          <div class="brand-mark">OR</div>
+          <div class="brand-mark">RD</div>
           <div>
             <p class="eyebrow">Ontario</p>
-            <h1>Broker Rate Desk</h1>
+            <h1>Rate Desk</h1>
           </div>
         </div>
 
@@ -3873,7 +4290,7 @@ body.dark {
         <section class="sidebar-panel">
           <p class="panel-label">Today</p>
           <strong id="todayLabel"></strong>
-          <span>Free beta for Ontario agents. Pro workspace target: $9/mo.</span>
+          <span>Fast reference for Ontario agents. Pro workspace target: $9/mo.</span>
         </section>
       </aside>
 
@@ -3881,24 +4298,24 @@ body.dark {
         <header class="topbar" id="dashboard">
           <div>
             <div class="status-row">
-                <p class="eyebrow">Ontario agent intelligence</p>
-              <span class="live-pill">Minimal rate desk</span>
+                <p class="eyebrow">Ontario mortgage intelligence</p>
+              <span class="live-pill">Live desk</span>
             </div>
-            <h2><span>One quiet desk for rates, policy, and lender fit.</span></h2>
+            <h2><span>Rates, policy, fit. One clean desk.</span></h2>
             <p class="topbar-copy">
-              A clean SaaS workspace for Ontario mortgage agents: current rates, source-backed policy notes, broker kits, and BDM context — without enterprise clutter.
+              A minimal workspace for Ontario mortgage agents to check current rates, source-backed policy, broker kits, and lender context before a file goes anywhere.
             </p>
             <div class="hero-proof-strip" aria-label="Desk highlights">
-              <span>Rates with sources</span>
-              <span>Policy beside the number</span>
-              <span>Agent Pro: $9/mo</span>
+              <span>Source-backed</span>
+              <span>Policy beside rate</span>
+              <span>Agent Pro $9/mo</span>
             </div>
           </div>
           <div class="topbar-actions">
             <button class="icon-button" id="themeToggle" type="button" title="Toggle theme" aria-label="Toggle theme">
               <span>◐</span>
             </button>
-            <a class="primary-button" href="#pricing">Start clean</a>
+            <a class="primary-button" href="#pricing">View plans</a>
           </div>
           <aside class="hero-insight" aria-label="Current rate snapshot">
             <p class="panel-label">Live abstract</p>
@@ -3920,8 +4337,8 @@ body.dark {
         <section class="product-direction-band" id="product-direction" aria-label="Product direction">
           <article class="product-direction-card">
             <p class="eyebrow">Product thesis</p>
-            <h3>Not another LOS. The pre-submission intelligence layer.</h3>
-            <p>Agents need a fast place to check the number, the policy, the source, and the next move. Keep the interface calm. Put trust beside every rate. Let workflow become the paid layer.</p>
+            <h3>The pre-submission layer for lender decisions.</h3>
+            <p>Agents need the number, source, policy catch, and next move in seconds. The desk stays calm, fast, and verifiable.</p>
             <div class="agent-use-grid">
               <article class="agent-use-card"><strong>Check</strong><small>See current insured and conventional options with source, date, and freshness.</small></article>
               <article class="agent-use-card"><strong>Match</strong><small>Turn LTV, credit, income, and property notes into likely lender paths.</small></article>
@@ -3930,8 +4347,8 @@ body.dark {
           </article>
           <aside class="market-position-card">
             <p class="eyebrow">Positioning</p>
-            <h3>Open it before you submit anywhere.</h3>
-            <p>A lightweight front door for placement decisions. Origination platforms can stay complex; this desk should feel instant.</p>
+            <h3>Open before submission.</h3>
+            <p>A lightweight front door for placement decisions. Keep origination systems complex; keep rate decisions instant.</p>
             <div class="product-position-list">
               <div><span>1</span><small><strong>Free reference</strong><br />Rates, policy notes, kits, lender directory.</small></div>
               <div><span>2</span><small><strong>Agent Pro</strong><br />Saved scenarios, alerts, notes, comparisons.</small></div>
