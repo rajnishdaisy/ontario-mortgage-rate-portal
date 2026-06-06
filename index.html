@@ -3355,6 +3355,492 @@ body.dark .data-moat-card {
   }
 }
 
+
+/* 2026 SaaS landing refresh: minimal, abstract, copy-led */
+:root {
+  --bg: #f7f8f4;
+  --surface: #ffffff;
+  --surface-strong: #f1f3ee;
+  --surface-tint: #eef5f1;
+  --text: #111612;
+  --muted: #66706a;
+  --line: #dde3dc;
+  --accent: #1d6f5b;
+  --accent-strong: #0f4c3e;
+  --accent-soft: #e5f1ec;
+  --ink-soft: rgba(17, 22, 18, 0.08);
+  --radius: 28px;
+  --shadow: 0 24px 70px rgba(29, 45, 34, 0.08);
+  --shadow-soft: 0 12px 34px rgba(29, 45, 34, 0.06);
+}
+
+body,
+body.dark {
+  background:
+    radial-gradient(circle at 8% 4%, rgba(29, 111, 91, 0.09), transparent 28rem),
+    radial-gradient(circle at 88% 16%, rgba(191, 171, 126, 0.16), transparent 22rem),
+    linear-gradient(180deg, #fbfcf8 0%, var(--bg) 46rem);
+  color: var(--text);
+  font-family: ui-serif, Georgia, Cambria, "Times New Roman", serif;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  display: block;
+  pointer-events: none;
+  opacity: 0.32;
+  background-image: radial-gradient(rgba(17,22,18,.16) 0.65px, transparent 0.65px);
+  background-size: 18px 18px;
+  mask-image: linear-gradient(to bottom, #000 0%, transparent 70%);
+  z-index: -1;
+}
+
+button,
+input,
+select,
+textarea,
+.nav-list,
+.eyebrow,
+.panel-label,
+.primary-button,
+.secondary-button,
+.live-pill,
+.badge,
+.desk-badges,
+.hero-proof-strip,
+.pricing-card small,
+.section-copy,
+.contact-line,
+small {
+  font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.app-shell {
+  grid-template-columns: 248px minmax(0, 1fr);
+}
+
+.sidebar {
+  padding: 22px 18px;
+  background: rgba(255,255,255,.72);
+  backdrop-filter: blur(18px);
+  border-right: 1px solid rgba(221,227,220,.82);
+}
+
+.brand-mark {
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 30% 25%, #f0d38d, transparent 34%),
+    linear-gradient(135deg, #0e382f, #236f5c);
+  color: #fff;
+}
+
+.brand-lockup h1 {
+  font-size: 1.05rem;
+  letter-spacing: -0.035em;
+}
+
+.nav-list {
+  gap: 4px;
+}
+
+.nav-list a {
+  border-radius: 999px;
+  padding: 10px 12px;
+  font-size: .84rem;
+}
+
+.nav-list a.active,
+.nav-list a:hover {
+  box-shadow: none;
+  background: #111612;
+  border-color: #111612;
+  color: #fff;
+}
+
+.sidebar-panel {
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 85% 16%, rgba(29,111,91,.22), transparent 36%),
+    #f6f7f2;
+  padding: 18px;
+}
+
+main {
+  max-width: 1360px;
+  gap: 18px;
+  padding: clamp(18px, 2.8vw, 34px);
+}
+
+.topbar,
+.product-direction-band,
+.band,
+.metric-grid article,
+.pricing-card,
+.product-direction-card,
+.market-position-card,
+.agent-use-card,
+.data-moat-card,
+.deal-overview-card,
+.deal-lane-card,
+.best-rate-card,
+.preferred-lender-panel,
+.package-card,
+.capability-grid article,
+.lender-card,
+.detail-panel,
+.program-card,
+.insurer-card,
+.contact-table-wrap,
+.resource-sidebar,
+.resource-card,
+.compliance {
+  border-radius: var(--radius) !important;
+  border: 1px solid rgba(221, 227, 220, 0.92) !important;
+  background: rgba(255,255,255,.78) !important;
+  box-shadow: var(--shadow-soft) !important;
+}
+
+.topbar {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) 176px minmax(280px, .62fr);
+  align-items: stretch;
+  gap: clamp(18px, 3vw, 34px);
+  padding: clamp(30px, 5vw, 68px);
+  overflow: hidden;
+  min-height: 620px;
+  background:
+    linear-gradient(115deg, rgba(255,255,255,.94), rgba(248,249,243,.78)),
+    radial-gradient(circle at 79% 20%, rgba(29,111,91,.18), transparent 30rem) !important;
+}
+
+.topbar::before,
+.abstract-orb,
+.product-direction-band::before,
+.band::before,
+.pricing-card::before,
+.metric-grid article::before {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+}
+
+.topbar::before {
+  width: min(43vw, 540px);
+  aspect-ratio: 1;
+  right: clamp(20px, 8vw, 112px);
+  top: 40px;
+  border-radius: 42% 58% 48% 52%;
+  background:
+    radial-gradient(circle at 35% 28%, rgba(245,222,170,.88), transparent 0 20%, transparent 38%),
+    conic-gradient(from 160deg, rgba(29,111,91,.12), rgba(29,111,91,.42), rgba(191,171,126,.3), rgba(17,22,18,.09), rgba(29,111,91,.12));
+  filter: saturate(.95);
+  opacity: .82;
+}
+
+.topbar > div:first-child,
+.topbar-actions,
+.hero-insight {
+  position: relative;
+  z-index: 1;
+}
+
+.status-row {
+  margin-bottom: 20px;
+}
+
+.eyebrow,
+.panel-label {
+  letter-spacing: .12em;
+  font-size: .68rem;
+  font-weight: 800;
+}
+
+.topbar h2 {
+  max-width: 840px;
+  margin: 0;
+  font-size: clamp(3.4rem, 7.8vw, 7.8rem);
+  line-height: .88;
+  letter-spacing: -.085em;
+  text-wrap: balance;
+}
+
+.topbar h2 span {
+  display: inline;
+}
+
+.topbar-copy {
+  max-width: 650px;
+  margin-top: 26px;
+  font-size: clamp(1.05rem, 1.8vw, 1.32rem);
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+.live-pill,
+.hero-proof-strip span,
+.desk-badges span,
+.badge {
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.72);
+}
+
+.primary-button,
+.secondary-button,
+.icon-button {
+  border-radius: 999px;
+  min-height: 46px;
+}
+
+.primary-button {
+  background: #111612;
+  color: #fff;
+  border-color: #111612;
+}
+
+.secondary-button {
+  background: rgba(255,255,255,.78);
+  color: var(--text);
+}
+
+.topbar-actions {
+  align-self: start;
+  justify-content: end;
+}
+
+.hero-insight {
+  align-self: end;
+  border-radius: 30px;
+  border: 1px solid rgba(255,255,255,.78);
+  padding: 24px;
+  background: rgba(255,255,255,.62);
+  backdrop-filter: blur(18px);
+  box-shadow: var(--shadow);
+}
+
+.hero-insight strong {
+  font-size: clamp(2.8rem, 5vw, 5rem);
+  letter-spacing: -.08em;
+}
+
+.product-direction-band,
+.band {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(28px, 4vw, 54px) !important;
+}
+
+.product-direction-band::before,
+.band::before {
+  width: 240px;
+  height: 240px;
+  right: -86px;
+  top: -96px;
+  border-radius: 46% 54% 64% 36%;
+  background: radial-gradient(circle at 35% 32%, rgba(240,211,141,.52), transparent 24%), linear-gradient(135deg, rgba(29,111,91,.13), rgba(17,22,18,.04));
+}
+
+.section-heading h3,
+.product-direction-card h3,
+.market-position-card h3,
+.intelligence-hero h3,
+.compliance h3 {
+  font-size: clamp(2rem, 4vw, 4.8rem);
+  line-height: .95;
+  letter-spacing: -.07em;
+  text-wrap: balance;
+}
+
+.section-copy,
+.intelligence-hero-copy,
+.product-direction-card p,
+.market-position-card p,
+.contact-line {
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
+.agent-use-grid,
+.data-moat-grid,
+.deal-overview-grid,
+.deal-lane-grid,
+.pricing-grid,
+.metric-grid {
+  gap: 14px;
+}
+
+.agent-use-card,
+.data-moat-card,
+.deal-overview-card,
+.deal-lane-card,
+.pricing-card,
+.metric-grid article {
+  position: relative;
+  overflow: hidden;
+}
+
+.agent-use-card::after,
+.data-moat-card::after,
+.deal-overview-card::after,
+.deal-lane-card::after,
+.pricing-card::after,
+.metric-grid article::after,
+.best-rate-card::after,
+.package-card::after {
+  content: "";
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  width: 56px;
+  height: 56px;
+  border-radius: 40% 60% 58% 42%;
+  background: linear-gradient(135deg, rgba(29,111,91,.16), rgba(240,211,141,.34));
+}
+
+.pricing-card.featured {
+  background: #111612 !important;
+  color: #fff;
+  border-color: #111612 !important;
+}
+
+.pricing-card.featured .eyebrow,
+.pricing-card.featured small,
+.pricing-card.featured li {
+  color: rgba(255,255,255,.72);
+}
+
+.pricing-price {
+  letter-spacing: -.08em;
+}
+
+.metric-grid article strong {
+  letter-spacing: -.07em;
+}
+
+@media (max-width: 1080px) {
+  .app-shell { grid-template-columns: 1fr; }
+  .sidebar { position: static; height: auto; }
+  .nav-list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .topbar { grid-template-columns: 1fr; min-height: auto; }
+  .topbar-actions { justify-content: start; }
+}
+
+@media (max-width: 720px) {
+  main { padding: 12px; }
+  .nav-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .topbar,
+  .product-direction-band,
+  .band { padding: 24px !important; }
+  .topbar h2 { font-size: clamp(3rem, 18vw, 4.4rem); }
+  .section-heading { align-items: flex-start; flex-direction: column; }
+}
+
+/* landing QA refinements: keep SaaS hero readable */
+body,
+body.dark {
+  font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.topbar {
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 330px);
+  min-height: 560px;
+}
+
+.topbar-actions {
+  position: absolute;
+  top: clamp(26px, 4vw, 46px);
+  right: clamp(26px, 4vw, 46px);
+  display: flex;
+  z-index: 3;
+}
+
+.topbar::before {
+  width: min(38vw, 470px);
+  right: clamp(34px, 10vw, 150px);
+  top: 76px;
+  opacity: .72;
+}
+
+.topbar h2,
+.section-heading h3,
+.product-direction-card h3,
+.market-position-card h3,
+.intelligence-hero h3,
+.compliance h3,
+.workspace-header h3,
+.pricing-price,
+.hero-insight strong {
+  font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.topbar h2 {
+  max-width: 720px;
+  font-size: clamp(3.1rem, 6vw, 6.25rem);
+  line-height: .94;
+  letter-spacing: -.075em;
+}
+
+.topbar-copy {
+  max-width: 590px;
+  font-size: clamp(1rem, 1.35vw, 1.18rem);
+}
+
+.hero-insight {
+  grid-column: 2;
+  justify-self: stretch;
+  max-width: 330px;
+}
+
+.product-direction-band {
+  grid-template-columns: minmax(0, 1fr) minmax(280px, .72fr);
+}
+
+.section-heading h3,
+.product-direction-card h3,
+.market-position-card h3,
+.intelligence-hero h3,
+.compliance h3,
+.workspace-header h3 {
+  font-size: clamp(1.9rem, 3.4vw, 4rem);
+  line-height: 1;
+}
+
+@media (max-width: 1080px) {
+  .topbar { grid-template-columns: 1fr; min-height: auto; }
+  .topbar-actions { position: static; justify-content: flex-start; }
+  .hero-insight { grid-column: auto; max-width: none; }
+  .topbar::before { width: 70vw; right: -18vw; top: 72px; }
+  .product-direction-band { grid-template-columns: 1fr; }
+}
+
+.primary-button,
+.secondary-button,
+.nav-list a {
+  text-decoration: none;
+}
+
+.pricing-card.featured .pricing-price {
+  color: #fff;
+}
+
+.pricing-card.featured .pricing-price span {
+  color: rgba(255,255,255,.64);
+}
+
+.pricing-price {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  letter-spacing: -0.04em;
+}
+
+.pricing-price span {
+  letter-spacing: 0;
+}
 </style>
   </head>
   <body>
@@ -3395,27 +3881,27 @@ body.dark .data-moat-card {
         <header class="topbar" id="dashboard">
           <div>
             <div class="status-row">
-              <p class="eyebrow">Agent rate + policy intelligence</p>
-              <span class="live-pill">Free beta live</span>
+                <p class="eyebrow">Ontario agent intelligence</p>
+              <span class="live-pill">Minimal rate desk</span>
             </div>
-            <h2><span>Rate + policy desk</span><span>for mortgage agents.</span></h2>
+            <h2><span>One quiet desk for rates, policy, and lender fit.</span></h2>
             <p class="topbar-copy">
-              A lightweight Lendesk-style public desk where agents can quickly check rates, lender policy notes, broker kits, BDM contacts, and scenario fit without paying enterprise software prices.
+              A clean SaaS workspace for Ontario mortgage agents: current rates, source-backed policy notes, broker kits, and BDM context — without enterprise clutter.
             </p>
             <div class="hero-proof-strip" aria-label="Desk highlights">
-              <span>Free rate lookup</span>
-              <span>$9/mo Pro workspace</span>
-              <span>Policies beside rates</span>
+              <span>Rates with sources</span>
+              <span>Policy beside the number</span>
+              <span>Agent Pro: $9/mo</span>
             </div>
           </div>
           <div class="topbar-actions">
             <button class="icon-button" id="themeToggle" type="button" title="Toggle theme" aria-label="Toggle theme">
               <span>◐</span>
             </button>
-            <a class="primary-button" href="#pricing">See pricing</a>
+            <a class="primary-button" href="#pricing">Start clean</a>
           </div>
           <aside class="hero-insight" aria-label="Current rate snapshot">
-            <p class="panel-label">Best live snapshot</p>
+            <p class="panel-label">Live abstract</p>
             <strong id="heroBestFixed">0.00%</strong>
             <span id="heroBestLender">Calculating lender leader</span>
             <dl>
@@ -3433,23 +3919,23 @@ body.dark .data-moat-card {
 
         <section class="product-direction-band" id="product-direction" aria-label="Product direction">
           <article class="product-direction-card">
-            <p class="eyebrow">What this should become</p>
-            <h3>The $9/month rate-and-policy desk for Canadian mortgage agents.</h3>
-            <p>Do not try to clone full enterprise origination software on day one. Win the wedge Lendesk/Finmo does not serve publicly: fast, searchable, affordable agent intelligence — rates, policies, lender fit, documents, BDMs, and broker-kit evidence in one clean web app.</p>
+            <p class="eyebrow">Product thesis</p>
+            <h3>Not another LOS. The pre-submission intelligence layer.</h3>
+            <p>Agents need a fast place to check the number, the policy, the source, and the next move. Keep the interface calm. Put trust beside every rate. Let workflow become the paid layer.</p>
             <div class="agent-use-grid">
-              <article class="agent-use-card"><strong>Check a rate</strong><small>Best insured/conventional rates by lender type with source, effective date, and stale warning.</small></article>
-              <article class="agent-use-card"><strong>Screen a scenario</strong><small>Enter LTV, credit, income, occupancy, province, and see likely lender paths + exceptions.</small></article>
-              <article class="agent-use-card"><strong>Find the policy</strong><small>Search broker kits, policy notes, BDM contacts, forms, and lender checklists fast.</small></article>
+              <article class="agent-use-card"><strong>Check</strong><small>See current insured and conventional options with source, date, and freshness.</small></article>
+              <article class="agent-use-card"><strong>Match</strong><small>Turn LTV, credit, income, and property notes into likely lender paths.</small></article>
+              <article class="agent-use-card"><strong>Package</strong><small>Open policies, kits, contacts, forms, and conditions from the same screen.</small></article>
             </div>
           </article>
           <aside class="market-position-card">
             <p class="eyebrow">Positioning</p>
-            <h3>Not LOS first. Intelligence first.</h3>
-            <p>Lendesk-style platforms power origination and lender connectivity. This product should start as the simpler front door agents open before they submit anywhere.</p>
+            <h3>Open it before you submit anywhere.</h3>
+            <p>A lightweight front door for placement decisions. Origination platforms can stay complex; this desk should feel instant.</p>
             <div class="product-position-list">
-              <div><span>1</span><small><strong>Free public layer</strong><br />Rates, lender directory, common policies, and broker kit search.</small></div>
-              <div><span>2</span><small><strong>Pro agent layer</strong><br />Saved scenarios, alerts, private notes, comparisons, and submission checklists.</small></div>
-              <div><span>3</span><small><strong>Brokerage layer</strong><br />Team rate approvals, internal policies, audit, permissions, and agent training.</small></div>
+              <div><span>1</span><small><strong>Free reference</strong><br />Rates, policy notes, kits, lender directory.</small></div>
+              <div><span>2</span><small><strong>Agent Pro</strong><br />Saved scenarios, alerts, notes, comparisons.</small></div>
+              <div><span>3</span><small><strong>Brokerage OS</strong><br />Approvals, internal overlays, audit, permissions.</small></div>
             </div>
           </aside>
         </section>
@@ -3457,9 +3943,9 @@ body.dark .data-moat-card {
         <section class="band rate-intelligence-studio" id="intelligence">
           <div class="intelligence-hero">
             <div>
-              <p class="eyebrow">Rate Intelligence Studio</p>
-              <h3>Better than a rate sheet: source, freshness, policy, and fit in one view.</h3>
-              <p class="intelligence-hero-copy">Agents do not just need the lowest number. They need to know whether that number is fresh, who supplied it, what policy catches apply, which borrower it fits, and what to do next. This is the real product wedge.</p>
+              <p class="eyebrow">Rate intelligence</p>
+              <h3>The rate board becomes useful when every number explains itself.</h3>
+              <p class="intelligence-hero-copy">Lowest rate is only the headline. The desk adds source, freshness, policy catches, borrower fit, and the next action.</p>
               <div class="hero-proof-strip" aria-label="Rate intelligence pillars">
                 <span>Source tracked</span>
                 <span>Freshness scored</span>
@@ -3487,7 +3973,7 @@ body.dark .data-moat-card {
           <div class="section-heading">
             <div>
               <p class="eyebrow">Agent view</p>
-              <h3>Best current opportunities with the context agents actually need.</h3>
+              <h3>Current opportunities, stripped down to signal.</h3>
             </div>
             <div class="desk-badges"><span>Rate</span><span>Source</span><span>Policy fit</span><span>Contact</span></div>
           </div>
@@ -3496,8 +3982,8 @@ body.dark .data-moat-card {
           <div class="section-heading" style="margin-top: 22px;">
             <div>
               <p class="eyebrow">Policy answers</p>
-              <h3>Turn broker kits into fast placement answers.</h3>
-              <p class="section-copy">This is where the product beats a normal rate page: policy, docs, BDM, and next action show beside the rate.</p>
+              <h3>Broker kits become placement answers.</h3>
+              <p class="section-copy">Policy, docs, BDM, and next action sit beside the rate — no tab maze.</p>
             </div>
           </div>
           <div class="policy-answer-grid" id="policyAnswerGrid"></div>
@@ -3505,42 +3991,42 @@ body.dark .data-moat-card {
           <div class="section-heading" style="margin-top: 22px;">
             <div>
               <p class="eyebrow">Data moat</p>
-              <h3>How we get credible rates without scraping private systems.</h3>
+              <h3>Credible data without pretending to be connected to everything.</h3>
             </div>
           </div>
           <div class="data-moat-grid">
-            <article class="data-moat-card"><b>1</b><strong>Rate-sheet inbox</strong><small>Authorized lender/BDM PDF, XLS, and email bulletins flow into an approval queue with source files attached.</small></article>
-            <article class="data-moat-card"><b>2</b><strong>Vendor/BDM portal</strong><small>Lenders can submit rate and policy updates directly. Admin approval protects trust before publishing.</small></article>
-            <article class="data-moat-card"><b>3</b><strong>Brokerage overlays</strong><small>Teams can add exclusive rates, compensation notes, preferred lender tags, and internal policy notes.</small></article>
-            <article class="data-moat-card"><b>4</b><strong>Freshness engine</strong><small>Every number gets effective date, stale warning, source, reviewer, and confidence score.</small></article>
+            <article class="data-moat-card"><b>1</b><strong>Inbox</strong><small>Approved lender and BDM updates enter with the source file attached.</small></article>
+            <article class="data-moat-card"><b>2</b><strong>Review</strong><small>AI extracts; humans approve before the public desk changes.</small></article>
+            <article class="data-moat-card"><b>3</b><strong>Overlay</strong><small>Brokerages add preferred lender tags, compensation notes, and internal policy.</small></article>
+            <article class="data-moat-card"><b>4</b><strong>Freshness</strong><small>Every number carries date, source, reviewer, and stale warning.</small></article>
           </div>
         </section>
 
         <section class="band" id="pricing">
           <div class="section-heading">
             <div>
-              <p class="eyebrow">Business model</p>
-              <h3>Start free. Charge for workflow.</h3>
-              <p class="section-copy">The public site should build trust and SEO. The $9 plan should sell convenience: saved work, alerts, scenarios, and agent productivity.</p>
+              <p class="eyebrow">Pricing</p>
+              <h3>Free for reference. Paid for memory.</h3>
+              <p class="section-copy">Keep the public desk open. Charge when agents want saved scenarios, alerts, comparisons, and private workflow.</p>
             </div>
           </div>
           <div class="pricing-grid">
             <article class="pricing-card">
               <p class="eyebrow">Free</p>
               <div class="pricing-price">$0</div>
-              <small>For agents who just need quick reference.</small>
+              <small>Open reference for everyday checks.</small>
               <ul><li>Rate board</li><li>Policy/broker kit search</li><li>Lender + BDM directory</li><li>Stale-rate warnings</li></ul>
             </article>
             <article class="pricing-card featured">
               <p class="eyebrow">Agent Pro</p>
               <div class="pricing-price">$9<span>/mo</span></div>
-              <small>For agents who want a personal command desk.</small>
+              <small>A private workspace for active placement work.</small>
               <ul><li>Saved scenarios</li><li>Rate alerts</li><li>Compare lenders side-by-side</li><li>Document checklist generator</li><li>Private notes + favourites</li></ul>
             </article>
             <article class="pricing-card">
               <p class="eyebrow">Brokerage</p>
               <div class="pricing-price">Custom</div>
-              <small>For teams that need control and approved data.</small>
+              <small>Control, approvals, and internal overlays for teams.</small>
               <ul><li>Team users</li><li>Rate approval queue</li><li>Internal policy overlays</li><li>Audit trail + admin controls</li></ul>
             </article>
           </div>
@@ -3572,8 +4058,8 @@ body.dark .data-moat-card {
         <section class="band landing-rate-board" id="best-rates">
           <div class="section-heading">
             <div>
-              <p class="eyebrow">Best 5-year rates</p>
-              <h3>High-ratio and conventional rate board</h3>
+              <p class="eyebrow">Rate board</p>
+              <h3>The numbers, with less noise.</h3>
             </div>
             <div class="desk-badges">
               <span>High ratio</span>
@@ -3584,14 +4070,14 @@ body.dark .data-moat-card {
 
           <div class="best-rate-layout">
             <div>
-              <p class="contact-line">Compare the best available 5-year fixed high-ratio and conventional rates by lender category.</p>
+              <p class="contact-line">Compare high-ratio and conventional options by lender type, then check source and fit before you quote.</p>
               <div class="best-rate-grid" id="bestRateGrid"></div>
             </div>
 
             <aside class="preferred-lender-panel">
               <div>
                 <p class="eyebrow">Preferred lender</p>
-                <h4>Let the broker choose</h4>
+                <h4>Choose your lens</h4>
               </div>
               <label class="search-box">
                 <span>Select preferred lender</span>
@@ -3605,9 +4091,9 @@ body.dark .data-moat-card {
         <section class="band full-deal-desk" id="deal-desk">
           <div class="section-heading">
             <div>
-              <p class="eyebrow">Full-fledged deal desk</p>
-              <h3>From rate lookup to lender-ready submission.</h3>
-              <p class="section-copy">Turn this from a static rate board into an operating desk: current rates, product fit, document conditions, submission notes, BDM escalation, and compliance trail in one place.</p>
+              <p class="eyebrow">Deal desk</p>
+              <h3>From quick check to lender-ready file.</h3>
+              <p class="section-copy">A simple operating layer for placement: current rates, product fit, conditions, BDM escalation, and the audit trail.</p>
             </div>
             <div class="desk-badges">
               <span>Live rates</span>
@@ -3621,12 +4107,12 @@ body.dark .data-moat-card {
             <article class="deal-overview-card">
               <span class="status-dot"></span>
               <strong>Live now</strong>
-              <small>Advisor login UI, protected pipeline, expanded intake, rate queue, and audit trail are deployed.</small>
+              <small>Login, pipeline, intake, rate queue, and audit trail are deployed.</small>
             </article>
             <article class="deal-overview-card warning">
               <span class="status-dot"></span>
-              <strong>Needs DB hardening</strong>
-              <small>Run the second Supabase SQL in the correct project before entering real borrower data.</small>
+              <strong>Protected data</strong>
+              <small>Auth and RLS need to stay enforced before real borrower data enters.</small>
             </article>
             <article class="deal-overview-card locked">
               <span class="status-dot"></span>
@@ -3643,8 +4129,8 @@ body.dark .data-moat-card {
           <div class="deal-section-divider">
             <div>
               <p class="eyebrow">Workflow map</p>
-              <h4>One file, four clear lanes.</h4>
-              <p>Each scenario should move through the same path so the lender choice, missing documents, rate source, and compliance trail are easy to explain.</p>
+              <h4>Four lanes. No chaos.</h4>
+              <p>Each scenario keeps lender choice, missing documents, rate source, and next action visible.</p>
             </div>
             <div class="deal-command-actions">
               <a class="primary-button" href="#deal-intake">Create intake</a>
@@ -3662,16 +4148,16 @@ body.dark .data-moat-card {
           <div class="deal-section-divider">
             <div>
               <p class="eyebrow">Rate access</p>
-              <h4>Permissioned rate intake, not public scraping.</h4>
-              <p>Broker rates are gated and time-sensitive. The safe operating model is to ingest authorized rate sheets, normalize them, and require human approval before publishing.</p>
+              <h4>Permissioned intake, not scraping theatre.</h4>
+              <p>Rate data comes from authorized sheets and bulletins, then gets normalized and approved before publishing.</p>
             </div>
           </div>
 
           <div class="rate-path-grid">
-            <article class="rate-path-card"><strong><b>A</b> Daily rate-sheet inbox</strong><small>Create rates@ / desk@, subscribe to lender and BDM bulletins, parse PDF/XLS/HTML attachments, and detect changes.</small></article>
-            <article class="rate-path-card"><strong><b>B</b> Broker portal exports</strong><small>Where allowed, save portal exports/rate sheets into a watched folder for automatic extraction and source tracking.</small></article>
-            <article class="rate-path-card"><strong><b>C</b> LOS/network platforms</strong><small>Request permitted export/API/feed options from Finmo, Velocity, Filogix Expert, M3/BOSS, and lender networks.</small></article>
-            <article class="rate-path-card"><strong><b>D</b> Approval + stale warnings</strong><small>Every imported rate needs source file, effective date, product type, reviewed by, and expiry/stale warning.</small></article>
+            <article class="rate-path-card"><strong><b>A</b> Inbox</strong><small>Receive lender and BDM updates at rates@luniaontua.resend.app.</small></article>
+            <article class="rate-path-card"><strong><b>B</b> Extract</strong><small>Parse PDF, XLS, HTML, and email context into normalized rate records.</small></article>
+            <article class="rate-path-card"><strong><b>C</b> Review</strong><small>Approve changes before they affect the public desk.</small></article>
+            <article class="rate-path-card"><strong><b>D</b> Publish</strong><small>Show effective date, source, confidence, and stale warnings.</small></article>
           </div>
 
           <article class="auth-card locked" id="authCard">
@@ -3797,8 +4283,8 @@ body.dark .data-moat-card {
         <section class="band package-band" id="packages">
           <div class="section-heading">
             <div>
-              <p class="eyebrow">Platform access</p>
-              <h3>Broker packages</h3>
+              <p class="eyebrow">Packages</p>
+              <h3>Simple access now. Deeper workflow later.</h3>
             </div>
             <span class="live-pill">Basic package is free</span>
           </div>
@@ -3836,28 +4322,28 @@ body.dark .data-moat-card {
           <div class="capability-grid" aria-label="Platform capabilities">
             <article>
               <span>01</span>
-              <strong>Prime, alt, MIC and MIE access</strong>
-              <p>Organize institutional, alternative, and private lending options in one searchable workspace.</p>
+              <strong>Lender universe</strong>
+              <p>Prime, alternative, private, MIC, and MIE options in one searchable workspace.</p>
             </article>
             <article>
               <span>02</span>
-              <strong>Full French / English support</strong>
-              <p>Structure content so broker teams can work with bilingual lender and borrower-facing notes.</p>
+              <strong>Bilingual-ready</strong>
+              <p>Structure notes and resources so teams can support English and French workflows.</p>
             </article>
             <article>
               <span>03</span>
-              <strong>Underwriting guidelines</strong>
-              <p>Keep credit, income, property, insurer, and document notes close to the rate decision.</p>
+              <strong>Policy context</strong>
+              <p>Keep credit, income, property, insurer, and document notes close to the rate.</p>
             </article>
             <article>
               <span>04</span>
-              <strong>Preferred lenders</strong>
-              <p>Help brokers prioritize lender partners and quickly compare their active programs.</p>
+              <strong>Preferred lenses</strong>
+              <p>Let brokers prioritize partners and compare active programs quickly.</p>
             </article>
             <article>
               <span>05</span>
-              <strong>Granular policy breakdown</strong>
-              <p>Break policies down by product, LTV, score, documentation, property, and exception path.</p>
+              <strong>Granular breakdown</strong>
+              <p>Break rules down by product, LTV, score, documentation, property, and exception path.</p>
             </article>
           </div>
         </section>
@@ -3865,8 +4351,8 @@ body.dark .data-moat-card {
         <section class="workspace">
           <div class="workspace-header">
             <div>
-              <p class="eyebrow">Pipeline triage</p>
-              <h3>Find the right lender before you submit.</h3>
+              <p class="eyebrow">Lender search</p>
+              <h3>Find the right path before you submit.</h3>
             </div>
             <div class="desk-badges">
               <span>Prime</span>
@@ -3896,7 +4382,7 @@ body.dark .data-moat-card {
               <div class="section-heading">
                 <div>
                   <p class="eyebrow">Lender sheet</p>
-                  <h3>Daily Rate Board</h3>
+                  <h3>Daily rate board</h3>
                 </div>
                 <button class="secondary-button" id="clearFilters" type="button">Clear</button>
               </div>
@@ -3910,8 +4396,8 @@ body.dark .data-moat-card {
         <section class="band" id="programs">
           <div class="section-heading">
             <div>
-              <p class="eyebrow">Broker placement</p>
-              <h3>Program Finder</h3>
+              <p class="eyebrow">Programs</p>
+              <h3>Placement paths by borrower shape.</h3>
             </div>
           </div>
           <aside class="program-detail" id="programDetail" aria-live="polite"></aside>
@@ -3921,8 +4407,8 @@ body.dark .data-moat-card {
         <section class="band" id="insurers">
           <div class="section-heading">
             <div>
-              <p class="eyebrow">Default mortgage insurance</p>
-              <h3>Insurers</h3>
+              <p class="eyebrow">Insurance</p>
+              <h3>Insurer notes beside the scenario.</h3>
             </div>
           </div>
           <div class="insurer-grid" id="insurerGrid"></div>
@@ -3931,8 +4417,8 @@ body.dark .data-moat-card {
         <section class="band" id="contacts">
           <div class="section-heading">
             <div>
-              <p class="eyebrow">Relationship desk</p>
-              <h3>BDM Contact Directory</h3>
+              <p class="eyebrow">Relationships</p>
+              <h3>The right BDM when the file needs context.</h3>
             </div>
           </div>
           <div class="contact-table-wrap">
@@ -3954,9 +4440,9 @@ body.dark .data-moat-card {
         <section class="band" id="resources">
           <div class="section-heading resource-heading">
             <div>
-              <p class="eyebrow">NLD broker kit ingestion</p>
-              <h3>Broker Kits & Policy Library</h3>
-              <p class="section-copy">Download lender PDFs directly from the organized NLD broker kit package. Search by lender, form, product, or policy and jump straight to the source file.</p>
+              <p class="eyebrow">Broker kits</p>
+              <h3>Policy library without the filing cabinet.</h3>
+              <p class="section-copy">Search lender PDFs by lender, form, product, or policy and jump straight to the source file.</p>
             </div>
             <div class="resource-stats" aria-label="Broker kit ingestion stats">
               <article><strong id="resourceFileCount">253</strong><span>files indexed</span></article>
@@ -3994,11 +4480,10 @@ body.dark .data-moat-card {
         <section class="band compliance" id="compliance">
           <div>
             <p class="eyebrow">Compliance note</p>
-            <h3>Built for internal broker use</h3>
+            <h3>Calm interface. Conservative claims.</h3>
           </div>
           <p>
-            Sample rates and guidelines are placeholders for your brokerage operations team to replace with current lender notices.
-            Brokers should confirm pricing, eligibility, compensation, and policies with each lender before advising a borrower.
+            Sample rates and guidelines are placeholders until replaced with current lender notices. Brokers should confirm pricing, eligibility, compensation, and policies with each lender before advising a borrower.
           </p>
         </section>
       </main>
