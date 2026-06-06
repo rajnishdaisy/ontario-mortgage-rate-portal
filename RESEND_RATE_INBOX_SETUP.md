@@ -6,7 +6,7 @@ This is the preferred workflow: brokers/lenders simply email a Resend receiving 
 
 ```text
 Broker/lender sends email
-  → rates@your-receiving-domain.com handled by Resend Inbound
+  → <anything>@luniaontua.resend.app handled by Resend Inbound
   → Resend webhook POST /api/resend-inbound
   → API retrieves full email + attachments from Resend
   → stores raw email in Supabase Storage bucket lender-rate-emails
@@ -51,11 +51,13 @@ email.received
 5. Copy the webhook signing secret.
 6. Add the signing secret to Vercel as `RESEND_WEBHOOK_SECRET`.
 
-Now a broker can simply send/forward lender sheets to something like:
+Current Resend-managed inbox:
 
 ```text
-rates@YOUR-RECEIVING-DOMAIN.com
+<anything>@luniaontua.resend.app
 ```
+
+Examples: `rates@luniaontua.resend.app`, `desk@luniaontua.resend.app`, or `shiv@luniaontua.resend.app` all route to the same Resend receiving domain. Use `rates@luniaontua.resend.app` as the standard forwarding address unless a custom domain is added later.
 
 No Gmail polling is required.
 

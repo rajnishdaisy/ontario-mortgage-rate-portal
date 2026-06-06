@@ -35,13 +35,13 @@ This creates:
 Recommended MVP address:
 
 ```text
-rates@ontariomortgagerateportal.ca
+rates@luniaontua.resend.app
 ```
 
-Acceptable SI internal test address:
+Resend also accepts any local-part on the managed receiving domain, for example:
 
 ```text
-lender-rates@sicapital.ca
+desk@luniaontua.resend.app
 ```
 
 Broker workflow:
@@ -57,7 +57,7 @@ For each broker mailbox, create filters like:
 
 ```text
 From contains: td.com OR scotiabank.com OR firstnational.ca OR mcap.com OR rmgmortgages.ca
-Action: Forward to rates@ontariomortgagerateportal.ca
+Action: Forward to rates@luniaontua.resend.app
 Action: Apply label Lender Rates
 ```
 
