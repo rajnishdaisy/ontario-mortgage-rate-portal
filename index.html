@@ -8312,7 +8312,7 @@ async function loadPublishedRatesFromSupabase() {
     const today = new Date().toISOString().slice(0, 10);
     const { data, error } = await supabaseClient
       .from("published_rates")
-      .select("lender_name,product_name,province,purpose,occupancy,mortgage_type,term_label,term_months,amortization_years,insured_rate,insurable_rate,uninsured_rate,variable_discount,rate_hold_days,effective_date,expiry_date,source_label,freshness_status,confidence,public_notes,conditions,approved_at,created_at")
+      .select("lender_name,product_name,province,purpose,occupancy,mortgage_type,term_label,term_months,insured_rate,insurable_rate,uninsured_rate,variable_discount,rate_hold_days,effective_date,expiry_date,source_label,freshness_status,confidence,public_notes,conditions,approved_at,created_at")
       .eq("workspace_id", "omrp-default")
       .eq("is_published", true)
       .or(`expiry_date.is.null,expiry_date.gte.${today}`)

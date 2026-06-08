@@ -276,14 +276,15 @@ async function setExtractedStatus(rateIds, status, actor, workspaceId, reviewNot
   return { ok: true, updated: Array.isArray(rows) ? rows.length : 0, rows };
 }
 
-async function bulkPublishRows(rows, actor, workspaceId, deactivateLenders = true) {
+async function bulkPublishRows(rows, actor, workspaceId, deactivateLenders = true, deactivateLenderNames = []) {
   const items = Array.isArray(rows) ? rows : [];
   if (!items.length) throw Object.assign(new Error('No published rows supplied'), { statusCode: 400 });
   const now = new Date().toISOString();
   const allowed = ['lender_name', 'product_name', 'province', 'purpose', 'occupancy', 'mortgage_type', 'term_label', 'term_months', 'insured_rate', 'insurable_rate', 'uninsured_rate', 'variable_discount', 'rate_hold_days', 'effective_date', 'expiry_date', 'source_label', 'freshness_status', 'confidence', 'public_notes', 'conditions'];
   const lenders = [...new Set(items.map((row) => row.lender_name).filter(Boolean))];
+  const staleLenders = [...new Set([...lenders, ...(Array.isArray(deactivateLenderNames) ? deactivateLenderNames : [])].filter(Boolean))];
   if (deactivateLenders) {
-    for (const lender of lenders) {
+    for (const lender of staleLenders) {
       await supabaseFetch(`/rest/v1/published_rates?workspace_id=eq.${encodeURIComponent(workspaceId)}&lender_name=eq.${encodeURIComponent(lender)}&is_published=eq.true`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json', Prefer: 'return=minimal' },
@@ -382,7 +383,7 @@ export default async function handler(req, res) {
     if (body.action === 'reject') return json(res, 200, await setExtractedStatus(body.rateIds, 'rejected', actor, actor.workspaceId, body.reviewNotes || body.reason));
     if (body.action === 'update-rate') return json(res, 200, await updateExtractedRate(body.rateId, body.patch || {}, actor, actor.workspaceId));
     if (body.action === 'publish') return json(res, 200, await publishRates(body.rateIds || [], actor, actor.workspaceId, body.deactivateOlderMatchingRates !== false));
-    if (body.action === 'bulk-publish') return json(res, 200, await bulkPublishRows(body.rows || [], actor, actor.workspaceId, body.deactivateLenders !== false));
+    if (body.action === 'bulk-publish') return json(res, 200, await bulkPublishRows(body.rows || [], actor, actor.workspaceId, body.deactivateLenders !== false, body.deactivateLenderNames || []));
     return json(res, 400, { error: 'Unknown action' });
   } catch (error) {
     console.error('admin rate intake failed', error);
