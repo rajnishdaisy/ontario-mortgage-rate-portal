@@ -6034,9 +6034,9 @@ textarea,
               </div>
             </div>
             <div class="rate-finder-toolbar" aria-label="Broker rate finder filters">
-              <label><span>Search</span><input id="rateFinderSearch" type="search" placeholder="TD, rental, 30yr, refi, CMLS..." /></label>
+              <label><span>Search</span><input id="rateFinderSearch" type="search" placeholder="TD, CMLS, 30yr amortization..." /></label>
               <label><span>Lender</span><select id="rateFinderLender"><option value="all">Any lender</option></select></label>
-              <label><span>Term</span><select id="rateFinderTerm"><option value="all">Any term</option><option value="12">1yr</option><option value="24">2yr</option><option value="36">3yr</option><option value="48">4yr</option><option value="60">5yr</option><option value="heloc">HELOC</option></select></label>
+              <label><span>Term</span><select id="rateFinderTerm"><option value="all">Any term</option><option value="12">1yr</option><option value="36">3yr</option><option value="60">5yr</option></select></label>
               <label><span>Fixed / variable</span><select id="rateFinderRateType"><option value="all">Fixed or variable</option><option value="fixed">Fixed only</option><option value="variable">Variable only</option></select></label>
               <label><span>Amortization</span><select id="rateFinderAmort"><option value="all">Any amort.</option><option value="25">25yr</option><option value="30">30yr</option></select></label>
               <label><span>Bucket</span><select id="rateFinderBucket"><option value="all">Any bucket</option><option value="insured">Insured / high ratio</option><option value="insurable">Insurable</option><option value="uninsured">Uninsured / refi</option><option value="variable">Variable</option><option value="alt">Alternative</option></select></label>
@@ -6047,12 +6047,8 @@ textarea,
             <div class="rate-finder-chips" aria-label="Common broker searches">
               <button type="button" data-rate-chip="best-5yr-insured">Best 5yr insured</button>
               <button type="button" data-rate-chip="best-3yr-fixed">Best 3yr fixed</button>
-              <button type="button" data-rate-chip="conventional-30yr">30yr conventional</button>
+              <button type="button" data-rate-chip="conventional-30yr">30yr amortization</button>
               <button type="button" data-rate-chip="variable">Variable</button>
-              <button type="button" data-rate-chip="refinance">Refinance</button>
-              <button type="button" data-rate-chip="rental">Rental</button>
-              <button type="button" data-rate-chip="alt-bfs">Alt / BFS</button>
-              <button type="button" data-rate-chip="recent">Recently updated</button>
               <button type="button" data-rate-chip="reset">Reset</button>
             </div>
             <div class="rate-finder-summary" id="rateFinderSummary">
@@ -8160,12 +8156,7 @@ function buildDealDeskRates(row) {
       { title: "5 Year Fixed", items: standardLabels.map((label, index) => ({ label, value: values[index] })) },
       { title: "5 Year Variable", items: standardLabels.map((label, index) => ({ label, value: values[10 + index] })) },
       { title: "1 Year Fixed", items: termLabels.map((label, index) => ({ label, value: values[20 + index] })) },
-      { title: "2 Year Fixed", items: termLabels.map((label, index) => ({ label, value: values[23 + index] })) },
-      { title: "3 Year Fixed", items: termLabels.map((label, index) => ({ label, value: values[26 + index] })) },
-      { title: "4 Year Fixed", items: termLabels.map((label, index) => ({ label, value: values[29 + index] })) },
-      { title: "7 Year Fixed", items: termLabels.map((label, index) => ({ label, value: values[32 + index] })) },
-      { title: "10 Year Fixed", items: termLabels.map((label, index) => ({ label, value: values[35 + index] })) },
-      { title: "Line of Credit", items: [{ label: "HELOC", value: values[38] }] }
+      { title: "3 Year Fixed", items: termLabels.map((label, index) => ({ label, value: values[26 + index] })) }
     ]
   };
 }
@@ -9588,13 +9579,20 @@ function sourceStatusTone(status = "") {
 
 const rateFinderTermCoverage = [
   { label: "1yr", value: "12" },
-  { label: "2yr", value: "24" },
   { label: "3yr", value: "36" },
-  { label: "4yr", value: "48" },
   { label: "5yr", value: "60" }
 ];
 const rateFinderAmortCoverage = ["25", "30"];
 const rateFinderRateTypeCoverage = ["fixed", "variable"];
+
+function isCoreQuoteRow(row = {}) {
+  const termValue = String(row.termValue || "");
+  const rateType = String(row.rateType || "").toLowerCase();
+  if (!["12", "36", "60"].includes(termValue)) return false;
+  if (!["fixed", "variable"].includes(rateType)) return false;
+  if (termValue !== "60" && rateType !== "fixed") return false;
+  return true;
+}
 
 function addRateFinderBlankCoverageRows(rows) {
   const hasRow = (lenderId, termValue, rateType, amortization) => rows.some((row) =>
@@ -9739,10 +9737,11 @@ function rateFinderRows() {
     if (dryRunVariableQuote) rows.push({ ...common, term: "5yr variable", termValue: "60", rateType: "variable", bucket: "variable", rateValue: dryRunVariableQuote.display, sortRateValue: dryRunVariableQuote.sort, note: dryRunVariableQuote.note });
   });
 
-  addRateFinderBlankCoverageRows(rows);
+  const coreRows = rows.filter(isCoreQuoteRow);
+  addRateFinderBlankCoverageRows(coreRows);
 
   const seen = new Set();
-  return rows
+  return coreRows
     .sort((a, b) => (Date.parse(b.updated || b.approvedAt || "") || 0) - (Date.parse(a.updated || a.approvedAt || "") || 0))
     .filter((row) => {
       const key = [row.lender, row.termValue, row.rateType, row.bucket, row.amortization, row.purpose].map((value) => normalizeSearchText(value)).join("|");
@@ -9771,7 +9770,7 @@ const RATE_TITLE_COLUMNS = [
   { key: "5v-uninsurable-25", group: "5 Year Term", subGroup: "5 Year Variable", label: "Uninsurable (With 25 Year Amort)", term: "60", rateType: "variable", bucket: "uninsured", amort: "25" },
   { key: "5v-uninsurable-30", group: "5 Year Term", subGroup: "5 Year Variable", label: "Uninsurable (With 30 Year Amort)", term: "60", rateType: "variable", bucket: "uninsured", amort: "30" },
   { key: "5v-rentals", group: "5 Year Term", subGroup: "5 Year Variable", label: "Rentals", term: "60", rateType: "variable", purpose: "rental" },
-  ...["12", "24", "36", "48", "84", "120"].flatMap((term) => {
+  ...["12", "36"].flatMap((term) => {
     const years = Number(term) / 12;
     const group = "Other Terms";
     const subGroup = `${years} Year Fixed`;
@@ -9780,8 +9779,7 @@ const RATE_TITLE_COLUMNS = [
       { key: `${term}f-insurable-80`, group, subGroup, label: "Insurable 80%", term, rateType: "fixed", bucket: "insurable" },
       { key: `${term}f-uninsurable-refi`, group, subGroup, label: "Uninsurable & Refi", term, rateType: "fixed", bucket: "uninsured" }
     ];
-  }),
-  { key: "heloc", group: "Other Terms", subGroup: "Line of Credit", label: "Line of Credit (HELOC)", term: "heloc", rateType: "variable", bucket: "variable" }
+  })
 ];
 
 function rateTitleColumnForRow(row = {}) {
