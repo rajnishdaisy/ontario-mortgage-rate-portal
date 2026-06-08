@@ -704,30 +704,73 @@ async function persistExtraction({ extraction, sourceDocumentId, extractionRunId
 
 async function processStoredSourceDocument(row) {
   const workspaceId = row.workspace_id || DEFAULT_WORKSPACE_ID;
-  const emailBytes = await downloadFromBucket(row.storage_bucket, row.storage_path);
-  const snapshot = JSON.parse(emailBytes.toString('utf8'));
-  const email = snapshot.received_email || {};
-  const meta = snapshot.normalized || {
-    from: row.source_email_from,
-    to: row.source_email_to,
-    subject: row.source_email_subject,
-    emailId: row.metadata?.resend_email_id || row.source_email_message_id,
-    messageId: row.source_email_message_id
-  };
+  let email = {};
+  let meta = {};
+  let downloadedAttachments = [];
+  let senderAllowed = { allowed: true, senderEmail: row.source_email_from || 'manual-upload', source: 'manual_upload', trustLevel: 'trusted_extract' };
 
-  const senderAllowed = await isAllowedSender(meta, workspaceId);
-  if (!senderAllowed.allowed) {
-    await patchRows('rate_source_documents', `id=eq.${encodeURIComponent(row.id)}`, {
-      status: 'rejected',
-      metadata: { ...(row.metadata || {}), sender_allowed: false, sender_email: senderAllowed.senderEmail, reason: senderAllowed.reason }
-    });
-    if (row.ingestion_event_id) {
-      await patchRows('rate_ingestion_events', `id=eq.${encodeURIComponent(row.ingestion_event_id)}`, {
-        status: 'Rejected',
-        notes: `Skipped AI analysis for unapproved sender ${senderAllowed.senderEmail || row.source_email_from}.`
+  if (row.source_kind === 'manual_upload') {
+    const buffer = await downloadFromBucket(row.storage_bucket, row.storage_path);
+    meta = {
+      from: row.source_email_from || row.metadata?.uploaded_by_email || 'manual-upload@omrp.local',
+      to: row.source_email_to || 'rates@ontariomortgagerateportal.ca',
+      subject: row.source_email_subject || `Manual rate-sheet upload: ${row.file_name || row.id}`,
+      emailId: row.id,
+      messageId: row.id
+    };
+    email = {
+      from: meta.from,
+      to: meta.to,
+      subject: meta.subject,
+      text: `Manual portal upload for ${row.lender_name || 'unknown lender'}. Reviewer notes: ${row.metadata?.notes || ''}`,
+      html: ''
+    };
+    downloadedAttachments = [{
+      filename: row.file_name || 'manual-upload',
+      contentType: row.mime_type || 'application/octet-stream',
+      size: row.file_size_bytes || buffer.length,
+      buffer
+    }];
+  } else {
+    const emailBytes = await downloadFromBucket(row.storage_bucket, row.storage_path);
+    const snapshot = JSON.parse(emailBytes.toString('utf8'));
+    email = snapshot.received_email || {};
+    meta = snapshot.normalized || {
+      from: row.source_email_from,
+      to: row.source_email_to,
+      subject: row.source_email_subject,
+      emailId: row.metadata?.resend_email_id || row.source_email_message_id,
+      messageId: row.source_email_message_id
+    };
+
+    senderAllowed = await isAllowedSender(meta, workspaceId);
+    if (!senderAllowed.allowed) {
+      await patchRows('rate_source_documents', `id=eq.${encodeURIComponent(row.id)}`, {
+        status: 'rejected',
+        metadata: { ...(row.metadata || {}), sender_allowed: false, sender_email: senderAllowed.senderEmail, reason: senderAllowed.reason }
+      });
+      if (row.ingestion_event_id) {
+        await patchRows('rate_ingestion_events', `id=eq.${encodeURIComponent(row.ingestion_event_id)}`, {
+          status: 'Rejected',
+          notes: `Skipped AI analysis for unapproved sender ${senderAllowed.senderEmail || row.source_email_from}.`
+        });
+      }
+      return { sourceDocumentId: row.id, ignored: true, reason: senderAllowed.reason, sender: senderAllowed.senderEmail };
+    }
+
+    const attachmentRows = await getRows(
+      'rate_source_documents',
+      `select=*&workspace_id=eq.${encodeURIComponent(workspaceId)}&ingestion_event_id=eq.${encodeURIComponent(row.ingestion_event_id)}&source_kind=eq.attachment&order=created_at.asc`
+    );
+    for (const attachmentRow of attachmentRows || []) {
+      const buffer = await downloadFromBucket(attachmentRow.storage_bucket, attachmentRow.storage_path);
+      downloadedAttachments.push({
+        filename: attachmentRow.file_name || 'attachment',
+        contentType: attachmentRow.mime_type || 'application/octet-stream',
+        size: attachmentRow.file_size_bytes || buffer.length,
+        buffer
       });
     }
-    return { sourceDocumentId: row.id, ignored: true, reason: senderAllowed.reason, sender: senderAllowed.senderEmail };
   }
 
   await patchRows('rate_source_documents', `id=eq.${encodeURIComponent(row.id)}`, {
@@ -735,22 +778,7 @@ async function processStoredSourceDocument(row) {
     metadata: { ...(row.metadata || {}), sender_allowed: true, sender_email: senderAllowed.senderEmail, allowlist_source: senderAllowed.source }
   });
 
-  const attachmentRows = await getRows(
-    'rate_source_documents',
-    `select=*&workspace_id=eq.${encodeURIComponent(workspaceId)}&ingestion_event_id=eq.${encodeURIComponent(row.ingestion_event_id)}&source_kind=eq.attachment&order=created_at.asc`
-  );
-  const downloadedAttachments = [];
-  for (const attachmentRow of attachmentRows || []) {
-    const buffer = await downloadFromBucket(attachmentRow.storage_bucket, attachmentRow.storage_path);
-    downloadedAttachments.push({
-      filename: attachmentRow.file_name || 'attachment',
-      contentType: attachmentRow.mime_type || 'application/octet-stream',
-      size: attachmentRow.file_size_bytes || buffer.length,
-      buffer
-    });
-  }
-
-  const extractionRunId = safeId('rer', row.id);
+  const extractionRunId = safeId('rer', `${row.id}:${Date.now()}:${Math.random()}`);
   await insertRows('rate_extraction_runs', [{
     id: extractionRunId,
     workspace_id: workspaceId,
@@ -821,11 +849,12 @@ async function processStoredSourceDocument(row) {
   }
 }
 
-export async function processQueuedRateEmails({ limit = 10 } = {}) {
+export async function processQueuedRateEmails({ limit = 10, sourceKind = 'manual_upload' } = {}) {
   const workspaceId = process.env.RATE_AI_WORKSPACE_ID || DEFAULT_WORKSPACE_ID;
+  const sourceFilter = sourceKind === 'email' ? 'source_kind=eq.email' : sourceKind === 'all' ? 'source_kind=in.(email,manual_upload)' : 'source_kind=eq.manual_upload';
   const rows = await getRows(
     'rate_source_documents',
-    `select=*&workspace_id=eq.${encodeURIComponent(workspaceId)}&source_kind=eq.email&status=eq.queued&order=received_at.asc&limit=${Number(limit) || 10}`
+    `select=*&workspace_id=eq.${encodeURIComponent(workspaceId)}&${sourceFilter}&status=in.(queued,failed)&order=received_at.asc&limit=${Number(limit) || 10}`
   );
   const results = [];
   for (const row of rows || []) {

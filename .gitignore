@@ -3,3 +3,4 @@
 node_modules
 __pycache__
 data/nld-broker-kits/
+.env*.local

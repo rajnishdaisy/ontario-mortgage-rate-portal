@@ -2323,6 +2323,28 @@ menu {
   }
 }
 
+
+.admin-intake-panel { display: grid; gap: 16px; }
+.admin-intake-toolbar, .admin-intake-grid, .admin-email-row, .admin-rate-row { display: grid; gap: 12px; }
+.admin-intake-toolbar { grid-template-columns: minmax(220px, 1fr) repeat(3, auto); align-items: center; }
+.admin-intake-toolbar input, .admin-intake-toolbar select { min-height: 42px; }
+.admin-intake-grid { grid-template-columns: minmax(280px, .85fr) minmax(0, 1.15fr); align-items: start; }
+.admin-inbox-list, .admin-rate-review-list { display: grid; gap: 10px; }
+.admin-email-row, .admin-email-detail, .admin-rate-row { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); padding: 14px; box-shadow: var(--shadow-soft); }
+.admin-email-row { text-align: left; color: var(--text); }
+.admin-email-row.active { border-color: color-mix(in srgb, var(--green) 38%, var(--line)); background: color-mix(in srgb, var(--surface-tint) 52%, var(--surface)); }
+.admin-email-row strong, .admin-rate-row strong { display: block; }
+.admin-email-meta, .admin-rate-meta, .admin-attachment-list { display: flex; flex-wrap: wrap; gap: 7px; color: var(--muted); font-size: .82rem; }
+.admin-chip { display: inline-flex; align-items: center; min-height: 24px; padding: 0 8px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface-strong); }
+.admin-chip.good { color: var(--green); border-color: color-mix(in srgb, var(--green) 35%, var(--line)); }
+.admin-chip.warn { color: var(--amber); border-color: color-mix(in srgb, var(--amber) 35%, var(--line)); }
+.admin-chip.bad { color: var(--red); border-color: color-mix(in srgb, var(--red) 35%, var(--line)); }
+.admin-email-detail { min-height: 360px; }
+.admin-rate-row { grid-template-columns: minmax(0, 1fr) auto; align-items: center; }
+.admin-rate-actions, .admin-detail-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.admin-empty-state { padding: 24px; border: 1px dashed var(--line); border-radius: 12px; color: var(--muted); background: var(--surface-strong); }
+@media (max-width: 900px) { .admin-intake-toolbar, .admin-intake-grid, .admin-rate-row { grid-template-columns: 1fr; } }
+
 @media (max-width: 1080px) {
   .app-shell {
     grid-template-columns: 1fr;
@@ -5652,6 +5674,7 @@ textarea,
           <a href="#insurers"><span>06</span> Insurers</a>
           <a href="#contacts"><span>07</span> BDM Contacts</a>
           <a href="#uploads"><span>08</span> Sheet Uploads</a>
+          <a href="#admin-inbox" data-admin-only><span>09</span> AI Review</a>
         </nav>
 
         <section class="sidebar-panel">
@@ -6021,8 +6044,8 @@ textarea,
           </div>
 
           <div class="rate-path-grid">
-            <article class="rate-path-card"><strong><b>A</b> Inbox</strong><small>Receive lender and BDM updates at rates@luniaontua.resend.app.</small></article>
-            <article class="rate-path-card"><strong><b>B</b> Extract</strong><small>Parse PDF, XLS, HTML, and email context into normalized rate records.</small></article>
+            <article class="rate-path-card"><strong><b>A</b> Upload</strong><small>Stage lender PDF or Excel rate sheets manually.</small></article>
+            <article class="rate-path-card"><strong><b>B</b> Extract</strong><small>Parse PDF/XLS/XLSX files into normalized rate records.</small></article>
             <article class="rate-path-card"><strong><b>C</b> Review</strong><small>Approve changes before they affect the public desk.</small></article>
             <article class="rate-path-card"><strong><b>D</b> Publish</strong><small>Show effective date, source, confidence, and stale warnings.</small></article>
           </div>
@@ -6343,8 +6366,7 @@ textarea,
               </div>
               <label><span>Lender</span><select id="uploadLenderSelect" required><option value="">Select lender</option></select></label>
               <div class="form-grid compact-form-grid">
-                <label><span>Uploader type</span><select id="uploadActorRole"><option>User / broker</option><option>Admin</option><option>BDM / lender contact</option></select></label>
-                <label><span>Source</span><select id="uploadSource"><option>Email attachment</option><option>Lender portal export</option><option>Manual upload</option><option>BDM supplied</option></select></label>
+                <label><span>Uploader type</span><select id="uploadActorRole"><option>User / broker</option><option>Admin</option></select></label>
                 <label><span>Effective date</span><input id="uploadEffectiveDate" type="date" /></label>
                 <label><span>Priority</span><select id="uploadPriority"><option>Normal</option><option>Urgent - rate change</option><option>Monthly refresh</option><option>Policy/rate exception</option></select></label>
               </div>
@@ -6355,10 +6377,9 @@ textarea,
               </label>
               <label><span>Reviewer note</span><textarea id="uploadNotes" rows="4" placeholder="Example: BDM says prime changed; check 1/3/5-year fixed and variable tabs first."></textarea></label>
               <div class="upload-actions">
-                <button class="primary-button" type="submit">Queue for AI review</button>
-                <button class="secondary-button" type="button" id="seedUploadDemo">Demo upload</button>
+                <button class="primary-button" type="submit">Queue manual upload for AI review</button>
               </div>
-              <p class="upload-help-text" id="uploadStatusText">Uploads are staged locally unless protected Supabase storage is available. No rate is published without manual review.</p>
+              <p class="upload-help-text" id="uploadStatusText">Only manual PDF/XLS/XLSX uploads are shown here. The AI reviews the saved file, writes a summary, and stages extracted rows for admin approval; nothing publishes automatically.</p>
             </form>
 
             <aside class="upload-card ai-review-card">
@@ -6383,6 +6404,34 @@ textarea,
               <button class="secondary-button" type="button" id="clearUploadQueue">Clear local queue</button>
             </div>
             <div class="rate-sheet-upload-list" id="rateSheetUploadList"></div>
+          </div>
+        </section>
+
+        <section class="band admin-intake-panel" id="admin-inbox" data-admin-page>
+          <div class="section-heading upload-heading">
+            <div>
+              <p class="eyebrow">Manual AI review</p>
+              <h3>Manual rate-sheet uploads, AI analysis, and publish gate.</h3>
+              <p class="section-copy">Admin-only review centre for manually uploaded PDF and Excel rate sheets. The AI reads the saved file, writes a summary, stages extracted rows for review, and approved rows can publish to the frontend rate board.</p>
+            </div>
+            <div class="upload-stats" aria-label="Admin email intake stats">
+              <article><strong id="adminInboxCount">0</strong><span>uploads</span></article>
+              <article><strong id="adminAttachmentCount">0</strong><span>files</span></article>
+              <article><strong id="adminDraftRateCount">0</strong><span>draft rows</span></article>
+            </div>
+          </div>
+          <div class="admin-intake-toolbar upload-card">
+            <input id="adminInboxSearch" type="search" placeholder="Search file, lender, uploader…" autocomplete="off" />
+            <select id="adminInboxStatus"><option value="all">All statuses</option><option value="queued">Queued</option><option value="needs_review">Needs review</option><option value="approved">Approved</option><option value="failed">Failed</option><option value="rejected">Rejected</option></select>
+            <button class="secondary-button" type="button" id="adminInboxRefresh">Refresh</button>
+            <button class="primary-button" type="button" id="adminAnalyzeQueued">Run AI processor / retry failed</button>
+          </div>
+          <div class="admin-intake-grid">
+            <div class="admin-inbox-list" id="adminInboxList"><div class="admin-empty-state">Admin inbox loads after an admin signs in.</div></div>
+            <div class="admin-email-detail" id="adminEmailDetail">
+              <p class="eyebrow">Manual upload detail</p><h4>Select an upload</h4>
+              <p class="contact-line">Open a manual upload to review the file, AI summary, extracted rows, and publish controls.</p>
+            </div>
           </div>
         </section>
 
@@ -6807,7 +6856,7 @@ let supabaseClient = null;
 let supabaseReady = false;
 let currentUser = null;
 let currentProfile = null;
-const initialAdminEmails = ["shiv@sicapital.ca", "raj@localtest"];
+const lockedAdminEmails = ["shiv@sicapital.ca"];
 const localAdminEmail = "raj@localtest";
 const localAdminSessionKey = "ontarioBrokerRateDesk.localAdminSession";
 let authRequired = true;
@@ -7724,10 +7773,16 @@ const rateSheetFilesInput = document.querySelector("#rateSheetFiles");
 const rateSheetUploadList = document.querySelector("#rateSheetUploadList");
 const uploadStatusText = document.querySelector("#uploadStatusText");
 const auditTrailList = document.querySelector("#auditTrailList");
+const adminInboxList = document.querySelector("#adminInboxList");
+const adminEmailDetail = document.querySelector("#adminEmailDetail");
+const adminInboxSearch = document.querySelector("#adminInboxSearch");
+const adminInboxStatus = document.querySelector("#adminInboxStatus");
+let adminInboxData = { documents: [], runs: [], attachments: [], extractedRates: [] };
+let activeAdminEmailId = "";
 let resourceIndex = null;
 let resourceEntries = [];
 const pageNavLinks = document.querySelectorAll('.nav-list a[href^="#"]');
-const pageRoutes = ["dashboard", "pricing", "intelligence", "best-rates", "deal-desk", "lenders", "packages", "programs", "insurers", "contacts", "uploads", "resources", "compliance"];
+const pageRoutes = ["dashboard", "pricing", "intelligence", "best-rates", "deal-desk", "lenders", "packages", "programs", "insurers", "contacts", "uploads", "admin-inbox", "resources", "compliance"];
 const pageGroups = {
   dashboard: [document.querySelector("#dashboard"), document.querySelector("#product-direction"), document.querySelector(".metric-grid")],
   pricing: [document.querySelector("#pricing")],
@@ -7740,6 +7795,7 @@ const pageGroups = {
   insurers: [document.querySelector("#insurers")],
   contacts: [document.querySelector("#contacts")],
   uploads: [document.querySelector("#uploads")],
+  "admin-inbox": [document.querySelector("#admin-inbox")],
   resources: [document.querySelector("#resources")],
   compliance: [document.querySelector("#compliance")]
 };
@@ -7797,6 +7853,10 @@ rateSheetUploadForm?.addEventListener("submit", (event) => { event.preventDefaul
 document.querySelector("#seedUploadDemo")?.addEventListener("click", seedDemoRateSheetUpload);
 document.querySelector("#clearUploadQueue")?.addEventListener("click", () => { rateSheetUploads = []; saveRateSheetUploads(); renderRateSheetUploads(); setUploadStatus("Local upload queue cleared."); });
 document.querySelector("#seedDemoRateIngestion")?.addEventListener("click", runStaticDemoRateIngestion);
+document.querySelector("#adminInboxRefresh")?.addEventListener("click", loadAdminInbox);
+document.querySelector("#adminAnalyzeQueued")?.addEventListener("click", analyzeQueuedAdminEmails);
+adminInboxSearch?.addEventListener("input", renderAdminInbox);
+adminInboxStatus?.addEventListener("change", renderAdminInbox);
 document.querySelector("#clearDealPipeline")?.addEventListener("click", async () => {
   const ids = dealPipeline.map((deal) => deal.id);
   dealPipeline = [];
@@ -8551,7 +8611,10 @@ function clearLocalAdminSession() {
 
 function isAdminUser() {
   const email = currentUser?.email?.toLowerCase() || "";
-  return initialAdminEmails.includes(email)
+  const lockedAdmin = lockedAdminEmails.includes(email);
+  const localDevAdmin = email === localAdminEmail && !isProductionHost();
+  return lockedAdmin
+    || localDevAdmin
     || currentUser?.app_metadata?.role === "admin"
     || currentUser?.user_metadata?.role === "admin"
     || currentProfile?.role === "admin";
@@ -8573,10 +8636,46 @@ function setProtectedWorkspaceUi() {
   else if (uploadStatusText?.textContent?.includes("Sign in")) setUploadStatus("Uploads are staged for manual AI analysis and admin approval before publishing.");
 }
 
+function profileFromAuthMetadata(user = currentUser) {
+  if (!user) return null;
+  const metadataProfile = user.user_metadata?.portal_profile || user.user_metadata?.omrp_profile || null;
+  if (!metadataProfile) return null;
+  return {
+    id: user.id,
+    email: user.email,
+    full_name: metadataProfile.full_name || user.user_metadata?.full_name || user.email,
+    company: metadataProfile.company || "",
+    phone: metadataProfile.phone || "",
+    requested_role: metadataProfile.requested_role || "broker",
+    role: lockedAdminEmails.includes((user.email || "").toLowerCase()) ? "admin" : "broker",
+    status: metadataProfile.status || "active",
+    workspace_id: metadataProfile.workspace_id || "omrp-default",
+    created_at: metadataProfile.created_at || new Date().toISOString(),
+    updated_at: metadataProfile.updated_at || new Date().toISOString()
+  };
+}
+
+function lockedAdminFallbackProfile(user = currentUser) {
+  if (!user || !lockedAdminEmails.includes((user.email || "").toLowerCase())) return null;
+  return {
+    id: user.id,
+    email: user.email,
+    full_name: "Shiv",
+    company: "SI Capital",
+    phone: "",
+    requested_role: "admin",
+    role: "admin",
+    status: "active",
+    workspace_id: "omrp-default"
+  };
+}
+
 async function loadCurrentProfile() {
   if (!currentUser) { currentProfile = null; return; }
   const localKey = `ontarioBrokerRateDesk.profile.${currentUser.id}`;
   try { currentProfile = JSON.parse(localStorage.getItem(localKey) || "null"); } catch { currentProfile = null; }
+  currentProfile = currentProfile || profileFromAuthMetadata() || lockedAdminFallbackProfile();
+  if (currentProfile) localStorage.setItem(localKey, JSON.stringify(currentProfile));
   if (!supabaseReady) return;
   try {
     const { data, error } = await supabaseClient.from("user_profiles").select("*").eq("id", currentUser.id).maybeSingle();
@@ -8587,6 +8686,8 @@ async function loadCurrentProfile() {
     }
   } catch (error) {
     console.warn("Profile load failed", error);
+    currentProfile = currentProfile || profileFromAuthMetadata() || lockedAdminFallbackProfile();
+    if (currentProfile) localStorage.setItem(localKey, JSON.stringify(currentProfile));
   }
 }
 
@@ -8601,7 +8702,7 @@ async function saveUserProfileFromForm(source = "inline") {
     company: textValue(isGlobal ? "#globalProfileCompany" : "#profileCompany"),
     phone: textValue(isGlobal ? "#globalProfilePhone" : "#profilePhone"),
     requested_role: requestedRole,
-    role: initialAdminEmails.includes((currentUser.email || "").toLowerCase()) ? "admin" : "broker",
+    role: lockedAdminEmails.includes((currentUser.email || "").toLowerCase()) ? "admin" : "broker",
     status: "active",
     workspace_id: workspaceId(),
     created_at: new Date().toISOString(),
@@ -8609,17 +8710,46 @@ async function saveUserProfileFromForm(source = "inline") {
   };
   currentProfile = profile;
   localStorage.setItem(`ontarioBrokerRateDesk.profile.${currentUser.id}`, JSON.stringify(profile));
+  let savedToProfileTable = false;
+  let savedToAuthMetadata = false;
   if (supabaseReady) {
+    try {
+      const { data: metadataData, error: metadataError } = await supabaseClient.auth.updateUser({
+        data: {
+          full_name: profile.full_name,
+          requested_role: profile.requested_role,
+          portal_profile: {
+            full_name: profile.full_name,
+            company: profile.company,
+            phone: profile.phone,
+            requested_role: profile.requested_role,
+            role: profile.role,
+            status: profile.status,
+            workspace_id: profile.workspace_id,
+            created_at: profile.created_at,
+            updated_at: profile.updated_at
+          }
+        }
+      });
+      if (metadataError) throw metadataError;
+      if (metadataData?.user) currentUser = metadataData.user;
+      savedToAuthMetadata = true;
+    } catch (error) {
+      console.warn("Profile auth metadata save failed", error);
+    }
     try {
       const { error } = await supabaseClient.from("user_profiles").upsert(profile);
       if (error) throw error;
-      setSupabaseStatus("Profile saved", "connected");
+      savedToProfileTable = true;
     } catch (error) {
       console.warn("Profile save failed", error);
-      setSupabaseStatus("Profile saved locally · run profile SQL", "error");
     }
+    if (savedToProfileTable) setSupabaseStatus("Profile saved", "connected");
+    else if (savedToAuthMetadata) setSupabaseStatus("Profile saved to account · database profile table pending", "connected");
+    else setSupabaseStatus("Profile saved on this device only · check Supabase Auth settings", "error");
   }
   setAuthUi();
+  await loadProtectedWorkspace();
   renderDealPipeline();
 }
 
@@ -8655,8 +8785,12 @@ function setAuthUi() {
       profileSummaryCard.innerHTML = `<strong>${escapeHtml(currentProfile.full_name || currentUser.email)}</strong><small>${escapeHtml(currentProfile.company || "Portal user")} · ${admin ? "Admin" : "User / broker"} · ${escapeHtml(currentProfile.status || "active")}</small>`;
     }
   }
+  document.querySelectorAll("[data-admin-only]").forEach((element) => { element.hidden = !admin; });
+  if (!admin && routeFromHash() === "admin-inbox") showPage("dashboard");
   if (schemaWarning) schemaWarning.hidden = hardenedSchemaReady;
   setProtectedWorkspaceUi();
+  if (admin) loadAdminInbox();
+  else renderAdminInbox();
 }
 
 async function initSupabase() {
@@ -8694,6 +8828,7 @@ async function loadProtectedWorkspace() {
     hardenedSchemaReady = true;
     await loadRateEventsFromSupabase();
     await loadAuditTrailFromSupabase();
+    if (isAdminUser()) await loadAdminInbox();
     setSupabaseStatus(currentUser ? "Protected Supabase synced" : "Supabase synced", "connected");
   } catch (error) {
     console.warn("Supabase protected load failed", error); hardenedSchemaReady = false; setSupabaseStatus("Run hardening SQL", "error");
@@ -8702,6 +8837,17 @@ async function loadProtectedWorkspace() {
   renderDealPipeline();
   renderRateEvents();
   renderAuditTrail();
+}
+
+async function registerConfirmedAccount(email, password) {
+  const response = await fetch("/api/register-user", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password })
+  });
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok || payload.ok === false) throw new Error(payload.error || `Registration failed ${response.status}`);
+  return payload;
 }
 
 async function signInWithPasswordAuth(action = "login", emailOverride = "", passwordOverride = "") {
@@ -8723,10 +8869,19 @@ async function signInWithPasswordAuth(action = "login", emailOverride = "", pass
   }
   if (!supabaseClient) { setGlobalAuthStatus("Supabase login is not configured here. Use raj@localtest only on local/dev.", "error"); setSupabaseStatus("Login unavailable", "error"); return; }
   setPasswordAuthButtonsDisabled(true);
-  const authCall = action === "signup"
-    ? supabaseClient.auth.signUp({ email, password, options: { data: { requested_role: "broker" } } })
-    : supabaseClient.auth.signInWithPassword({ email, password });
-  const { data, error } = await authCall;
+  let data = null;
+  let error = null;
+  try {
+    if (action === "signup") {
+      setSupabaseStatus("Creating confirmed account…", "connected");
+      await registerConfirmedAccount(email, password);
+    }
+    const result = await supabaseClient.auth.signInWithPassword({ email, password });
+    data = result.data;
+    error = result.error;
+  } catch (caughtError) {
+    error = caughtError;
+  }
   setPasswordAuthButtonsDisabled(false);
   const authMessage = describePasswordAuthError(error, action);
   if (error) {
@@ -8738,13 +8893,8 @@ async function signInWithPasswordAuth(action = "login", emailOverride = "", pass
   await loadCurrentProfile();
   setAuthUi();
   await loadProtectedWorkspace();
-  if (action === "signup" && !data?.session) {
-    setSupabaseStatus("Account created", "connected");
-    setGlobalAuthStatus("Account created. If Supabase asks for email confirmation, confirm once, then login with your password.", "connected");
-  } else {
-    setSupabaseStatus(action === "signup" ? "Account created" : "Logged in", "connected");
-    setGlobalAuthStatus(currentProfile ? `Logged in as ${email}.` : `Logged in as ${email}. Complete your profile to unlock the desk.`, "connected");
-  }
+  setSupabaseStatus(action === "signup" ? "Account created" : "Logged in", "connected");
+  setGlobalAuthStatus(currentProfile ? `Logged in as ${email}.` : `Logged in as ${email}. Complete your profile to unlock the desk.`, "connected");
 }
 
 function setPasswordAuthButtonsDisabled(disabled) {
@@ -8975,26 +9125,17 @@ async function uploadRateSheetFileToSupabase(upload, file) {
     const { error } = await supabaseClient.storage.from("rate-sheet-uploads").upload(path, file, { upsert: false, contentType: file.type || "application/octet-stream" });
     if (error) throw error;
     try {
-      await supabaseClient.from("rate_sheet_uploads").insert({
-        id: upload.id,
-        workspace_id: upload.workspaceId,
-        lender_id: upload.lenderId,
-        lender: upload.lender,
-        file_name: upload.fileName,
-        file_type: upload.fileType,
-        file_size: upload.fileSize,
-        source: upload.source,
-        actor_role: upload.actorRole,
-        effective_date: upload.effectiveDate || null,
-        priority: upload.priority,
-        notes: upload.notes || null,
-        status: upload.status,
-        storage_path: path,
-        created_by: currentUser?.id || null,
-        created_at: upload.createdAt
+      const token = (await supabaseClient.auth.getSession())?.data?.session?.access_token;
+      const response = await fetch("/api/manual-rate-upload", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ upload: { ...upload, storagePath: path }, storagePath: path, mimeType: file.type || "application/octet-stream" })
       });
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok || payload.ok === false) throw new Error(payload.error || `Upload queue sync failed ${response.status}`);
     } catch (tableError) {
       console.warn("Upload metadata table sync failed", tableError);
+      setUploadStatus("File stored, but queue sync failed. Refresh and try again or check admin access.", "error");
     }
     return path;
   } catch (error) {
@@ -10251,6 +10392,239 @@ function renderInsurers() {
       `
     )
     .join("");
+}
+
+
+function adminAuthHeaders() {
+  const sessionPromise = supabaseClient?.auth?.getSession?.();
+  return sessionPromise;
+}
+
+function adminStatusClass(status = "") {
+  const value = String(status || "").toLowerCase();
+  if (["approved", "published", "extracted", "stored"].includes(value)) return "good";
+  if (["failed", "rejected"].includes(value)) return "bad";
+  return "warn";
+}
+
+function isMissingAdminSchemaError(message = "") {
+  return /rate_source_documents|extracted_rate_products|rate_extraction_runs|user_profiles|schema cache|PGRST205/i.test(String(message || ""));
+}
+
+function friendlyAdminErrorMessage(error) {
+  const message = error?.message || String(error || "Admin inbox unavailable");
+  if (isMissingAdminSchemaError(message)) {
+    return "Admin database migration pending. Run the Supabase admin-email-intake SQL, then refresh this inbox.";
+  }
+  return message;
+}
+
+async function getAdminAccessToken() {
+  if (!supabaseClient) throw new Error("Supabase session unavailable");
+  let { data } = await supabaseClient.auth.getSession();
+  let token = data?.session?.access_token || "";
+  if (!token && supabaseClient.auth.refreshSession) {
+    const refreshed = await supabaseClient.auth.refreshSession().catch(() => ({ data: null }));
+    data = refreshed?.data || data;
+    token = data?.session?.access_token || "";
+    currentUser = data?.session?.user || currentUser;
+  }
+  if (!token) {
+    currentUser = null;
+    currentProfile = null;
+    setAuthUi();
+    throw new Error("Admin login required. Sign in again as shiv@sicapital.ca.");
+  }
+  return token;
+}
+
+async function adminApi(body = null, method = "POST") {
+  const token = await getAdminAccessToken();
+  const response = await fetch("/api/admin-rate-intake", {
+    method: body ? method : "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
+    },
+    body: body ? JSON.stringify(body) : undefined
+  });
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(friendlyAdminErrorMessage(payload.error || `Admin API failed ${response.status}`));
+  return payload;
+}
+
+async function loadAdminInbox() {
+  if (!adminInboxList) return;
+  if (!isAdminUser()) { renderAdminInbox(); return; }
+  adminInboxList.innerHTML = `<div class="admin-empty-state">Loading admin inbox…</div>`;
+  try {
+    adminInboxData = await adminApi(null, "GET");
+    if (!activeAdminEmailId && adminInboxData.documents?.length) activeAdminEmailId = adminInboxData.documents[0].id;
+    renderAdminInbox();
+  } catch (error) {
+    console.warn("Admin inbox load failed", error);
+    const message = friendlyAdminErrorMessage(error);
+    adminInboxList.innerHTML = `<div class="admin-empty-state">${escapeHtml(message)}</div>`;
+    if (adminEmailDetail) adminEmailDetail.innerHTML = `<p class="eyebrow">Admin inbox</p><h4>Could not load</h4><p class="contact-line">${escapeHtml(message)}</p>`;
+  }
+}
+
+function filteredAdminDocuments() {
+  const query = normalizeSearchText(adminInboxSearch?.value || "");
+  const status = adminInboxStatus?.value || "all";
+  return (adminInboxData.documents || []).filter((doc) => {
+    const matchesStatus = status === "all" || doc.status === status;
+    const haystack = normalizeSearchText([doc.source_email_from, doc.source_email_to, doc.source_email_subject, doc.lender_name, doc.status].join(" "));
+    return matchesStatus && (!query || haystack.includes(query));
+  });
+}
+
+function adminRowsForEmail(emailId) {
+  return (adminInboxData.extractedRates || []).filter((row) => row.source_document_id === emailId);
+}
+
+function adminRunsForEmail(emailId) {
+  return (adminInboxData.runs || []).filter((row) => row.source_document_id === emailId);
+}
+
+function adminAttachmentsForEvent(eventId) {
+  return (adminInboxData.attachments || []).filter((row) => row.ingestion_event_id === eventId);
+}
+
+function renderAdminInbox() {
+  if (!adminInboxList) return;
+  if (!isAdminUser()) {
+    adminInboxList.innerHTML = `<div class="admin-empty-state">Admin-only. Sign in as the locked admin user to view incoming email and attachments.</div>`;
+    if (adminEmailDetail) adminEmailDetail.innerHTML = `<p class="eyebrow">Admin only</p><h4>Access restricted</h4><p class="contact-line">This page is hidden from non-admin profiles and API calls enforce admin access.</p>`;
+    return;
+  }
+  const docs = filteredAdminDocuments();
+  const attachments = adminInboxData.documents || [];
+  const drafts = (adminInboxData.extractedRates || []).filter((row) => ["needs_review", "approved"].includes(row.status));
+  document.querySelector("#adminInboxCount") && (document.querySelector("#adminInboxCount").textContent = String((adminInboxData.documents || []).length));
+  document.querySelector("#adminAttachmentCount") && (document.querySelector("#adminAttachmentCount").textContent = String(attachments.length));
+  document.querySelector("#adminDraftRateCount") && (document.querySelector("#adminDraftRateCount").textContent = String(drafts.length));
+  if (!docs.length) {
+    adminInboxList.innerHTML = `<div class="admin-empty-state">No manual uploads match this filter yet. Upload a PDF/XLS/XLSX, then run the AI processor.</div>`;
+    renderAdminEmailDetail(null);
+    return;
+  }
+  if (!docs.some((doc) => doc.id === activeAdminEmailId)) activeAdminEmailId = docs[0].id;
+  adminInboxList.innerHTML = docs.map((doc) => {
+    const rows = adminRowsForEmail(doc.id);
+    const att = doc.source_kind === "manual_upload" ? [doc] : adminAttachmentsForEvent(doc.ingestion_event_id);
+    const run = adminRunsForEmail(doc.id)[0];
+    return `<button class="admin-email-row ${doc.id === activeAdminEmailId ? "active" : ""}" type="button" data-admin-email="${escapeHtml(doc.id)}">
+      <strong>${escapeHtml(doc.source_email_subject || "(no subject)")}</strong>
+      <div class="admin-email-meta">
+        <span>${escapeHtml(doc.source_email_from || "unknown sender")}</span>
+        <span>${escapeHtml(displayDate(doc.received_at))}</span>
+        <span class="admin-chip ${adminStatusClass(doc.status)}">${escapeHtml(String(doc.status || "stored").replace(/_/g, " "))}</span>
+        <span class="admin-chip">${att.length} attachment${att.length === 1 ? "" : "s"}</span>
+        <span class="admin-chip ${adminStatusClass(run?.status || "queued")}">${escapeHtml((run?.status || "queued").replace(/_/g, " "))}</span>
+        <span class="admin-chip">${rows.length} row${rows.length === 1 ? "" : "s"}</span>
+      </div>
+    </button>`;
+  }).join("");
+  adminInboxList.querySelectorAll("[data-admin-email]").forEach((button) => button.addEventListener("click", () => {
+    activeAdminEmailId = button.dataset.adminEmail;
+    renderAdminInbox();
+  }));
+  renderAdminEmailDetail((adminInboxData.documents || []).find((doc) => doc.id === activeAdminEmailId));
+}
+
+function renderAdminEmailDetail(doc) {
+  if (!adminEmailDetail) return;
+  if (!doc) {
+    adminEmailDetail.innerHTML = `<p class="eyebrow">Manual upload detail</p><h4>No upload selected</h4><p class="contact-line">No matching manual upload items.</p>`;
+    return;
+  }
+  const attachments = doc.source_kind === "manual_upload" ? [doc] : adminAttachmentsForEvent(doc.ingestion_event_id);
+  const runs = adminRunsForEmail(doc.id);
+  const rows = adminRowsForEmail(doc.id);
+  const latestRun = runs[0];
+  adminEmailDetail.innerHTML = `
+    <p class="eyebrow">Manual upload detail</p>
+    <h4>${escapeHtml(doc.file_name || doc.source_email_subject || "Manual rate sheet")}</h4>
+    <div class="admin-email-meta">
+      <span>${escapeHtml(doc.source_email_from || "unknown sender")}</span>
+      <span>${escapeHtml(doc.source_email_to || "rate inbox")}</span>
+      <span>${escapeHtml(displayDate(doc.received_at))}</span>
+      <span class="admin-chip ${adminStatusClass(doc.status)}">${escapeHtml((doc.status || "stored").replace(/_/g, " "))}</span>
+    </div>
+    <p class="contact-line">${escapeHtml(latestRun?.summary || latestRun?.error_message || doc.metadata?.fetch_error || "File is saved. Click Run AI processor to get the AI review summary and extracted rows.")}</p>
+    <h4>Uploaded file</h4>
+    <div class="admin-attachment-list">${attachments.length ? attachments.map((att) => `<button class="secondary-button" type="button" data-admin-attachment="${escapeHtml(att.id)}">${escapeHtml(att.file_name || "rate sheet")} · ${Math.round((att.file_size_bytes || 0)/1024)} KB</button>`).join("") : `<span class="admin-chip warn">No saved file found</span>`}</div>
+    <h4>AI extracted rows</h4>
+    <div class="admin-rate-review-list">${rows.length ? rows.map(renderAdminRateRow).join("") : `<div class="admin-empty-state">No extracted rate rows yet. Run the AI processor. If it fails, the error summary appears above instead of silently hiding it.</div>`}</div>
+    <div class="admin-detail-actions">
+      <button class="secondary-button" type="button" data-admin-refresh>Refresh</button>
+      <button class="primary-button" type="button" data-admin-publish-selected>Publish approved / selected rows</button>
+    </div>
+  `;
+  adminEmailDetail.querySelectorAll("[data-admin-attachment]").forEach((button) => button.addEventListener("click", () => openAdminAttachment(button.dataset.adminAttachment)));
+  adminEmailDetail.querySelectorAll("[data-admin-approve]").forEach((button) => button.addEventListener("click", () => adminRateAction("approve", [button.dataset.adminApprove])));
+  adminEmailDetail.querySelectorAll("[data-admin-reject]").forEach((button) => button.addEventListener("click", () => adminRateAction("reject", [button.dataset.adminReject])));
+  adminEmailDetail.querySelector("[data-admin-refresh]")?.addEventListener("click", loadAdminInbox);
+  adminEmailDetail.querySelector("[data-admin-publish-selected]")?.addEventListener("click", () => {
+    const ids = rows.filter((row) => ["approved", "needs_review"].includes(row.status)).map((row) => row.id);
+    adminRateAction("publish", ids);
+  });
+}
+
+function renderAdminRateRow(row) {
+  const bestRate = row.uninsured_rate || row.insurable_rate || row.insured_rate || row.variable_discount || "N/A";
+  const confidence = row.confidence == null ? "n/a" : `${Math.round(Number(row.confidence) * 100)}%`;
+  return `<article class="admin-rate-row">
+    <div>
+      <strong>${escapeHtml(row.lender_name || "Unknown lender")} · ${escapeHtml(row.term_label || row.product_name || "Rate product")}</strong>
+      <div class="admin-rate-meta">
+        <span class="admin-chip">${escapeHtml(rate(bestRate))}</span>
+        <span>${escapeHtml(row.product_name || "")}</span>
+        <span>${escapeHtml(row.mortgage_type || "")}</span>
+        <span>effective ${escapeHtml(displayDate(row.effective_date))}</span>
+        <span>confidence ${escapeHtml(confidence)}</span>
+        <span class="admin-chip ${adminStatusClass(row.status)}">${escapeHtml((row.status || "needs_review").replace(/_/g, " "))}</span>
+      </div>
+    </div>
+    <div class="admin-rate-actions">
+      <button class="secondary-button" type="button" data-admin-approve="${escapeHtml(row.id)}">Approve</button>
+      <button class="secondary-button" type="button" data-admin-reject="${escapeHtml(row.id)}">Reject</button>
+    </div>
+  </article>`;
+}
+
+async function openAdminAttachment(attachmentId) {
+  try {
+    const result = await adminApi({ action: "signed-url", attachmentId });
+    if (result.url) window.open(result.url, "_blank", "noopener,noreferrer");
+  } catch (error) {
+    setSupabaseStatus(error.message, "error");
+  }
+}
+
+async function adminRateAction(action, rateIds) {
+  if (!rateIds?.length) { setSupabaseStatus("No rate rows selected", "error"); return; }
+  try {
+    const result = await adminApi({ action, rateIds, deactivateOlderMatchingRates: true });
+    setSupabaseStatus(action === "publish" ? `${result.publishedCount || 0} rate rows published` : `${action} complete`, "connected");
+    await loadPublishedRatesFromSupabase();
+    await loadAdminInbox();
+  } catch (error) {
+    setSupabaseStatus(error.message, "error");
+  }
+}
+
+async function analyzeQueuedAdminEmails() {
+  try {
+    setSupabaseStatus("Running AI processor…", "connected");
+    const result = await adminApi({ action: "analyze-queued", limit: 10 });
+    const ok = (result.results || []).filter((item) => item.ok !== false).length;
+    setSupabaseStatus(`AI processor checked ${result.checked || 0}; ${ok} ok`, "connected");
+    await loadAdminInbox();
+  } catch (error) {
+    setSupabaseStatus(error.message, "error");
+  }
 }
 
 function renderRateSelect() {
