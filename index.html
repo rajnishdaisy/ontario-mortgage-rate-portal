@@ -8158,7 +8158,7 @@ async function loadPublishedRatesFromSupabase() {
       .eq("is_published", true)
       .or(`expiry_date.is.null,expiry_date.gte.${today}`)
       .order("effective_date", { ascending: false })
-      .limit(250);
+      .limit(1000);
     if (error) throw error;
     livePublishedRates = data || [];
     liveRatesLoaded = true;
