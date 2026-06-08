@@ -875,12 +875,15 @@ async function processStoredSourceDocument(row) {
   }
 }
 
-export async function processQueuedRateEmails({ limit = 10, sourceKind = 'manual_upload' } = {}) {
+export async function processQueuedRateEmails({ limit = 10, sourceKind = 'manual_upload', sourceDocumentId = '' } = {}) {
   const workspaceId = process.env.RATE_AI_WORKSPACE_ID || DEFAULT_WORKSPACE_ID;
-  const sourceFilter = sourceKind === 'email' ? 'source_kind=eq.email' : sourceKind === 'all' ? 'source_kind=in.(email,manual_upload)' : 'source_kind=eq.manual_upload';
+  const sourceFilter = sourceDocumentId
+    ? `id=eq.${encodeURIComponent(sourceDocumentId)}`
+    : sourceKind === 'email' ? 'source_kind=eq.email' : sourceKind === 'all' ? 'source_kind=in.(email,manual_upload)' : 'source_kind=eq.manual_upload';
+  const statusFilter = sourceDocumentId ? '' : '&status=in.(queued,failed)';
   const rows = await getRows(
     'rate_source_documents',
-    `select=*&workspace_id=eq.${encodeURIComponent(workspaceId)}&${sourceFilter}&status=in.(queued,failed)&order=received_at.asc&limit=${Number(limit) || 10}`
+    `select=*&workspace_id=eq.${encodeURIComponent(workspaceId)}&${sourceFilter}${statusFilter}&order=received_at.asc&limit=${Number(limit) || 10}`
   );
   const results = [];
   for (const row of rows || []) {

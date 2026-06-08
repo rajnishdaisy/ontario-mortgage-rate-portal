@@ -94,6 +94,128 @@ function todayIso() {
   return new Date().toISOString().slice(0, 10);
 }
 
+function cleanPathPart(value = 'file') {
+  return String(value || 'file')
+    .replace(/[^a-zA-Z0-9._-]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 160) || 'file';
+}
+
+function cleanText(value = '', max = 500) {
+  return String(value || '').trim().slice(0, max);
+}
+
+async function downloadExternalRateSource(url) {
+  const parsed = new URL(url);
+  if (parsed.protocol !== 'https:') throw Object.assign(new Error('Only HTTPS rate-sheet URLs are allowed'), { statusCode: 400 });
+  const allowedHosts = String(process.env.RATE_SOURCE_URL_ALLOWED_HOSTS || 'www.mortgageboss.ca,mortgageboss.ca')
+    .split(',')
+    .map((host) => host.trim().toLowerCase())
+    .filter(Boolean);
+  const hostname = parsed.hostname.toLowerCase();
+  if (allowedHosts.length && !allowedHosts.some((host) => hostname === host || hostname.endsWith(`.${host}`))) {
+    throw Object.assign(new Error(`Rate source host not allowed: ${parsed.hostname}`), { statusCode: 400 });
+  }
+  const response = await fetch(url, { redirect: 'follow' });
+  const arrayBuffer = await response.arrayBuffer();
+  if (!response.ok) throw Object.assign(new Error(`Rate source download failed ${response.status}`), { statusCode: 400 });
+  const maxBytes = Number(process.env.RATE_SOURCE_URL_MAX_BYTES || 12 * 1024 * 1024);
+  if (arrayBuffer.byteLength > maxBytes) throw Object.assign(new Error(`Rate source file too large: ${arrayBuffer.byteLength} bytes`), { statusCode: 400 });
+  return {
+    buffer: Buffer.from(arrayBuffer),
+    contentType: response.headers.get('content-type') || 'application/octet-stream',
+    size: arrayBuffer.byteLength,
+    lastModified: response.headers.get('last-modified') || null,
+    etag: response.headers.get('etag') || null
+  };
+}
+
+async function uploadBufferToBucket(bucket, storagePath, buffer, contentType) {
+  const response = await fetch(`${supabaseBase()}/storage/v1/object/${encodeURIComponent(bucket)}/${storagePath.split('/').map(encodeURIComponent).join('/')}`, {
+    method: 'POST',
+    headers: serviceHeaders({ 'Content-Type': contentType || 'application/octet-stream', 'x-upsert': 'true' }),
+    body: buffer
+  });
+  const text = await response.text();
+  if (!response.ok) throw new Error(`Supabase storage upload failed ${response.status}: ${text}`);
+  try { return text ? JSON.parse(text) : null; } catch { return text; }
+}
+
+async function queueUrlRateSource(body, actor, workspaceId) {
+  const sourceUrl = cleanText(body.url || body.sourceUrl, 2000);
+  if (!sourceUrl) throw Object.assign(new Error('Missing source URL'), { statusCode: 400 });
+  const parsed = new URL(sourceUrl);
+  const downloaded = await downloadExternalRateSource(sourceUrl);
+  const now = new Date().toISOString();
+  const fileName = cleanText(body.fileName, 300) || cleanPathPart(decodeURIComponent(parsed.pathname.split('/').pop() || 'rate-sheet.pdf'));
+  const uploadId = stableId('urlup', `${workspaceId}:${sourceUrl}:${downloaded.etag || downloaded.lastModified || downloaded.size}`);
+  const storagePath = `${workspaceId}/url-imports/${todayIso()}/${uploadId}/${fileName}`;
+  await uploadBufferToBucket('rate-sheet-uploads', storagePath, downloaded.buffer, downloaded.contentType);
+
+  const lenderName = cleanText(body.lender, 200) || 'Multiple lenders';
+  await supabaseFetch('/rest/v1/rate_sheet_uploads', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Prefer: 'resolution=merge-duplicates,return=minimal' },
+    body: JSON.stringify({
+      id: uploadId,
+      workspace_id: workspaceId,
+      lender_id: cleanText(body.lenderId, 120),
+      lender: lenderName,
+      file_name: fileName,
+      file_type: downloaded.contentType.includes('pdf') ? 'PDF' : 'FILE',
+      file_size: downloaded.size,
+      source: cleanText(body.source, 120) || 'Connected URL',
+      actor_role: 'Admin URL connector',
+      effective_date: body.effectiveDate || null,
+      priority: cleanText(body.priority, 80) || 'Normal',
+      notes: cleanText(body.notes, 2000) || `Connected from ${sourceUrl}`,
+      status: 'Queued for AI review',
+      storage_path: storagePath,
+      created_by: actor.user.id,
+      created_at: now
+    })
+  });
+
+  const sourceDocumentId = `rsd-${uploadId}`.slice(0, 120);
+  await supabaseFetch('/rest/v1/rate_source_documents', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Prefer: 'resolution=merge-duplicates,return=representation' },
+    body: JSON.stringify({
+      id: sourceDocumentId,
+      workspace_id: workspaceId,
+      ingestion_event_id: null,
+      source_kind: 'manual_upload',
+      lender_name: lenderName,
+      source_email_from: actor.user.email || null,
+      source_email_to: 'rates@ontariomortgagerateportal.ca',
+      source_email_subject: `Connected rate-sheet URL: ${fileName}`,
+      source_email_message_id: sourceDocumentId,
+      source_email_thread_id: null,
+      received_at: now,
+      storage_bucket: 'rate-sheet-uploads',
+      storage_path: storagePath,
+      mime_type: downloaded.contentType,
+      file_name: fileName,
+      file_size_bytes: downloaded.size,
+      sha256: crypto.createHash('sha256').update(downloaded.buffer).digest('hex'),
+      status: 'queued',
+      parse_priority: 30,
+      metadata: {
+        upload_id: uploadId,
+        source_url: sourceUrl,
+        source_host: parsed.hostname,
+        last_modified: downloaded.lastModified,
+        etag: downloaded.etag,
+        lender_mode: 'combined',
+        combined_lenders: true,
+        queued_by: 'admin-url-connector'
+      }
+    })
+  });
+
+  return { ok: true, uploadId, sourceDocumentId, storagePath, fileName, fileSize: downloaded.size, contentType: downloaded.contentType };
+}
+
 function ratePresent(row) {
   return [row.insured_rate, row.insurable_rate, row.uninsured_rate].some((value) => value !== null && value !== undefined && value !== '') || Boolean(row.variable_discount);
 }
@@ -254,7 +376,8 @@ export default async function handler(req, res) {
     if (req.method !== 'POST') return json(res, 405, { error: 'Method not allowed' });
     const body = req.body || {};
     if (body.action === 'signed-url') return json(res, 200, await signedUrl(body.attachmentId, actor.workspaceId));
-    if (body.action === 'analyze-queued') return json(res, 200, { ok: true, ...(await processQueuedRateEmails({ limit: body.limit || 10, sourceKind: 'manual_upload' })) });
+    if (body.action === 'queue-url') return json(res, 200, await queueUrlRateSource(body, actor, actor.workspaceId));
+    if (body.action === 'analyze-queued') return json(res, 200, { ok: true, ...(await processQueuedRateEmails({ limit: body.limit || 10, sourceKind: 'manual_upload', sourceDocumentId: body.sourceDocumentId || '' })) });
     if (body.action === 'approve') return json(res, 200, await setExtractedStatus(body.rateIds, 'approved', actor, actor.workspaceId, body.reviewNotes));
     if (body.action === 'reject') return json(res, 200, await setExtractedStatus(body.rateIds, 'rejected', actor, actor.workspaceId, body.reviewNotes || body.reason));
     if (body.action === 'update-rate') return json(res, 200, await updateExtractedRate(body.rateId, body.patch || {}, actor, actor.workspaceId));
