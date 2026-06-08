@@ -8100,6 +8100,40 @@ function lowestNumber(...values) {
   return numbers.length ? Math.min(...numbers) : null;
 }
 
+function latestRateTimestamp(row = {}) {
+  const candidates = [row.effective_date, row.effectiveDate, row.approved_at, row.approvedAt, row.created_at, row.createdAt]
+    .map((value) => Date.parse(value || ""))
+    .filter(Number.isFinite);
+  return candidates.length ? Math.max(...candidates) : 0;
+}
+
+function publishedRateIdentity(row = {}) {
+  return [
+    row.lender_name || row.lenderName || "Unknown lender",
+    row.product_name || row.productName || "Published rate",
+    row.term_label || row.termLabel || "Term pending",
+    row.term_months || row.termMonths || "",
+    row.mortgage_type || row.mortgageType || "fixed",
+    row.purpose || "purchase",
+    row.occupancy || "owner-occupied",
+    row.amortization_years || row.amortizationYears || "25"
+  ].map((value) => normalizeSearchText(value)).join("|");
+}
+
+function dedupeLatestPublishedRates(rows = []) {
+  const latest = new Map();
+  (rows || []).forEach((row, index) => {
+    const key = publishedRateIdentity(row);
+    const existing = latest.get(key);
+    const score = latestRateTimestamp(row) || (rows.length - index);
+    const existingScore = existing ? latestRateTimestamp(existing.row) || (rows.length - existing.index) : -1;
+    if (!existing || score >= existingScore) latest.set(key, { row, index });
+  });
+  return [...latest.values()]
+    .map((item) => item.row)
+    .sort((a, b) => latestRateTimestamp(b) - latestRateTimestamp(a));
+}
+
 function applyPublishedRatesToLenders(rows = []) {
   const current = structuredClone(demoLenders);
   const bySlug = new Map(current.map((lender) => [slugifyLenderName(lender.name), lender]));
@@ -8153,14 +8187,15 @@ async function loadPublishedRatesFromSupabase() {
     const today = new Date().toISOString().slice(0, 10);
     const { data, error } = await supabaseClient
       .from("published_rates")
-      .select("lender_name,product_name,province,purpose,occupancy,mortgage_type,term_label,term_months,insured_rate,insurable_rate,uninsured_rate,variable_discount,rate_hold_days,effective_date,expiry_date,source_label,freshness_status,confidence,public_notes,conditions,approved_at")
+      .select("lender_name,product_name,province,purpose,occupancy,mortgage_type,term_label,term_months,amortization_years,insured_rate,insurable_rate,uninsured_rate,variable_discount,rate_hold_days,effective_date,expiry_date,source_label,freshness_status,confidence,public_notes,conditions,approved_at,created_at")
       .eq("workspace_id", "omrp-default")
       .eq("is_published", true)
       .or(`expiry_date.is.null,expiry_date.gte.${today}`)
       .order("effective_date", { ascending: false })
+      .order("approved_at", { ascending: false })
       .limit(1000);
     if (error) throw error;
-    livePublishedRates = data || [];
+    livePublishedRates = dedupeLatestPublishedRates(data || []);
     liveRatesLoaded = true;
     if (livePublishedRates.length) {
       lenders = applyPublishedRatesToLenders(livePublishedRates);
@@ -8179,8 +8214,8 @@ async function loadDryRunRateSheets() {
     dryRunRateSheetData = await response.json();
     dryRunRateRows = dryRunRateSheetData.published_rate_rows_dry_run || [];
     if (dryRunRateRows.length && !livePublishedRates.length) {
-      livePublishedRates = dryRunRateRows;
-      lenders = applyPublishedRatesToLenders(dryRunRateRows);
+      livePublishedRates = dedupeLatestPublishedRates(dryRunRateRows);
+      lenders = applyPublishedRatesToLenders(livePublishedRates);
       render();
     } else {
       renderDryRunRateSheets();
@@ -9543,6 +9578,7 @@ function rateFinderRows() {
       hold: row.rate_hold_days || row.rateHoldDays || "—",
       source: typeof (row.source_label || row.sourceLabel) === "string" ? (row.source_label || row.sourceLabel) : "Published rate row",
       updated: row.effective_date || row.effectiveDate || row.approved_at || row.approvedAt || "",
+      approvedAt: row.approved_at || row.approvedAt || row.created_at || row.createdAt || "",
       status: row.freshness_status || row.freshnessStatus || (row.confidence >= 0.88 ? "approved" : "review-only"),
       note: row.public_notes || row.publicNotes || row.conditions || "AI-extracted rate row. Confirm lender eligibility."
     };
@@ -9581,12 +9617,14 @@ function rateFinderRows() {
   addRateFinderBlankCoverageRows(rows);
 
   const seen = new Set();
-  return rows.filter((row) => {
-    const key = [row.lender, row.termValue, row.rateType, row.bucket, row.rateValue, row.amortization, row.purpose, row.source, row.status].join("|");
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return row.isPlaceholder || (row.rateValue !== null && row.rateValue !== undefined && row.rateValue !== "");
-  });
+  return rows
+    .sort((a, b) => (Date.parse(b.updated || b.approvedAt || "") || 0) - (Date.parse(a.updated || a.approvedAt || "") || 0))
+    .filter((row) => {
+      const key = [row.lender, row.termValue, row.rateType, row.bucket, row.amortization, row.purpose].map((value) => normalizeSearchText(value)).join("|");
+      if (!row.isPlaceholder && seen.has(key)) return false;
+      if (!row.isPlaceholder) seen.add(key);
+      return row.isPlaceholder || (row.rateValue !== null && row.rateValue !== undefined && row.rateValue !== "");
+    });
 }
 
 function renderBrokerRateFinder() {
