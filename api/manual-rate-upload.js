@@ -76,11 +76,12 @@ export default async function handler(req, res) {
     if (!uploadId) return json(res, 400, { ok: false, error: 'Missing upload id.' });
     const workspaceId = actor.workspaceId;
     const now = new Date().toISOString();
-    const lenderName = cleanText(upload.lender, 200) || 'Unknown lender';
+    const combinedLenders = upload.lenderMode === 'combined' || upload.combinedLenders === true;
+    const lenderName = combinedLenders ? 'Multiple lenders' : (cleanText(upload.lender, 200) || 'Unknown lender');
     const fileName = cleanText(upload.fileName, 300) || 'rate-sheet-upload';
     const fileType = cleanText(upload.fileType, 30) || 'FILE';
     const notes = cleanText(upload.notes, 2000);
-    const source = cleanText(upload.source, 120) || 'Manual upload';
+    const source = cleanText(upload.source, 120) || (combinedLenders ? 'Combined all-lender upload' : 'Manual upload');
     const actorRole = cleanText(upload.actorRole, 120) || 'User / broker';
     const status = safeStatus(upload.status);
 
@@ -134,6 +135,8 @@ export default async function handler(req, res) {
         metadata: {
           upload_id: uploadId,
           lender_id: cleanText(upload.lenderId, 120),
+          lender_mode: combinedLenders ? 'combined' : 'single',
+          combined_lenders: combinedLenders,
           source,
           actor_role: actorRole,
           notes,

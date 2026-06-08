@@ -6364,7 +6364,11 @@ textarea,
                 </div>
                 <span class="source-chip">PDF / XLS / XLSX</span>
               </div>
-              <label><span>Lender</span><select id="uploadLenderSelect" required><option value="">Select lender</option></select></label>
+              <div class="form-grid compact-form-grid">
+                <label><span>Upload type</span><select id="uploadLenderMode"><option value="single">Single lender file</option><option value="combined">One PDF with all lenders</option></select></label>
+                <label><span>Lender</span><select id="uploadLenderSelect" required><option value="">Select lender</option></select></label>
+              </div>
+              <p class="upload-help-text compact-help" id="combinedUploadHelp">Choose “one PDF with all lenders” when the file contains multiple lenders. The AI will split rows by lender name and stage each rate under the matching lender for admin review.</p>
               <div class="form-grid compact-form-grid">
                 <label><span>Uploader type</span><select id="uploadActorRole"><option>User / broker</option><option>Admin</option></select></label>
                 <label><span>Effective date</span><input id="uploadEffectiveDate" type="date" /></label>
@@ -7768,6 +7772,7 @@ const rateIngestionForm = document.querySelector("#rateIngestionForm");
 const rateIngestionList = document.querySelector("#rateIngestionList");
 const demoIngestionSummary = document.querySelector("#demoIngestionSummary");
 const rateSheetUploadForm = document.querySelector("#rateSheetUploadForm");
+const uploadLenderMode = document.querySelector("#uploadLenderMode");
 const uploadLenderSelect = document.querySelector("#uploadLenderSelect");
 const rateSheetFilesInput = document.querySelector("#rateSheetFiles");
 const rateSheetUploadList = document.querySelector("#rateSheetUploadList");
@@ -7850,6 +7855,7 @@ signOutButton?.addEventListener("click", signOutAdvisor);
 profileCreateForm?.addEventListener("submit", (event) => { event.preventDefault(); saveUserProfileFromForm("inline"); });
 rateIngestionForm?.addEventListener("submit", (event) => { event.preventDefault(); createRateEventFromForm(); });
 rateSheetUploadForm?.addEventListener("submit", (event) => { event.preventDefault(); createRateSheetUploadsFromForm(); });
+uploadLenderMode?.addEventListener("change", syncUploadLenderMode);
 document.querySelector("#seedUploadDemo")?.addEventListener("click", seedDemoRateSheetUpload);
 document.querySelector("#clearUploadQueue")?.addEventListener("click", () => { rateSheetUploads = []; saveRateSheetUploads(); renderRateSheetUploads(); setUploadStatus("Local upload queue cleared."); });
 document.querySelector("#seedDemoRateIngestion")?.addEventListener("click", runStaticDemoRateIngestion);
@@ -9081,14 +9087,29 @@ function normalizeStaticDemoSource(record) {
   };
 }
 
+function syncUploadLenderMode() {
+  if (!uploadLenderMode || !uploadLenderSelect) return;
+  const combined = uploadLenderMode.value === "combined";
+  uploadLenderSelect.required = !combined;
+  uploadLenderSelect.disabled = combined;
+  if (combined) uploadLenderSelect.value = "";
+  const help = document.querySelector("#combinedUploadHelp");
+  if (help) help.textContent = combined
+    ? "Combined mode active: upload one PDF/Excel package and the AI will assign each extracted rate row to the lender named in the document."
+    : "Choose “one PDF with all lenders” when the file contains multiple lenders. The AI will split rows by lender name and stage each rate under the matching lender for admin review.";
+}
+
 async function createRateSheetUploadsFromForm() {
   if (!rateSheetUploadForm || !rateSheetFilesInput) return;
   if (authRequired && !canUseProtectedWorkspace()) { setUploadStatus("Sign in and create your profile before uploading lender rate sheets.", "error"); return; }
-  const lenderId = uploadLenderSelect?.value || "";
-  const lender = lenders.find((item) => item.id === lenderId);
+  const lenderMode = uploadLenderMode?.value || "single";
+  const combinedLenders = lenderMode === "combined";
+  const lenderId = combinedLenders ? "all-lenders" : (uploadLenderSelect?.value || "");
+  const lender = combinedLenders ? { id: "all-lenders", name: "Multiple lenders" } : lenders.find((item) => item.id === lenderId);
   const files = [...(rateSheetFilesInput.files || [])];
   const allowed = /\.(pdf|xls|xlsx)$/i;
-  if (!lender || !files.length) { setUploadStatus("Choose a lender and at least one PDF or Excel file.", "error"); return; }
+  if (!lender || !files.length) { setUploadStatus(combinedLenders ? "Choose one combined PDF or Excel file." : "Choose a lender and at least one PDF or Excel file.", "error"); return; }
+  if (combinedLenders && files.length !== 1) { setUploadStatus("Combined all-lenders mode accepts one file at a time so the AI can keep one source package together.", "error"); return; }
   const invalid = files.find((file) => !allowed.test(file.name));
   if (invalid) { setUploadStatus(`${invalid.name} is not supported. Upload PDF, XLS, or XLSX only.`, "error"); return; }
 
@@ -9099,10 +9120,12 @@ async function createRateSheetUploadsFromForm() {
       workspaceId: workspaceId(),
       lenderId: lender.id,
       lender: lender.name,
+      lenderMode,
+      combinedLenders,
       fileName: file.name,
       fileType: file.name.split(".").pop()?.toUpperCase() || file.type || "FILE",
       fileSize: file.size,
-      source: document.querySelector("#uploadSource")?.value || "Manual upload",
+      source: document.querySelector("#uploadSource")?.value || (combinedLenders ? "Combined all-lender upload" : "Manual upload"),
       actorRole: document.querySelector("#uploadActorRole")?.value || "User / broker",
       effectiveDate: document.querySelector("#uploadEffectiveDate")?.value || "",
       priority: document.querySelector("#uploadPriority")?.value || "Normal",
@@ -9119,7 +9142,8 @@ async function createRateSheetUploadsFromForm() {
   saveRateSheetUploads();
   renderRateSheetUploads();
   rateSheetUploadForm.reset();
-  setUploadStatus(`${created.length} rate sheet${created.length === 1 ? "" : "s"} queued for manual AI analysis.`);
+  syncUploadLenderMode();
+  setUploadStatus(`${created.length} rate sheet${created.length === 1 ? "" : "s"} queued for ${combinedLenders ? "all-lender" : "manual"} AI analysis.`);
   await logAuditEvent("rate_sheet_uploaded", `${created.length} sheet(s) queued for ${lender.name}`);
 }
 
@@ -9202,7 +9226,7 @@ function renderRateSheetUploads() {
           <span>${escapeHtml(item.fileType)}</span>
           <span>${formatFileSize(item.fileSize)}</span>
           <span>${escapeHtml(item.priority)}</span>
-          <span>${item.storagePath ? "Stored" : "Local stage"}</span>
+          <span>${item.combinedLenders ? "All-lender split" : (item.storagePath ? "Stored" : "Local stage")}</span>
         </div>
       </div>
       <span class="upload-status-chip">${escapeHtml(item.status)}</span>
@@ -9247,6 +9271,7 @@ function render() {
   renderInsurers();
   renderContacts();
   renderRateSheetUploadSelect();
+  syncUploadLenderMode();
   renderRateSheetUploads();
   renderRateSelect();
   renderDealPipeline();

@@ -368,7 +368,7 @@ function extractionSchema() {
       type: 'object',
       additionalProperties: false,
       properties: {
-        lender_name: { type: 'string' },
+        lender_name: { type: 'string', description: 'Single lender name, or Multiple lenders when one document contains more than one lender.' },
         effective_date: { type: ['string', 'null'], description: 'YYYY-MM-DD if known' },
         expiry_date: { type: ['string', 'null'], description: 'YYYY-MM-DD if known' },
         summary: { type: 'string' },
@@ -380,6 +380,7 @@ function extractionSchema() {
             type: 'object',
             additionalProperties: false,
             properties: {
+              lender_name: { type: ['string', 'null'], description: 'Required when the source document contains multiple lenders. Use the exact lender name shown for this rate row.' },
               product_name: { type: ['string', 'null'] },
               province: { type: ['string', 'null'] },
               purpose: { type: ['string', 'null'] },
@@ -409,6 +410,7 @@ function extractionSchema() {
             type: 'object',
             additionalProperties: false,
             properties: {
+              lender_name: { type: ['string', 'null'], description: 'Lender this note belongs to when known.' },
               category: { type: 'string' },
               title: { type: 'string' },
               note: { type: 'string' },
@@ -427,6 +429,7 @@ function extractionSchema() {
             type: 'object',
             additionalProperties: false,
             properties: {
+              lender_name: { type: ['string', 'null'], description: 'Lender this contact belongs to when known.' },
               name: { type: 'string' },
               role: { type: ['string', 'null'] },
               email: { type: ['string', 'null'] },
@@ -527,7 +530,7 @@ async function runAiExtraction({ email, meta, sourceDocument, attachments }) {
   const inputContent = [
     {
       type: 'input_text',
-      text: `You are an Ontario mortgage rate-sheet operations analyst. Extract only facts visible in the email/attachments. Do not guess missing rates. Normalize rates as percentages, e.g. 4.59 not 0.0459. If a number is unclear, omit it or set null and lower confidence. Return products, policy notes, and BDM/lender contacts. Auto-publish should be true only if lender, effective date, term, at least one rate, and conditions are clear. Source document id: ${sourceDocument.id}\n\n${bodyText}`
+      text: `You are an Ontario mortgage rate-sheet operations analyst. Extract only facts visible in the email/attachments. Do not guess missing rates. Normalize rates as percentages, e.g. 4.59 not 0.0459. If a number is unclear, omit it or set null and lower confidence. Return products, policy notes, and BDM/lender contacts. If the source is a combined/all-lenders package, set top-level lender_name to "Multiple lenders" and put the exact lender name on every product.lender_name, policy_notes[].lender_name, and contacts[].lender_name so each row can be filed under the correct lender. Auto-publish should be true only if lender, effective date, term, at least one rate, and conditions are clear. Source document id: ${sourceDocument.id}\n\n${bodyText}`
     },
     ...(await attachmentContentParts(attachments))
   ];
@@ -611,7 +614,8 @@ async function persistExtraction({ extraction, sourceDocumentId, extractionRunId
   const policies = Array.isArray(extraction.policy_notes) ? extraction.policy_notes : [];
   const contacts = Array.isArray(extraction.contacts) ? extraction.contacts : [];
   const confidence = averageConfidence(extraction);
-  const hasPublishableProduct = products.some((p) => Boolean(lender && lender !== 'Unknown lender' && isPublishableProduct(p, extraction)));
+  const lenderForProduct = (product) => String(product?.lender_name || lender || 'Unknown lender').trim() || 'Unknown lender';
+  const hasPublishableProduct = products.some((p) => Boolean(lenderForProduct(p) && lenderForProduct(p) !== 'Unknown lender' && isPublishableProduct(p, extraction)));
   const shouldPublish = Boolean(canAutoPublish && extraction.auto_publish_recommended) && confidence >= AUTO_PUBLISH_MIN_CONFIDENCE && hasPublishableProduct;
   const productStatus = shouldPublish ? 'published' : 'needs_review';
   const extractedRows = products.map((p, idx) => ({
@@ -619,7 +623,7 @@ async function persistExtraction({ extraction, sourceDocumentId, extractionRunId
     workspace_id: workspaceId,
     extraction_run_id: extractionRunId,
     source_document_id: sourceDocumentId,
-    lender_name: lender,
+    lender_name: lenderForProduct(p),
     product_name: p.product_name || null,
     province: p.province || 'Ontario',
     purpose: p.purpose || null,
@@ -686,7 +690,7 @@ async function persistExtraction({ extraction, sourceDocumentId, extractionRunId
       id: safeId('pol', `${sourceDocumentId}:${idx}`),
       workspace_id: workspaceId,
       source_document_id: sourceDocumentId,
-      lender_name: lender,
+      lender_name: p.lender_name || lender,
       category: p.category || 'general',
       title: p.title || 'Policy note',
       note: p.note || '',
@@ -705,7 +709,7 @@ async function persistExtraction({ extraction, sourceDocumentId, extractionRunId
       id: safeId('bdm', `${sourceDocumentId}:${idx}`),
       workspace_id: workspaceId,
       source_document_id: sourceDocumentId,
-      lender_name: lender,
+      lender_name: c.lender_name || lender,
       name: c.name,
       role: c.role || null,
       email: c.email || null,
@@ -743,7 +747,7 @@ async function processStoredSourceDocument(row) {
       from: meta.from,
       to: meta.to,
       subject: meta.subject,
-      text: `Manual portal upload for ${row.lender_name || 'unknown lender'}. Reviewer notes: ${row.metadata?.notes || ''}`,
+      text: `Manual portal upload for ${row.lender_name || 'unknown lender'}. ${row.metadata?.combined_lenders ? 'This is one combined file containing multiple lenders; extract each lender separately and set lender_name on every extracted row.' : ''} Reviewer notes: ${row.metadata?.notes || ''}`,
       html: ''
     };
     downloadedAttachments = [{
