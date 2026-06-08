@@ -1,0 +1,1107 @@
+{
+  "summary": {
+    "generated_at": "2026-06-08T02:34:00Z",
+    "mode": "dry_run_static",
+    "inbox_checked": 54,
+    "attachments_seen": 83,
+    "candidate_emails": 7,
+    "unique_candidate_documents": 3,
+    "extracted_rate_rows": 5,
+    "noise_or_deal_document_emails": 40,
+    "standard_inbox": "rates@luniaontua.resend.app",
+    "actual_recent_recipient_matches": 0,
+    "note": "Dry run uses emails visible in the current Resend receiving feed. Recent messages are mostly @docs.sicapital.ca, not rates@luniaontua.resend.app."
+  },
+  "candidate_documents": [
+    {
+      "lender": "MortgageBOSS multi-lender sheet",
+      "document_type": "rate_sheet",
+      "status": "needs_review",
+      "filename": "MortgageBOSSRateSheet.pdf",
+      "content_type": "application/pdf",
+      "size": 474155,
+      "source_received_at": "2026-03-16 15:02:03.123678+00",
+      "source_from": "shivv.sharma@gmail.com",
+      "source_to": "docs-fce3c4f2@docs.sicapital.ca",
+      "source_subject": "Fwd: test"
+    },
+    {
+      "lender": "TD Canada Trust",
+      "document_type": "rate_sheet",
+      "status": "extracted",
+      "filename": "RTP Broker  Rate Sheet 01-30-2026.xlsx",
+      "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "size": 397905,
+      "source_received_at": "2026-03-16 14:17:58.526371+00",
+      "source_from": "shivv.sharma@gmail.com",
+      "source_to": "docs-db20785d@docs.sicapital.ca",
+      "source_subject": "Re: test"
+    },
+    {
+      "lender": "BMO",
+      "document_type": "policy_or_template",
+      "status": "organized_as_policy_template",
+      "filename": "BMO BrokerEdge Pricing Desk Exception Template 20260223.xlsx",
+      "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "size": 14962,
+      "source_received_at": "2026-03-16 14:11:32.959872+00",
+      "source_from": "shivv.sharma@gmail.com",
+      "source_to": "docs-db20785d@docs.sicapital.ca",
+      "source_subject": "test"
+    }
+  ],
+  "published_rate_rows_dry_run": [
+    {
+      "lender_name": "TD Canada Trust",
+      "product_name": "TD Home Equity FlexLine Fixed Rate Term Portion",
+      "province": "Ontario",
+      "purpose": "HELOC / Term Portion",
+      "occupancy": "Owner occupied; rental adjustment noted",
+      "mortgage_type": "fixed",
+      "term_label": "1 Year Fixed",
+      "term_months": 12,
+      "posted_rate": 5.84,
+      "ltv_or_amount_bucket_rates": [
+        {
+          "bucket": "<$299,999",
+          "rate": 5.49
+        },
+        {
+          "bucket": "$300,000-$499,999",
+          "rate": 5.49
+        },
+        {
+          "bucket": "$500,000-$749,999",
+          "rate": 5.44
+        },
+        {
+          "bucket": ">$750,000",
+          "rate": 5.44
+        }
+      ],
+      "insured_rate": null,
+      "insurable_rate": 5.44,
+      "uninsured_rate": 5.44,
+      "compensation_bps": 55,
+      "effective_date": "2026-01-30",
+      "source_label": "RTP Broker Rate Sheet 01-30-2026.xlsx",
+      "confidence": 0.88,
+      "public_notes": "Dry-run extraction from spreadsheet preview. Amount-tiered FlexLine rates; add 5 bps for amortizations greater than 25 years where applicable; add 15 bps for rental properties per sheet note."
+    },
+    {
+      "lender_name": "TD Canada Trust",
+      "product_name": "TD Home Equity FlexLine Fixed Rate Term Portion",
+      "province": "Ontario",
+      "purpose": "HELOC / Term Portion",
+      "occupancy": "Owner occupied; rental adjustment noted",
+      "mortgage_type": "fixed",
+      "term_label": "2 Year Fixed",
+      "term_months": 24,
+      "posted_rate": 5.14,
+      "ltv_or_amount_bucket_rates": [
+        {
+          "bucket": "<$299,999",
+          "rate": 4.69
+        },
+        {
+          "bucket": "$300,000-$499,999",
+          "rate": 4.69
+        },
+        {
+          "bucket": "$500,000-$749,999",
+          "rate": 4.64
+        },
+        {
+          "bucket": ">$750,000",
+          "rate": 4.64
+        }
+      ],
+      "insured_rate": null,
+      "insurable_rate": 4.64,
+      "uninsured_rate": 4.64,
+      "compensation_bps": 55,
+      "effective_date": "2026-01-30",
+      "source_label": "RTP Broker Rate Sheet 01-30-2026.xlsx",
+      "confidence": 0.88,
+      "public_notes": "Dry-run extraction from spreadsheet preview. Amount-tiered FlexLine rates; add 5 bps for amortizations greater than 25 years where applicable; add 15 bps for rental properties per sheet note."
+    },
+    {
+      "lender_name": "TD Canada Trust",
+      "product_name": "TD Home Equity FlexLine Fixed Rate Term Portion",
+      "province": "Ontario",
+      "purpose": "HELOC / Term Portion",
+      "occupancy": "Owner occupied; rental adjustment noted",
+      "mortgage_type": "fixed",
+      "term_label": "3 Year Fixed",
+      "term_months": 36,
+      "posted_rate": 6.05,
+      "ltv_or_amount_bucket_rates": [
+        {
+          "bucket": "<$299,999",
+          "rate": 4.44
+        },
+        {
+          "bucket": "$300,000-$499,999",
+          "rate": 4.44
+        },
+        {
+          "bucket": "$500,000-$749,999",
+          "rate": 4.39
+        },
+        {
+          "bucket": ">$750,000",
+          "rate": 4.39
+        }
+      ],
+      "insured_rate": null,
+      "insurable_rate": 4.39,
+      "uninsured_rate": 4.39,
+      "compensation_bps": 60,
+      "effective_date": "2026-01-30",
+      "source_label": "RTP Broker Rate Sheet 01-30-2026.xlsx",
+      "confidence": 0.88,
+      "public_notes": "Dry-run extraction from spreadsheet preview. Amount-tiered FlexLine rates; add 5 bps for amortizations greater than 25 years where applicable; add 15 bps for rental properties per sheet note."
+    },
+    {
+      "lender_name": "TD Canada Trust",
+      "product_name": "TD Home Equity FlexLine Fixed Rate Term Portion",
+      "province": "Ontario",
+      "purpose": "HELOC / Term Portion",
+      "occupancy": "Owner occupied; rental adjustment noted",
+      "mortgage_type": "fixed",
+      "term_label": "4 Year Fixed",
+      "term_months": 48,
+      "posted_rate": 5.99,
+      "ltv_or_amount_bucket_rates": [
+        {
+          "bucket": "<$299,999",
+          "rate": 4.59
+        },
+        {
+          "bucket": "$300,000-$499,999",
+          "rate": 4.59
+        },
+        {
+          "bucket": "$500,000-$749,999",
+          "rate": 4.54
+        },
+        {
+          "bucket": ">$750,000",
+          "rate": 4.54
+        }
+      ],
+      "insured_rate": null,
+      "insurable_rate": 4.54,
+      "uninsured_rate": 4.54,
+      "compensation_bps": 70,
+      "effective_date": "2026-01-30",
+      "source_label": "RTP Broker Rate Sheet 01-30-2026.xlsx",
+      "confidence": 0.88,
+      "public_notes": "Dry-run extraction from spreadsheet preview. Amount-tiered FlexLine rates; add 5 bps for amortizations greater than 25 years where applicable; add 15 bps for rental properties per sheet note."
+    },
+    {
+      "lender_name": "TD Canada Trust",
+      "product_name": "TD Home Equity FlexLine Fixed Rate Term Portion",
+      "province": "Ontario",
+      "purpose": "HELOC / Term Portion",
+      "occupancy": "Owner occupied; rental adjustment noted",
+      "mortgage_type": "fixed",
+      "term_label": "5 Year Fixed",
+      "term_months": 60,
+      "posted_rate": 6.09,
+      "ltv_or_amount_bucket_rates": [
+        {
+          "bucket": "<$299,999",
+          "rate": 4.59
+        },
+        {
+          "bucket": "$300,000-$499,999",
+          "rate": 4.59
+        },
+        {
+          "bucket": "$500,000-$749,999",
+          "rate": 4.54
+        },
+        {
+          "bucket": ">$750,000",
+          "rate": 4.54
+        }
+      ],
+      "insured_rate": null,
+      "insurable_rate": 4.54,
+      "uninsured_rate": 4.54,
+      "compensation_bps": 75,
+      "effective_date": "2026-01-30",
+      "source_label": "RTP Broker Rate Sheet 01-30-2026.xlsx",
+      "confidence": 0.88,
+      "public_notes": "Dry-run extraction from spreadsheet preview. Amount-tiered FlexLine rates; add 5 bps for amortizations greater than 25 years where applicable; add 15 bps for rental properties per sheet note."
+    }
+  ],
+  "policy_notes_dry_run": [
+    {
+      "lender_name": "BMO",
+      "source_label": "BMO BrokerEdge Pricing Desk Exception Template 20260223.xlsx",
+      "effective_date": "2026-02-23",
+      "note_type": "pricing_exception_process",
+      "status": "organized_as_policy_template",
+      "summary": "Template for broker pricing desk exception requests. Requires application #, underwriter email, BDM email, closing date, requested rate, mortgage amount, term, product, status, program, cashback, and buydown willingness. Submit to BrokerEdgePricingDesk@bmo.com and cc BDM.",
+      "confidence": 0.93
+    }
+  ],
+  "lender_rate_matrix": [
+    {
+      "lender_name": "B2B Bank",
+      "source_label": "MortgageBOSSRateSheet.pdf",
+      "source_status": "received_multi_lender_pdf_needs_parser_review",
+      "sheet_date": "5/20",
+      "rates": {
+        "sheet_date": "5/20",
+        "insured_5yr": "4.44",
+        "insurable_75_80_5yr": "4.84",
+        "uninsured_refi_25yr_5yr": "4.84",
+        "variable_insured": "P-0.65"
+      },
+      "best_visible_fixed_5yr": 4.44
+    },
+    {
+      "lender_name": "BMO",
+      "source_label": "MortgageBOSSRateSheet.pdf",
+      "source_status": "received_multi_lender_pdf_needs_parser_review",
+      "sheet_date": "3/27",
+      "rates": {
+        "sheet_date": "3/27",
+        "insured_5yr": "4.69",
+        "insurable_75_80_5yr": "5.09",
+        "uninsured_refi_25yr_5yr": "5.09",
+        "variable_insured": "P-0.33"
+      },
+      "best_visible_fixed_5yr": 4.69
+    },
+    {
+      "lender_name": "CMLS",
+      "source_label": "MortgageBOSSRateSheet.pdf",
+      "source_status": "received_multi_lender_pdf_needs_parser_review",
+      "sheet_date": "5/30",
+      "rates": {
+        "sheet_date": "5/30",
+        "insured_5yr": "4.39",
+        "insurable_75_80_5yr": "4.64",
+        "uninsured_refi_25yr_5yr": "4.84",
+        "variable_insured": "P-0.75"
+      },
+      "best_visible_fixed_5yr": 4.39
+    },
+    {
+      "lender_name": "First National",
+      "source_label": "MortgageBOSSRateSheet.pdf",
+      "source_status": "received_multi_lender_pdf_needs_parser_review",
+      "sheet_date": "5/23",
+      "rates": {
+        "sheet_date": "5/23",
+        "insured_5yr": "4.49",
+        "insurable_75_80_5yr": "4.79",
+        "uninsured_refi_25yr_5yr": "4.84",
+        "variable_insured": "P-0.75"
+      },
+      "best_visible_fixed_5yr": 4.49
+    },
+    {
+      "lender_name": "Highclere",
+      "source_label": "MortgageBOSSRateSheet.pdf",
+      "source_status": "received_multi_lender_pdf_needs_parser_review",
+      "sheet_date": "5/16",
+      "rates": {
+        "sheet_date": "5/16",
+        "insured_5yr": "4.49",
+        "insurable_75_80_5yr": "4.74",
+        "uninsured_refi_25yr_5yr": null,
+        "variable_insured": "P-0.75"
+      },
+      "best_visible_fixed_5yr": 4.49
+    },
+    {
+      "lender_name": "MERIX",
+      "source_label": "MortgageBOSSRateSheet.pdf",
+      "source_status": "received_multi_lender_pdf_needs_parser_review",
+      "sheet_date": "5/20",
+      "rates": {
+        "sheet_date": "5/20",
+        "insured_5yr": "4.49",
+        "insurable_75_80_5yr": "4.69",
+        "uninsured_refi_25yr_5yr": "4.84",
+        "variable_insured": "P-0.75"
+      },
+      "best_visible_fixed_5yr": 4.49
+    },
+    {
+      "lender_name": "Manulife Bank",
+      "source_label": "MortgageBOSSRateSheet.pdf",
+      "source_status": "received_multi_lender_pdf_needs_parser_review",
+      "sheet_date": "4/9",
+      "rates": {
+        "sheet_date": "4/9",
+        "insured_5yr": "4.39",
+        "insurable_75_80_5yr": "4.69",
+        "uninsured_refi_25yr_5yr": null,
+        "variable_insured": "P-0.70"
+      },
+      "best_visible_fixed_5yr": 4.39
+    },
+    {
+      "lender_name": "MCAP",
+      "source_label": "MortgageBOSSRateSheet.pdf",
+      "source_status": "received_multi_lender_pdf_needs_parser_review",
+      "sheet_date": "5/20",
+      "rates": {
+        "sheet_date": "5/20",
+        "insured_5yr": "4.49",
+        "insurable_75_80_5yr": "4.69",
+        "uninsured_refi_25yr_5yr": "4.84",
+        "variable_insured": "P-0.75"
+      },
+      "best_visible_fixed_5yr": 4.49
+    },
+    {
+      "lender_name": "Neo",
+      "source_label": "MortgageBOSSRateSheet.pdf",
+      "source_status": "received_multi_lender_pdf_needs_parser_review",
+      "sheet_date": "5/26",
+      "rates": {
+        "sheet_date": "5/26",
+        "insured_5yr": "4.39",
+        "insurable_75_80_5yr": "4.64",
+        "uninsured_refi_25yr_5yr": "4.89",
+        "variable_insured": "P-0.85"
+      },
+      "best_visible_fixed_5yr": 4.39
+    },
+    {
+      "lender_name": "RFA",
+      "source_label": "MortgageBOSSRateSheet.pdf",
+      "source_status": "received_multi_lender_pdf_needs_parser_review",
+      "sheet_date": "5/16",
+      "rates": {
+        "sheet_date": "5/16",
+        "insured_5yr": "4.49",
+        "insurable_75_80_5yr": "4.69",
+        "uninsured_refi_25yr_5yr": "4.84",
+        "variable_insured": "P-0.75"
+      },
+      "best_visible_fixed_5yr": 4.49
+    },
+    {
+      "lender_name": "RMG",
+      "source_label": "MortgageBOSSRateSheet.pdf",
+      "source_status": "received_multi_lender_pdf_needs_parser_review",
+      "sheet_date": "5/20",
+      "rates": {
+        "sheet_date": "5/20",
+        "insured_5yr": "4.49",
+        "insurable_75_80_5yr": "4.69",
+        "uninsured_refi_25yr_5yr": "4.84",
+        "variable_insured": "P-0.75"
+      },
+      "best_visible_fixed_5yr": 4.49
+    },
+    {
+      "lender_name": "Scotiabank",
+      "source_label": "MortgageBOSSRateSheet.pdf",
+      "source_status": "received_multi_lender_pdf_needs_parser_review",
+      "sheet_date": "5/12",
+      "rates": {
+        "sheet_date": "5/12",
+        "insured_5yr": "4.34",
+        "insurable_75_80_5yr": "4.59",
+        "uninsured_refi_25yr_5yr": "4.59",
+        "variable_insured": "P-0.70"
+      },
+      "best_visible_fixed_5yr": 4.34
+    },
+    {
+      "lender_name": "Strive",
+      "source_label": "MortgageBOSSRateSheet.pdf",
+      "source_status": "received_multi_lender_pdf_needs_parser_review",
+      "sheet_date": "5/16",
+      "rates": {
+        "sheet_date": "5/16",
+        "insured_5yr": "4.49",
+        "insurable_75_80_5yr": "4.69",
+        "uninsured_refi_25yr_5yr": "4.84",
+        "variable_insured": "P-0.75"
+      },
+      "best_visible_fixed_5yr": 4.49
+    },
+    {
+      "lender_name": "TD Canada Trust",
+      "source_label": "MortgageBOSSRateSheet.pdf",
+      "source_status": "received_multi_lender_pdf_needs_parser_review",
+      "sheet_date": "5/29",
+      "rates": {
+        "sheet_date": "5/29",
+        "insured_5yr": "4.44",
+        "insurable_75_80_5yr": "4.74",
+        "uninsured_refi_25yr_5yr": "4.74",
+        "variable_insured": "P-0.61"
+      },
+      "best_visible_fixed_5yr": 4.44,
+      "extracted_term_rows": [
+        {
+          "term_label": "1 Year Fixed",
+          "best_rate": 5.44,
+          "source_label": "RTP Broker Rate Sheet 01-30-2026.xlsx",
+          "status": "extracted_from_spreadsheet"
+        },
+        {
+          "term_label": "2 Year Fixed",
+          "best_rate": 4.64,
+          "source_label": "RTP Broker Rate Sheet 01-30-2026.xlsx",
+          "status": "extracted_from_spreadsheet"
+        },
+        {
+          "term_label": "3 Year Fixed",
+          "best_rate": 4.39,
+          "source_label": "RTP Broker Rate Sheet 01-30-2026.xlsx",
+          "status": "extracted_from_spreadsheet"
+        },
+        {
+          "term_label": "4 Year Fixed",
+          "best_rate": 4.54,
+          "source_label": "RTP Broker Rate Sheet 01-30-2026.xlsx",
+          "status": "extracted_from_spreadsheet"
+        },
+        {
+          "term_label": "5 Year Fixed",
+          "best_rate": 4.54,
+          "source_label": "RTP Broker Rate Sheet 01-30-2026.xlsx",
+          "status": "extracted_from_spreadsheet"
+        }
+      ]
+    },
+    {
+      "lender_name": "Desjardins",
+      "source_label": "MortgageBOSSRateSheet.pdf",
+      "source_status": "received_multi_lender_pdf_needs_parser_review",
+      "sheet_date": "5/1",
+      "rates": {
+        "sheet_date": "5/1",
+        "insured_5yr": "4.19",
+        "insurable_75_80_5yr": "4.34",
+        "uninsured_refi_25yr_5yr": "4.34",
+        "variable_insured": "P-0.55"
+      },
+      "best_visible_fixed_5yr": 4.19
+    },
+    {
+      "lender_name": "DUCA Credit Union",
+      "source_label": "MortgageBOSSRateSheet.pdf",
+      "source_status": "received_multi_lender_pdf_needs_parser_review",
+      "sheet_date": "5/26",
+      "rates": {
+        "sheet_date": "5/26",
+        "insured_5yr": "4.39",
+        "insurable_75_80_5yr": "4.69",
+        "uninsured_refi_25yr_5yr": "4.69",
+        "variable_insured": "P-0.75"
+      },
+      "best_visible_fixed_5yr": 4.39
+    }
+  ],
+  "recommended_website_lanes": [
+    {
+      "lane": "Published-ready rows",
+      "purpose": "Rows with clear lender, product, term, rate, source and date.",
+      "items": 5
+    },
+    {
+      "lane": "Lender matrix",
+      "purpose": "One lender per row/card, showing visible 5-year insured/conventional/variable rates and source.",
+      "items": 16
+    },
+    {
+      "lane": "Source documents",
+      "purpose": "Keep every attachment traceable with status: extracted, needs parser review, template, or rejected.",
+      "items": 3
+    },
+    {
+      "lane": "Policy/templates",
+      "purpose": "Useful non-rate documents such as BMO pricing exception templates.",
+      "items": 1
+    },
+    {
+      "lane": "Rejected/noise",
+      "purpose": "Deal docs and unrelated files stay out of public rates but remain auditable in review output.",
+      "items": 40
+    }
+  ],
+  "review_queue": [
+    {
+      "email_id": "89fdcda3-6f83-4acb-8190-b12ca818ad23",
+      "received_at": "2026-03-16 15:02:03.123678+00",
+      "from": "shivv.sharma@gmail.com",
+      "to": "docs-fce3c4f2@docs.sicapital.ca",
+      "subject": "Fwd: test",
+      "attachments": [
+        {
+          "filename": "MortgageBOSSRateSheet.pdf",
+          "content_type": "application/pdf",
+          "size": 474155
+        }
+      ]
+    },
+    {
+      "email_id": "5dfda00c-19f1-4f2d-a820-a51e26b85134",
+      "received_at": "2026-03-16 15:00:08.412017+00",
+      "from": "shivv.sharma@gmail.com",
+      "to": "docs-db20785d@docs.sicapital.ca",
+      "subject": "test",
+      "attachments": [
+        {
+          "filename": "MortgageBOSSRateSheet.pdf",
+          "content_type": "application/pdf",
+          "size": 474155
+        }
+      ]
+    },
+    {
+      "email_id": "8b634b83-2837-46b7-8ae0-dca730472a43",
+      "received_at": "2026-03-16 14:17:58.526371+00",
+      "from": "shivv.sharma@gmail.com",
+      "to": "docs-db20785d@docs.sicapital.ca",
+      "subject": "Re: test",
+      "attachments": [
+        {
+          "filename": "RTP Broker  Rate Sheet 01-30-2026.xlsx",
+          "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "size": 397905
+        }
+      ]
+    },
+    {
+      "email_id": "75c7d88f-3900-45f6-bad5-e5fd5d320c0d",
+      "received_at": "2026-03-16 14:11:32.959872+00",
+      "from": "shivv.sharma@gmail.com",
+      "to": "docs-db20785d@docs.sicapital.ca",
+      "subject": "test",
+      "attachments": [
+        {
+          "filename": "BMO BrokerEdge Pricing Desk Exception Template 20260223.xlsx",
+          "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "size": 14962
+        }
+      ]
+    },
+    {
+      "email_id": "0755c350-7d18-4a92-9f17-c03fe698e2fe",
+      "received_at": "2026-03-16 14:04:28.456195+00",
+      "from": "shivv.sharma@gmail.com",
+      "to": "docs-db20785d@docs.sicapital.ca",
+      "subject": "Re: test",
+      "attachments": [
+        {
+          "filename": "RTP Broker  Rate Sheet 01-30-2026.xlsx",
+          "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "size": 397905
+        }
+      ]
+    },
+    {
+      "email_id": "ebf54b9f-2e9f-418e-8fb5-7a1eb43e961b",
+      "received_at": "2026-03-16 13:40:47.277103+00",
+      "from": "shivv.sharma@gmail.com",
+      "to": "docs-db20785d@docs.sicapital.ca",
+      "subject": "test",
+      "attachments": [
+        {
+          "filename": "RTP Broker  Rate Sheet 01-30-2026.xlsx",
+          "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "size": 397905
+        }
+      ]
+    },
+    {
+      "email_id": "22827b8b-90a4-4c5d-a9da-325df47a4c9c",
+      "received_at": "2026-03-16 12:16:46.781124+00",
+      "from": "shivv.sharma@gmail.com",
+      "to": "docs-caabed8a@docs.sicapital.ca",
+      "subject": "test",
+      "attachments": [
+        {
+          "filename": "RTP Broker  Rate Sheet 01-30-2026.xlsx",
+          "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "size": 397905
+        }
+      ]
+    }
+  ],
+  "rejected_noise_sample": [
+    {
+      "email_id": "8a071bd3-5faf-4c3d-81ee-0522f78b041c",
+      "received_at": "2026-05-30 19:24:28.82624+00",
+      "from": "hiren.p.gandhi@gmail.com",
+      "to": "hiren@docs.sicapital.ca",
+      "subject": "Documents",
+      "attachments": [
+        {
+          "filename": "1517 Creekway Pvt.zip",
+          "content_type": "application/x-zip-compressed",
+          "size": 6300814
+        }
+      ],
+      "reason": "deal/client document or non-rate attachment"
+    },
+    {
+      "email_id": "6784afec-300f-46cc-ac0a-bdd0788506fc",
+      "received_at": "2026-05-30 19:23:30.638135+00",
+      "from": "hiren.p.gandhi@gmail.com",
+      "to": "hiren@docs.sicapital.ca",
+      "subject": "Documents",
+      "attachments": [
+        {
+          "filename": "1304 Creekway Pvt.zip",
+          "content_type": "application/zip",
+          "size": 3346844
+        },
+        {
+          "filename": "Hiren.zip",
+          "content_type": "application/zip",
+          "size": 7185377
+        },
+        {
+          "filename": "103 Anthracite Pvt.zip",
+          "content_type": "application/zip",
+          "size": 2955429
+        }
+      ],
+      "reason": "deal/client document or non-rate attachment"
+    },
+    {
+      "email_id": "7673573c-f09f-4c5c-8f7e-72032b8c9e15",
+      "received_at": "2026-05-26 16:31:18.74586+00",
+      "from": "ialam@ialamphoto.com",
+      "to": "docs-0362680f@docs.sicapital.ca",
+      "subject": "Fwd: Builders Risk Quote - 2635 HHello ighpoint Rd",
+      "attachments": [
+        {
+          "filename": "BOR.pdf",
+          "content_type": "application/pdf",
+          "size": 337950
+        },
+        {
+          "filename": "Application (unsigned).pdf",
+          "content_type": "application/pdf",
+          "size": 324409
+        },
+        {
+          "filename": "NCD - Iftikhar Alam.pdf",
+          "content_type": "application/pdf",
+          "size": 420535
+        }
+      ],
+      "reason": "deal/client document or non-rate attachment"
+    },
+    {
+      "email_id": "245c74ce-e0ec-4770-ac5e-355becb12030",
+      "received_at": "2026-05-11 12:35:52.544001+00",
+      "from": "jay.p789@yahoo.in",
+      "to": "jay@docs.sicapital.ca",
+      "subject": "Rbc loan document",
+      "attachments": [
+        {
+          "filename": "Updated Documents 1.pdf",
+          "content_type": "application/pdf",
+          "size": 9128275
+        }
+      ],
+      "reason": "deal/client document or non-rate attachment"
+    },
+    {
+      "email_id": "6946b767-511c-4d97-990e-c99bd65a5331",
+      "received_at": "2026-05-11 12:07:40.310833+00",
+      "from": "jay.p789@yahoo.in",
+      "to": "jay@docs.sicapital.ca",
+      "subject": "Subway-jay",
+      "attachments": [
+        {
+          "filename": "079.pdf",
+          "content_type": "application/pdf",
+          "size": 40533
+        }
+      ],
+      "reason": "deal/client document or non-rate attachment"
+    },
+    {
+      "email_id": "5a7fc82c-e09e-462d-9398-c88b1d5bb65c",
+      "received_at": "2026-05-11 12:07:14.122686+00",
+      "from": "jay.p789@yahoo.in",
+      "to": "jay@docs.sicapital.ca",
+      "subject": "Karan\u2019s payout amount",
+      "attachments": [
+        {
+          "filename": "PHOTO-2026-05-08-10-42-04.jpg",
+          "content_type": "image/jpeg",
+          "size": 28821
+        }
+      ],
+      "reason": "deal/client document or non-rate attachment"
+    },
+    {
+      "email_id": "3bbcb697-3bcc-47f3-8383-b264c8a9046f",
+      "received_at": "2026-05-11 12:06:59.360864+00",
+      "from": "jay.p789@yahoo.in",
+      "to": "jay@docs.sicapital.ca",
+      "subject": "RBC loan as of today",
+      "attachments": [
+        {
+          "filename": "PHOTO-2026-05-08-10-40-30.jpg",
+          "content_type": "image/jpeg",
+          "size": 33538
+        }
+      ],
+      "reason": "deal/client document or non-rate attachment"
+    },
+    {
+      "email_id": "e37744a3-f58a-4b67-937e-08c777fbe3f7",
+      "received_at": "2026-05-11 12:06:44.608299+00",
+      "from": "jay.p789@yahoo.in",
+      "to": "jay@docs.sicapital.ca",
+      "subject": "Subway -jay",
+      "attachments": [
+        {
+          "filename": "QUOTE-SUB19031-83529-GLOUCESTER, ON.pdf",
+          "content_type": "application/pdf",
+          "size": 37632
+        }
+      ],
+      "reason": "deal/client document or non-rate attachment"
+    },
+    {
+      "email_id": "31331447-33ac-451a-9a67-d4a1006ce6be",
+      "received_at": "2026-05-07 21:37:35.837032+00",
+      "from": "silkroadautoexport@gmail.com",
+      "to": "docs-df49987d@docs.sicapital.ca",
+      "subject": "Re: documents",
+      "attachments": [
+        {
+          "filename": "Incorporation Subhan Auto.pdf",
+          "content_type": "application/pdf",
+          "size": 452386
+        }
+      ],
+      "reason": "deal/client document or non-rate attachment"
+    },
+    {
+      "email_id": "58967da5-8f7f-4a06-b1a0-465bf7122024",
+      "received_at": "2026-05-07 21:30:42.420784+00",
+      "from": "silkroadautoexport@gmail.com",
+      "to": "docs-df49987d@docs.sicapital.ca",
+      "subject": "documents",
+      "attachments": [
+        {
+          "filename": "cad 20406.pdf",
+          "content_type": "application/pdf",
+          "size": 218476
+        },
+        {
+          "filename": "TD_EVERY_DAY_A_BUSINESS_PLAN_64-5283493_Mar_31-Apr_30_2026.pdf",
+          "content_type": "application/pdf",
+          "size": 88218
+        },
+        {
+          "filename": "TD_EVERY_DAY_A_BUSINESS_PLAN_64-5283493_Nov_28-Dec_31_2025.pdf",
+          "content_type": "application/pdf",
+          "size": 92262
+        }
+      ],
+      "reason": "deal/client document or non-rate attachment"
+    },
+    {
+      "email_id": "c6b33d5a-eae2-45cb-a663-858176299315",
+      "received_at": "2026-05-07 10:17:07.210898+00",
+      "from": "kaysee.brown@hotmail.com",
+      "to": "kaysee@docs.sicapital.ca",
+      "subject": "PDF Bank Statement",
+      "attachments": [
+        {
+          "filename": "TDDocument.pdf",
+          "content_type": "application/pdf",
+          "size": 148717
+        },
+        {
+          "filename": "TDDocument.pdf",
+          "content_type": "application/pdf",
+          "size": 148220
+        },
+        {
+          "filename": "TDDocument.pdf",
+          "content_type": "application/pdf",
+          "size": 147443
+        }
+      ],
+      "reason": "deal/client document or non-rate attachment"
+    },
+    {
+      "email_id": "31812636-cb4a-44cd-902b-3545b9b523b9",
+      "received_at": "2026-05-06 13:47:35.791589+00",
+      "from": "ialam@ialamphoto.com",
+      "to": "docs-0362680f@docs.sicapital.ca",
+      "subject": "Docs requested",
+      "attachments": [
+        {
+          "filename": "Notice_of_assessment_2024_04_08_21_16_32_445208.pdf",
+          "content_type": "application/pdf",
+          "size": 55263
+        },
+        {
+          "filename": "2023-T2.pdf",
+          "content_type": "application/pdf",
+          "size": 462507
+        },
+        {
+          "filename": "2024-T2.pdf",
+          "content_type": "application/pdf",
+          "size": 456404
+        }
+      ],
+      "reason": "deal/client document or non-rate attachment"
+    },
+    {
+      "email_id": "7b7a2101-69d9-480e-a8f1-67ae259b22ed",
+      "received_at": "2026-05-05 19:32:11.308054+00",
+      "from": "kaysee.brown@hotmail.com",
+      "to": "kaysee@docs.sicapital.ca",
+      "subject": "Bank statement",
+      "attachments": [
+        {
+          "filename": "image1.png",
+          "content_type": "image/png",
+          "size": 629835
+        },
+        {
+          "filename": "image2.png",
+          "content_type": "image/png",
+          "size": 660217
+        },
+        {
+          "filename": "image0.png",
+          "content_type": "image/png",
+          "size": 608649
+        }
+      ],
+      "reason": "deal/client document or non-rate attachment"
+    },
+    {
+      "email_id": "25895690-1e27-4d4b-9b7a-fa1ed59ce76d",
+      "received_at": "2026-04-30 21:46:19.215957+00",
+      "from": "kaysee.brown@hotmail.com",
+      "to": "kaysee@docs.sicapital.ca",
+      "subject": "Equifax",
+      "attachments": [
+        {
+          "filename": "efx-creditreport_20260430.pdf",
+          "content_type": "application/pdf",
+          "size": 103733
+        }
+      ],
+      "reason": "deal/client document or non-rate attachment"
+    },
+    {
+      "email_id": "0a6cf128-76d4-4348-b923-21c28402f785",
+      "received_at": "2026-04-17 14:13:37.80627+00",
+      "from": "shivv.sharma@gmail.com",
+      "to": "kirsi@docs.sicapital.ca",
+      "subject": "docs",
+      "attachments": [
+        {
+          "filename": "2025 T4.pdf",
+          "content_type": "application/pdf",
+          "size": 107197
+        },
+        {
+          "filename": "Arsh Passport.jpg",
+          "content_type": "image/jpeg",
+          "size": 52410
+        },
+        {
+          "filename": "edoc_MortgagesLoans_Jan242026.pdf.pdf",
+          "content_type": "application/pdf",
+          "size": 42507
+        }
+      ],
+      "reason": "deal/client document or non-rate attachment"
+    },
+    {
+      "email_id": "07b08726-36af-4a27-950c-66ad1518967e",
+      "received_at": "2026-04-17 12:44:58.841777+00",
+      "from": "realtorakash@gmail.com",
+      "to": "kirsi@docs.sicapital.ca",
+      "subject": "Fwd: Accepted Offer",
+      "attachments": [
+        {
+          "filename": "EV_Deposit-Instructions.pdf",
+          "content_type": "application/pdf",
+          "size": 141765
+        },
+        {
+          "filename": "Counter-OFFER-86-Porter.pdf_(SECURED).pdf",
+          "content_type": "application/pdf",
+          "size": 398772
+        }
+      ],
+      "reason": "deal/client document or non-rate attachment"
+    },
+    {
+      "email_id": "116d8854-1d6f-45ba-a87c-77df891546b5",
+      "received_at": "2026-04-12 19:48:29.31105+00",
+      "from": "shivv.sharma@gmail.com",
+      "to": "docs-38edbf3b@docs.sicapital.ca",
+      "subject": "Initial upload",
+      "attachments": [],
+      "reason": "deal/client document or non-rate attachment"
+    },
+    {
+      "email_id": "1912367c-6cd4-45d9-b385-fd33566e1088",
+      "received_at": "2026-04-10 03:25:10.869591+00",
+      "from": "sara.redcarpetaffairs@gmail.com",
+      "to": "docs-0362680f@docs.sicapital.ca",
+      "subject": "Sara Rahman documents",
+      "attachments": [
+        {
+          "filename": "efx-creditreport_20260409.pdf",
+          "content_type": "application/pdf",
+          "size": 116799
+        },
+        {
+          "filename": "IMG_5472.jpeg",
+          "content_type": "image/jpeg",
+          "size": 3320545
+        },
+        {
+          "filename": "IMG_3931.jpeg",
+          "content_type": "image/jpeg",
+          "size": 2613211
+        }
+      ],
+      "reason": "deal/client document or non-rate attachment"
+    },
+    {
+      "email_id": "09f9eba1-c170-4dce-863c-3c06f2b2529f",
+      "received_at": "2026-04-09 13:14:09.684711+00",
+      "from": "shivv.sharma@gmail.com",
+      "to": "docs-961b0544@docs.sicapital.ca",
+      "subject": "test",
+      "attachments": [
+        {
+          "filename": "Business_partners_at_202604070803.png",
+          "content_type": "image/png",
+          "size": 3062103
+        }
+      ],
+      "reason": "deal/client document or non-rate attachment"
+    },
+    {
+      "email_id": "92b45816-f0dc-476a-837c-2038952cd173",
+      "received_at": "2026-04-08 18:55:57.540852+00",
+      "from": "ialam@ialamphoto.com",
+      "to": "docs-0362680f@docs.sicapital.ca",
+      "subject": "T2 - Updated",
+      "attachments": [
+        {
+          "filename": "T2- I Alam Photo.pdf",
+          "content_type": "application/pdf",
+          "size": 456574
+        }
+      ],
+      "reason": "deal/client document or non-rate attachment"
+    },
+    {
+      "email_id": "b4196874-fd4e-436f-8c06-b71175354c21",
+      "received_at": "2026-04-07 14:08:09.610525+00",
+      "from": "ialam@ialamphoto.com",
+      "to": "docs-0362680f@docs.sicapital.ca",
+      "subject": "Business - T2",
+      "attachments": [
+        {
+          "filename": "2024 T2 - View Return - Initial Assessment-.pdf",
+          "content_type": "application/pdf",
+          "size": 229236
+        },
+        {
+          "filename": "2023 T2 - View Return - Reassessment.pdf",
+          "content_type": "application/pdf",
+          "size": 214058
+        }
+      ],
+      "reason": "deal/client document or non-rate attachment"
+    },
+    {
+      "email_id": "3ac17223-714c-4613-8dae-c14037a4929e",
+      "received_at": "2026-04-07 14:00:28.953264+00",
+      "from": "ialam@ialamphoto.com",
+      "to": "docs-0362680f@docs.sicapital.ca",
+      "subject": "statement of account",
+      "attachments": [
+        {
+          "filename": "Statement of account.pdf",
+          "content_type": "application/pdf",
+          "size": 101784
+        }
+      ],
+      "reason": "deal/client document or non-rate attachment"
+    },
+    {
+      "email_id": "bc5b3670-55a7-403c-98fe-862e0e81e3d6",
+      "received_at": "2026-04-07 11:07:23.601435+00",
+      "from": "shivv.sharma@gmail.com",
+      "to": "docs-961b0544@docs.sicapital.ca",
+      "subject": "K & R EXPRESS",
+      "attachments": [
+        {
+          "filename": "K & R Express - April 2024 Income Statement.pdf",
+          "content_type": "application/pdf",
+          "size": 262900
+        },
+        {
+          "filename": "Year End 2023.pdf",
+          "content_type": "application/pdf",
+          "size": 2602828
+        },
+        {
+          "filename": "Year End 2021.pdf",
+          "content_type": "application/pdf",
+          "size": 399666
+        }
+      ],
+      "reason": "deal/client document or non-rate attachment"
+    },
+    {
+      "email_id": "e700c8ae-c86e-48ba-aaa8-de9f67c570c9",
+      "received_at": "2026-03-27 19:28:31.913447+00",
+      "from": "ialam@ialamphoto.com",
+      "to": "docs-0362680f@docs.sicapital.ca",
+      "subject": "credit report",
+      "attachments": [
+        {
+          "filename": "efx-creditreport_20260327.pdf",
+          "content_type": "application/pdf",
+          "size": 156115
+        }
+      ],
+      "reason": "deal/client document or non-rate attachment"
+    },
+    {
+      "email_id": "095bcf03-8c12-4a14-b5cd-da52d0b6b97b",
+      "received_at": "2026-03-27 18:58:35.572626+00",
+      "from": "ialam@ialamphoto.com",
+      "to": "docs-0362680f@docs.sicapital.ca",
+      "subject": "Business Docs",
+      "attachments": [
+        {
+          "filename": "Statements.zip",
+          "content_type": "application/zip",
+          "size": 1052720
+        }
+      ],
+      "reason": "deal/client document or non-rate attachment"
+    }
+  ]
+}

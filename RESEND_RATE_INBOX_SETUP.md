@@ -13,8 +13,8 @@ Broker/lender sends email
   → stores attachments in lender-rate-attachments
   → checks sender against the trusted sender allowlist
   → unapproved senders are rejected/skipped without AI analysis
-  → approved senders are queued for the 12-hour rate update cron
-  → Vercel Cron GET /api/rate-updates-cron every 12 hours
+  → approved senders are queued for the hourly rate update cron
+  → Vercel Cron GET /api/rate-updates-cron every hour
   → OpenAI extracts rates/policies/BDM contacts
   → stores extraction JSON in parsed-rate-artifacts
   → writes normalized rows to Supabase
@@ -73,26 +73,30 @@ OPENAI_RATE_EXTRACTION_MODEL=gpt-4.1-mini
 RATE_AI_AUTO_PUBLISH_MIN_CONFIDENCE=0.84
 RATE_AI_WORKSPACE_ID=omrp-default
 RATE_AI_ALLOWED_SENDERS=rates@examplelender.ca,bdm@examplebank.com
+RATE_AI_ALLOW_ACTIVE_PROFILE_SENDERS=true
+RATE_AI_ACTIVE_ADMIN_CAN_PUBLISH=false
 RATE_AI_CRON_BATCH_LIMIT=10
 CRON_SECRET=...
 ```
 
-`RATE_AI_ALLOWED_SENDERS` is the safety gate. Leave it empty until Shiv provides the approved sender emails; with no approved sender, the system stores inbound mail but rejects/skips AI analysis. Exact emails are preferred. Domain entries such as `examplebank.com`, `@examplebank.com`, or `*.examplebank.com` are supported but should only be used when the whole domain is trusted.
+`RATE_AI_ALLOWED_SENDERS` is the safety gate for lender/direct sender addresses. Exact emails are preferred. Domain entries such as `examplebank.com`, `@examplebank.com`, or `*.examplebank.com` are supported but should only be used when the whole domain is trusted.
+
+Active broker/admin profile emails are also accepted by default (`RATE_AI_ALLOW_ACTIVE_PROFILE_SENDERS=true`) so onboarded brokers can forward lender rate emails into the Resend inbox. Broker-forwarded mail is analyzed/categorized as `trusted_extract`; it does not auto-publish unless a sender is explicitly `trusted_publish` or `RATE_AI_ACTIVE_ADMIN_CAN_PUBLISH=true` is enabled for admin profiles.
 
 You can also manage trusted senders in Supabase table `lender_email_sources` by setting `sender_email` and `trust_level` to `trusted_extract` or `trusted_publish`.
 
-## 12-hour cron
+## Hourly cron
 
 `vercel.json` schedules:
 
 ```json
 {
   "path": "/api/rate-updates-cron",
-  "schedule": "0 */12 * * *"
+  "schedule": "0 * * * *"
 }
 ```
 
-The cron processes queued emails only from approved senders. If `CRON_SECRET` is set, Vercel sends it as an authorization bearer header; direct unauthenticated calls are rejected.
+The cron processes queued emails from approved senders and active broker/admin profiles. If `CRON_SECRET` is set, Vercel sends it as an authorization bearer header; direct unauthenticated calls are rejected.
 
 ## Auto-review / auto-update rule
 

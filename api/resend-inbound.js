@@ -233,6 +233,27 @@ async function lookupTrustedSender(senderEmail, workspaceId) {
   return (rows || []).find((row) => ['trusted_extract', 'trusted_publish'].includes(row.trust_level)) || null;
 }
 
+async function lookupActiveProfileSender(senderEmail, workspaceId) {
+  if (process.env.RATE_AI_ALLOW_ACTIVE_PROFILE_SENDERS === 'false') return null;
+  try {
+    const rows = await getRows(
+      'user_profiles',
+      `select=id,email,role,status,workspace_id&workspace_id=eq.${encodeURIComponent(workspaceId)}&email=eq.${encodeURIComponent(senderEmail)}&status=eq.active&limit=1`
+    );
+    const profile = Array.isArray(rows) ? rows[0] : null;
+    if (!profile) return null;
+    return {
+      ...profile,
+      trust_level: profile.role === 'admin' && process.env.RATE_AI_ACTIVE_ADMIN_CAN_PUBLISH === 'true'
+        ? 'trusted_publish'
+        : 'trusted_extract'
+    };
+  } catch (error) {
+    console.warn('Active profile sender lookup failed', error.message);
+    return null;
+  }
+}
+
 async function isAllowedSender(meta, workspaceId) {
   const senderEmail = parseEmailAddress(meta.from);
   if (!senderEmail) return { allowed: false, senderEmail, reason: 'missing_sender_email' };
@@ -245,9 +266,11 @@ async function isAllowedSender(meta, workspaceId) {
       trustLevel: process.env.RATE_AI_ALLOWED_SENDERS_CAN_PUBLISH === 'true' ? 'trusted_publish' : 'trusted_extract'
     };
   }
+  const activeProfile = await lookupActiveProfileSender(senderEmail, workspaceId);
+  if (activeProfile) return { allowed: true, senderEmail, source: 'active_profile', activeProfile, trustLevel: activeProfile.trust_level };
   const trustedSource = await lookupTrustedSender(senderEmail, workspaceId);
   if (trustedSource) return { allowed: true, senderEmail, source: 'database', trustedSource, trustLevel: trustedSource.trust_level };
-  return { allowed: false, senderEmail, reason: envList.length ? 'sender_not_in_allowlist' : 'allowlist_empty' };
+  return { allowed: false, senderEmail, reason: envList.length ? 'sender_not_in_allowlist_or_active_profile' : 'allowlist_empty_or_no_active_profile' };
 }
 
 async function downloadUrl(url) {
@@ -444,8 +467,11 @@ async function spreadsheetToText(buffer, filename) {
     worksheet.eachRow({ includeEmpty: false }, (row) => {
       const values = [];
       row.eachCell({ includeEmpty: true }, (cell) => {
-        const value = cell.text || cell.value || '';
-        values.push(String(value).replace(/\r?\n/g, ' ').replace(/,/g, ' '));
+        const rawValue = cell.value ?? '';
+        const value = rawValue && typeof rawValue === 'object'
+          ? (rawValue.text || rawValue.result || rawValue.richText?.map((part) => part.text).join('') || rawValue.hyperlink || '')
+          : rawValue;
+        values.push(String(value ?? '').replace(/\r?\n/g, ' ').replace(/,/g, ' '));
       });
       if (values.some(Boolean)) rows.push(values.join(','));
     });

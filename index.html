@@ -3,7 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Agent Rate Desk Ontario</title>
+    <title>Ontario Mortgage Rate Portal | Broker Rate Desk</title>
+    <meta name="description" content="Production-grade Ontario mortgage broker rate desk for source-backed rates, lender policy, deal fit, and broker kits." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;450;500;600;700;800;900&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet" />
@@ -94,6 +95,90 @@ a {
   min-height: 100vh;
   min-width: 0;
   overflow-x: hidden;
+}
+
+body.portal-locked .sidebar,
+body.portal-locked main > :not(#accessLockScreen) {
+  display: none !important;
+}
+
+body:not(.portal-locked) #accessLockScreen {
+  display: none !important;
+}
+
+body.portal-locked .app-shell {
+  grid-template-columns: 1fr;
+}
+
+.access-lock-screen {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 28px;
+  background: radial-gradient(circle at 20% 0%, rgba(8, 122, 138, .16), transparent 34rem), var(--bg);
+}
+
+.access-lock-card {
+  width: min(560px, 100%);
+  display: grid;
+  gap: 18px;
+  padding: 28px;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, .94);
+  box-shadow: var(--shadow);
+}
+
+.access-lock-card h1 {
+  margin: 0;
+  font-size: clamp(2rem, 5vw, 3.6rem);
+  letter-spacing: -.07em;
+  line-height: .92;
+}
+
+.access-lock-card p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.access-lock-form {
+  display: grid;
+  gap: 12px;
+}
+
+.access-lock-form label {
+  display: grid;
+  gap: 7px;
+  font-size: .75rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.access-lock-form input {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 13px 14px;
+  font: inherit;
+  background: #fff;
+  color: var(--text);
+}
+
+.auth-button-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.auth-button-row button {
+  width: 100%;
+}
+
+.access-lock-status {
+  min-height: 20px;
+  color: var(--muted);
+  font-size: .9rem;
 }
 
 .sidebar {
@@ -372,6 +457,134 @@ menu,
   display: grid;
   gap: 10px;
   margin-top: 12px;
+}
+
+.dry-run-rate-panel {
+  margin-top: 18px;
+  border: 1px solid color-mix(in srgb, var(--green) 20%, var(--line));
+  border-radius: 24px;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--green) 8%, var(--surface)), var(--surface));
+  padding: 18px;
+}
+
+.dry-run-rate-panel h4 {
+  margin: 0;
+  letter-spacing: -0.035em;
+}
+
+.dry-run-summary-grid,
+.dry-run-doc-grid,
+.dry-run-row-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.dry-run-summary-grid {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  margin: 14px 0;
+}
+
+.dry-run-summary-grid span,
+.dry-run-doc-card,
+.dry-run-row-card,
+.dry-run-empty {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface);
+  padding: 14px;
+}
+
+.dry-run-summary-grid small,
+.dry-run-doc-card small,
+.dry-run-row-card small {
+  color: var(--muted);
+  display: block;
+  line-height: 1.45;
+}
+
+.dry-run-summary-grid strong {
+  display: block;
+  font-size: 1.35rem;
+  color: var(--ink);
+}
+
+.dry-run-doc-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 14px 0;
+}
+
+.dry-run-doc-card strong,
+.dry-run-row-card strong {
+  display: block;
+  margin-bottom: 6px;
+}
+
+.dry-run-status {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  margin-top: 10px;
+  border-radius: 999px;
+  padding: 5px 9px;
+  background: color-mix(in srgb, var(--green) 10%, var(--surface));
+  color: var(--green);
+  font-size: 0.75rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.dry-run-row-grid {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.dry-run-row-card {
+  display: grid;
+  gap: 8px;
+}
+
+.dry-run-rate-number {
+  font-size: 1.5rem;
+  font-weight: 950;
+  letter-spacing: -0.055em;
+}
+
+.dry-run-lender-table {
+  display: grid;
+  gap: 8px;
+  margin: 14px 0 18px;
+}
+
+.dry-run-lender-row {
+  display: grid;
+  grid-template-columns: minmax(160px, 1.2fr) repeat(4, minmax(92px, .65fr)) minmax(190px, 1.3fr);
+  gap: 10px;
+  align-items: stretch;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface);
+  padding: 10px;
+}
+
+.dry-run-lender-row > span {
+  display: grid;
+  gap: 3px;
+  align-content: center;
+  min-width: 0;
+}
+
+.dry-run-lender-row strong {
+  color: var(--ink);
+  font-weight: 950;
+}
+
+.dry-run-lender-head {
+  background: color-mix(in srgb, var(--ink) 4%, var(--surface));
+  color: var(--muted);
+  font-size: .76rem;
+  font-weight: 950;
+  letter-spacing: .06em;
+  text-transform: uppercase;
 }
 
 .best-rate-card,
@@ -2098,6 +2311,16 @@ menu {
   .detail-panel {
     position: static;
   }
+
+  .dry-run-summary-grid,
+  .dry-run-doc-grid,
+  .dry-run-row-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .dry-run-lender-row {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 1080px) {
@@ -2168,7 +2391,11 @@ menu {
   .insurer-columns,
   .insurer-detail-columns,
   .rate-row,
-  .form-grid {
+  .form-grid,
+  .dry-run-summary-grid,
+  .dry-run-doc-grid,
+  .dry-run-row-grid,
+  .dry-run-lender-row {
     grid-template-columns: 1fr;
   }
 
@@ -4258,9 +4485,1154 @@ th, td { border-color: var(--line); }
   .topbar { min-height: auto; }
   .topbar-actions { position: static; margin-top: 22px; }
 }
-</style>
+
+
+/* Dense broker-first Rate Finder */
+.broker-rate-finder {
+  margin: 18px 0 18px;
+  border: 1px solid color-mix(in srgb, var(--green) 30%, var(--line));
+  border-radius: 20px;
+  background:
+    linear-gradient(135deg, rgba(24, 93, 65, .075), transparent 45%),
+    linear-gradient(180deg, rgba(255,255,255,.97), color-mix(in srgb, var(--surface-strong) 92%, #fff));
+  box-shadow: 0 24px 70px rgba(23, 38, 34, .10);
+  overflow: hidden;
+}
+
+.rate-finder-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 13px 14px 10px;
+  border-bottom: 1px solid color-mix(in srgb, var(--green) 16%, var(--line));
+}
+
+.rate-finder-head h4 {
+  margin: 0;
+  letter-spacing: -.035em;
+  font-size: 1rem;
+}
+
+.rate-finder-head p {
+  margin: 2px 0 0;
+  color: var(--muted);
+  font-size: .78rem;
+  font-weight: 760;
+}
+
+.rate-finder-mode {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+  color: var(--green);
+  font-size: .72rem;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: .045em;
+}
+
+.rate-finder-mode span {
+  border: 1px solid color-mix(in srgb, var(--green) 24%, var(--line));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--green) 8%, var(--surface));
+  padding: 5px 8px;
+}
+
+.rate-finder-toolbar {
+  display: grid;
+  grid-template-columns: minmax(240px, 1.45fr) repeat(4, minmax(124px, .9fr));
+  gap: 8px;
+  padding: 12px;
+  border-bottom: 1px solid var(--line);
+  background: color-mix(in srgb, var(--green) 4%, var(--surface));
+}
+
+.rate-finder-toolbar label {
+  display: grid;
+  gap: 5px;
+  color: color-mix(in srgb, var(--muted) 82%, var(--text));
+  font-size: .66rem;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: .055em;
+}
+
+.rate-finder-toolbar input,
+.rate-finder-toolbar select {
+  width: 100%;
+  min-height: 38px;
+  border: 1px solid color-mix(in srgb, var(--line) 82%, var(--green));
+  border-radius: 11px;
+  padding: 8px 10px;
+  background: rgba(255,255,255,.86);
+  color: var(--text);
+  font-size: .84rem;
+  font-weight: 850;
+  text-transform: none;
+  letter-spacing: 0;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.78);
+}
+
+.rate-finder-toolbar input:focus,
+.rate-finder-toolbar select:focus {
+  outline: 2px solid color-mix(in srgb, var(--green) 28%, transparent);
+  border-color: color-mix(in srgb, var(--green) 52%, var(--line));
+}
+
+.rate-finder-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--line);
+  background: rgba(255,255,255,.55);
+}
+
+.rate-finder-chips button {
+  border: 1px solid color-mix(in srgb, var(--green) 24%, var(--line));
+  border-radius: 999px;
+  background: var(--surface);
+  color: color-mix(in srgb, var(--green) 82%, var(--text));
+  padding: 6px 10px;
+  font-size: .74rem;
+  font-weight: 950;
+  box-shadow: 0 1px 0 rgba(255,255,255,.8);
+}
+
+.rate-finder-chips button:hover {
+  border-color: var(--green);
+  background: color-mix(in srgb, var(--green) 10%, var(--surface));
+  transform: translateY(-1px);
+}
+
+.rate-finder-summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 12px;
+  color: var(--muted);
+  font-weight: 850;
+  font-size: .82rem;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--green) 7%, var(--surface)), var(--surface));
+}
+
+.rate-finder-summary strong {
+  color: var(--green);
+  font-size: 1.08rem;
+  letter-spacing: -.03em;
+}
+
+.rate-table-wrap {
+  overflow: auto;
+  max-height: 560px;
+  scrollbar-gutter: stable;
+  background: var(--surface);
+}
+
+.rate-finder-table {
+  width: 100%;
+  min-width: 0;
+  table-layout: fixed;
+  border-collapse: collapse;
+  font-size: .81rem;
+}
+
+.rate-finder-table th,
+.rate-finder-table td {
+  padding: 8px 10px;
+  border-top: 1px solid color-mix(in srgb, var(--line) 86%, transparent);
+  text-align: left;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.rate-finder-table th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: color-mix(in srgb, var(--nav) 10%, var(--surface));
+  color: color-mix(in srgb, var(--muted) 88%, var(--text));
+  font-size: .64rem;
+  text-transform: uppercase;
+  letter-spacing: .065em;
+  box-shadow: 0 1px 0 var(--line);
+}
+
+.rate-finder-table th:nth-child(1) { width: 16%; }
+.rate-finder-table th:nth-child(2) { width: 9%; }
+.rate-finder-table th:nth-child(3) { width: 8%; }
+.rate-finder-table th:nth-child(4) { width: 8%; }
+.rate-finder-table th:nth-child(5) { width: 15%; }
+.rate-finder-table th:nth-child(6) { width: 7%; }
+.rate-finder-table th:nth-child(7) { width: 12%; }
+.rate-finder-table th:nth-child(8) { width: 10%; }
+.rate-finder-table th:nth-child(9) { width: 15%; }
+
+.rate-finder-table td {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rate-finder-table tbody tr:nth-child(even) td {
+  background: color-mix(in srgb, var(--surface-strong) 54%, var(--surface));
+}
+
+.rate-finder-table td.rate-number {
+  color: var(--green);
+  font-size: .9rem;
+  font-weight: 980;
+  letter-spacing: -.035em;
+  line-height: 1.08;
+  white-space: normal;
+}
+
+.rate-finder-table .lender-cell {
+  min-width: 150px;
+  color: var(--text);
+  font-weight: 950;
+}
+
+.rate-finder-table .text-link {
+  border: 0;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--green) 9%, var(--surface));
+  color: color-mix(in srgb, var(--green) 80%, var(--text));
+  padding: 4px 8px;
+  font: inherit;
+  font-size: .78rem;
+  font-weight: 950;
+  cursor: pointer;
+}
+
+.rate-finder-table td[data-label="Source / status"] {
+  max-width: 250px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--muted);
+}
+
+.source-status-cell {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.source-status-cell .source-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rate-finder-table .quote-note {
+  max-width: 210px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--muted);
+}
+
+.rate-finder-table td[data-label="Purpose"] { max-width: 140px; overflow: hidden; text-overflow: ellipsis; }
+.rate-finder-table td[data-label="Lender type"] { color: color-mix(in srgb, var(--text) 82%, var(--muted)); }
+
+.rate-finder-table tr:hover td {
+  background: color-mix(in srgb, var(--green) 7%, var(--surface));
+}
+
+.rate-status-pill {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 4px 7px;
+  font-size: .62rem;
+  font-weight: 950;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  background: color-mix(in srgb, var(--green) 12%, var(--surface));
+  color: var(--green);
+}
+
+.rate-status-pill.review,
+.rate-status-pill.watch { background: color-mix(in srgb, var(--amber) 12%, var(--surface)); color: var(--amber); }
+.rate-status-pill.stale,
+.rate-status-pill.expired { background: color-mix(in srgb, var(--red) 10%, var(--surface)); color: var(--red); }
+
+.rate-finder-empty {
+  padding: 20px;
+  color: var(--muted);
+  font-weight: 800;
+}
+
+@media (max-width: 1180px) {
+  .rate-finder-toolbar { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: 760px) {
+  .rate-finder-head { align-items: flex-start; flex-direction: column; }
+  .rate-finder-toolbar { grid-template-columns: 1fr; }
+  .rate-finder-summary { align-items: flex-start; flex-direction: column; }
+  .rate-table-wrap { max-height: none; }
+  .rate-finder-table { min-width: 0; }
+  .rate-finder-table thead { display: none; }
+  .rate-finder-table, .rate-finder-table tbody, .rate-finder-table tr, .rate-finder-table td { display: block; width: 100%; }
+  .rate-finder-table tr { border-top: 1px solid var(--line); padding: 9px 0; }
+  .rate-finder-table td { border: 0; padding: 5px 12px; white-space: normal; }
+  .rate-finder-table td::before { content: attr(data-label); display: block; color: var(--muted); font-size: .66rem; text-transform: uppercase; font-weight: 950; letter-spacing: .05em; }
+  .rate-finder-table .quote-note,
+  .rate-finder-table td[data-label="Source / status"],
+  .rate-finder-table td[data-label="Purpose"] { max-width: none; }
+}
+
+
+/* Production-ready optimization pass — broker command centre theme */
+:root {
+  --bg: #f3f1eb;
+  --surface: #fffdf7;
+  --surface-strong: #f7f3e8;
+  --surface-tint: #edf5ee;
+  --text: #0f1714;
+  --muted: #65706a;
+  --line: #ded8ca;
+  --accent: #1c6f53;
+  --accent-strong: #104a37;
+  --accent-soft: #dcebe2;
+  --green: #17664e;
+  --amber: #b7791f;
+  --red: #b5473b;
+  --nav: #0b1110;
+  --gold: #c89b3c;
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --shadow: 0 28px 80px rgba(25, 31, 27, .13);
+  --shadow-soft: 0 14px 38px rgba(25, 31, 27, .09);
+}
+
+body.dark {
+  --bg: #0b100e;
+  --surface: #101815;
+  --surface-strong: #15201c;
+  --surface-tint: #15271f;
+  --text: #f5f0e4;
+  --muted: #a8b4aa;
+  --line: #26372f;
+  --accent: #7fd4aa;
+  --accent-strong: #a9eccb;
+  --accent-soft: #193527;
+  --green: #79d5a5;
+  --amber: #e3bd6f;
+  --nav: #070b0a;
+  --gold: #e3bd6f;
+}
+
+body {
+  font-family: "Geist", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background:
+    radial-gradient(circle at 88% -8%, color-mix(in srgb, var(--green) 17%, transparent), transparent 34rem),
+    radial-gradient(circle at 5% 18%, color-mix(in srgb, var(--gold) 12%, transparent), transparent 28rem),
+    linear-gradient(90deg, rgba(15,23,20,.045) 1px, transparent 1px),
+    linear-gradient(180deg, #fffdf8 0, var(--bg) 30rem);
+  background-size: auto, auto, 72px 72px, auto;
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: antialiased;
+}
+
+body.dark {
+  background:
+    radial-gradient(circle at 88% -8%, rgba(121,213,165,.14), transparent 34rem),
+    radial-gradient(circle at 3% 15%, rgba(227,189,111,.09), transparent 30rem),
+    linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px),
+    linear-gradient(180deg, #0d1411 0, var(--bg) 32rem);
+  background-size: auto, auto, 72px 72px, auto;
+}
+
+.app-shell {
+  grid-template-columns: 254px minmax(0, 1fr);
+  background: linear-gradient(90deg, var(--nav) 0 254px, transparent 254px);
+}
+.sidebar {
+  padding: 22px 18px;
+  background:
+    radial-gradient(circle at 30% 0%, rgba(200,155,60,.18), transparent 16rem),
+    linear-gradient(180deg, #111a17, var(--nav));
+  border-right: 1px solid rgba(255,255,255,.08);
+}
+.brand-mark {
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--gold), #f5d98c 42%, #1f7758 100%);
+  box-shadow: 0 14px 28px rgba(0,0,0,.28), inset 0 0 0 1px rgba(255,255,255,.32);
+}
+.brand-lockup h1 { letter-spacing: -.045em; }
+.sidebar .brand-lockup h1 { color: #fffdf7; }
+.sidebar .brand-lockup .eyebrow { color: rgba(245,250,246,.62); }
+.nav-list { gap: 5px; }
+.nav-list a {
+  padding: 11px 12px;
+  border-radius: 12px;
+  font-weight: 780;
+  color: rgba(245,250,246,.72);
+  transition: background .16s ease, color .16s ease, transform .16s ease;
+}
+.nav-list a.active,
+.nav-list a:hover {
+  background: rgba(255,255,255,.11);
+  color: #fffdf7;
+  transform: translateX(2px);
+}
+.sidebar-panel {
+  border-radius: 18px;
+  border-color: rgba(255,255,255,.15);
+  background: rgba(255,255,255,.07);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+  color: rgba(245,250,246,.72);
+}
+.sidebar-panel strong { color: #fffdf7; }
+.sidebar-panel .panel-label { color: rgba(245,250,246,.58); }
+
+main {
+  width: min(100%, 1260px);
+  margin: 0 auto;
+  padding: 32px;
+  gap: 28px;
+}
+
+.topbar,
+.band,
+.product-direction-card,
+.market-position-card,
+.metric-grid article,
+.pricing-card,
+.auth-card,
+.lender-card,
+.package-card,
+.program-card,
+.insurer-card,
+.bdm-card,
+.resource-card,
+.compliance,
+.broker-rate-finder,
+.dry-run-rate-panel,
+.ai-panel,
+.workspace-panel,
+.deal-command-card,
+.deal-side-card {
+  border-radius: var(--radius-lg) !important;
+  border-color: color-mix(in srgb, var(--line) 84%, var(--gold)) !important;
+  box-shadow: var(--shadow-soft);
+}
+
+.topbar {
+  position: relative;
+  min-height: 500px;
+  padding: clamp(34px, 5vw, 64px) !important;
+  background:
+    radial-gradient(circle at 83% 56%, rgba(15, 23, 20, .08), transparent 19rem),
+    linear-gradient(135deg, color-mix(in srgb, var(--surface) 94%, #fff), color-mix(in srgb, var(--surface-strong) 82%, var(--gold)));
+  border: 1px solid var(--line);
+  overflow: hidden;
+}
+.topbar::before {
+  content: "";
+  position: absolute;
+  right: -9rem;
+  bottom: -11rem;
+  width: 35rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(200,155,60,.22), rgba(23,102,78,.12) 46%, transparent 68%);
+  pointer-events: none;
+}
+.topbar::after {
+  content: "";
+  position: absolute;
+  inset: 16px;
+  border-radius: calc(var(--radius-lg) - 8px);
+  border: 1px solid rgba(255,255,255,.52);
+  pointer-events: none;
+}
+.topbar > * { position: relative; z-index: 1; }
+.topbar h2 {
+  max-width: 760px;
+  font-size: clamp(3.6rem, 7.3vw, 7.4rem);
+  letter-spacing: -.09em;
+  line-height: .84;
+}
+.topbar-copy {
+  max-width: 620px;
+  font-size: clamp(1.02rem, 1.5vw, 1.24rem);
+  color: color-mix(in srgb, var(--muted) 86%, var(--text));
+}
+.hero-proof-strip span,
+.live-pill,
+.desk-badges span {
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--line) 70%, var(--gold));
+  background: color-mix(in srgb, var(--surface) 86%, var(--gold));
+  color: color-mix(in srgb, var(--text) 82%, var(--green));
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-weight: 800;
+}
+.hero-insight {
+  align-self: start;
+  border-radius: 22px;
+  background: color-mix(in srgb, var(--surface) 86%, transparent);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 28px 70px rgba(16, 31, 25, .16);
+}
+.hero-insight strong,
+.metric-grid strong,
+.best-rate-cell strong,
+.pricing-price,
+.rate-number {
+  font-variant-numeric: tabular-nums;
+}
+
+.section-heading,
+.workspace-header {
+  align-items: flex-end;
+  border-bottom: 1px solid color-mix(in srgb, var(--line) 78%, transparent);
+  padding-bottom: 14px;
+}
+.section-heading h3,
+.workspace-header h3,
+.product-direction-card h3,
+.market-position-card h3,
+.intelligence-hero h3,
+.pricing-card h4,
+.compliance h3 {
+  letter-spacing: -.064em;
+}
+.eyebrow,
+.panel-label {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  letter-spacing: .055em;
+  color: color-mix(in srgb, var(--muted) 78%, var(--green));
+}
+
+.metric-grid article {
+  min-height: 112px;
+  background: linear-gradient(180deg, var(--surface), color-mix(in srgb, var(--surface-strong) 70%, var(--surface)));
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.metric-grid article:hover,
+.best-rate-card:hover,
+.lender-card:hover,
+.package-card:hover,
+.program-card:hover,
+.resource-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+button,
+.button-link,
+.text-link {
+  transition: transform .16s ease, box-shadow .16s ease, background .16s ease, border-color .16s ease;
+}
+button:hover,
+.button-link:hover { transform: translateY(-1px); }
+.button-link,
+.topbar-actions a,
+.pricing-card.featured .button-link {
+  border-radius: 999px !important;
+  font-weight: 900;
+}
+.topbar-actions a,
+.button-link.primary {
+  background: var(--nav) !important;
+  color: #fffdf7 !important;
+  box-shadow: 0 16px 34px rgba(11,17,16,.22);
+}
+
+input,
+select,
+textarea,
+.search-box input,
+.resource-toolbar input,
+.resource-toolbar select {
+  border-radius: 14px !important;
+  background: color-mix(in srgb, var(--surface) 92%, #fff) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.8);
+}
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 3px solid color-mix(in srgb, var(--green) 18%, transparent) !important;
+  border-color: color-mix(in srgb, var(--green) 55%, var(--line)) !important;
+}
+
+.broker-rate-finder {
+  border-color: color-mix(in srgb, var(--green) 34%, var(--line)) !important;
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--green) 9%, transparent), transparent 42%),
+    var(--surface) !important;
+}
+.rate-finder-toolbar {
+  grid-template-columns: minmax(250px, 1.55fr) repeat(4, minmax(126px, .88fr));
+  background: color-mix(in srgb, var(--surface-strong) 72%, var(--green)) !important;
+}
+.rate-finder-table th {
+  background: color-mix(in srgb, var(--nav) 92%, var(--green)) !important;
+  color: #f7f0df !important;
+}
+.rate-finder-table tbody tr:hover td {
+  background: color-mix(in srgb, var(--green) 8%, var(--surface)) !important;
+}
+.rate-finder-table tbody tr.rate-row-blank td {
+  color: color-mix(in srgb, var(--muted) 82%, var(--text));
+  background: color-mix(in srgb, var(--surface-strong) 62%, #fff);
+}
+.rate-finder-table tbody tr.rate-row-blank td.rate-number {
+  min-height: 24px;
+}
+.rate-finder-table tbody tr.rate-row-blank td.rate-number::after {
+  content: "";
+  display: block;
+  height: 1px;
+  width: 28px;
+  background: color-mix(in srgb, var(--line) 92%, var(--muted));
+}
+.rate-status-pill.blank {
+  background: color-mix(in srgb, var(--muted) 11%, var(--surface));
+  color: color-mix(in srgb, var(--muted) 82%, var(--text));
+}
+.rate-status-pill.approved,
+.rate-status-pill.fresh {
+  background: color-mix(in srgb, var(--green) 14%, var(--surface));
+  color: color-mix(in srgb, var(--green) 76%, var(--text));
+}
+
+@media (max-width: 1080px) {
+  .app-shell { background: transparent; }
+  main { width: 100%; padding: 18px; }
+  .sidebar { border-right: 0; border-bottom: 1px solid rgba(255,255,255,.08); }
+  .topbar { min-height: auto; }
+  .topbar h2 { font-size: clamp(3.2rem, 12vw, 6rem); }
+}
+@media (max-width: 720px) {
+  main { padding: 10px; gap: 16px; }
+  .sidebar { padding: 14px; }
+  .brand-lockup { align-items: flex-start; }
+  .nav-list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+  .nav-list a { padding: 10px; font-size: .88rem; }
+  .topbar { padding: 58px 20px 24px !important; border-radius: 20px !important; }
+  .topbar h2 { font-size: clamp(3.05rem, 16vw, 4.9rem); letter-spacing: -.1em; }
+  .topbar-copy { font-size: .98rem; }
+  .hero-proof-strip { gap: 6px; }
+  .hero-proof-strip span { font-size: .62rem; }
+  .section-heading,
+  .workspace-header,
+  .rate-finder-head,
+  .rate-finder-summary { align-items: flex-start; flex-direction: column; }
+  .rate-finder-toolbar { grid-template-columns: 1fr 1fr; }
+  .rate-finder-toolbar label:first-child { grid-column: 1 / -1; }
+  .rate-table-wrap { max-height: 620px; }
+}
+
+/* Office/database cleanup pass — internal portal, not landing page */
+:root {
+  --bg: #f4f5f1;
+  --surface: #fbfbf7;
+  --surface-strong: #eceee7;
+  --surface-tint: #e6ebe5;
+  --text: #1c241f;
+  --muted: #68726b;
+  --line: #d3d8cf;
+  --accent: #2e6b4f;
+  --accent-strong: #1d4e39;
+  --accent-soft: #dce8df;
+  --green: #2e6b4f;
+  --gold: #9a7a3c;
+  --nav: #202823;
+  --radius-sm: 6px;
+  --radius-md: 9px;
+  --radius-lg: 12px;
+  --shadow: 0 14px 36px rgba(32,40,35,.10);
+  --shadow-soft: 0 8px 22px rgba(32,40,35,.075);
+}
+
+body {
+  background:
+    linear-gradient(90deg, rgba(32,40,35,.035) 1px, transparent 1px),
+    linear-gradient(180deg, #f8f8f4 0, var(--bg) 360px);
+  background-size: 28px 28px, auto;
+}
+
+.product-direction-band,
+#intelligence,
+#pricing,
+#resources,
+#compliance {
+  display: none !important;
+}
+
+.app-shell {
+  grid-template-columns: 220px minmax(0, 1fr);
+  background: linear-gradient(90deg, var(--nav) 0 220px, transparent 220px);
+}
+.sidebar {
+  padding: 18px 12px;
+  background: #202823;
+  border-right: 1px solid #111713;
+}
+.brand-lockup {
+  padding: 0 8px 14px;
+  border-bottom: 1px solid rgba(255,255,255,.10);
+}
+.brand-mark {
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  background: #e8ede7;
+  color: #1f4f3a;
+  box-shadow: none;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+}
+.sidebar .brand-lockup h1 {
+  color: #f3f4ee;
+  font-size: 1.02rem;
+  letter-spacing: -.02em;
+}
+.sidebar .brand-lockup .eyebrow { color: #9aa79d; }
+.nav-list {
+  gap: 2px;
+  margin-top: 12px;
+}
+.nav-list a {
+  min-height: 34px;
+  padding: 8px 9px;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  color: #c5ccc4;
+  font-size: .86rem;
+  font-weight: 720;
+  transform: none !important;
+}
+.nav-list a span {
+  display: inline-flex;
+  width: 22px;
+  color: #819088;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: .68rem;
+}
+.nav-list a.active,
+.nav-list a:hover {
+  background: #2a332e;
+  border-color: rgba(255,255,255,.08);
+  color: #fffdf7;
+  box-shadow: inset 2px 0 0 #7eb090;
+}
+.nav-list a.active span,
+.nav-list a:hover span { color: #a8d1b5; }
+.sidebar-panel {
+  margin: 14px 6px 0;
+  padding: 12px;
+  border-radius: 8px;
+  background: #18201b;
+  border-color: rgba(255,255,255,.08);
+  box-shadow: none;
+  color: #aeb8b0;
+}
+.sidebar-panel strong {
+  color: #eef1ea;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: .88rem;
+}
+.sidebar-panel span { font-size: .78rem; line-height: 1.45; }
+
+main {
+  width: min(100%, 1320px);
+  padding: 22px 24px 36px;
+  gap: 18px;
+}
+.topbar {
+  min-height: 0 !important;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  padding: 22px 22px 20px !important;
+  border-radius: 12px !important;
+  background:
+    linear-gradient(90deg, rgba(46,107,79,.08), transparent 42%),
+    var(--surface) !important;
+  box-shadow: var(--shadow-soft);
+}
+.topbar::before,
+.topbar::after { display: none; }
+.topbar h2 {
+  max-width: 620px;
+  font-size: clamp(2.45rem, 4.1vw, 3.85rem);
+  line-height: .94;
+  letter-spacing: -.07em;
+}
+.topbar-copy {
+  max-width: 620px;
+  margin-top: 12px;
+  font-size: 1rem;
+}
+.live-pill,
+.hero-proof-strip span,
+.desk-badges span {
+  min-height: 26px;
+  padding: 0 9px;
+  border-radius: 6px;
+  background: #edf2ed;
+  border-color: var(--line);
+  color: #2f4639;
+  font-size: .7rem;
+  box-shadow: none;
+}
+.topbar-actions {
+  position: absolute;
+  top: 22px;
+  right: 22px;
+  min-width: 0;
+  flex-direction: row;
+  gap: 8px;
+}
+.topbar-actions a { display: none !important; }
+.primary-button,
+.secondary-button,
+.button-link,
+.topbar-actions a,
+button {
+  border-radius: 7px !important;
+}
+.topbar-actions a,
+.button-link.primary,
+.primary-button {
+  background: #26342d !important;
+  color: #fbfbf7 !important;
+  box-shadow: none;
+}
+.hero-insight {
+  grid-column: 2;
+  align-self: start !important;
+  justify-self: stretch;
+  margin-top: 94px;
+  max-width: 280px;
+  padding: 14px;
+  border-radius: 10px;
+  background: #f6f7f2;
+  border: 1px solid var(--line);
+  box-shadow: none;
+  backdrop-filter: none;
+}
+.hero-insight > strong {
+  font-size: 2.25rem;
+}
+.hero-insight dl div,
+.metric-grid article,
+.band,
+.lender-card,
+.program-card,
+.insurer-card,
+.bdm-card,
+.broker-rate-finder,
+.deal-command-card,
+.deal-side-card,
+.auth-card,
+.dry-run-rate-panel,
+.workspace-panel,
+.package-card {
+  border-radius: 10px !important;
+  box-shadow: var(--shadow-soft) !important;
+}
+.metric-grid {
+  gap: 10px;
+}
+.metric-grid article {
+  min-height: 86px;
+  padding: 14px;
+  background: var(--surface);
+}
+.metric-grid article small,
+.panel-label,
+.eyebrow {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+}
+.section-heading {
+  padding-bottom: 10px;
+}
+.section-heading h3,
+.workspace-header h3 {
+  font-size: clamp(1.45rem, 2.4vw, 2.7rem);
+  letter-spacing: -.045em;
+}
+.rate-finder-toolbar {
+  grid-template-columns: minmax(230px, 1.4fr) repeat(4, minmax(120px, .9fr));
+  padding: 12px;
+  gap: 8px;
+  border-radius: 9px;
+  background: #eef1eb !important;
+}
+input,
+select,
+textarea,
+.search-box input,
+.resource-toolbar input,
+.resource-toolbar select {
+  border-radius: 7px !important;
+  background: #fffefa !important;
+}
+.rate-table-wrap {
+  border-radius: 9px;
+  border-color: var(--line);
+}
+.rate-finder-table th {
+  background: #26342d !important;
+  color: #f4f5ef !important;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: .66rem;
+}
+.rate-finder-table td {
+  padding: 9px 8px;
+  border-color: #e2e5dc;
+}
+.rate-finder-table tbody tr:nth-child(even) td { background: #f7f8f3; }
+.rate-finder-table tbody tr:hover td { background: #eaf0ea !important; }
+
+.upload-help-text,
+.profile-create-form small,
+.profile-summary-card small {
+  font-size: .82rem;
+}
+.profile-create-form,
+.profile-summary-card {
+  display: grid;
+  gap: 12px;
+  margin-top: 14px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fbfcf6;
+}
+.profile-create-form[hidden],
+.profile-summary-card[hidden],
+.schema-warning[hidden] {
+  display: none !important;
+}
+.profile-form-head strong,
+.profile-form-head small,
+.profile-summary-card strong,
+.profile-summary-card small {
+  display: block;
+}
+.admin-lock-note {
+  padding: 10px 12px;
+  border-radius: 9px;
+  border: 1px solid color-mix(in srgb, #b45309 30%, var(--line));
+  background: #fff7ed;
+  color: #9a3412;
+  font-size: .85rem;
+}
+.upload-card.admin-disabled {
+  opacity: .72;
+}
+.upload-card.admin-disabled input,
+.upload-card.admin-disabled select,
+.upload-card.admin-disabled textarea,
+.upload-card.admin-disabled button.primary-button {
+  pointer-events: none;
+}
+
+.upload-desk {
+  display: grid;
+  gap: 18px;
+}
+.upload-heading {
+  align-items: start;
+}
+.upload-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(92px, 1fr));
+  gap: 8px;
+  min-width: min(100%, 340px);
+}
+.upload-stats article,
+.upload-card {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: 10px;
+  box-shadow: var(--shadow-soft);
+}
+.upload-stats article {
+  padding: 12px;
+}
+.upload-stats strong {
+  display: block;
+  font-size: 1.45rem;
+  letter-spacing: -0.05em;
+}
+.upload-stats span,
+.upload-help-text,
+.rate-sheet-upload-list small,
+.review-steps span,
+.upload-guardrail span {
+  color: var(--muted);
+}
+.upload-desk-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(280px, .65fr);
+  gap: 16px;
+  align-items: start;
+}
+.upload-card {
+  padding: 18px;
+}
+.upload-form {
+  display: grid;
+  gap: 14px;
+}
+.upload-form-head,
+.upload-queue-head,
+.upload-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.upload-form h4,
+.ai-review-card h4,
+.upload-queue-card h4 {
+  margin: 0;
+  font-size: 1.2rem;
+  letter-spacing: -0.035em;
+}
+.compact-form-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.file-drop-zone {
+  display: grid;
+  gap: 8px;
+  place-items: center;
+  text-align: center;
+  min-height: 160px;
+  padding: 22px;
+  border: 1.5px dashed color-mix(in srgb, var(--green) 40%, var(--line));
+  background: #f6f8f2;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.file-drop-zone input {
+  width: min(100%, 340px);
+}
+.file-drop-zone strong {
+  font-size: 1.05rem;
+}
+.upload-actions {
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+.review-steps {
+  display: grid;
+  gap: 12px;
+  padding: 0;
+  margin: 16px 0;
+  list-style: none;
+  counter-reset: review-step;
+}
+.review-steps li {
+  display: grid;
+  grid-template-columns: 34px 1fr;
+  gap: 10px;
+  align-items: start;
+}
+.review-steps li::before {
+  counter-increment: review-step;
+  content: counter(review-step);
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: #26342d;
+  color: #f4f5ef;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: .75rem;
+}
+.review-steps strong,
+.review-steps span {
+  display: block;
+  grid-column: 2;
+}
+.upload-guardrail {
+  display: grid;
+  gap: 4px;
+  padding: 12px;
+  border-radius: 9px;
+  background: #eef1eb;
+  border: 1px solid var(--line);
+}
+.rate-sheet-upload-list {
+  display: grid;
+  gap: 10px;
+  margin-top: 12px;
+}
+.upload-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: #fffefa;
+}
+.upload-item strong,
+.upload-item span,
+.upload-item small {
+  display: block;
+}
+.upload-item-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+.upload-item-meta span,
+.upload-status-chip {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 4px 8px;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: .67rem;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.upload-status-chip {
+  align-self: start;
+  background: #f1f4ec;
+  color: var(--green);
+  border-color: color-mix(in srgb, var(--green) 28%, var(--line));
+}
+@media (max-width: 900px) {
+  .upload-desk-grid,
+  .compact-form-grid {
+    grid-template-columns: 1fr;
+  }
+  .upload-stats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1080px) {
+  .app-shell { background: transparent; grid-template-columns: 1fr; }
+  .sidebar { padding: 12px; }
+  .topbar { grid-template-columns: 1fr; }
+  .topbar-actions { position: static; margin: 14px 0 0; }
+  .hero-insight { grid-column: auto; max-width: none; margin-top: 14px; }
+}
+@media (max-width: 720px) {
+  main { padding: 10px; }
+  .nav-list { grid-template-columns: 1fr 1fr; }
+  .topbar { padding: 18px !important; }
+  .topbar h2 { font-size: clamp(2.55rem, 14vw, 4.2rem); }
+  .rate-finder-toolbar { grid-template-columns: 1fr; }
+}
+    </style>
   </head>
-  <body>
+  <body class="portal-locked">
     <div class="app-shell">
       <aside class="sidebar" aria-label="Portal navigation">
         <div class="brand-lockup">
@@ -4272,29 +5644,51 @@ th, td { border-color: var(--line); }
         </div>
 
         <nav class="nav-list">
-          <a href="#dashboard" class="active">Dashboard</a>
-          <a href="ai.html">AI Desk</a>
-          <a href="#pricing">Pricing</a>
-          <a href="#intelligence">Rate Intelligence</a>
-          <a href="#best-rates">Best Rates</a>
-          <a href="#deal-desk">Deal Desk</a>
-          <a href="#lenders">Lenders</a>
-          <a href="#packages">Packages</a>
-          <a href="#programs">Programs</a>
-          <a href="#insurers">Insurers</a>
-          <a href="#contacts">BDM Contacts</a>
-          <a href="#resources">Broker Kits</a>
-          <a href="#compliance">Compliance</a>
+          <a href="#dashboard" class="active"><span>01</span> Dashboard</a>
+          <a href="#best-rates"><span>02</span> Rate Board</a>
+          <a href="#deal-desk"><span>03</span> Deal Desk</a>
+          <a href="#lenders"><span>04</span> Lenders</a>
+          <a href="#programs"><span>05</span> Programs</a>
+          <a href="#insurers"><span>06</span> Insurers</a>
+          <a href="#contacts"><span>07</span> BDM Contacts</a>
+          <a href="#uploads"><span>08</span> Sheet Uploads</a>
         </nav>
 
         <section class="sidebar-panel">
-          <p class="panel-label">Today</p>
+          <p class="panel-label">Desk date</p>
           <strong id="todayLabel"></strong>
-          <span>Fast reference for Ontario agents. Pro workspace target: $9/mo.</span>
+          <span>Internal rate, lender, and deal-fit database for Ontario broker work.</span>
         </section>
       </aside>
 
       <main>
+        <section class="access-lock-screen" id="accessLockScreen" aria-live="polite">
+          <article class="access-lock-card">
+            <p class="eyebrow">Private rate desk</p>
+            <h1>Login or create account.</h1>
+            <p>Ontario Mortgage Rate Portal is locked. Use email and password to sign in. New users can create an account, then complete a profile before the desk unlocks.<span id="localAdminHint"> Local development admin: <strong>raj@localtest</strong>.</span></p>
+            <form class="access-lock-form" id="globalAuthForm">
+              <label><span>Email / username</span><input id="globalAuthEmail" type="email" placeholder="advisor@example.com" autocomplete="email" required /></label>
+              <label><span>Password</span><input id="globalAuthPassword" type="password" placeholder="Minimum 6 characters" autocomplete="current-password" /></label>
+              <div class="auth-button-row">
+                <button class="primary-button" type="submit" data-auth-action="login">Login</button>
+                <button class="secondary-button" type="submit" data-auth-action="signup">Create account</button>
+              </div>
+            </form>
+            <form class="profile-create-form" id="globalProfileCreateForm" hidden>
+              <div class="profile-form-head"><strong>Create your portal profile</strong><small>You are signed in. Complete this profile to unlock the desk.</small></div>
+              <div class="form-grid compact-form-grid">
+                <label><span>Full name</span><input id="globalProfileFullName" autocomplete="name" placeholder="Your name" required /></label>
+                <label><span>Brokerage / team</span><input id="globalProfileCompany" placeholder="SI Capital / brokerage" /></label>
+                <label><span>Phone</span><input id="globalProfilePhone" autocomplete="tel" placeholder="416-555-0123" /></label>
+                <label><span>Requested access</span><select id="globalProfileRequestedRole"><option value="broker">User / broker</option><option value="admin">Admin request</option></select></label>
+              </div>
+              <button class="primary-button" type="submit">Save profile + unlock desk</button>
+              <small>Admin access still requires the admin user/database role. New profiles default to broker access.</small>
+            </form>
+            <small class="access-lock-status" id="globalAuthStatus">Enter your email to sign in or create an account.</small>
+          </article>
+        </section>
         <header class="topbar" id="dashboard">
           <div>
             <div class="status-row">
@@ -4303,19 +5697,19 @@ th, td { border-color: var(--line); }
             </div>
             <h2><span>Rates, policy, fit. One clean desk.</span></h2>
             <p class="topbar-copy">
-              A minimal workspace for Ontario mortgage agents to check current rates, source-backed policy, broker kits, and lender context before a file goes anywhere.
+              A compact operations database for Ontario mortgage brokers: rate rows, lender policy, contacts, and deal-fit checks in one place.
             </p>
             <div class="hero-proof-strip" aria-label="Desk highlights">
-              <span>Source-backed</span>
-              <span>Policy beside rate</span>
-              <span>Agent Pro $9/mo</span>
+              <span>Rate table</span>
+              <span>Lender files</span>
+              <span>Deal fit</span>
             </div>
           </div>
           <div class="topbar-actions">
             <button class="icon-button" id="themeToggle" type="button" title="Toggle theme" aria-label="Toggle theme">
               <span>◐</span>
             </button>
-            <a class="primary-button" href="#pricing">View plans</a>
+            <a class="primary-button" href="#best-rates">Open rate board</a>
           </div>
           <aside class="hero-insight" aria-label="Current rate snapshot">
             <p class="panel-label">Live abstract</p>
@@ -4485,6 +5879,54 @@ th, td { border-color: var(--line); }
             </div>
           </div>
 
+
+
+          <div class="broker-rate-finder" id="brokerRateFinder">
+            <div class="rate-finder-head">
+              <div>
+                <h4>Broker quote finder</h4>
+                <p>Pick term, fixed/variable, and amortization first — then narrow by bucket, purpose, or lender.</p>
+              </div>
+              <div class="rate-finder-mode" aria-label="Primary quote controls">
+                <span>Term</span>
+                <span>Fixed / variable</span>
+                <span>Amortization</span>
+              </div>
+            </div>
+            <div class="rate-finder-toolbar" aria-label="Broker rate finder filters">
+              <label><span>Search</span><input id="rateFinderSearch" type="search" placeholder="TD, rental, 30yr, refi, CMLS..." /></label>
+              <label><span>Lender</span><select id="rateFinderLender"><option value="all">Any lender</option></select></label>
+              <label><span>Term</span><select id="rateFinderTerm"><option value="all">Any term</option><option value="12">1yr</option><option value="24">2yr</option><option value="36">3yr</option><option value="48">4yr</option><option value="60">5yr</option><option value="heloc">HELOC</option></select></label>
+              <label><span>Fixed / variable</span><select id="rateFinderRateType"><option value="all">Fixed or variable</option><option value="fixed">Fixed only</option><option value="variable">Variable only</option></select></label>
+              <label><span>Amortization</span><select id="rateFinderAmort"><option value="all">Any amort.</option><option value="25">25yr</option><option value="30">30yr</option></select></label>
+              <label><span>Bucket</span><select id="rateFinderBucket"><option value="all">Any bucket</option><option value="insured">Insured / high ratio</option><option value="insurable">Insurable</option><option value="uninsured">Uninsured / refi</option><option value="variable">Variable</option><option value="alt">Alternative</option></select></label>
+              <label><span>Purpose</span><select id="rateFinderPurpose"><option value="all">Any purpose</option><option value="purchase">Purchase</option><option value="refinance">Refinance</option><option value="rental">Rental</option><option value="private">Private exit</option></select></label>
+              <label><span>Lender type</span><select id="rateFinderType"><option value="all">Any type</option><option value="bank">Bank</option><option value="monoline">Monoline</option><option value="credit union">Credit union</option><option value="alternative">Alternative</option><option value="private">Private / MIC</option></select></label>
+              <label><span>Sort</span><select id="rateFinderSort"><option value="lowest">Lowest rate</option><option value="freshest">Freshest source</option><option value="lender">Lender A-Z</option><option value="term">Term</option><option value="hold">Rate hold</option></select></label>
+            </div>
+            <div class="rate-finder-chips" aria-label="Common broker searches">
+              <button type="button" data-rate-chip="best-5yr-insured">Best 5yr insured</button>
+              <button type="button" data-rate-chip="best-3yr-fixed">Best 3yr fixed</button>
+              <button type="button" data-rate-chip="conventional-30yr">30yr conventional</button>
+              <button type="button" data-rate-chip="variable">Variable</button>
+              <button type="button" data-rate-chip="refinance">Refinance</button>
+              <button type="button" data-rate-chip="rental">Rental</button>
+              <button type="button" data-rate-chip="alt-bfs">Alt / BFS</button>
+              <button type="button" data-rate-chip="recent">Recently updated</button>
+              <button type="button" data-rate-chip="reset">Reset</button>
+            </div>
+            <div class="rate-finder-summary" id="rateFinderSummary">
+              <span><strong>0</strong> matching rate rows</span>
+              <span>Dry-run rows are visible and marked review-only so brokers can quote fast with source awareness.</span>
+            </div>
+            <div class="rate-table-wrap">
+              <table class="rate-finder-table" aria-label="Broker searchable rate table">
+                <thead><tr><th>Lender</th><th>Term</th><th>Fixed/Var</th><th>Bucket</th><th>Rate</th><th>Amort.</th><th>Purpose</th><th>Lender type</th><th>Source / status</th></tr></thead>
+                <tbody id="rateFinderTable"></tbody>
+              </table>
+            </div>
+          </div>
+
           <div class="best-rate-layout">
             <div>
               <p class="contact-line">Compare high-ratio and conventional options by lender type, then check source and fit before you quote.</p>
@@ -4502,6 +5944,14 @@ th, td { border-color: var(--line); }
               </label>
               <div id="preferredLenderCard"></div>
             </aside>
+          </div>
+
+          <div class="dry-run-rate-panel" id="dryRunRateSheetPanel" aria-live="polite">
+            <div class="dry-run-empty">
+              <p class="eyebrow">Inbox dry run</p>
+              <h4>Scanning received rate sheets…</h4>
+              <p class="contact-line">The portal will show extracted lender rows, policy/template items, and files that need review once the dry-run index loads.</p>
+            </div>
           </div>
         </section>
 
@@ -4585,10 +6035,24 @@ th, td { border-color: var(--line); }
               <div class="schema-warning" id="schemaWarning" hidden>Database hardening SQL still needs to be applied before real borrower data is safe.</div>
             </div>
             <div class="auth-actions" id="authActions">
-              <label><span>Email</span><input id="authEmail" type="email" placeholder="advisor@example.com" autocomplete="email" /></label>
-              <button class="primary-button" type="button" id="sendMagicLink">Send login link</button>
-              <button class="secondary-button" type="button" id="signOutButton" hidden>Sign out</button>
+            <label><span>Email / username</span><input id="authEmail" type="email" placeholder="advisor@example.com" autocomplete="email" /></label>
+            <label><span>Password</span><input id="authPassword" type="password" placeholder="Password" autocomplete="current-password" /></label>
+            <button class="primary-button" type="button" id="loginButton">Login</button>
+            <button class="secondary-button" type="button" id="createAccountButton">Create account</button>
+            <button class="secondary-button" type="button" id="signOutButton" hidden>Sign out</button>
             </div>
+            <form class="profile-create-form" id="profileCreateForm" hidden>
+              <div class="profile-form-head"><strong>Create your portal profile</strong><small>New users sign in first, then complete this profile before using protected workspace tools.</small></div>
+              <div class="form-grid compact-form-grid">
+                <label><span>Full name</span><input id="profileFullName" autocomplete="name" placeholder="Your name" required /></label>
+                <label><span>Brokerage / team</span><input id="profileCompany" placeholder="SI Capital / brokerage" /></label>
+                <label><span>Phone</span><input id="profilePhone" autocomplete="tel" placeholder="416-555-0123" /></label>
+                <label><span>Requested access</span><select id="profileRequestedRole"><option value="broker">User / broker</option><option value="admin">Admin request</option></select></label>
+              </div>
+              <button class="primary-button" type="submit">Save profile</button>
+              <small>Admin access is controlled by the admin user/database role, not by this form alone.</small>
+            </form>
+            <div class="profile-summary-card" id="profileSummaryCard" hidden></div>
           </article>
 
           <div class="deal-builder-grid" id="deal-intake">
@@ -4851,6 +6315,74 @@ th, td { border-color: var(--line); }
               </thead>
               <tbody id="contactTable"></tbody>
             </table>
+          </div>
+        </section>
+
+        <section class="band upload-desk" id="uploads">
+          <div class="section-heading upload-heading">
+            <div>
+              <p class="eyebrow">Rate sheet intake</p>
+              <h3>Upload lender PDFs and Excel sheets for AI review.</h3>
+              <p class="section-copy">Users and admins can stage rate sheets by lender. The queue is intentionally review-first: files are labelled, checked, and handed to manual AI analysis before anything is pushed to a lender record.</p>
+            </div>
+            <div class="upload-stats" aria-label="Rate sheet upload queue stats">
+              <article><strong id="uploadQueueCount">0</strong><span>queued</span></article>
+              <article><strong id="uploadPdfCount">0</strong><span>PDF</span></article>
+              <article><strong id="uploadExcelCount">0</strong><span>Excel</span></article>
+            </div>
+          </div>
+
+          <div class="upload-desk-grid">
+            <form class="upload-card upload-form" id="rateSheetUploadForm">
+              <div class="upload-form-head">
+                <div>
+                  <p class="eyebrow">New upload</p>
+                  <h4>Stage a rate sheet</h4>
+                </div>
+                <span class="source-chip">PDF / XLS / XLSX</span>
+              </div>
+              <label><span>Lender</span><select id="uploadLenderSelect" required><option value="">Select lender</option></select></label>
+              <div class="form-grid compact-form-grid">
+                <label><span>Uploader type</span><select id="uploadActorRole"><option>User / broker</option><option>Admin</option><option>BDM / lender contact</option></select></label>
+                <label><span>Source</span><select id="uploadSource"><option>Email attachment</option><option>Lender portal export</option><option>Manual upload</option><option>BDM supplied</option></select></label>
+                <label><span>Effective date</span><input id="uploadEffectiveDate" type="date" /></label>
+                <label><span>Priority</span><select id="uploadPriority"><option>Normal</option><option>Urgent - rate change</option><option>Monthly refresh</option><option>Policy/rate exception</option></select></label>
+              </div>
+              <label class="file-drop-zone" for="rateSheetFiles">
+                <input id="rateSheetFiles" type="file" multiple accept=".pdf,.xls,.xlsx,application/pdf,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" required />
+                <strong>Drop or choose PDF / Excel files</strong>
+                <span>Each file is queued for manual AI extraction, lender matching, and admin approval before publishing.</span>
+              </label>
+              <label><span>Reviewer note</span><textarea id="uploadNotes" rows="4" placeholder="Example: BDM says prime changed; check 1/3/5-year fixed and variable tabs first."></textarea></label>
+              <div class="upload-actions">
+                <button class="primary-button" type="submit">Queue for AI review</button>
+                <button class="secondary-button" type="button" id="seedUploadDemo">Demo upload</button>
+              </div>
+              <p class="upload-help-text" id="uploadStatusText">Uploads are staged locally unless protected Supabase storage is available. No rate is published without manual review.</p>
+            </form>
+
+            <aside class="upload-card ai-review-card">
+              <p class="eyebrow">Manual AI workflow</p>
+              <h4>How the sheet moves</h4>
+              <ol class="review-steps">
+                <li><strong>Intake</strong><span>Capture lender, source, file type, effective date, and uploader context.</span></li>
+                <li><strong>AI analysis</strong><span>Extract terms, amortization, fixed/variable rows, Prime, hold period, conditions, and notes.</span></li>
+                <li><strong>Lender match</strong><span>Map clean rows back to the matching lender profile and flag conflicts for admin review.</span></li>
+                <li><strong>Publish gate</strong><span>Admin approves before rows are pushed into the live Rate Board.</span></li>
+              </ol>
+              <div class="upload-guardrail"><strong>Guardrail</strong><span>Unsupported combinations stay blank. The portal should never invent a rate from a PDF or spreadsheet.</span></div>
+            </aside>
+          </div>
+
+          <div class="upload-card upload-queue-card">
+            <div class="upload-queue-head">
+              <div>
+                <p class="eyebrow">Review queue</p>
+                <h4>Files waiting for extraction</h4>
+              </div>
+              <button class="secondary-button" type="button" id="clearUploadQueue">Clear local queue</button>
+            </div>
+            <div class="rate-sheet-upload-list" id="rateSheetUploadList"></div>
           </div>
         </section>
 
@@ -5264,6 +6796,7 @@ const demoLenders = [
 const storageKey = "ontarioBrokerRateDesk.lenders";
 const preferredLenderStorageKey = "ontarioBrokerRateDesk.preferredLender";
 const dealPipelineStorageKey = "ontarioBrokerRateDesk.deals";
+const rateSheetUploadStorageKey = "ontarioBrokerRateDesk.rateSheetUploads";
 let lenders = [];
 let activeFilter = "all";
 let activeLenderId = "";
@@ -5273,12 +6806,19 @@ let dealPipeline = loadDealPipeline();
 let supabaseClient = null;
 let supabaseReady = false;
 let currentUser = null;
+let currentProfile = null;
+const initialAdminEmails = ["shiv@sicapital.ca", "raj@localtest"];
+const localAdminEmail = "raj@localtest";
+const localAdminSessionKey = "ontarioBrokerRateDesk.localAdminSession";
 let authRequired = true;
 let hardenedSchemaReady = false;
 let rateEvents = loadRateEvents();
+let rateSheetUploads = loadRateSheetUploads();
 let auditTrail = loadAuditTrail();
 let livePublishedRates = [];
 let liveRatesLoaded = false;
+let dryRunRateSheetData = null;
+let dryRunRateRows = [];
 
 const programColorMap = {
   "Alternative": "#7C3AED",
@@ -6130,6 +7670,18 @@ const detailPanel = document.querySelector("#detailPanel");
 const searchInput = document.querySelector("#searchInput");
 const runSearchButton = document.querySelector("#runSearch");
 const bestRateGrid = document.querySelector("#bestRateGrid");
+const rateFinderTable = document.querySelector("#rateFinderTable");
+const rateFinderSummary = document.querySelector("#rateFinderSummary");
+const rateFinderSearch = document.querySelector("#rateFinderSearch");
+const rateFinderLender = document.querySelector("#rateFinderLender");
+const rateFinderTerm = document.querySelector("#rateFinderTerm");
+const rateFinderRateType = document.querySelector("#rateFinderRateType");
+const rateFinderAmort = document.querySelector("#rateFinderAmort");
+const rateFinderBucket = document.querySelector("#rateFinderBucket");
+const rateFinderPurpose = document.querySelector("#rateFinderPurpose");
+const rateFinderType = document.querySelector("#rateFinderType");
+const rateFinderSort = document.querySelector("#rateFinderSort");
+const dryRunRateSheetPanel = document.querySelector("#dryRunRateSheetPanel");
 const preferredLenderSelect = document.querySelector("#preferredLenderSelect");
 const preferredLenderCard = document.querySelector("#preferredLenderCard");
 const filterButtons = document.querySelectorAll("[data-filter]");
@@ -6150,17 +7702,32 @@ const supabaseStatus = document.querySelector("#supabaseStatus");
 const authCard = document.querySelector("#authCard");
 const authStatusLine = document.querySelector("#authStatusLine");
 const authEmailInput = document.querySelector("#authEmail");
-const sendMagicLinkButton = document.querySelector("#sendMagicLink");
+const authPasswordInput = document.querySelector("#authPassword");
+const loginButton = document.querySelector("#loginButton");
+const createAccountButton = document.querySelector("#createAccountButton");
 const signOutButton = document.querySelector("#signOutButton");
+const globalAuthForm = document.querySelector("#globalAuthForm");
+const globalAuthEmailInput = document.querySelector("#globalAuthEmail");
+const globalAuthPasswordInput = document.querySelector("#globalAuthPassword");
+const globalAuthStatus = document.querySelector("#globalAuthStatus");
+const globalProfileCreateForm = document.querySelector("#globalProfileCreateForm");
+const localAdminHint = document.querySelector("#localAdminHint");
+const profileCreateForm = document.querySelector("#profileCreateForm");
+const profileSummaryCard = document.querySelector("#profileSummaryCard");
 const schemaWarning = document.querySelector("#schemaWarning");
 const rateIngestionForm = document.querySelector("#rateIngestionForm");
 const rateIngestionList = document.querySelector("#rateIngestionList");
 const demoIngestionSummary = document.querySelector("#demoIngestionSummary");
+const rateSheetUploadForm = document.querySelector("#rateSheetUploadForm");
+const uploadLenderSelect = document.querySelector("#uploadLenderSelect");
+const rateSheetFilesInput = document.querySelector("#rateSheetFiles");
+const rateSheetUploadList = document.querySelector("#rateSheetUploadList");
+const uploadStatusText = document.querySelector("#uploadStatusText");
 const auditTrailList = document.querySelector("#auditTrailList");
 let resourceIndex = null;
 let resourceEntries = [];
 const pageNavLinks = document.querySelectorAll('.nav-list a[href^="#"]');
-const pageRoutes = ["dashboard", "pricing", "intelligence", "best-rates", "deal-desk", "lenders", "packages", "programs", "insurers", "contacts", "resources", "compliance"];
+const pageRoutes = ["dashboard", "pricing", "intelligence", "best-rates", "deal-desk", "lenders", "packages", "programs", "insurers", "contacts", "uploads", "resources", "compliance"];
 const pageGroups = {
   dashboard: [document.querySelector("#dashboard"), document.querySelector("#product-direction"), document.querySelector(".metric-grid")],
   pricing: [document.querySelector("#pricing")],
@@ -6172,6 +7739,7 @@ const pageGroups = {
   programs: [document.querySelector("#programs")],
   insurers: [document.querySelector("#insurers")],
   contacts: [document.querySelector("#contacts")],
+  uploads: [document.querySelector("#uploads")],
   resources: [document.querySelector("#resources")],
   compliance: [document.querySelector("#compliance")]
 };
@@ -6207,15 +7775,27 @@ resourceLenderFilter?.addEventListener("change", renderResources);
 resourceCategoryFilter?.addEventListener("change", renderResources);
 resourceTypeFilter?.addEventListener("change", renderResources);
 
+[rateFinderSearch, rateFinderLender, rateFinderTerm, rateFinderRateType, rateFinderAmort, rateFinderBucket, rateFinderPurpose, rateFinderType, rateFinderSort].forEach((control) => {
+  control?.addEventListener(control === rateFinderSearch ? "input" : "change", renderBrokerRateFinder);
+});
+document.querySelectorAll("[data-rate-chip]").forEach((button) => button.addEventListener("click", () => applyRateFinderChip(button.dataset.rateChip)));
+
 dealIntakeForm?.addEventListener("submit", (event) => {
   event.preventDefault();
   createDealFromForm();
 });
 
 document.querySelector("#seedDemoDeal")?.addEventListener("click", seedDealForm);
-sendMagicLinkButton?.addEventListener("click", signInWithMagicLink);
+globalAuthForm?.addEventListener("submit", (event) => { event.preventDefault(); signInWithPasswordAuth(event.submitter?.dataset?.authAction || "login", globalAuthEmailInput?.value || "", globalAuthPasswordInput?.value || ""); });
+globalProfileCreateForm?.addEventListener("submit", (event) => { event.preventDefault(); saveUserProfileFromForm("global"); });
+loginButton?.addEventListener("click", () => signInWithPasswordAuth("login", authEmailInput?.value || "", authPasswordInput?.value || ""));
+createAccountButton?.addEventListener("click", () => signInWithPasswordAuth("signup", authEmailInput?.value || "", authPasswordInput?.value || ""));
 signOutButton?.addEventListener("click", signOutAdvisor);
+profileCreateForm?.addEventListener("submit", (event) => { event.preventDefault(); saveUserProfileFromForm("inline"); });
 rateIngestionForm?.addEventListener("submit", (event) => { event.preventDefault(); createRateEventFromForm(); });
+rateSheetUploadForm?.addEventListener("submit", (event) => { event.preventDefault(); createRateSheetUploadsFromForm(); });
+document.querySelector("#seedUploadDemo")?.addEventListener("click", seedDemoRateSheetUpload);
+document.querySelector("#clearUploadQueue")?.addEventListener("click", () => { rateSheetUploads = []; saveRateSheetUploads(); renderRateSheetUploads(); setUploadStatus("Local upload queue cleared."); });
 document.querySelector("#seedDemoRateIngestion")?.addEventListener("click", runStaticDemoRateIngestion);
 document.querySelector("#clearDealPipeline")?.addEventListener("click", async () => {
   const ids = dealPipeline.map((deal) => deal.id);
@@ -6349,6 +7929,7 @@ document.querySelector("#resetDemoData")?.addEventListener("click", () => {
 
 function applyDealDeskUpdates(items) {
   items.forEach((lender) => {
+    if (lender.liveRateSource) return;
     const row = dealDeskRateRows[lender.id];
     if (!row) return;
 
@@ -6439,8 +8020,12 @@ function slugifyLenderName(value = "") {
 }
 
 function displayDate(value) {
-  const parsed = Date.parse(value || "");
-  if (!Number.isFinite(parsed)) return value || "Source dated";
+  const raw = String(value || "").trim();
+  if (!raw) return "Source dated";
+  if (/^\d{1,2}\/\d{1,2}$/.test(raw)) return `Sheet ${raw}`;
+  if (/\d{1,2}\/\d{1,2}/.test(raw) && !/(\b20\d{2}\b|\d{4}-\d{2}-\d{2})/.test(raw)) return raw;
+  const parsed = Date.parse(raw);
+  if (!Number.isFinite(parsed)) return raw;
   return new Intl.DateTimeFormat("en-CA", { month: "short", day: "numeric", year: "numeric" }).format(new Date(parsed));
 }
 
@@ -6482,7 +8067,10 @@ function applyPublishedRatesToLenders(rows = []) {
     const bestConventional = lowestNumber(row.insurable_rate, row.uninsured_rate);
     if (bestInsured !== null) lender.rates.insuredFixed = lowestNumber(lender.rates.insuredFixed, bestInsured);
     if (bestConventional !== null) lender.rates.conventional = lowestNumber(lender.rates.conventional, bestConventional);
-    if (row.mortgage_type === "variable") lender.rates.variable = lowestNumber(lender.rates.variable, row.uninsured_rate, row.insurable_rate, row.insured_rate, row.lender_prime_rate);
+    if (row.mortgage_type === "variable") {
+      const variableQuote = row.variable_discount || row.variableDiscount || null;
+      lender.rates.variable = variableQuote || lowestNumber(lender.rates.variable, row.uninsured_rate, row.insurable_rate, row.insured_rate, row.lender_prime_rate);
+    }
     lender.updated = displayDate(row.effective_date || row.approved_at || lender.updated);
     lender.portal = row.source_label || lender.portal || "AI-published lender email";
     lender.policyNote = `${row.product_name || row.term_label || "Published rate"} · ${row.source_label || "Lender email"} · confidence ${Math.round(Number(row.confidence || 0) * 100)}%. ${row.public_notes || "Subject to lender approval and eligibility."}`;
@@ -6516,6 +8104,116 @@ async function loadPublishedRatesFromSupabase() {
   } catch (error) {
     console.warn("Published rates unavailable", error);
   }
+}
+
+async function loadDryRunRateSheets() {
+  try {
+    const response = await fetch("/data/rate-sheet-dry-run.json", { cache: "no-store" });
+    if (!response.ok) throw new Error(`Dry-run index failed ${response.status}`);
+    dryRunRateSheetData = await response.json();
+    dryRunRateRows = dryRunRateSheetData.published_rate_rows_dry_run || [];
+    if (dryRunRateRows.length && !livePublishedRates.length) {
+      livePublishedRates = dryRunRateRows;
+      lenders = applyPublishedRatesToLenders(dryRunRateRows);
+      render();
+    } else {
+      renderDryRunRateSheets();
+    }
+  } catch (error) {
+    console.warn("Dry-run rate-sheet index unavailable", error);
+    if (dryRunRateSheetPanel) {
+      dryRunRateSheetPanel.innerHTML = `<div class="dry-run-empty"><p class="eyebrow">Inbox dry run</p><h4>Dry-run index unavailable</h4><p class="contact-line">${escapeHtml(error.message)}</p></div>`;
+    }
+  }
+}
+
+function renderDryRunRateSheets() {
+  if (!dryRunRateSheetPanel || !dryRunRateSheetData) return;
+  const summary = dryRunRateSheetData.summary || {};
+  const docs = dryRunRateSheetData.candidate_documents || [];
+  const rows = dryRunRateSheetData.published_rate_rows_dry_run || [];
+  const policies = dryRunRateSheetData.policy_notes_dry_run || [];
+  const lenderMatrix = dryRunRateSheetData.lender_rate_matrix || [];
+  const lanes = dryRunRateSheetData.recommended_website_lanes || [];
+  dryRunRateSheetPanel.innerHTML = `
+    <div class="section-heading resource-heading">
+      <div>
+        <p class="eyebrow">Rate-sheet command centre</p>
+        <h4>Organized by lender, source, and review status</h4>
+        <p class="contact-line">This is the clean structure for the existing site: lender rate matrix first, extracted publish-ready rows second, then source docs, templates, and review/noise. Review-only until approved.</p>
+      </div>
+      <div class="desk-badges"><span>${escapeHtml(summary.mode || "dry run")}</span><span>${escapeHtml(summary.standard_inbox || "rates inbox")}</span></div>
+    </div>
+    <div class="dry-run-summary-grid">
+      <span><strong>${summary.inbox_checked || 0}</strong><small>emails scanned</small></span>
+      <span><strong>${summary.attachments_seen || 0}</strong><small>attachments seen</small></span>
+      <span><strong>${lenderMatrix.length}</strong><small>lenders organized</small></span>
+      <span><strong>${summary.extracted_rate_rows || rows.length}</strong><small>publish-ready rows</small></span>
+      <span><strong>${summary.actual_recent_recipient_matches || 0}</strong><small>sent to rates@ inbox</small></span>
+    </div>
+
+    <h4>Lender rate matrix</h4>
+    <p class="contact-line">One lender per row. This is where rate-sheet data belongs on the site: current visible 5-year insured/conventional/variable rates with source status.</p>
+    <div class="dry-run-lender-table" role="table" aria-label="Received rate-sheet lender matrix">
+      <div class="dry-run-lender-row dry-run-lender-head" role="row">
+        <span>Lender</span><span>5yr insured</span><span>5yr insurable 75–80</span><span>5yr unins/refi 25yr</span><span>Variable</span><span>Source/status</span>
+      </div>
+      ${lenderMatrix.map((item) => `
+        <div class="dry-run-lender-row" role="row">
+          <span><strong>${escapeHtml(item.lender_name || "Unknown lender")}</strong><small>${escapeHtml(item.sheet_date ? `Sheet ${item.sheet_date}` : "Source dated")}</small></span>
+          <span>${dryRunRateCell(item.rates?.insured_5yr)}</span>
+          <span>${dryRunRateCell(item.rates?.insurable_75_80_5yr)}</span>
+          <span>${dryRunRateCell(item.rates?.uninsured_refi_25yr_5yr)}</span>
+          <span>${dryRunRateCell(item.rates?.variable_insured)}</span>
+          <span><small>${escapeHtml(item.source_label || "Source")}</small><span class="dry-run-status">${escapeHtml((item.source_status || "review").replace(/_/g, " "))}</span></span>
+        </div>
+      `).join("")}
+    </div>
+
+    <h4>Publish-ready extracted rows</h4>
+    <div class="dry-run-row-grid">
+      ${rows.map((row) => `
+        <article class="dry-run-row-card">
+          <strong>${escapeHtml(row.term_label || "Rate row")}</strong>
+          <span class="dry-run-rate-number">${rate(row.uninsured_rate || row.insurable_rate || row.insured_rate)}</span>
+          <small>${escapeHtml(row.lender_name)} · ${escapeHtml(row.product_name || "Product")}</small>
+          <small>${escapeHtml(row.source_label || "Source")} · effective ${escapeHtml(displayDate(row.effective_date))}</small>
+        </article>
+      `).join("")}
+    </div>
+
+    <h4>Website lanes</h4>
+    <div class="dry-run-doc-grid">
+      ${lanes.map((lane) => `
+        <article class="dry-run-doc-card">
+          <strong>${escapeHtml(lane.lane || "Lane")}</strong>
+          <small>${escapeHtml(lane.purpose || "")}</small>
+          <span class="dry-run-status">${Number(lane.items || 0)} item${Number(lane.items || 0) === 1 ? "" : "s"}</span>
+        </article>
+      `).join("")}
+    </div>
+
+    <h4>Source documents routed</h4>
+    <div class="dry-run-doc-grid">
+      ${docs.map((doc) => `
+        <article class="dry-run-doc-card">
+          <strong>${escapeHtml(doc.lender || "Unknown lender")}</strong>
+          <small>${escapeHtml(doc.filename || "Unnamed attachment")}</small>
+          <small>${escapeHtml(doc.document_type || "document")} · ${escapeHtml(doc.source_received_at || "received")}</small>
+          <span class="dry-run-status">${escapeHtml((doc.status || "needs_review").replace(/_/g, " "))}</span>
+        </article>
+      `).join("")}
+    </div>
+    ${policies.length ? `<h4>Policy/template items</h4><div class="dry-run-doc-grid">${policies.map((policy) => `<article class="dry-run-doc-card"><strong>${escapeHtml(policy.lender_name)}</strong><small>${escapeHtml(policy.summary)}</small><span class="dry-run-status">${escapeHtml((policy.status || "organized").replace(/_/g, " "))}</span></article>`).join("")}</div>` : ""}
+    <p class="contact-line">${escapeHtml(summary.note || "")}</p>
+  `;
+}
+
+function dryRunRateCell(value) {
+  if (value === null || value === undefined || value === "") return `<strong>N/A</strong>`;
+  const raw = String(value);
+  const display = raw.startsWith("P") ? raw : rate(Number(raw));
+  return `<strong>${escapeHtml(display)}</strong>`;
 }
 
 function rate(value) {
@@ -6806,6 +8504,10 @@ function loadRateEvents() {
   try { const parsed = JSON.parse(localStorage.getItem("ontarioBrokerRateDesk.rateEvents") || "[]"); return Array.isArray(parsed) ? parsed : []; } catch { return []; }
 }
 function saveRateEvents() { localStorage.setItem("ontarioBrokerRateDesk.rateEvents", JSON.stringify(rateEvents)); }
+function loadRateSheetUploads() {
+  try { const parsed = JSON.parse(localStorage.getItem(rateSheetUploadStorageKey) || "[]"); return Array.isArray(parsed) ? parsed : []; } catch { return []; }
+}
+function saveRateSheetUploads() { localStorage.setItem(rateSheetUploadStorageKey, JSON.stringify(rateSheetUploads.slice(0, 80))); }
 function loadAuditTrail() {
   try { const parsed = JSON.parse(localStorage.getItem("ontarioBrokerRateDesk.auditTrail") || "[]"); return Array.isArray(parsed) ? parsed : []; } catch { return []; }
 }
@@ -6818,41 +8520,172 @@ function setSupabaseStatus(message, state = "") {
   supabaseStatus.classList.toggle("error", state === "error");
 }
 
+function setGlobalAuthStatus(message, state = "") {
+  if (!globalAuthStatus) return;
+  globalAuthStatus.textContent = message;
+  globalAuthStatus.style.color = state === "error" ? "var(--red)" : state === "connected" ? "var(--green)" : "var(--muted)";
+}
+
+function canUseLocalAdmin(email) {
+  return (email || "").trim().toLowerCase() === localAdminEmail && !isProductionHost();
+}
+
+function setLocalAdminSession() {
+  currentUser = { id: "local-admin-raj", email: localAdminEmail, app_metadata: { role: "admin", workspace_id: "omrp-local" }, user_metadata: { role: "admin", workspace_id: "omrp-local" } };
+  currentProfile = { id: currentUser.id, email: localAdminEmail, full_name: "Raj Local Admin", company: "Local Test", phone: "", requested_role: "admin", role: "admin", status: "active", workspace_id: "omrp-local" };
+  localStorage.setItem(localAdminSessionKey, "1");
+  localStorage.setItem(`ontarioBrokerRateDesk.profile.${currentUser.id}`, JSON.stringify(currentProfile));
+  setSupabaseStatus("Local admin unlocked", "connected");
+  setGlobalAuthStatus("Local admin unlocked as raj@localtest.", "connected");
+}
+
+function restoreLocalAdminSession() {
+  if (isProductionHost() || localStorage.getItem(localAdminSessionKey) !== "1") return false;
+  setLocalAdminSession();
+  return true;
+}
+
+function clearLocalAdminSession() {
+  localStorage.removeItem(localAdminSessionKey);
+}
+
+function isAdminUser() {
+  const email = currentUser?.email?.toLowerCase() || "";
+  return initialAdminEmails.includes(email)
+    || currentUser?.app_metadata?.role === "admin"
+    || currentUser?.user_metadata?.role === "admin"
+    || currentProfile?.role === "admin";
+}
+
+function profileComplete() {
+  return !authRequired || Boolean(currentProfile?.id || currentProfile?.email);
+}
+
+function canUseProtectedWorkspace() {
+  return !authRequired || (Boolean(currentUser) && profileComplete());
+}
+
+function setProtectedWorkspaceUi() {
+  const locked = authRequired && (!currentUser || !profileComplete());
+  document.querySelectorAll("#dealIntakeForm input, #dealIntakeForm select, #dealIntakeForm textarea, #dealIntakeForm button.primary-button, #rateSheetUploadForm input, #rateSheetUploadForm select, #rateSheetUploadForm textarea, #rateSheetUploadForm button.primary-button").forEach((el) => { el.disabled = locked; });
+  document.querySelector("#rateSheetUploadForm")?.classList.toggle("admin-disabled", locked);
+  if (locked) setUploadStatus("Sign in and create your profile before uploading lender rate sheets.", "error");
+  else if (uploadStatusText?.textContent?.includes("Sign in")) setUploadStatus("Uploads are staged for manual AI analysis and admin approval before publishing.");
+}
+
+async function loadCurrentProfile() {
+  if (!currentUser) { currentProfile = null; return; }
+  const localKey = `ontarioBrokerRateDesk.profile.${currentUser.id}`;
+  try { currentProfile = JSON.parse(localStorage.getItem(localKey) || "null"); } catch { currentProfile = null; }
+  if (!supabaseReady) return;
+  try {
+    const { data, error } = await supabaseClient.from("user_profiles").select("*").eq("id", currentUser.id).maybeSingle();
+    if (error) throw error;
+    if (data) {
+      currentProfile = data;
+      localStorage.setItem(localKey, JSON.stringify(data));
+    }
+  } catch (error) {
+    console.warn("Profile load failed", error);
+  }
+}
+
+async function saveUserProfileFromForm(source = "inline") {
+  if (!currentUser) { setSupabaseStatus("Sign in before creating profile", "error"); return; }
+  const isGlobal = source === "global";
+  const requestedRole = document.querySelector(isGlobal ? "#globalProfileRequestedRole" : "#profileRequestedRole")?.value || "broker";
+  const profile = {
+    id: currentUser.id,
+    email: currentUser.email,
+    full_name: textValue(isGlobal ? "#globalProfileFullName" : "#profileFullName") || currentUser.email,
+    company: textValue(isGlobal ? "#globalProfileCompany" : "#profileCompany"),
+    phone: textValue(isGlobal ? "#globalProfilePhone" : "#profilePhone"),
+    requested_role: requestedRole,
+    role: initialAdminEmails.includes((currentUser.email || "").toLowerCase()) ? "admin" : "broker",
+    status: "active",
+    workspace_id: workspaceId(),
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  };
+  currentProfile = profile;
+  localStorage.setItem(`ontarioBrokerRateDesk.profile.${currentUser.id}`, JSON.stringify(profile));
+  if (supabaseReady) {
+    try {
+      const { error } = await supabaseClient.from("user_profiles").upsert(profile);
+      if (error) throw error;
+      setSupabaseStatus("Profile saved", "connected");
+    } catch (error) {
+      console.warn("Profile save failed", error);
+      setSupabaseStatus("Profile saved locally · run profile SQL", "error");
+    }
+  }
+  setAuthUi();
+  renderDealPipeline();
+}
+
 function setAuthUi() {
-  if (!authCard) return;
   const signedIn = Boolean(currentUser?.email);
-  authCard.classList.toggle("locked", !signedIn);
-  if (authStatusLine) authStatusLine.textContent = signedIn ? `Signed in as ${currentUser.email}. Deal cards, rate events, and audit actions sync to the protected workspace.` : "Sign in with an approved advisor email before entering borrower details. Supabase Auth and row-level security keep deal records tied to the signed-in user/workspace.";
-  if (sendMagicLinkButton) sendMagicLinkButton.hidden = signedIn;
+  const profiled = Boolean(currentProfile?.id || currentProfile?.email);
+  const admin = isAdminUser();
+  document.body.classList.toggle("portal-locked", authRequired && (!signedIn || !profiled));
+  if (localAdminHint) localAdminHint.hidden = isProductionHost();
+  if (globalAuthEmailInput && !globalAuthEmailInput.value && authEmailInput?.value) globalAuthEmailInput.value = authEmailInput.value;
+  if (authCard) authCard.classList.toggle("locked", !signedIn || !profiled);
+  if (globalAuthForm) globalAuthForm.hidden = signedIn;
+  if (globalProfileCreateForm) globalProfileCreateForm.hidden = !signedIn || profiled;
+  if (globalAuthStatus) {
+    if (!signedIn) setGlobalAuthStatus(isProductionHost() ? "Enter your email and password to login or create an account." : "Login required. Use raj@localtest locally or enter email/password.");
+    else if (!profiled) setGlobalAuthStatus(`Signed in as ${currentUser.email}. Complete your profile to unlock the desk.`, "connected");
+    else setGlobalAuthStatus(`Profile complete. Desk unlocked for ${currentUser.email}.`, "connected");
+  }
+  if (authStatusLine) {
+    authStatusLine.textContent = signedIn
+      ? (profiled ? `Signed in as ${currentUser.email}. Access: ${admin ? "Admin" : "User / broker"}. Protected workspace tools are tied to this profile.` : `Signed in as ${currentUser.email}. Create your profile to finish onboarding.`)
+      : "Login with email/password or create a new account. New users must complete a portal profile before protected workspace tools unlock.";
+  }
+  if (loginButton) loginButton.hidden = signedIn;
+  if (createAccountButton) createAccountButton.hidden = signedIn;
   if (signOutButton) signOutButton.hidden = !signedIn;
   if (authEmailInput) authEmailInput.hidden = signedIn;
+  if (authPasswordInput) authPasswordInput.hidden = signedIn;
+  if (profileCreateForm) profileCreateForm.hidden = !signedIn || profiled;
+  if (profileSummaryCard) {
+    profileSummaryCard.hidden = !signedIn || !profiled;
+    if (signedIn && profiled) {
+      profileSummaryCard.innerHTML = `<strong>${escapeHtml(currentProfile.full_name || currentUser.email)}</strong><small>${escapeHtml(currentProfile.company || "Portal user")} · ${admin ? "Admin" : "User / broker"} · ${escapeHtml(currentProfile.status || "active")}</small>`;
+    }
+  }
   if (schemaWarning) schemaWarning.hidden = hardenedSchemaReady;
+  setProtectedWorkspaceUi();
 }
 
 async function initSupabase() {
-  if (!window.supabase?.createClient) { authRequired = false; setSupabaseStatus("Local demo mode", "error"); setAuthUi(); return; }
+  if (restoreLocalAdminSession()) { setAuthUi(); renderDealPipeline(); renderRateEvents(); renderAuditTrail(); return; }
+  if (!window.supabase?.createClient) { authRequired = true; setSupabaseStatus("Login required · Supabase unavailable", "error"); setAuthUi(); return; }
   try {
     const response = await fetch("/api/supabase-config", { cache: "no-store" });
     const config = response.ok ? await response.json() : {};
     const url = config.url || localStorage.getItem("ontarioBrokerRateDesk.supabaseUrl") || "";
     const anonKey = config.anonKey || localStorage.getItem("ontarioBrokerRateDesk.supabaseAnonKey") || "";
-    if (!url || !anonKey) { authRequired = false; setSupabaseStatus("Local demo mode · add Supabase env", "error"); setAuthUi(); return; }
+    if (!url || !anonKey) { authRequired = true; setSupabaseStatus("Login required · add Supabase env", "error"); setAuthUi(); return; }
     supabaseClient = window.supabase.createClient(url, anonKey);
     const { data: sessionData } = await supabaseClient.auth.getSession();
     currentUser = sessionData?.session?.user || null;
-    supabaseClient.auth.onAuthStateChange((_event, session) => { currentUser = session?.user || null; setAuthUi(); loadProtectedWorkspace(); });
     supabaseReady = true;
+    await loadCurrentProfile();
+    supabaseClient.auth.onAuthStateChange(async (_event, session) => { currentUser = session?.user || null; await loadCurrentProfile(); setAuthUi(); loadProtectedWorkspace(); });
     await loadPublishedRatesFromSupabase();
     setAuthUi();
     await loadProtectedWorkspace();
   } catch (error) {
-    console.warn("Supabase sync unavailable", error); authRequired = false; setSupabaseStatus("Supabase offline · local fallback", "error"); setAuthUi();
+    console.warn("Supabase sync unavailable", error); authRequired = true; setSupabaseStatus("Login required · Supabase offline", "error"); setAuthUi();
   }
 }
 
 async function loadProtectedWorkspace() {
   if (!supabaseReady) return;
   if (authRequired && !currentUser) { dealPipeline = []; renderDealPipeline(); renderRateEvents(); renderAuditTrail(); setSupabaseStatus("Login required", "error"); return; }
+  if (authRequired && !profileComplete()) { dealPipeline = []; renderDealPipeline(); renderRateEvents(); renderAuditTrail(); setSupabaseStatus("Create profile to unlock workspace", "error"); return; }
   try {
     const { data, error } = await supabaseClient.from("deal_desk_deals").select("*").order("created_at", { ascending: false });
     if (error) throw error;
@@ -6871,14 +8704,89 @@ async function loadProtectedWorkspace() {
   renderAuditTrail();
 }
 
-async function signInWithMagicLink() {
-  const email = authEmailInput?.value?.trim();
-  if (!email || !supabaseClient) return;
-  const { error } = await supabaseClient.auth.signInWithOtp({ email, options: { emailRedirectTo: window.location.origin + window.location.pathname + "#deal-desk" } });
-  setSupabaseStatus(error ? "Login link failed" : "Check email for login link", error ? "error" : "connected");
+async function signInWithPasswordAuth(action = "login", emailOverride = "", passwordOverride = "") {
+  const email = (emailOverride || authEmailInput?.value || globalAuthEmailInput?.value || "").trim().toLowerCase();
+  const password = passwordOverride || authPasswordInput?.value || globalAuthPasswordInput?.value || "";
+  if (!email) { setGlobalAuthStatus("Enter your email first.", "error"); return; }
+  if (canUseLocalAdmin(email)) {
+    setLocalAdminSession();
+    setAuthUi();
+    renderDealPipeline();
+    renderRateEvents();
+    renderAuditTrail();
+    return;
+  }
+  if (!password || password.length < 6) {
+    setGlobalAuthStatus("Enter a password with at least 6 characters.", "error");
+    setSupabaseStatus("Password required", "error");
+    return;
+  }
+  if (!supabaseClient) { setGlobalAuthStatus("Supabase login is not configured here. Use raj@localtest only on local/dev.", "error"); setSupabaseStatus("Login unavailable", "error"); return; }
+  setPasswordAuthButtonsDisabled(true);
+  const authCall = action === "signup"
+    ? supabaseClient.auth.signUp({ email, password, options: { data: { requested_role: "broker" } } })
+    : supabaseClient.auth.signInWithPassword({ email, password });
+  const { data, error } = await authCall;
+  setPasswordAuthButtonsDisabled(false);
+  const authMessage = describePasswordAuthError(error, action);
+  if (error) {
+    setSupabaseStatus(authMessage.short, "error");
+    setGlobalAuthStatus(authMessage.long, "error");
+    return;
+  }
+  currentUser = data?.user || data?.session?.user || currentUser;
+  await loadCurrentProfile();
+  setAuthUi();
+  await loadProtectedWorkspace();
+  if (action === "signup" && !data?.session) {
+    setSupabaseStatus("Account created", "connected");
+    setGlobalAuthStatus("Account created. If Supabase asks for email confirmation, confirm once, then login with your password.", "connected");
+  } else {
+    setSupabaseStatus(action === "signup" ? "Account created" : "Logged in", "connected");
+    setGlobalAuthStatus(currentProfile ? `Logged in as ${email}.` : `Logged in as ${email}. Complete your profile to unlock the desk.`, "connected");
+  }
 }
-async function signOutAdvisor() { if (!supabaseClient) return; await supabaseClient.auth.signOut(); currentUser = null; setAuthUi(); await loadProtectedWorkspace(); }
-function workspaceId() { return currentUser?.app_metadata?.workspace_id || currentUser?.user_metadata?.workspace_id || "omrp-default"; }
+
+function setPasswordAuthButtonsDisabled(disabled) {
+  [loginButton, createAccountButton, ...Array.from(globalAuthForm?.querySelectorAll("button") || [])].forEach((button) => {
+    if (button) button.disabled = disabled;
+  });
+}
+
+function describePasswordAuthError(error, action = "login") {
+  if (!error) return { short: "", long: "" };
+  const code = String(error.code || "").toLowerCase();
+  const message = String(error.message || "").toLowerCase();
+  if (error.status === 429 || code.includes("rate_limit") || message.includes("rate limit")) {
+    return { short: "Rate limit hit", long: "Too many attempts. Wait a few minutes, then try again." };
+  }
+  if (message.includes("invalid login") || message.includes("invalid credentials")) {
+    return { short: "Invalid login", long: "Email or password is incorrect. Use Create account if this is your first time." };
+  }
+  if (message.includes("already registered") || message.includes("already exists")) {
+    return { short: "Account exists", long: "Account already exists. Use Login with your password." };
+  }
+  if (message.includes("password") && message.includes("6")) {
+    return { short: "Password too short", long: "Password must be at least 6 characters." };
+  }
+  if (message.includes("signup") && message.includes("disabled")) {
+    return { short: "Signup disabled", long: "Password account creation is disabled in Supabase Auth settings. Enable Email signups, then try again." };
+  }
+  if (message.includes("email not confirmed")) {
+    return { short: "Confirm email", long: "Email confirmation is still enabled in Supabase. Confirm the email once, or disable confirmation for password-only login." };
+  }
+  return { short: action === "signup" ? "Signup failed" : "Login failed", long: `${action === "signup" ? "Signup" : "Login"} failed: ${error.message || "check Supabase Auth settings."}` };
+}
+
+async function signOutAdvisor() {
+  clearLocalAdminSession();
+  if (supabaseClient) await supabaseClient.auth.signOut();
+  currentUser = null;
+  currentProfile = null;
+  setAuthUi();
+  await loadProtectedWorkspace();
+}
+function workspaceId() { return currentProfile?.workspace_id || currentUser?.app_metadata?.workspace_id || currentUser?.user_metadata?.workspace_id || "omrp-default"; }
 function dealNumber(selector) { const value = Number(document.querySelector(selector)?.value || 0); return Number.isFinite(value) ? value : 0; }
 function textValue(selector) { return document.querySelector(selector)?.value?.trim() || ""; }
 function isProductionHost() { return !["localhost", "127.0.0.1", ""].includes(window.location.hostname); }
@@ -6897,7 +8805,7 @@ async function upsertDealToSupabase(deal) {
 
 async function createDealFromForm() {
   const value = dealNumber("#dealValue"); const mortgage = dealNumber("#dealMortgage"); if (!value || !mortgage) return;
-  if (authRequired && !currentUser) { setSupabaseStatus("Sign in before creating real deals", "error"); return; }
+  if (authRequired && !canUseProtectedWorkspace()) { setSupabaseStatus("Sign in and create a profile before creating real deals", "error"); return; }
   if (isProductionHost() && (!supabaseReady || !hardenedSchemaReady || !currentUser)) { setSupabaseStatus("Protected Supabase login required before entering borrower PII", "error"); return; }
   const deal = { id: `deal-${Date.now()}`, workspaceId: workspaceId(), ownerId: currentUser?.id || null, client: textValue("#dealClient") || "New scenario", borrowerEmail: textValue("#dealBorrowerEmail"), borrowerPhone: textValue("#dealBorrowerPhone"), purpose: document.querySelector("#dealPurpose").value, province: document.querySelector("#dealProvince").value, closing: document.querySelector("#dealClosing").value, propertyType: document.querySelector("#dealPropertyType").value, value, mortgage, existingMortgage: dealNumber("#dealExistingMortgage"), downPayment: document.querySelector("#dealDownPayment").value, credit: document.querySelector("#dealCredit").value, income: document.querySelector("#dealIncome").value, annualIncome: dealNumber("#dealAnnualIncome"), gds: textValue("#dealGds") ? dealNumber("#dealGds") : "", tds: textValue("#dealTds") ? dealNumber("#dealTds") : "", term: document.querySelector("#dealTerm").value, occupancy: document.querySelector("#dealOccupancy").value, selectedLender: textValue("#dealSelectedLender"), selectedRate: textValue("#dealSelectedRate") ? dealNumber("#dealSelectedRate") : "", notes: textValue("#dealNotes"), status: "intake", createdAt: new Date().toISOString() };
   dealPipeline.unshift(deal); saveDealPipeline(); renderDealPipeline(); await upsertDealToSupabase(deal); await logAuditEvent("deal_created", `Created ${deal.client}`, deal.id); dealIntakeForm.reset();
@@ -6926,7 +8834,7 @@ function renderDealPipeline() {
   if (!dealPipelineBoard) return;
   const statuses = [{ id: "intake", label: "Intake" }, { id: "review", label: "Review" }, { id: "submit", label: "Submit" }, { id: "approved", label: "Approved" }];
   pipelineCount.textContent = `${dealPipeline.length} active`;
-  if (authRequired && !currentUser) { dealPipelineBoard.innerHTML = `<section class="pipeline-column" style="grid-column: 1 / -1;"><header><h5>Locked</h5><span>0</span></header><div class="empty-pipeline">Sign in to view protected deal cards.</div></section>`; return; }
+  if (authRequired && !canUseProtectedWorkspace()) { dealPipelineBoard.innerHTML = `<section class="pipeline-column" style="grid-column: 1 / -1;"><header><h5>Locked</h5><span>0</span></header><div class="empty-pipeline">Sign in and create your profile to view protected deal cards.</div></section>`; return; }
   dealPipelineBoard.innerHTML = statuses.map((status) => { const deals = dealPipeline.filter((deal) => deal.status === status.id); return `<section class="pipeline-column"><header><h5>${status.label}</h5><span>${deals.length}</span></header>${deals.length ? deals.map(renderDealCard).join("") : `<div class="empty-pipeline">No files here yet.</div>`}</section>`; }).join("");
   dealPipelineBoard.querySelectorAll("[data-move-deal]").forEach((button) => { button.addEventListener("click", () => moveDeal(button.dataset.moveDeal, button.dataset.status)); });
   dealPipelineBoard.querySelectorAll("[data-remove-deal]").forEach((button) => { button.addEventListener("click", () => removeDeal(button.dataset.removeDeal)); });
@@ -7017,7 +8925,157 @@ function normalizeStaticDemoSource(record) {
   };
 }
 
-async function createRateEventFromForm() { if (authRequired && !currentUser) { setSupabaseStatus("Sign in before logging rate events", "error"); return; } const event = { id: `rate-${Date.now()}`, workspaceId: workspaceId(), lender: textValue("#rateEventLender"), source: document.querySelector("#rateEventSource")?.value || "Manual upload", effectiveDate: document.querySelector("#rateEventEffective")?.value || "", status: document.querySelector("#rateEventStatus")?.value || "Pending review", notes: textValue("#rateEventNotes"), createdAt: new Date().toISOString() }; rateEvents.unshift(event); saveRateEvents(); renderRateEvents(); rateIngestionForm.reset(); await upsertRateEvent(event); await logAuditEvent("rate_event_logged", `${event.lender}: ${event.status}`); }
+async function createRateSheetUploadsFromForm() {
+  if (!rateSheetUploadForm || !rateSheetFilesInput) return;
+  if (authRequired && !canUseProtectedWorkspace()) { setUploadStatus("Sign in and create your profile before uploading lender rate sheets.", "error"); return; }
+  const lenderId = uploadLenderSelect?.value || "";
+  const lender = lenders.find((item) => item.id === lenderId);
+  const files = [...(rateSheetFilesInput.files || [])];
+  const allowed = /\.(pdf|xls|xlsx)$/i;
+  if (!lender || !files.length) { setUploadStatus("Choose a lender and at least one PDF or Excel file.", "error"); return; }
+  const invalid = files.find((file) => !allowed.test(file.name));
+  if (invalid) { setUploadStatus(`${invalid.name} is not supported. Upload PDF, XLS, or XLSX only.`, "error"); return; }
+
+  const created = [];
+  for (const file of files) {
+    const upload = {
+      id: `sheet-${Date.now()}-${Math.random().toString(16).slice(2)}`,
+      workspaceId: workspaceId(),
+      lenderId: lender.id,
+      lender: lender.name,
+      fileName: file.name,
+      fileType: file.name.split(".").pop()?.toUpperCase() || file.type || "FILE",
+      fileSize: file.size,
+      source: document.querySelector("#uploadSource")?.value || "Manual upload",
+      actorRole: document.querySelector("#uploadActorRole")?.value || "User / broker",
+      effectiveDate: document.querySelector("#uploadEffectiveDate")?.value || "",
+      priority: document.querySelector("#uploadPriority")?.value || "Normal",
+      notes: textValue("#uploadNotes"),
+      status: "Queued for AI review",
+      storagePath: "",
+      createdAt: new Date().toISOString()
+    };
+    upload.storagePath = await uploadRateSheetFileToSupabase(upload, file);
+    created.push(upload);
+  }
+
+  rateSheetUploads = [...created, ...rateSheetUploads];
+  saveRateSheetUploads();
+  renderRateSheetUploads();
+  rateSheetUploadForm.reset();
+  setUploadStatus(`${created.length} rate sheet${created.length === 1 ? "" : "s"} queued for manual AI analysis.`);
+  await logAuditEvent("rate_sheet_uploaded", `${created.length} sheet(s) queued for ${lender.name}`);
+}
+
+async function uploadRateSheetFileToSupabase(upload, file) {
+  if (!supabaseReady || (authRequired && !currentUser)) return "";
+  const safeName = file.name.replace(/[^a-z0-9._-]+/gi, "-").toLowerCase();
+  const path = `${workspaceId()}/${upload.lenderId}/${upload.id}-${safeName}`;
+  try {
+    const { error } = await supabaseClient.storage.from("rate-sheet-uploads").upload(path, file, { upsert: false, contentType: file.type || "application/octet-stream" });
+    if (error) throw error;
+    try {
+      await supabaseClient.from("rate_sheet_uploads").insert({
+        id: upload.id,
+        workspace_id: upload.workspaceId,
+        lender_id: upload.lenderId,
+        lender: upload.lender,
+        file_name: upload.fileName,
+        file_type: upload.fileType,
+        file_size: upload.fileSize,
+        source: upload.source,
+        actor_role: upload.actorRole,
+        effective_date: upload.effectiveDate || null,
+        priority: upload.priority,
+        notes: upload.notes || null,
+        status: upload.status,
+        storage_path: path,
+        created_by: currentUser?.id || null,
+        created_at: upload.createdAt
+      });
+    } catch (tableError) {
+      console.warn("Upload metadata table sync failed", tableError);
+    }
+    return path;
+  } catch (error) {
+    console.warn("Rate sheet storage upload failed", error);
+    setUploadStatus("Storage bucket unavailable; file metadata staged locally for review.", "error");
+    return "";
+  }
+}
+
+function seedDemoRateSheetUpload() {
+  if (authRequired && !canUseProtectedWorkspace()) { setUploadStatus("Sign in and create your profile before adding upload records.", "error"); return; }
+  const lender = lenders.find((item) => item.name.includes("TD")) || lenders[0];
+  if (!lender) return;
+  const demo = {
+    id: `sheet-demo-${Date.now()}`,
+    workspaceId: workspaceId(),
+    lenderId: lender.id,
+    lender: lender.name,
+    fileName: `${lender.name.replaceAll(" ", "-").toLowerCase()}-rate-sheet-demo.pdf`,
+    fileType: "PDF",
+    fileSize: 842000,
+    source: "Email attachment",
+    actorRole: "Admin",
+    effectiveDate: new Date().toISOString().slice(0, 10),
+    priority: "Urgent - rate change",
+    notes: "Demo: AI should extract Prime, 1/3/5-year fixed, variables, holds, and lender conditions before publish.",
+    status: "Queued for AI review",
+    storagePath: "",
+    createdAt: new Date().toISOString()
+  };
+  rateSheetUploads.unshift(demo);
+  saveRateSheetUploads();
+  renderRateSheetUploads();
+  setUploadStatus("Demo upload added to the manual AI review queue.");
+}
+
+function renderRateSheetUploadSelect() {
+  if (!uploadLenderSelect) return;
+  const current = uploadLenderSelect.value;
+  uploadLenderSelect.innerHTML = `<option value="">Select lender</option>` + lenders.map((lender) => `<option value="${escapeHtml(lender.id)}">${escapeHtml(lender.name)}</option>`).join("");
+  if (current) uploadLenderSelect.value = current;
+}
+
+function renderRateSheetUploads() {
+  if (!rateSheetUploadList) return;
+  const pdfCount = rateSheetUploads.filter((item) => item.fileType === "PDF").length;
+  const excelCount = rateSheetUploads.filter((item) => ["XLS", "XLSX"].includes(item.fileType)).length;
+  document.querySelector("#uploadQueueCount").textContent = rateSheetUploads.length;
+  document.querySelector("#uploadPdfCount").textContent = pdfCount;
+  document.querySelector("#uploadExcelCount").textContent = excelCount;
+  rateSheetUploadList.innerHTML = rateSheetUploads.slice(0, 12).map((item) => `
+    <article class="upload-item">
+      <div>
+        <strong>${escapeHtml(item.lender)} · ${escapeHtml(item.fileName)}</strong>
+        <small>${escapeHtml(item.source)} · ${escapeHtml(item.actorRole)}${item.effectiveDate ? ` · effective ${escapeHtml(item.effectiveDate)}` : ""}</small>
+        ${item.notes ? `<small>${escapeHtml(item.notes)}</small>` : ""}
+        <div class="upload-item-meta">
+          <span>${escapeHtml(item.fileType)}</span>
+          <span>${formatFileSize(item.fileSize)}</span>
+          <span>${escapeHtml(item.priority)}</span>
+          <span>${item.storagePath ? "Stored" : "Local stage"}</span>
+        </div>
+      </div>
+      <span class="upload-status-chip">${escapeHtml(item.status)}</span>
+    </article>
+  `).join("") || `<div class="empty-pipeline">No files queued yet. Upload a lender PDF or Excel rate sheet to start the manual AI review flow.</div>`;
+}
+
+function setUploadStatus(message, state = "") {
+  if (!uploadStatusText) return;
+  uploadStatusText.textContent = message;
+  uploadStatusText.style.color = state === "error" ? "#9a3412" : "";
+}
+
+function formatFileSize(bytes = 0) {
+  if (!bytes) return "0 KB";
+  if (bytes > 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  return `${Math.max(1, Math.round(bytes / 1024))} KB`;
+}
+
+async function createRateEventFromForm() { if (authRequired && !canUseProtectedWorkspace()) { setSupabaseStatus("Sign in and create a profile before logging rate events", "error"); return; } if (authRequired && !isAdminUser()) { setSupabaseStatus("Admin access required for rate-event approvals", "error"); return; } const event = { id: `rate-${Date.now()}`, workspaceId: workspaceId(), lender: textValue("#rateEventLender"), source: document.querySelector("#rateEventSource")?.value || "Manual upload", effectiveDate: document.querySelector("#rateEventEffective")?.value || "", status: document.querySelector("#rateEventStatus")?.value || "Pending review", notes: textValue("#rateEventNotes"), createdAt: new Date().toISOString() }; rateEvents.unshift(event); saveRateEvents(); renderRateEvents(); rateIngestionForm.reset(); await upsertRateEvent(event); await logAuditEvent("rate_event_logged", `${event.lender}: ${event.status}`); }
 async function upsertRateEvent(event) { if (!supabaseReady || (authRequired && !currentUser)) return; try { const { error } = await supabaseClient.from("rate_ingestion_events").upsert({ id: event.id, workspace_id: event.workspaceId || workspaceId(), created_by: currentUser?.id || null, lender: event.lender, source: event.source, effective_date: event.effectiveDate || null, status: event.status, notes: event.notes || null, created_at: event.createdAt }); if (error) throw error; } catch (error) { console.warn("Rate event sync failed", error); hardenedSchemaReady = false; setSupabaseStatus("Run hardening SQL", "error"); setAuthUi(); } }
 async function loadRateEventsFromSupabase() { if (!supabaseReady || (authRequired && !currentUser)) return; try { const { data, error } = await supabaseClient.from("rate_ingestion_events").select("*").order("created_at", { ascending: false }).limit(20); if (error) throw error; rateEvents = (data || []).map((row) => ({ id: row.id, workspaceId: row.workspace_id, lender: row.lender, source: row.source, effectiveDate: row.effective_date || "", status: row.status, notes: row.notes || "", createdAt: row.created_at })); saveRateEvents(); } catch (error) { console.warn("Rate event load failed", error); } renderRateEvents(); }
 function renderRateEvents() { if (!rateIngestionList) return; rateIngestionList.innerHTML = rateEvents.slice(0, 8).map((event) => `<article class="rate-event"><strong>${escapeHtml(event.lender || "Unnamed lender")} · ${escapeHtml(event.status)}</strong><small>${escapeHtml(event.source)}${event.effectiveDate ? ` · effective ${escapeHtml(event.effectiveDate)}` : ""}</small>${event.notes ? `<small>${escapeHtml(event.notes)}</small>` : ""}</article>`).join("") || `<div class="empty-pipeline">No rate events logged yet.</div>`; }
@@ -7035,13 +9093,17 @@ function render() {
   renderMetrics();
   renderRateIntelligence();
   renderBestRateDashboard();
+  renderBrokerRateFinder();
   renderLenderList(results);
   renderDetails(lenders.find((lender) => lender.id === activeLenderId) || results[0]);
   renderPrograms();
   renderInsurers();
   renderContacts();
+  renderRateSheetUploadSelect();
+  renderRateSheetUploads();
   renderRateSelect();
   renderDealPipeline();
+  renderDryRunRateSheets();
 }
 
 function renderMetrics() {
@@ -7161,6 +9223,298 @@ function parseRateUpdatedDate(updated = "") {
   return Number.NaN;
 }
 
+
+function lenderTypeForName(name) {
+  const lender = lenders.find((item) => item.name === name || slugifyLenderName(item.name) === slugifyLenderName(name));
+  return lender?.type || "unknown";
+}
+
+function lenderIdForName(name) {
+  const lender = lenders.find((item) => item.name === name || slugifyLenderName(item.name) === slugifyLenderName(name));
+  return lender?.id || slugifyLenderName(name);
+}
+
+function normalizeTermValue(label = "", months = null) {
+  const numericMonths = Number(months);
+  if (Number.isFinite(numericMonths) && numericMonths > 0) return String(numericMonths);
+  const raw = String(label).toLowerCase();
+  if (raw.includes("heloc") || raw.includes("flexline")) return "heloc";
+  const year = raw.match(/(?:^|\D)([1-9])\s*(?:yr|year|y)(?:\D|$)/);
+  const digit = year && year[1];
+  if (digit) return String(Number(digit) * 12);
+  return "60";
+}
+
+function sourceStatusTone(status = "") {
+  const raw = String(status).toLowerCase();
+  if (raw.includes("approved") || raw.includes("publish")) return "approved";
+  if (raw.includes("fresh")) return "fresh";
+  if (raw.includes("stale") || raw.includes("expired")) return "stale";
+  if (raw.includes("blank") || raw.includes("no current")) return "blank";
+  return "review";
+}
+
+const rateFinderTermCoverage = [
+  { label: "1yr", value: "12" },
+  { label: "2yr", value: "24" },
+  { label: "3yr", value: "36" },
+  { label: "4yr", value: "48" },
+  { label: "5yr", value: "60" }
+];
+const rateFinderAmortCoverage = ["25", "30"];
+const rateFinderRateTypeCoverage = ["fixed", "variable"];
+
+function addRateFinderBlankCoverageRows(rows) {
+  const hasRow = (lenderId, termValue, rateType, amortization) => rows.some((row) =>
+    row.lenderId === lenderId
+    && row.termValue === termValue
+    && row.rateType === rateType
+    && String(row.amortization) === String(amortization)
+    && row.rateValue !== null
+    && row.rateValue !== undefined
+    && row.rateValue !== ""
+  );
+
+  lenders.forEach((lender) => {
+    const base = {
+      lender: lender.name,
+      lenderId: lender.id,
+      lenderType: lender.type,
+      bucket: "uninsured",
+      rateValue: "",
+      sortRateValue: null,
+      purpose: "purchase/refinance",
+      hold: "—",
+      source: "No current rate sheet",
+      updated: lender.updated,
+      status: "blank",
+      note: "No current rate available for this term/type/amortization. Leave blank until a lender sheet provides one.",
+      isPlaceholder: true
+    };
+    rateFinderTermCoverage.forEach((term) => {
+      rateFinderRateTypeCoverage.forEach((rateType) => {
+        rateFinderAmortCoverage.forEach((amortization) => {
+          if (hasRow(lender.id, term.value, rateType, amortization)) return;
+          rows.push({
+            ...base,
+            term: `${term.label} ${rateType}`,
+            termValue: term.value,
+            rateType,
+            amortization,
+            bucket: rateType === "variable" ? "variable" : "uninsured"
+          });
+        });
+      });
+    });
+  });
+}
+
+function rateFinderRows() {
+  const rows = [];
+  lenders.forEach((lender) => {
+    const base = {
+      lender: lender.name,
+      lenderId: lender.id,
+      lenderType: lender.type,
+      source: typeof lender.liveRateSource === "string" ? lender.liveRateSource : rateSourceLabel(lender),
+      updated: lender.updated,
+      status: lender.liveRateSource || liveRatesLoaded ? "published" : "demo",
+      note: lender.policyNote || "Confirm current lender sheet before quote."
+    };
+    if (numericRate(lender.rates.insuredFixed) !== null) rows.push({ ...base, term: "5yr fixed", termValue: "60", rateType: "fixed", bucket: "insured", rateValue: lender.rates.insuredFixed, sortRateValue: lender.rates.insuredFixed, amortization: "25", purpose: "purchase", hold: lender.rateHoldDays || "—" });
+    if (numericRate(lender.rates.conventional) !== null) rows.push({ ...base, term: "5yr fixed", termValue: "60", rateType: "fixed", bucket: "uninsured", rateValue: lender.rates.conventional, sortRateValue: lender.rates.conventional, amortization: "25", purpose: "purchase/refinance", hold: lender.rateHoldDays || "—" });
+    const variableQuote = variableRateRowValue(lender.rates.variable, lender.dealDesk?.primeRate || dealDeskSource.primeRate);
+    if (variableQuote) rows.push({ ...base, term: "5yr variable", termValue: "60", rateType: "variable", bucket: "variable", rateValue: variableQuote.display, sortRateValue: variableQuote.sort, amortization: "25", purpose: "purchase", hold: lender.rateHoldDays || "—", note: variableQuote.note });
+    if (numericRate(lender.rates.alt) !== null) rows.push({ ...base, term: "alt 1st", termValue: "60", rateType: "fixed", bucket: "alt", rateValue: lender.rates.alt, sortRateValue: lender.rates.alt, amortization: "25", purpose: "alternative/private", hold: "—" });
+
+    const deskRow = dealDeskRateRows[lender.id];
+    if (deskRow?.values?.length) {
+      const deskBase = {
+        ...base,
+        source: dealDeskSource.name,
+        updated: `BOSS ${deskRow.sheetDate}`,
+        status: "lender_sheet",
+        hold: lender.rateHoldDays || "—",
+        note: `From ${dealDeskSource.name}, sheet ${deskRow.sheetDate}. Confirm current conditions before quote.`
+      };
+      const addDeskFixed = (value, purpose, amortization) => {
+        const parsed = Number(value);
+        if (Number.isFinite(parsed) && parsed > 0) rows.push({ ...deskBase, term: "5yr fixed", termValue: "60", rateType: "fixed", bucket: "uninsured", rateValue: parsed, sortRateValue: parsed, amortization, purpose });
+      };
+      const addDeskVariable = (value, purpose, amortization) => {
+        const quote = variableRateRowValue(value, dealDeskSource.primeRate);
+        if (quote) rows.push({ ...deskBase, term: amortization === "HELOC" ? "HELOC" : "5yr variable", termValue: amortization === "HELOC" ? "heloc" : "60", rateType: "variable", bucket: "variable", rateValue: quote.display, sortRateValue: quote.sort, amortization: amortization === "HELOC" ? "—" : amortization, purpose, note: quote.note });
+      };
+      addDeskFixed(deskRow.values[8], "purchase", "30");
+      addDeskFixed(deskRow.values[9], "refinance", "30");
+      addDeskFixed(deskRow.values[7], "rental", "25");
+      addDeskVariable(deskRow.values[18], "purchase", "30");
+      addDeskVariable(deskRow.values[19], "refinance", "30");
+      addDeskVariable(deskRow.values[17], "rental", "25");
+      addDeskVariable(deskRow.values[38], "HELOC", "HELOC");
+    }
+  });
+
+  (livePublishedRates || []).forEach((row) => {
+    const lender = row.lender_name || row.lenderName || "Unknown lender";
+    const term = row.term_label || row.termLabel || "Term pending";
+    const termValue = normalizeTermValue(term, row.term_months || row.termMonths);
+    const common = {
+      lender,
+      lenderId: lenderIdForName(lender),
+      lenderType: lenderTypeForName(lender),
+      term,
+      termValue,
+      rateType: normalizeSearchText(term).includes("variable") ? "variable" : "fixed",
+      amortization: String(row.amortization_years || row.amortizationYears || (String(row.public_notes || row.publicNotes || "").includes("30") ? "30" : "25")),
+      purpose: row.purpose || "purchase",
+      hold: row.rate_hold_days || row.rateHoldDays || "—",
+      source: typeof (row.source_label || row.sourceLabel) === "string" ? (row.source_label || row.sourceLabel) : "Published rate row",
+      updated: row.effective_date || row.effectiveDate || row.approved_at || row.approvedAt || "",
+      status: row.freshness_status || row.freshnessStatus || (row.confidence >= 0.88 ? "approved" : "review-only"),
+      note: row.public_notes || row.publicNotes || row.conditions || "AI-extracted rate row. Confirm lender eligibility."
+    };
+    if (numericRate(row.insured_rate ?? row.insuredRate) !== null) rows.push({ ...common, bucket: "insured", rateValue: Number(row.insured_rate ?? row.insuredRate), sortRateValue: Number(row.insured_rate ?? row.insuredRate) });
+    if (numericRate(row.insurable_rate ?? row.insurableRate) !== null) rows.push({ ...common, bucket: "insurable", rateValue: Number(row.insurable_rate ?? row.insurableRate), sortRateValue: Number(row.insurable_rate ?? row.insurableRate) });
+    if (numericRate(row.uninsured_rate ?? row.uninsuredRate) !== null) rows.push({ ...common, bucket: "uninsured", rateValue: Number(row.uninsured_rate ?? row.uninsuredRate), sortRateValue: Number(row.uninsured_rate ?? row.uninsuredRate) });
+    const liveVariableQuote = variableRateRowValue(row.variable_discount || row.variableDiscount, row.lender_prime_rate || row.lenderPrimeRate || dealDeskSource.primeRate);
+    if (liveVariableQuote) rows.push({ ...common, term: common.termValue === "heloc" ? "HELOC" : `${Number(common.termValue || 60) / 12}yr variable`, termValue: common.termValue === "heloc" ? "heloc" : (common.termValue || "60"), rateType: "variable", bucket: "variable", rateValue: liveVariableQuote.display, sortRateValue: liveVariableQuote.sort, note: liveVariableQuote.note });
+  });
+
+  (dryRunRateSheetData?.lender_rate_matrix || []).forEach((item) => {
+    const lender = item.lender_name || "Unknown lender";
+    const common = {
+      lender,
+      lenderId: lenderIdForName(lender),
+      lenderType: lenderTypeForName(lender),
+      term: "5yr fixed",
+      termValue: "60",
+      rateType: "fixed",
+      amortization: "25",
+      purpose: "purchase/refinance",
+      hold: "—",
+      source: item.source_label || "Dry-run sheet",
+      updated: item.sheet_date || "",
+      status: item.source_status || "review-only",
+      note: "Dry-run visible to brokers; source still needs approval before client quote."
+    };
+    const rates = item.rates || {};
+    if (numericRate(rates.insured_5yr) !== null) rows.push({ ...common, bucket: "insured", rateValue: Number(rates.insured_5yr), sortRateValue: Number(rates.insured_5yr) });
+    if (numericRate(rates.insurable_75_80_5yr) !== null) rows.push({ ...common, bucket: "insurable", rateValue: Number(rates.insurable_75_80_5yr), sortRateValue: Number(rates.insurable_75_80_5yr) });
+    if (numericRate(rates.uninsured_refi_25yr_5yr) !== null) rows.push({ ...common, bucket: "uninsured", rateValue: Number(rates.uninsured_refi_25yr_5yr), sortRateValue: Number(rates.uninsured_refi_25yr_5yr) });
+    const dryRunVariableQuote = variableRateRowValue(rates.variable_insured, dealDeskSource.primeRate);
+    if (dryRunVariableQuote) rows.push({ ...common, term: "5yr variable", termValue: "60", rateType: "variable", bucket: "variable", rateValue: dryRunVariableQuote.display, sortRateValue: dryRunVariableQuote.sort, note: dryRunVariableQuote.note });
+  });
+
+  addRateFinderBlankCoverageRows(rows);
+
+  const seen = new Set();
+  return rows.filter((row) => {
+    const key = [row.lender, row.termValue, row.rateType, row.bucket, row.rateValue, row.amortization, row.purpose, row.source, row.status].join("|");
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return row.isPlaceholder || (row.rateValue !== null && row.rateValue !== undefined && row.rateValue !== "");
+  });
+}
+
+function renderBrokerRateFinder() {
+  if (!rateFinderTable) return;
+  hydrateRateFinderLenders();
+  const controls = {
+    query: normalizeSearchText(rateFinderSearch?.value || ""),
+    lender: rateFinderLender?.value || "all",
+    term: rateFinderTerm?.value || "all",
+    rateType: rateFinderRateType?.value || "all",
+    amort: rateFinderAmort?.value || "all",
+    bucket: rateFinderBucket?.value || "all",
+    purpose: rateFinderPurpose?.value || "all",
+    type: rateFinderType?.value || "all",
+    sort: rateFinderSort?.value || "lowest"
+  };
+  let rows = rateFinderRows().filter((row) => {
+    const haystack = normalizeSearchText([row.lender, row.lenderType, row.term, row.rateType, row.bucket, row.rateValue, row.purpose, row.amortization, row.source, row.status, row.note].join(" "));
+    const rowRateType = row.rateType || (normalizeSearchText(row.term).includes("variable") || row.bucket === "variable" ? "variable" : "fixed");
+    return (!controls.query || haystack.includes(controls.query))
+      && (controls.lender === "all" || row.lenderId === controls.lender)
+      && (controls.term === "all" || row.termValue === controls.term)
+      && (controls.rateType === "all" || rowRateType === controls.rateType)
+      && (controls.amort === "all" || (controls.term === "heloc" && row.termValue === "heloc") || String(row.amortization).includes(controls.amort))
+      && (controls.bucket === "all" || row.bucket === controls.bucket)
+      && (controls.purpose === "all" || normalizeSearchText(row.purpose).includes(controls.purpose))
+      && (controls.type === "all" || row.lenderType === controls.type || (controls.type === "private" && normalizeSearchText(row.purpose + " " + row.bucket).includes("private")));
+  });
+
+  rows.sort((a, b) => {
+    if (a.isPlaceholder !== b.isPlaceholder) return a.isPlaceholder ? 1 : -1;
+    if (controls.sort === "freshest") return (Date.parse(b.updated) || 0) - (Date.parse(a.updated) || 0);
+    if (controls.sort === "lender") return a.lender.localeCompare(b.lender);
+    if (controls.sort === "term") return String(a.termValue).localeCompare(String(b.termValue), undefined, { numeric: true });
+    if (controls.sort === "hold") return (Number(b.hold) || 0) - (Number(a.hold) || 0);
+    const av = Number(a.sortRateValue ?? a.rateValue); const bv = Number(b.sortRateValue ?? b.rateValue);
+    if (Number.isFinite(av) && Number.isFinite(bv)) return av - bv;
+    return String(a.rateValue).localeCompare(String(b.rateValue));
+  });
+
+  const displayRows = rows;
+  rateFinderSummary.innerHTML = `<span><strong>${rows.length}</strong> matching rate row${rows.length === 1 ? "" : "s"}</span><span>${dryRunRateSheetData ? "Includes dry-run lender sheets marked review-only." : "Loading dry-run rate sheets…"}</span>`;
+  rateFinderTable.innerHTML = displayRows.map((row) => {
+    const tone = sourceStatusTone(row.status);
+    return `
+      <tr class="${row.isPlaceholder ? "rate-row-blank" : ""}">
+        <td data-label="Lender" class="lender-cell"><button class="text-link" type="button" data-lender="${escapeHtml(row.lenderId)}">${escapeHtml(row.lender)}</button></td>
+        <td data-label="Term">${escapeHtml(row.term)}</td>
+        <td data-label="Fixed/Var">${escapeHtml(titleCase(row.rateType || (normalizeSearchText(row.term).includes("variable") ? "variable" : "fixed")))}</td>
+        <td data-label="Bucket">${escapeHtml(titleCase(row.bucket))}</td>
+        <td data-label="Rate" class="rate-number">${row.isPlaceholder ? "" : escapeHtml(rate(row.rateValue))}</td>
+        <td data-label="Amort.">${escapeHtml(row.amortization)}${String(row.amortization).includes("—") ? "" : "yr"}</td>
+        <td data-label="Purpose">${escapeHtml(row.purpose)}</td>
+        <td data-label="Lender type">${escapeHtml(titleCase(row.lenderType))}</td>
+        <td data-label="Source / status" title="${escapeHtml(`${row.source} · ${String(row.status).replace(/_/g, " ")} · ${row.note}`)}"><span class="source-status-cell"><span class="source-label">${escapeHtml(row.source)}</span><span class="rate-status-pill ${tone}">${escapeHtml(String(row.status).replace(/_/g, " "))}</span></span></td>
+      </tr>`;
+  }).join("") || `<tr><td colspan="9"><div class="rate-finder-empty">No matching rates. Broaden the filters or reset the finder.</div></td></tr>`;
+}
+
+function hydrateRateFinderLenders() {
+  if (!rateFinderLender) return;
+  const current = rateFinderLender.value || "all";
+  const options = lenders.map((lender) => `<option value="${lender.id}">${escapeHtml(lender.name)}</option>`).join("");
+  const next = `<option value="all">Any lender</option>${options}`;
+  if (rateFinderLender.dataset.optionsHtml !== next) {
+    rateFinderLender.innerHTML = next;
+    rateFinderLender.dataset.optionsHtml = next;
+    rateFinderLender.value = [...rateFinderLender.options].some((option) => option.value === current) ? current : "all";
+  }
+}
+
+function setRateFinder(values = {}) {
+  if (values.search !== undefined && rateFinderSearch) rateFinderSearch.value = values.search;
+  if (values.lender !== undefined && rateFinderLender) rateFinderLender.value = values.lender;
+  if (values.term !== undefined && rateFinderTerm) rateFinderTerm.value = values.term;
+  if (values.rateType !== undefined && rateFinderRateType) rateFinderRateType.value = values.rateType;
+  if (values.amort !== undefined && rateFinderAmort) rateFinderAmort.value = values.amort;
+  if (values.bucket !== undefined && rateFinderBucket) rateFinderBucket.value = values.bucket;
+  if (values.purpose !== undefined && rateFinderPurpose) rateFinderPurpose.value = values.purpose;
+  if (values.type !== undefined && rateFinderType) rateFinderType.value = values.type;
+  if (values.sort !== undefined && rateFinderSort) rateFinderSort.value = values.sort;
+  renderBrokerRateFinder();
+}
+
+function applyRateFinderChip(chip) {
+  const reset = { search: "", lender: "all", term: "all", rateType: "all", amort: "all", bucket: "all", purpose: "all", type: "all", sort: "lowest" };
+  const presets = {
+    "best-5yr-insured": { ...reset, term: "60", rateType: "fixed", bucket: "insured" },
+    "best-3yr-fixed": { ...reset, term: "36", rateType: "fixed" },
+    "conventional-30yr": { ...reset, term: "60", rateType: "fixed", bucket: "uninsured", amort: "30" },
+    variable: { ...reset, rateType: "variable", bucket: "variable" },
+    refinance: { ...reset, purpose: "refinance", bucket: "uninsured" },
+    rental: { ...reset, purpose: "rental" },
+    "alt-bfs": { ...reset, type: "alternative", search: "self employed bfs alternative" },
+    recent: { ...reset, sort: "freshest" },
+    reset
+  };
+  setRateFinder(presets[chip] || reset);
+}
+
 function renderBestRateDashboard() {
   const bestOverall = findBestRate(lenders, "insuredFixed") || findBestRate(lenders, "conventional");
   if (!preferredLenderId || !lenders.some((lender) => lender.id === preferredLenderId)) {
@@ -7239,6 +9593,65 @@ function findBestRate(items, rateKey) {
 
 function numericRate(value) {
   return typeof value === "number" && Number.isFinite(value) ? value : null;
+}
+
+function parsePercentValue(value) {
+  const match = String(value ?? "").match(/-?\d+(?:\.\d+)?/);
+  return match ? Number(match[0]) : null;
+}
+
+function primeRateValue(prime = dealDeskSource.primeRate) {
+  return parsePercentValue(prime);
+}
+
+function primeAdjustmentValue(value) {
+  const raw = String(value ?? "").trim();
+  if (!raw || raw === "-") return null;
+  if (!/^p(?:rime)?\s*[+-]/i.test(raw)) return null;
+  const amount = parsePercentValue(raw);
+  if (amount === null) return null;
+  return raw.includes("+") ? amount : -Math.abs(amount);
+}
+
+function effectivePrimeRate(value, prime = dealDeskSource.primeRate) {
+  const primeNumeric = primeRateValue(prime);
+  const adjustment = primeAdjustmentValue(value);
+  return primeNumeric !== null && adjustment !== null ? Number((primeNumeric + adjustment).toFixed(2)) : null;
+}
+
+function primeRateLabel(value, prime = dealDeskSource.primeRate) {
+  const raw = String(value ?? "").trim();
+  if (!raw || raw === "-") return raw;
+  const adjustment = primeAdjustmentValue(raw);
+  if (adjustment === null) return raw;
+  const abs = Math.abs(adjustment).toFixed(2).replace(/\.00$/, "");
+  const sign = adjustment >= 0 ? "+" : "-";
+  const effective = effectivePrimeRate(raw, prime);
+  return effective !== null ? `Prime ${sign} ${abs}% (${effective.toFixed(2)}%)` : `Prime ${sign} ${abs}%`;
+}
+
+function variableRateRowValue(value, prime = dealDeskSource.primeRate) {
+  const raw = String(value ?? "").trim();
+  if (!raw || raw === "-") return null;
+  const adjustment = primeAdjustmentValue(raw);
+  if (adjustment !== null) return {
+    display: primeRateLabel(raw, prime),
+    sort: effectivePrimeRate(raw, prime),
+    note: `Variable pricing shown from lender sheet against Prime ${prime}. Confirm current prime and eligibility before quote.`
+  };
+  const effective = typeof value === "number" && Number.isFinite(value) ? value : Number(raw);
+  const primeNumeric = primeRateValue(prime);
+  if (Number.isFinite(effective) && primeNumeric !== null) {
+    const impliedAdjustment = Number((effective - primeNumeric).toFixed(2));
+    const sign = impliedAdjustment >= 0 ? "+" : "-";
+    const abs = Math.abs(impliedAdjustment).toFixed(2).replace(/\.00$/, "");
+    return {
+      display: `Prime ${sign} ${abs}% (${effective.toFixed(2)}%)`,
+      sort: effective,
+      note: `Variable pricing converted to Prime notation using lender desk Prime ${prime}. Confirm current prime and eligibility before quote.`
+    };
+  }
+  return { display: raw, sort: null, note: `Variable pricing shown from source. Confirm against current Prime ${prime}.` };
 }
 
 function bestRateCell(label, result) {
@@ -7888,6 +10301,7 @@ function initials(value) {
 
 render();
 initSupabase();
+loadDryRunRateSheets();
 loadResourceIndex();
 showPage(routeFromHash(), { updateHash: window.location.hash !== "", scrollTop: true });
 window.addEventListener("load", () => showPage(routeFromHash(), { updateHash: false, scrollTop: true }));
