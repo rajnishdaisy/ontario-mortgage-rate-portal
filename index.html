@@ -4669,41 +4669,100 @@ th, td { border-color: var(--line); }
 
 .rate-title-board-head strong { color: var(--green); font-size: .82rem; }
 
-.rate-title-scroll { overflow-x: auto; }
-
-.rate-title-table {
-  width: 100%;
-  min-width: 1680px;
-  border-collapse: collapse;
-  table-layout: fixed;
+.rate-title-scroll {
+  overflow: auto;
+  max-height: 520px;
+  padding: 10px;
+  background: color-mix(in srgb, var(--nav) 5%, var(--surface));
 }
 
-.rate-title-table th,
-.rate-title-table td {
-  border: 1px solid color-mix(in srgb, var(--line) 78%, var(--green));
-  padding: 5px 4px;
-  text-align: center;
+.rate-title-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.rate-title-card {
+  display: grid;
+  grid-template-columns: 142px minmax(0, 1fr);
+  gap: 10px;
+  align-items: stretch;
+  padding: 10px;
+  border: 1px solid color-mix(in srgb, var(--line) 84%, transparent);
+  border-radius: 13px;
+  background: rgba(255,255,255,.84);
+  box-shadow: 0 8px 22px rgba(20, 45, 32, .045);
+}
+
+.rate-title-lender {
+  display: flex;
+  align-items: center;
+  color: var(--green);
+  font-size: .75rem;
+  font-weight: 950;
+  letter-spacing: .01em;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+
+.rate-title-sections {
+  display: grid;
+  grid-template-columns: minmax(210px, 1fr) minmax(210px, 1fr) minmax(260px, 1.25fr);
+  gap: 8px;
+}
+
+.rate-title-section {
+  min-width: 0;
+  padding: 8px;
+  border: 1px solid color-mix(in srgb, var(--line) 82%, transparent);
+  border-radius: 11px;
+  background: #fbfcf7;
+}
+
+.rate-title-section h5 {
+  margin: 0 0 7px;
+  color: color-mix(in srgb, var(--text) 85%, var(--green));
+  font-size: .63rem;
+  font-weight: 950;
+  letter-spacing: .075em;
+  text-transform: uppercase;
+}
+
+.rate-title-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.rate-title-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 7px;
+  border: 1px solid color-mix(in srgb, var(--green) 18%, var(--line));
+  border-radius: 999px;
+  background: #fff;
+  color: color-mix(in srgb, var(--green) 90%, #111);
   font-size: .66rem;
-  font-weight: 900;
+  font-weight: 950;
+  line-height: 1;
   white-space: nowrap;
 }
 
-.rate-title-table thead th { background: #f2f4ec; color: var(--text); }
-.rate-title-table thead th.group-5yr { background: color-mix(in srgb, var(--green) 12%, #f7f7ef); }
-.rate-title-table thead th.group-other { background: color-mix(in srgb, #9d2f25 14%, #f7f7ef); }
-.rate-title-table .lender-title-cell {
-  position: sticky;
-  left: 0;
-  z-index: 2;
-  width: 150px;
-  min-width: 150px;
-  background: #fff;
-  text-align: left;
+.rate-title-pill span {
+  color: var(--muted);
+  font-weight: 850;
 }
-.rate-title-table tbody tr:nth-child(even) td { background: #fbfcf7; }
-.rate-title-table tbody tr:nth-child(even) .lender-title-cell { background: #fbfcf7; }
-.rate-title-table td.rate-title-empty { color: color-mix(in srgb, var(--muted) 70%, transparent); font-weight: 700; }
-.rate-title-table td.rate-title-hit { color: var(--green); }
+
+.rate-title-empty-text {
+  color: color-mix(in srgb, var(--muted) 78%, transparent);
+  font-size: .68rem;
+  font-weight: 850;
+}
+
+@media (max-width: 900px) {
+  .rate-title-card { grid-template-columns: 1fr; }
+  .rate-title-sections { grid-template-columns: 1fr; }
+}
 
 .rate-table-wrap {
   overflow: auto;
@@ -6003,7 +6062,7 @@ textarea,
             <div class="rate-title-board" aria-label="MortgageBOSS-style title sorted board">
               <div class="rate-title-board-head">
                 <strong>Title-sorted board</strong>
-                <span>Columns match the lender-sheet titles: 5-year fixed/variable first, then other terms.</span>
+                <span>Readable by lender: 5-year fixed, 5-year variable, then other terms.</span>
               </div>
               <div class="rate-title-scroll" id="rateTitleBoard"></div>
             </div>
@@ -9757,35 +9816,46 @@ function renderRateTitleBoard(rows = []) {
     if (!current || nextScore >= currentScore) lenderRows.get(lenderId).cells.set(column.key, row);
   });
 
-  const groupRuns = [];
-  RATE_TITLE_COLUMNS.forEach((column) => {
-    const last = groupRuns[groupRuns.length - 1];
-    if (last && last.label === column.group) last.count += 1;
-    else groupRuns.push({ label: column.group, count: 1, className: column.group.includes("5 Year") ? "group-5yr" : "group-other" });
-  });
-  const subGroupRuns = [];
-  RATE_TITLE_COLUMNS.forEach((column) => {
-    const last = subGroupRuns[subGroupRuns.length - 1];
-    if (last && last.label === column.subGroup) last.count += 1;
-    else subGroupRuns.push({ label: column.subGroup, count: 1 });
-  });
+  const shortLabel = (column) => {
+    if (column.key === "heloc") return "HELOC";
+    return column.label
+      .replace("Uninsurable (Within 65% / 20yr Amort)", "Unins. 65/20")
+      .replace("Uninsurable (With 25 Year Amort)", "Unins. 25yr")
+      .replace("Uninsurable (With 30 Year Amort)", "Unins. 30yr")
+      .replace("Uninsurable Refinance", "Unins. refi")
+      .replace("Uninsurable & Refi", "Unins./refi")
+      .replace("Insurable ", "Ins. ")
+      .replace("Insured", "Insured");
+  };
+  const sectionDefinitions = [
+    { key: "5fixed", title: "5 Year Fixed", columns: RATE_TITLE_COLUMNS.filter((column) => column.subGroup === "5 Year Fixed") },
+    { key: "5variable", title: "5 Year Variable", columns: RATE_TITLE_COLUMNS.filter((column) => column.subGroup === "5 Year Variable") },
+    { key: "other", title: "Other terms", columns: RATE_TITLE_COLUMNS.filter((column) => column.group === "Other Terms") }
+  ];
+  const renderSection = (cells, section) => {
+    const pills = section.columns
+      .map((column) => {
+        const row = cells.get(column.key);
+        if (!row) return "";
+        const title = `${column.subGroup} · ${column.label} · ${row.source || "source"} · ${row.updated || "latest"}`;
+        return `<span class="rate-title-pill" title="${escapeHtml(title)}"><span>${escapeHtml(shortLabel(column))}</span>${escapeHtml(rate(row.rateValue))}</span>`;
+      })
+      .filter(Boolean)
+      .join("");
+    return `<section class="rate-title-section"><h5>${escapeHtml(section.title)}</h5><div class="rate-title-pills">${pills || `<span class="rate-title-empty-text">No current row</span>`}</div></section>`;
+  };
 
-  const body = [...lenderRows.values()]
+  const cards = [...lenderRows.values()]
     .sort((a, b) => a.lender.localeCompare(b.lender))
-    .map(({ lender, cells }) => `<tr><th class="lender-title-cell">${escapeHtml(lender)}</th>${RATE_TITLE_COLUMNS.map((column) => {
-      const row = cells.get(column.key);
-      return row ? `<td class="rate-title-hit" title="${escapeHtml(`${row.source} · ${row.updated || "latest"}`)}">${escapeHtml(rate(row.rateValue))}</td>` : `<td class="rate-title-empty">—</td>`;
-    }).join("")}</tr>`)
+    .map(({ lender, cells }) => `<article class="rate-title-card">
+      <div class="rate-title-lender">${escapeHtml(lender)}</div>
+      <div class="rate-title-sections">${sectionDefinitions.map((section) => renderSection(cells, section)).join("")}</div>
+    </article>`)
     .join("");
 
-  rateTitleBoard.innerHTML = `<table class="rate-title-table">
-    <thead>
-      <tr><th class="lender-title-cell" rowspan="3">Lender</th>${groupRuns.map((group) => `<th class="${group.className}" colspan="${group.count}">${escapeHtml(group.label)}</th>`).join("")}</tr>
-      <tr>${subGroupRuns.map((group) => `<th colspan="${group.count}">${escapeHtml(group.label)}</th>`).join("")}</tr>
-      <tr>${RATE_TITLE_COLUMNS.map((column) => `<th>${escapeHtml(column.label)}</th>`).join("")}</tr>
-    </thead>
-    <tbody>${body || `<tr><td colspan="${RATE_TITLE_COLUMNS.length + 1}" class="rate-title-empty">No matching title-board rates yet.</td></tr>`}</tbody>
-  </table>`;
+  rateTitleBoard.innerHTML = cards
+    ? `<div class="rate-title-grid">${cards}</div>`
+    : `<div class="rate-title-empty-text">No matching title-board rates yet.</div>`;
 }
 
 function renderBrokerRateFinder() {
