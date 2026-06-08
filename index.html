@@ -4647,6 +4647,64 @@ th, td { border-color: var(--line); }
   letter-spacing: -.03em;
 }
 
+.rate-title-board {
+  margin: 10px 12px 12px;
+  border: 1px solid color-mix(in srgb, var(--green) 18%, var(--line));
+  border-radius: 15px;
+  background: rgba(255,255,255,.76);
+  overflow: hidden;
+}
+
+.rate-title-board-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 9px 10px;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  font-size: .72rem;
+  font-weight: 900;
+}
+
+.rate-title-board-head strong { color: var(--green); font-size: .82rem; }
+
+.rate-title-scroll { overflow-x: auto; }
+
+.rate-title-table {
+  width: 100%;
+  min-width: 1680px;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.rate-title-table th,
+.rate-title-table td {
+  border: 1px solid color-mix(in srgb, var(--line) 78%, var(--green));
+  padding: 5px 4px;
+  text-align: center;
+  font-size: .66rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.rate-title-table thead th { background: #f2f4ec; color: var(--text); }
+.rate-title-table thead th.group-5yr { background: color-mix(in srgb, var(--green) 12%, #f7f7ef); }
+.rate-title-table thead th.group-other { background: color-mix(in srgb, #9d2f25 14%, #f7f7ef); }
+.rate-title-table .lender-title-cell {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  width: 150px;
+  min-width: 150px;
+  background: #fff;
+  text-align: left;
+}
+.rate-title-table tbody tr:nth-child(even) td { background: #fbfcf7; }
+.rate-title-table tbody tr:nth-child(even) .lender-title-cell { background: #fbfcf7; }
+.rate-title-table td.rate-title-empty { color: color-mix(in srgb, var(--muted) 70%, transparent); font-weight: 700; }
+.rate-title-table td.rate-title-hit { color: var(--green); }
+
 .rate-table-wrap {
   overflow: auto;
   max-height: 560px;
@@ -5925,7 +5983,7 @@ textarea,
               <label><span>Bucket</span><select id="rateFinderBucket"><option value="all">Any bucket</option><option value="insured">Insured / high ratio</option><option value="insurable">Insurable</option><option value="uninsured">Uninsured / refi</option><option value="variable">Variable</option><option value="alt">Alternative</option></select></label>
               <label><span>Purpose</span><select id="rateFinderPurpose"><option value="all">Any purpose</option><option value="purchase">Purchase</option><option value="refinance">Refinance</option><option value="rental">Rental</option><option value="private">Private exit</option></select></label>
               <label><span>Lender type</span><select id="rateFinderType"><option value="all">Any type</option><option value="bank">Bank</option><option value="monoline">Monoline</option><option value="credit union">Credit union</option><option value="alternative">Alternative</option><option value="private">Private / MIC</option></select></label>
-              <label><span>Sort</span><select id="rateFinderSort"><option value="lowest">Lowest rate</option><option value="freshest">Freshest source</option><option value="lender">Lender A-Z</option><option value="term">Term</option><option value="hold">Rate hold</option></select></label>
+              <label><span>Sort</span><select id="rateFinderSort"><option value="title">Title board order</option><option value="lowest">Lowest rate</option><option value="freshest">Freshest source</option><option value="lender">Lender A-Z</option><option value="term">Term</option><option value="hold">Rate hold</option></select></label>
             </div>
             <div class="rate-finder-chips" aria-label="Common broker searches">
               <button type="button" data-rate-chip="best-5yr-insured">Best 5yr insured</button>
@@ -5941,6 +5999,13 @@ textarea,
             <div class="rate-finder-summary" id="rateFinderSummary">
               <span><strong>0</strong> matching rate rows</span>
               <span>Dry-run rows are visible and marked review-only so brokers can quote fast with source awareness.</span>
+            </div>
+            <div class="rate-title-board" aria-label="MortgageBOSS-style title sorted board">
+              <div class="rate-title-board-head">
+                <strong>Title-sorted board</strong>
+                <span>Columns match the lender-sheet titles: 5-year fixed/variable first, then other terms.</span>
+              </div>
+              <div class="rate-title-scroll" id="rateTitleBoard"></div>
             </div>
             <div class="rate-table-wrap">
               <table class="rate-finder-table" aria-label="Broker searchable rate table">
@@ -7724,6 +7789,7 @@ const searchInput = document.querySelector("#searchInput");
 const runSearchButton = document.querySelector("#runSearch");
 const bestRateGrid = document.querySelector("#bestRateGrid");
 const rateFinderTable = document.querySelector("#rateFinderTable");
+const rateTitleBoard = document.querySelector("#rateTitleBoard");
 const rateFinderSummary = document.querySelector("#rateFinderSummary");
 const rateFinderSearch = document.querySelector("#rateFinderSearch");
 const rateFinderLender = document.querySelector("#rateFinderLender");
@@ -9627,6 +9693,101 @@ function rateFinderRows() {
     });
 }
 
+const RATE_TITLE_COLUMNS = [
+  { key: "5f-insured", group: "5 Year Term", subGroup: "5 Year Fixed", label: "Insured", term: "60", rateType: "fixed", bucket: "insured" },
+  { key: "5f-insurable-65", group: "5 Year Term", subGroup: "5 Year Fixed", label: "Insurable ≤65%", term: "60", rateType: "fixed", bucket: "insurable", match: /(?:≤|<=|under|up to)?\s*65|0\s*-\s*65/i },
+  { key: "5f-insurable-65-70", group: "5 Year Term", subGroup: "5 Year Fixed", label: "Insurable 65%-70%", term: "60", rateType: "fixed", bucket: "insurable", match: /65\s*[-–]\s*70/i },
+  { key: "5f-insurable-70-75", group: "5 Year Term", subGroup: "5 Year Fixed", label: "Insurable 70%-75%", term: "60", rateType: "fixed", bucket: "insurable", match: /70\s*[-–]\s*75/i },
+  { key: "5f-insurable-75-80", group: "5 Year Term", subGroup: "5 Year Fixed", label: "Insurable 75%-80%", term: "60", rateType: "fixed", bucket: "insurable", match: /75\s*[-–]\s*80|80\s*%?\s*ltv/i, fallbackForBucket: true },
+  { key: "5f-uninsurable-65-20", group: "5 Year Term", subGroup: "5 Year Fixed", label: "Uninsurable (Within 65% / 20yr Amort)", term: "60", rateType: "fixed", bucket: "uninsured", amort: "20", match: /within\s*65|20\s*yr|20\s*year/i },
+  { key: "5f-uninsurable-25", group: "5 Year Term", subGroup: "5 Year Fixed", label: "Uninsurable (With 25 Year Amort)", term: "60", rateType: "fixed", bucket: "uninsured", amort: "25" },
+  { key: "5f-uninsurable-30", group: "5 Year Term", subGroup: "5 Year Fixed", label: "Uninsurable (With 30 Year Amort)", term: "60", rateType: "fixed", bucket: "uninsured", amort: "30" },
+  { key: "5f-rentals", group: "5 Year Term", subGroup: "5 Year Fixed", label: "Rentals", term: "60", rateType: "fixed", purpose: "rental" },
+  { key: "5v-insured", group: "5 Year Term", subGroup: "5 Year Variable", label: "Insured", term: "60", rateType: "variable", bucket: "insured" },
+  { key: "5v-insurable-65", group: "5 Year Term", subGroup: "5 Year Variable", label: "Insurable ≤65%", term: "60", rateType: "variable", bucket: "insurable", match: /(?:≤|<=|under|up to)?\s*65|0\s*-\s*65/i },
+  { key: "5v-insurable-65-70", group: "5 Year Term", subGroup: "5 Year Variable", label: "Insurable 65%-70%", term: "60", rateType: "variable", bucket: "insurable", match: /65\s*[-–]\s*70/i },
+  { key: "5v-insurable-70-75", group: "5 Year Term", subGroup: "5 Year Variable", label: "Insurable 70%-75%", term: "60", rateType: "variable", bucket: "insurable", match: /70\s*[-–]\s*75/i },
+  { key: "5v-insurable-75-80", group: "5 Year Term", subGroup: "5 Year Variable", label: "Insurable 75%-80%", term: "60", rateType: "variable", bucket: "insurable", match: /75\s*[-–]\s*80|80\s*%?\s*ltv/i, fallbackForBucket: true },
+  { key: "5v-uninsurable-refi", group: "5 Year Term", subGroup: "5 Year Variable", label: "Uninsurable Refinance", term: "60", rateType: "variable", bucket: "uninsured", purpose: "refinance" },
+  { key: "5v-uninsurable-25", group: "5 Year Term", subGroup: "5 Year Variable", label: "Uninsurable (With 25 Year Amort)", term: "60", rateType: "variable", bucket: "uninsured", amort: "25" },
+  { key: "5v-uninsurable-30", group: "5 Year Term", subGroup: "5 Year Variable", label: "Uninsurable (With 30 Year Amort)", term: "60", rateType: "variable", bucket: "uninsured", amort: "30" },
+  { key: "5v-rentals", group: "5 Year Term", subGroup: "5 Year Variable", label: "Rentals", term: "60", rateType: "variable", purpose: "rental" },
+  ...["12", "24", "36", "48", "84", "120"].flatMap((term) => {
+    const years = Number(term) / 12;
+    const group = "Other Terms";
+    const subGroup = `${years} Year Fixed`;
+    return [
+      { key: `${term}f-insured`, group, subGroup, label: "Insured", term, rateType: "fixed", bucket: "insured" },
+      { key: `${term}f-insurable-80`, group, subGroup, label: "Insurable 80%", term, rateType: "fixed", bucket: "insurable" },
+      { key: `${term}f-uninsurable-refi`, group, subGroup, label: "Uninsurable & Refi", term, rateType: "fixed", bucket: "uninsured" }
+    ];
+  }),
+  { key: "heloc", group: "Other Terms", subGroup: "Line of Credit", label: "Line of Credit (HELOC)", term: "heloc", rateType: "variable", bucket: "variable" }
+];
+
+function rateTitleColumnForRow(row = {}) {
+  const haystack = normalizeSearchText([row.term, row.bucket, row.purpose, row.amortization, row.source, row.note].join(" "));
+  const rowRateType = row.rateType || (haystack.includes("variable") ? "variable" : "fixed");
+  const directMatches = RATE_TITLE_COLUMNS.filter((column) => {
+    if (column.term !== String(row.termValue)) return false;
+    if (column.rateType !== rowRateType) return false;
+    if (column.bucket && column.bucket !== row.bucket && !(column.key === "heloc" && row.termValue === "heloc")) return false;
+    if (column.amort && !String(row.amortization).includes(column.amort)) return false;
+    if (column.purpose && !normalizeSearchText(row.purpose).includes(column.purpose)) return false;
+    if (column.match && !column.match.test(haystack)) return false;
+    return true;
+  });
+  return directMatches[0]
+    || RATE_TITLE_COLUMNS.find((column) => column.term === String(row.termValue) && column.rateType === rowRateType && column.bucket === row.bucket && column.fallbackForBucket)
+    || RATE_TITLE_COLUMNS.find((column) => column.term === String(row.termValue) && column.rateType === rowRateType && column.bucket === row.bucket)
+    || null;
+}
+
+function renderRateTitleBoard(rows = []) {
+  if (!rateTitleBoard) return;
+  const lenderRows = new Map();
+  rows.filter((row) => !row.isPlaceholder).forEach((row) => {
+    const column = rateTitleColumnForRow(row);
+    if (!column) return;
+    const lenderId = row.lenderId || slugifyLenderName(row.lender);
+    if (!lenderRows.has(lenderId)) lenderRows.set(lenderId, { lender: row.lender, cells: new Map() });
+    const current = lenderRows.get(lenderId).cells.get(column.key);
+    const nextScore = Date.parse(row.updated || row.approvedAt || "") || 0;
+    const currentScore = current ? Date.parse(current.updated || current.approvedAt || "") || 0 : -1;
+    if (!current || nextScore >= currentScore) lenderRows.get(lenderId).cells.set(column.key, row);
+  });
+
+  const groupRuns = [];
+  RATE_TITLE_COLUMNS.forEach((column) => {
+    const last = groupRuns[groupRuns.length - 1];
+    if (last && last.label === column.group) last.count += 1;
+    else groupRuns.push({ label: column.group, count: 1, className: column.group.includes("5 Year") ? "group-5yr" : "group-other" });
+  });
+  const subGroupRuns = [];
+  RATE_TITLE_COLUMNS.forEach((column) => {
+    const last = subGroupRuns[subGroupRuns.length - 1];
+    if (last && last.label === column.subGroup) last.count += 1;
+    else subGroupRuns.push({ label: column.subGroup, count: 1 });
+  });
+
+  const body = [...lenderRows.values()]
+    .sort((a, b) => a.lender.localeCompare(b.lender))
+    .map(({ lender, cells }) => `<tr><th class="lender-title-cell">${escapeHtml(lender)}</th>${RATE_TITLE_COLUMNS.map((column) => {
+      const row = cells.get(column.key);
+      return row ? `<td class="rate-title-hit" title="${escapeHtml(`${row.source} · ${row.updated || "latest"}`)}">${escapeHtml(rate(row.rateValue))}</td>` : `<td class="rate-title-empty">—</td>`;
+    }).join("")}</tr>`)
+    .join("");
+
+  rateTitleBoard.innerHTML = `<table class="rate-title-table">
+    <thead>
+      <tr><th class="lender-title-cell" rowspan="3">Lender</th>${groupRuns.map((group) => `<th class="${group.className}" colspan="${group.count}">${escapeHtml(group.label)}</th>`).join("")}</tr>
+      <tr>${subGroupRuns.map((group) => `<th colspan="${group.count}">${escapeHtml(group.label)}</th>`).join("")}</tr>
+      <tr>${RATE_TITLE_COLUMNS.map((column) => `<th>${escapeHtml(column.label)}</th>`).join("")}</tr>
+    </thead>
+    <tbody>${body || `<tr><td colspan="${RATE_TITLE_COLUMNS.length + 1}" class="rate-title-empty">No matching title-board rates yet.</td></tr>`}</tbody>
+  </table>`;
+}
+
 function renderBrokerRateFinder() {
   if (!rateFinderTable) return;
   hydrateRateFinderLenders();
@@ -9639,7 +9800,7 @@ function renderBrokerRateFinder() {
     bucket: rateFinderBucket?.value || "all",
     purpose: rateFinderPurpose?.value || "all",
     type: rateFinderType?.value || "all",
-    sort: rateFinderSort?.value || "lowest"
+    sort: rateFinderSort?.value || "title"
   };
   let rows = rateFinderRows().filter((row) => {
     const haystack = normalizeSearchText([row.lender, row.lenderType, row.term, row.rateType, row.bucket, row.rateValue, row.purpose, row.amortization, row.source, row.status, row.note].join(" "));
@@ -9656,6 +9817,12 @@ function renderBrokerRateFinder() {
 
   rows.sort((a, b) => {
     if (a.isPlaceholder !== b.isPlaceholder) return a.isPlaceholder ? 1 : -1;
+    if (controls.sort === "title") {
+      const ac = rateTitleColumnForRow(a); const bc = rateTitleColumnForRow(b);
+      const ai = ac ? RATE_TITLE_COLUMNS.findIndex((column) => column.key === ac.key) : 999;
+      const bi = bc ? RATE_TITLE_COLUMNS.findIndex((column) => column.key === bc.key) : 999;
+      return ai - bi || a.lender.localeCompare(b.lender);
+    }
     if (controls.sort === "freshest") return (Date.parse(b.updated) || 0) - (Date.parse(a.updated) || 0);
     if (controls.sort === "lender") return a.lender.localeCompare(b.lender);
     if (controls.sort === "term") return String(a.termValue).localeCompare(String(b.termValue), undefined, { numeric: true });
@@ -9667,6 +9834,7 @@ function renderBrokerRateFinder() {
 
   const displayRows = rows;
   rateFinderSummary.innerHTML = `<span><strong>${rows.length}</strong> matching rate row${rows.length === 1 ? "" : "s"}</span><span>${dryRunRateSheetData ? "Includes dry-run lender sheets marked review-only." : "Loading dry-run rate sheets…"}</span>`;
+  renderRateTitleBoard(displayRows);
   rateFinderTable.innerHTML = displayRows.map((row) => {
     const tone = sourceStatusTone(row.status);
     return `
@@ -9710,7 +9878,7 @@ function setRateFinder(values = {}) {
 }
 
 function applyRateFinderChip(chip) {
-  const reset = { search: "", lender: "all", term: "all", rateType: "all", amort: "all", bucket: "all", purpose: "all", type: "all", sort: "lowest" };
+  const reset = { search: "", lender: "all", term: "all", rateType: "all", amort: "all", bucket: "all", purpose: "all", type: "all", sort: "title" };
   const presets = {
     "best-5yr-insured": { ...reset, term: "60", rateType: "fixed", bucket: "insured" },
     "best-3yr-fixed": { ...reset, term: "36", rateType: "fixed" },
