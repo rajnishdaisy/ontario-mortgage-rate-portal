@@ -547,7 +547,21 @@ async function runAiExtraction({ email, meta, sourceDocument, attachments }) {
   });
 
   const responseText = await response.text();
-  if (!response.ok) throw new Error(`OpenAI extraction failed ${response.status}: ${responseText}`);
+  if (!response.ok) {
+    let errorMessage = `OpenAI extraction failed ${response.status}`;
+    try {
+      const errorPayload = JSON.parse(responseText);
+      const code = errorPayload?.error?.code || errorPayload?.error?.type || '';
+      if (response.status === 401 || code === 'invalid_api_key') {
+        errorMessage = 'OpenAI extraction failed 401: the server OpenAI API key is invalid or expired. Update OPENAI_API_KEY in Vercel, redeploy, then retry this upload.';
+      } else {
+        errorMessage = `OpenAI extraction failed ${response.status}: ${errorPayload?.error?.message || responseText}`;
+      }
+    } catch {
+      errorMessage = `OpenAI extraction failed ${response.status}: ${responseText}`;
+    }
+    throw new Error(sanitizeErrorMessage(errorMessage));
+  }
   const parsed = JSON.parse(responseText);
   const outputText = parsed.output_text || parsed.output?.flatMap((o) => o.content || []).find((c) => c.text)?.text;
   if (!outputText) throw new Error(`OpenAI extraction returned no output_text: ${responseText.slice(0, 500)}`);
@@ -563,6 +577,13 @@ function averageConfidence(extraction) {
   const values = [extraction.confidence, ...(extraction.products || []).map((p) => p.confidence)].filter((n) => typeof n === 'number');
   if (!values.length) return 0;
   return values.reduce((a, b) => a + b, 0) / values.length;
+}
+
+function sanitizeErrorMessage(message = '') {
+  const text = String(message || '');
+  return text
+    .replace(/sk-[A-Za-z0-9_-]{8,}/g, '[redacted OpenAI key]')
+    .replace(/Bearer\s+[A-Za-z0-9._-]+/gi, 'Bearer [redacted]');
 }
 
 function realisticRateOrNull(value) {
@@ -833,19 +854,20 @@ async function processStoredSourceDocument(row) {
       confidence: publishResult.confidence
     };
   } catch (error) {
+    const safeMessage = sanitizeErrorMessage(error.message);
     await patchRows('rate_extraction_runs', `id=eq.${encodeURIComponent(extractionRunId)}`, {
       status: 'failed',
       completed_at: new Date().toISOString(),
-      error_message: error.message
+      error_message: safeMessage
     });
     await patchRows('rate_source_documents', `id=eq.${encodeURIComponent(row.id)}`, { status: 'failed' });
     if (row.ingestion_event_id) {
       await patchRows('rate_ingestion_events', `id=eq.${encodeURIComponent(row.ingestion_event_id)}`, {
         status: 'Rejected',
-        notes: `AI extraction failed: ${error.message}`
+        notes: `AI extraction failed: ${safeMessage}`
       });
     }
-    throw error;
+    throw new Error(safeMessage);
   }
 }
 
