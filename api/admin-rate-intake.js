@@ -44,19 +44,32 @@ function getBearer(req) {
   return String(auth).startsWith('Bearer ') ? String(auth).slice(7) : '';
 }
 
+function timingSafeEqualText(a = '', b = '') {
+  const ab = Buffer.from(String(a));
+  const bb = Buffer.from(String(b));
+  if (ab.length !== bb.length) return false;
+  return crypto.timingSafeEqual(ab, bb);
+}
+
+async function adminProfileByEmail(email) {
+  const rows = await supabaseFetch(`/rest/v1/user_profiles?select=id,email,role,status,workspace_id&email=eq.${encodeURIComponent(email)}&role=eq.admin&status=eq.active&limit=1`, {
+    headers: { Accept: 'application/json' }
+  });
+  return Array.isArray(rows) ? rows[0] : null;
+}
+
 async function requireAdmin(req) {
   const token = getBearer(req);
   if (!token) throw Object.assign(new Error('Missing bearer token'), { statusCode: 401 });
 
   const serviceAdminToken = process.env.OMRP_SERVICE_ADMIN_TOKEN;
-  if (serviceAdminToken && serviceAdminToken.length >= 32 && token === serviceAdminToken) {
-    const rows = await supabaseFetch(`/rest/v1/user_profiles?select=id,email,role,status,workspace_id&email=eq.${encodeURIComponent('shiv@sicapital.ca')}&limit=1`, {
-      headers: { Accept: 'application/json' }
-    });
-    const profile = Array.isArray(rows) ? rows[0] : null;
-    if (!profile) throw Object.assign(new Error('Locked admin profile not found'), { statusCode: 403 });
+  if (process.env.OMRP_ALLOW_SERVICE_ADMIN_TOKEN === 'true' && serviceAdminToken && serviceAdminToken.length >= 32 && timingSafeEqualText(token, serviceAdminToken)) {
+    const serviceEmail = String(process.env.OMRP_SERVICE_ADMIN_EMAIL || '').trim().toLowerCase();
+    if (!serviceEmail) throw Object.assign(new Error('Service admin email not configured'), { statusCode: 403 });
+    const profile = await adminProfileByEmail(serviceEmail);
+    if (!profile) throw Object.assign(new Error('Service admin profile not active'), { statusCode: 403 });
     return {
-      user: { id: profile.id, email: profile.email || 'shiv@sicapital.ca' },
+      user: { id: profile.id, email: profile.email || serviceEmail },
       profile,
       workspaceId: profile.workspace_id || DEFAULT_WORKSPACE_ID
     };
@@ -66,24 +79,14 @@ async function requireAdmin(req) {
     headers: { apikey: serviceKey(), Authorization: `Bearer ${token}` }
   });
   const userText = await userResponse.text();
-  if (!userResponse.ok) throw Object.assign(new Error(`Invalid session: ${userText}`), { statusCode: 401 });
+  if (!userResponse.ok) throw Object.assign(new Error('Invalid session'), { statusCode: 401 });
   const user = JSON.parse(userText);
-  const email = String(user.email || '').toLowerCase();
-  const isLockedAdmin = email === 'shiv@sicapital.ca';
-
-  let profile = null;
-  try {
-    const rows = await supabaseFetch(`/rest/v1/user_profiles?select=id,email,role,status,workspace_id&id=eq.${encodeURIComponent(user.id)}&limit=1`, {
-      headers: { Accept: 'application/json' }
-    });
-    profile = Array.isArray(rows) ? rows[0] : null;
-  } catch (error) {
-    if (!isLockedAdmin) throw error;
-  }
-  if (!isLockedAdmin && !(profile?.role === 'admin' && profile?.status === 'active')) {
-    throw Object.assign(new Error('Admin access required'), { statusCode: 403 });
-  }
-  return { user, profile, workspaceId: profile?.workspace_id || DEFAULT_WORKSPACE_ID };
+  const rows = await supabaseFetch(`/rest/v1/user_profiles?select=id,email,role,status,workspace_id&id=eq.${encodeURIComponent(user.id)}&role=eq.admin&status=eq.active&limit=1`, {
+    headers: { Accept: 'application/json' }
+  });
+  const profile = Array.isArray(rows) ? rows[0] : null;
+  if (!profile) throw Object.assign(new Error('Admin access required'), { statusCode: 403 });
+  return { user, profile, workspaceId: profile.workspace_id || DEFAULT_WORKSPACE_ID };
 }
 
 function stableId(prefix, seed = '') {
@@ -105,7 +108,7 @@ function cleanText(value = '', max = 500) {
   return String(value || '').trim().slice(0, max);
 }
 
-async function downloadExternalRateSource(url) {
+function allowedRateSourceUrl(url) {
   const parsed = new URL(url);
   if (parsed.protocol !== 'https:') throw Object.assign(new Error('Only HTTPS rate-sheet URLs are allowed'), { statusCode: 400 });
   const allowedHosts = String(process.env.RATE_SOURCE_URL_ALLOWED_HOSTS || 'www.mortgageboss.ca,mortgageboss.ca')
@@ -116,15 +119,44 @@ async function downloadExternalRateSource(url) {
   if (allowedHosts.length && !allowedHosts.some((host) => hostname === host || hostname.endsWith(`.${host}`))) {
     throw Object.assign(new Error(`Rate source host not allowed: ${parsed.hostname}`), { statusCode: 400 });
   }
-  const response = await fetch(url, { redirect: 'follow' });
-  const arrayBuffer = await response.arrayBuffer();
+  return parsed;
+}
+
+async function downloadExternalRateSource(url, redirectsLeft = 3) {
+  allowedRateSourceUrl(url);
+  const response = await fetch(url, { redirect: 'manual' });
+  if ([301, 302, 303, 307, 308].includes(response.status)) {
+    if (redirectsLeft <= 0) throw Object.assign(new Error('Rate source redirected too many times'), { statusCode: 400 });
+    const location = response.headers.get('location');
+    if (!location) throw Object.assign(new Error('Rate source redirect missing location'), { statusCode: 400 });
+    return downloadExternalRateSource(new URL(location, url).toString(), redirectsLeft - 1);
+  }
   if (!response.ok) throw Object.assign(new Error(`Rate source download failed ${response.status}`), { statusCode: 400 });
   const maxBytes = Number(process.env.RATE_SOURCE_URL_MAX_BYTES || 12 * 1024 * 1024);
-  if (arrayBuffer.byteLength > maxBytes) throw Object.assign(new Error(`Rate source file too large: ${arrayBuffer.byteLength} bytes`), { statusCode: 400 });
+  const declaredBytes = Number(response.headers.get('content-length') || 0);
+  if (declaredBytes > maxBytes) throw Object.assign(new Error(`Rate source file too large: ${declaredBytes} bytes`), { statusCode: 400 });
+  const reader = response.body?.getReader?.();
+  const chunks = [];
+  let size = 0;
+  if (reader) {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      size += value.byteLength;
+      if (size > maxBytes) throw Object.assign(new Error(`Rate source file too large: ${size} bytes`), { statusCode: 400 });
+      chunks.push(Buffer.from(value));
+    }
+  } else {
+    const arrayBuffer = await response.arrayBuffer();
+    size = arrayBuffer.byteLength;
+    if (size > maxBytes) throw Object.assign(new Error(`Rate source file too large: ${size} bytes`), { statusCode: 400 });
+    chunks.push(Buffer.from(arrayBuffer));
+  }
+  const buffer = Buffer.concat(chunks);
   return {
-    buffer: Buffer.from(arrayBuffer),
+    buffer,
     contentType: response.headers.get('content-type') || 'application/octet-stream',
-    size: arrayBuffer.byteLength,
+    size: buffer.byteLength,
     lastModified: response.headers.get('last-modified') || null,
     etag: response.headers.get('etag') || null
   };
@@ -314,6 +346,22 @@ async function bulkPublishRows(rows, actor, workspaceId, deactivateLenders = tru
 async function publishRates(rateIds, actor, workspaceId, deactivateOlderMatchingRates = true) {
   const ids = Array.isArray(rateIds) ? rateIds : [];
   if (!ids.length) throw Object.assign(new Error('No extracted rate IDs supplied'), { statusCode: 400 });
+  try {
+    const rpcResult = await supabaseFetch('/rest/v1/rpc/publish_extracted_rate_products', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify({
+        p_workspace_id: workspaceId,
+        p_rate_ids: ids,
+        p_approved_by: actor.user.id,
+        p_deactivate_older: deactivateOlderMatchingRates !== false
+      })
+    });
+    return { ok: true, mode: 'transactional-rpc', ...(rpcResult || {}) };
+  } catch (error) {
+    console.warn('Transactional publish RPC unavailable, falling back to sequential publish', error.message);
+  }
+
   const rows = await supabaseFetch(`/rest/v1/extracted_rate_products?select=*&workspace_id=eq.${encodeURIComponent(workspaceId)}&id=in.(${ids.map(encodeURIComponent).join(',')})`, {
     headers: { Accept: 'application/json' }
   });
@@ -351,7 +399,7 @@ async function publishRates(rateIds, actor, workspaceId, deactivateOlderMatching
     rate_hold_days: row.rate_hold_days,
     effective_date: row.effective_date || todayIso(),
     expiry_date: row.expiry_date,
-    source_label: 'Admin-approved email intake',
+    source_label: 'Admin-approved intake',
     freshness_status: 'fresh',
     confidence: row.confidence,
     public_notes: row.review_notes,
@@ -366,8 +414,8 @@ async function publishRates(rateIds, actor, workspaceId, deactivateOlderMatching
     headers: { 'Content-Type': 'application/json', Prefer: 'return=minimal' },
     body: JSON.stringify(publishedRows)
   });
-  await setExtractedStatus(publishable.map((row) => row.id), 'published', actor, workspaceId, 'Published by admin from email intake.');
-  return { ok: true, publishedCount: publishedRows.length };
+  await setExtractedStatus(publishable.map((row) => row.id), 'published', actor, workspaceId, 'Published by admin from intake.');
+  return { ok: true, mode: 'sequential-fallback', publishedCount: publishedRows.length };
 }
 
 export default async function handler(req, res) {

@@ -18,9 +18,19 @@ function json(res, status, body) {
   return res.status(status).json(body);
 }
 
-async function readRawBody(req) {
+async function readRawBody(req, maxBytes = Number(process.env.RESEND_WEBHOOK_MAX_BYTES || 2 * 1024 * 1024)) {
   const chunks = [];
-  for await (const chunk of req) chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
+  let size = 0;
+  for await (const chunk of req) {
+    const buffer = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
+    size += buffer.byteLength;
+    if (size > maxBytes) {
+      const err = new Error('Request body too large');
+      err.statusCode = 413;
+      throw err;
+    }
+    chunks.push(buffer);
+  }
   return Buffer.concat(chunks).toString('utf8');
 }
 
@@ -875,16 +885,33 @@ async function processStoredSourceDocument(row) {
   }
 }
 
-export async function processQueuedRateEmails({ limit = 10, sourceKind = 'manual_upload', sourceDocumentId = '' } = {}) {
-  const workspaceId = process.env.RATE_AI_WORKSPACE_ID || DEFAULT_WORKSPACE_ID;
-  const sourceFilter = sourceDocumentId
-    ? `id=eq.${encodeURIComponent(sourceDocumentId)}`
-    : sourceKind === 'email' ? 'source_kind=eq.email' : sourceKind === 'all' ? 'source_kind=in.(email,manual_upload)' : 'source_kind=eq.manual_upload';
-  const statusFilter = sourceDocumentId ? '' : '&status=in.(queued,failed)';
-  const rows = await getRows(
-    'rate_source_documents',
-    `select=*&workspace_id=eq.${encodeURIComponent(workspaceId)}&${sourceFilter}${statusFilter}&order=received_at.asc&limit=${Number(limit) || 10}`
-  );
+export async function processQueuedRateEmails({ limit = 10, workspaceId = process.env.RATE_AI_WORKSPACE_ID || DEFAULT_WORKSPACE_ID, sourceKind = 'manual_upload', sourceDocumentId = '' } = {}) {
+  let rows = [];
+  if (sourceDocumentId) {
+    rows = await getRows(
+      'rate_source_documents',
+      `select=*&workspace_id=eq.${encodeURIComponent(workspaceId)}&id=eq.${encodeURIComponent(sourceDocumentId)}&limit=1`
+    );
+  } else {
+    try {
+      rows = await supabaseFetch('/rest/v1/rpc/claim_next_rate_source_documents', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({ p_workspace_id: workspaceId, p_source_kind: sourceKind, p_limit: Number(limit) || 10 })
+      });
+    } catch (error) {
+      console.warn('Rate-source claim RPC unavailable, falling back to non-atomic queue read', error.message);
+      const sourceFilter = sourceKind === 'email' ? 'source_kind=eq.email' : sourceKind === 'all' ? 'source_kind=in.(email,manual_upload)' : 'source_kind=eq.manual_upload';
+      rows = await getRows(
+        'rate_source_documents',
+        `select=*&workspace_id=eq.${encodeURIComponent(workspaceId)}&${sourceFilter}&status=in.(queued,failed)&order=received_at.asc&limit=${Number(limit) || 10}`
+      );
+      if (rows?.length) {
+        const ids = rows.map((row) => row.id);
+        await patchRows('rate_source_documents', `id=in.(${ids.map(encodeURIComponent).join(',')})&workspace_id=eq.${encodeURIComponent(workspaceId)}`, { status: 'extracting', metadata: { claimed_without_rpc: true, claimed_at: new Date().toISOString() } }).catch(() => null);
+      }
+    }
+  }
   const results = [];
   for (const row of rows || []) {
     try {
@@ -896,13 +923,14 @@ export async function processQueuedRateEmails({ limit = 10, sourceKind = 'manual
   return { workspaceId, checked: rows?.length || 0, results };
 }
 
-function isAuthorizedInboxAdmin(req) {
+function authorizedInboxTokenKind(req) {
   const adminToken = process.env.RATE_INBOX_ADMIN_TOKEN;
   const cronSecret = process.env.CRON_SECRET;
-  const auth = getHeader(req, 'authorization');
-  if (adminToken && auth === `Bearer ${adminToken}`) return true;
-  if (cronSecret && auth === `Bearer ${cronSecret}`) return true;
-  return false;
+  const auth = getHeader(req, 'authorization') || '';
+  const bearer = String(auth).startsWith('Bearer ') ? String(auth).slice(7) : '';
+  if (adminToken && timingSafeEqualText(bearer, adminToken)) return 'admin';
+  if (cronSecret && timingSafeEqualText(bearer, cronSecret)) return 'cron';
+  return '';
 }
 
 async function listReceivedEmails(limit = 25) {
@@ -1146,9 +1174,13 @@ export default async function handler(req, res) {
 
   try {
     const rawBody = await readRawBody(req);
-    if (isAuthorizedInboxAdmin(req)) {
+    const inboxTokenKind = authorizedInboxTokenKind(req);
+    if (inboxTokenKind) {
       const body = rawBody ? JSON.parse(rawBody) : {};
-      const limit = Math.max(1, Math.min(100, Number(body.limit || req.query?.limit || 25)));
+      if (inboxTokenKind === 'cron' && (body.mode === 'inspect' || body.emailIds?.length)) {
+        return json(res, 403, { ok: false, error: 'Cron token cannot inspect or select inbox messages.' });
+      }
+      const limit = Math.max(1, Math.min(inboxTokenKind === 'cron' ? 10 : 100, Number(body.limit || req.query?.limit || 25)));
       const processImmediately = body.processImmediately !== false;
       const listed = body.emailIds?.length
         ? body.emailIds.map((id) => ({ id, email_id: id }))
@@ -1227,6 +1259,6 @@ export default async function handler(req, res) {
     return json(res, result.fetchFailed ? 202 : 200, result);
   } catch (error) {
     console.error('resend inbound processing failed', error);
-    return json(res, 500, { ok: false, error: error.message });
+    return json(res, error.statusCode || 500, { ok: false, error: error.statusCode ? error.message : 'Inbound processing failed' });
   }
 }

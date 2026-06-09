@@ -6382,13 +6382,6 @@ textarea,
             </label>
             <button class="primary-button search-button" id="runSearch" type="button">Search</button>
 
-            <div class="segmented-control" aria-label="Lender type filter">
-              <button class="active" type="button" data-filter="all">All</button>
-              <button type="button" data-filter="bank">Bank</button>
-              <button type="button" data-filter="monoline">Monoline</button>
-              <button type="button" data-filter="alternative">Alternative</button>
-              <button type="button" data-filter="credit union">Credit Union</button>
-            </div>
           </div>
 
           <section class="split-view" id="lenders">
@@ -8435,10 +8428,7 @@ function numberOrNull(selector) {
 
 function filteredLenders() {
   const query = searchInput.value.trim();
-  return lenders.filter((lender) => {
-    const matchesType = activeFilter === "all" || lender.type === activeFilter;
-    return matchesType && matchesAggressiveSearch(buildSearchHaystack(lender), query);
-  });
+  return lenders.filter((lender) => matchesAggressiveSearch(buildSearchHaystack(lender), query));
 }
 
 function buildSearchHaystack(lender) {
@@ -8766,8 +8756,7 @@ function isAdminUser() {
   return lockedAdmin
     || localDevAdmin
     || currentUser?.app_metadata?.role === "admin"
-    || currentUser?.user_metadata?.role === "admin"
-    || currentProfile?.role === "admin";
+    || currentUser?.user_metadata?.role === "admin";
 }
 
 function profileComplete() {
@@ -9272,8 +9261,8 @@ async function createRateSheetUploadsFromForm() {
       storagePath: "",
       createdAt: new Date().toISOString()
     };
-    upload.storagePath = await uploadRateSheetFileToSupabase(upload, file);
-    created.push(upload);
+    const uploaded = await uploadRateSheetFileToSupabase(upload, file);
+    created.push({ ...upload, ...uploaded });
   }
 
   rateSheetUploads = [...created, ...rateSheetUploads];
@@ -9281,36 +9270,34 @@ async function createRateSheetUploadsFromForm() {
   renderRateSheetUploads();
   rateSheetUploadForm.reset();
   syncUploadLenderMode();
-  setUploadStatus(`${created.length} rate sheet${created.length === 1 ? "" : "s"} queued for ${combinedLenders ? "all-lender" : "manual"} AI analysis.`);
+  setUploadStatus(`${created.length} rate sheet${created.length === 1 ? "" : "s"} stored and queued for ${combinedLenders ? "all-lender" : "manual"} AI analysis.`);
   await logAuditEvent("rate_sheet_uploaded", `${created.length} sheet(s) queued for ${lender.name}`);
 }
 
 async function uploadRateSheetFileToSupabase(upload, file) {
-  if (!supabaseReady || (authRequired && !currentUser)) return "";
+  if (!supabaseReady || (authRequired && !currentUser)) throw new Error("Sign in before uploading rate sheets.");
   const safeName = file.name.replace(/[^a-z0-9._-]+/gi, "-").toLowerCase();
-  const path = `${workspaceId()}/${upload.lenderId}/${upload.id}-${safeName}`;
-  try {
-    const { error } = await supabaseClient.storage.from("rate-sheet-uploads").upload(path, file, { upsert: false, contentType: file.type || "application/octet-stream" });
-    if (error) throw error;
-    try {
-      const token = (await supabaseClient.auth.getSession())?.data?.session?.access_token;
-      const response = await fetch("/api/manual-rate-upload", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ upload: { ...upload, storagePath: path }, storagePath: path, mimeType: file.type || "application/octet-stream" })
-      });
-      const payload = await response.json().catch(() => ({}));
-      if (!response.ok || payload.ok === false) throw new Error(payload.error || `Upload queue sync failed ${response.status}`);
-    } catch (tableError) {
-      console.warn("Upload metadata table sync failed", tableError);
-      setUploadStatus("File stored, but queue sync failed. Refresh and try again or check admin access.", "error");
-    }
-    return path;
-  } catch (error) {
+  const path = `${workspaceId()}/${currentUser.id}/${upload.id}-${safeName}`;
+  const { error } = await supabaseClient.storage.from("rate-sheet-uploads").upload(path, file, { upsert: false, contentType: file.type || "application/octet-stream" });
+  if (error) {
     console.warn("Rate sheet storage upload failed", error);
-    setUploadStatus("Storage bucket unavailable; file metadata staged locally for review.", "error");
-    return "";
+    setUploadStatus("Storage upload failed. Nothing was queued for AI/admin review.", "error");
+    throw error;
   }
+  const token = (await supabaseClient.auth.getSession())?.data?.session?.access_token;
+  const response = await fetch("/api/manual-rate-upload", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ upload: { ...upload, storagePath: path }, storagePath: path, mimeType: file.type || "application/octet-stream" })
+  });
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok || payload.ok === false) {
+    const message = payload.error || `Upload queue sync failed ${response.status}`;
+    console.warn("Upload metadata table sync failed", message);
+    setUploadStatus("File stored, but queue sync failed. It was not sent to AI/admin review yet.", "error");
+    throw new Error(message);
+  }
+  return { storagePath: path, id: payload.uploadId || upload.id, sourceDocumentId: payload.sourceDocumentId || "", status: "Queued for AI review" };
 }
 
 function seedDemoRateSheetUpload() {
@@ -9364,7 +9351,7 @@ function renderRateSheetUploads() {
           <span>${escapeHtml(item.fileType)}</span>
           <span>${formatFileSize(item.fileSize)}</span>
           <span>${escapeHtml(item.priority)}</span>
-          <span>${item.combinedLenders ? "All-lender split" : (item.storagePath ? "Stored" : "Local stage")}</span>
+          <span>${item.combinedLenders ? "All-lender split" : (item.storagePath ? "Stored" : "Demo only")}</span>
         </div>
       </div>
       <span class="upload-status-chip">${escapeHtml(item.status)}</span>
@@ -9772,8 +9759,7 @@ function renderBrokerRateFinder() {
     rateType: rateFinderRateType?.value || "all",
     amort: rateFinderAmort?.value || "all",
     bucket: rateFinderBucket?.value || "all",
-    purpose: rateFinderPurpose?.value || "all",
-    sort: "lowest"
+    purpose: rateFinderPurpose?.value || "all"
   };
   let rows = rateFinderRows().filter((row) => {
     const haystack = normalizeSearchText([row.lender, row.lenderType, row.term, row.rateType, row.bucket, row.rateValue, row.purpose, row.amortization, row.source, row.status, row.note].join(" "));
@@ -9789,18 +9775,11 @@ function renderBrokerRateFinder() {
 
   rows.sort((a, b) => {
     if (a.isPlaceholder !== b.isPlaceholder) return a.isPlaceholder ? 1 : -1;
-    if (controls.sort === "title") {
-      const ac = rateTitleColumnForRow(a); const bc = rateTitleColumnForRow(b);
-      const ai = ac ? RATE_TITLE_COLUMNS.findIndex((column) => column.key === ac.key) : 999;
-      const bi = bc ? RATE_TITLE_COLUMNS.findIndex((column) => column.key === bc.key) : 999;
-      return ai - bi || a.lender.localeCompare(b.lender);
-    }
-    if (controls.sort === "freshest") return (Date.parse(b.updated) || 0) - (Date.parse(a.updated) || 0);
-    if (controls.sort === "lender") return a.lender.localeCompare(b.lender);
-    if (controls.sort === "term") return String(a.termValue).localeCompare(String(b.termValue), undefined, { numeric: true });
-    if (controls.sort === "hold") return (Number(b.hold) || 0) - (Number(a.hold) || 0);
-    const av = Number(a.sortRateValue ?? a.rateValue); const bv = Number(b.sortRateValue ?? b.rateValue);
+    const av = Number(a.sortRateValue ?? a.rateValue);
+    const bv = Number(b.sortRateValue ?? b.rateValue);
     if (Number.isFinite(av) && Number.isFinite(bv)) return av - bv;
+    if (Number.isFinite(av)) return -1;
+    if (Number.isFinite(bv)) return 1;
     return String(a.rateValue).localeCompare(String(b.rateValue));
   });
 
