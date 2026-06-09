@@ -5783,13 +5783,13 @@ textarea,
 
         <nav class="nav-list">
           <a href="#dashboard" class="active"><span>01</span> Dashboard</a>
-          <a href="#best-rates"><span>02</span> Rate Board</a>
-          <a href="#deal-desk"><span>03</span> Deal Desk</a>
-          <a href="#lenders"><span>04</span> Lenders</a>
-          <a href="#programs"><span>05</span> Programs</a>
-          <a href="#insurers"><span>06</span> Insurers</a>
-          <a href="#contacts"><span>07</span> BDM Contacts</a>
-          <a href="#uploads"><span>08</span> Sheet Uploads</a>
+          <a href="#uploads"><span>02</span> Sheet Uploads</a>
+          <a href="#best-rates"><span>03</span> Rate Board</a>
+          <a href="#deal-desk"><span>04</span> Deal Desk</a>
+          <a href="#lenders"><span>05</span> Lenders</a>
+          <a href="#programs"><span>06</span> Programs</a>
+          <a href="#insurers"><span>07</span> Insurers</a>
+          <a href="#contacts"><span>08</span> BDM Contacts</a>
           <a href="#admin-inbox" data-admin-only><span>09</span> AI Review</a>
         </nav>
 
@@ -5848,7 +5848,8 @@ textarea,
             <button class="icon-button" id="themeToggle" type="button" title="Toggle theme" aria-label="Toggle theme">
               <span>◐</span>
             </button>
-            <a class="primary-button" href="#best-rates">Open rate board</a>
+            <a class="primary-button" href="#uploads">Open sheet command centre</a>
+            <a class="secondary-button" href="#best-rates">Open rate board</a>
           </div>
           <aside class="hero-insight" aria-label="Current rate snapshot">
             <p class="panel-label">Live abstract</p>
@@ -5866,6 +5867,77 @@ textarea,
             </dl>
           </aside>
         </header>
+
+        <section class="band upload-desk" id="uploads">
+          <div class="section-heading upload-heading">
+            <div>
+              <p class="eyebrow">Rate-sheet command centre</p>
+              <h3>Upload lender PDFs and Excel sheets right from the front page.</h3>
+              <p class="section-copy">Users and admins can stage rate sheets immediately after opening the desk. The queue is intentionally review-first: files are labelled, checked, and handed to manual AI analysis before anything is pushed to a lender record.</p>
+            </div>
+            <div class="upload-stats" aria-label="Rate sheet upload queue stats">
+              <article><strong id="uploadQueueCount">0</strong><span>queued</span></article>
+              <article><strong id="uploadPdfCount">0</strong><span>PDF</span></article>
+              <article><strong id="uploadExcelCount">0</strong><span>Excel</span></article>
+            </div>
+          </div>
+
+          <div class="upload-desk-grid">
+            <form class="upload-card upload-form" id="rateSheetUploadForm">
+              <div class="upload-form-head">
+                <div>
+                  <p class="eyebrow">New upload</p>
+                  <h4>Stage a rate sheet</h4>
+                </div>
+                <span class="source-chip">PDF / XLS / XLSX</span>
+              </div>
+              <div class="form-grid compact-form-grid">
+                <label><span>Upload type</span><select id="uploadLenderMode"><option value="single">Single lender file</option><option value="combined">One PDF with all lenders</option></select></label>
+                <label><span>Lender</span><select id="uploadLenderSelect" required><option value="">Select lender</option></select></label>
+              </div>
+              <p class="upload-help-text compact-help" id="combinedUploadHelp">Choose “one PDF with all lenders” when the file contains multiple lenders. The AI will split rows by lender name and stage each rate under the matching lender for admin review.</p>
+              <div class="form-grid compact-form-grid">
+                <label><span>Uploader type</span><select id="uploadActorRole"><option>User / broker</option><option>Admin</option></select></label>
+                <label><span>Effective date</span><input id="uploadEffectiveDate" type="date" /></label>
+                <label><span>Priority</span><select id="uploadPriority"><option>Normal</option><option>Urgent - rate change</option><option>Monthly refresh</option><option>Policy/rate exception</option></select></label>
+              </div>
+              <label class="file-drop-zone" for="rateSheetFiles">
+                <input id="rateSheetFiles" type="file" multiple accept=".pdf,.xls,.xlsx,application/pdf,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" required />
+                <strong>Drop or choose PDF / Excel files</strong>
+                <span>Each file is queued for manual AI extraction, lender matching, and admin approval before publishing.</span>
+              </label>
+              <label><span>Reviewer note</span><textarea id="uploadNotes" rows="4" placeholder="Example: BDM says prime changed; check 1/3/5-year fixed and variable tabs first."></textarea></label>
+              <div class="upload-actions">
+                <button class="primary-button" type="submit">Queue manual upload for AI review</button>
+              </div>
+              <p class="upload-help-text" id="uploadStatusText">Only manual PDF/XLS/XLSX uploads are shown here. The AI reviews the saved file, writes a summary, and stages extracted rows for admin approval; nothing publishes automatically.</p>
+            </form>
+
+            <aside class="upload-card ai-review-card">
+              <p class="eyebrow">Manual AI workflow</p>
+              <h4>How the sheet moves</h4>
+              <ol class="review-steps">
+                <li><strong>Intake</strong><span>Capture lender, source, file type, effective date, and uploader context.</span></li>
+                <li><strong>AI analysis</strong><span>Extract terms, amortization, fixed/variable rows, Prime, hold period, conditions, and notes.</span></li>
+                <li><strong>Lender match</strong><span>Map clean rows back to the matching lender profile and flag conflicts for admin review.</span></li>
+                <li><strong>Publish gate</strong><span>Admin approves before rows are pushed into the live Rate Board.</span></li>
+              </ol>
+              <div class="upload-guardrail"><strong>Guardrail</strong><span>Unsupported combinations stay blank. The portal should never invent a rate from a PDF or spreadsheet.</span></div>
+            </aside>
+          </div>
+
+          <div class="upload-card upload-queue-card">
+            <div class="upload-queue-head">
+              <div>
+                <p class="eyebrow">Review queue</p>
+                <h4>Files waiting for extraction</h4>
+              </div>
+              <button class="secondary-button" type="button" id="clearUploadQueue">Clear local queue</button>
+            </div>
+            <div class="rate-sheet-upload-list" id="rateSheetUploadList"></div>
+          </div>
+        </section>
+
 
         <section class="product-direction-band" id="product-direction" aria-label="Product direction">
           <article class="product-direction-card">
@@ -6441,76 +6513,6 @@ textarea,
               </thead>
               <tbody id="contactTable"></tbody>
             </table>
-          </div>
-        </section>
-
-        <section class="band upload-desk" id="uploads">
-          <div class="section-heading upload-heading">
-            <div>
-              <p class="eyebrow">Rate sheet intake</p>
-              <h3>Upload lender PDFs and Excel sheets for AI review.</h3>
-              <p class="section-copy">Users and admins can stage rate sheets by lender. The queue is intentionally review-first: files are labelled, checked, and handed to manual AI analysis before anything is pushed to a lender record.</p>
-            </div>
-            <div class="upload-stats" aria-label="Rate sheet upload queue stats">
-              <article><strong id="uploadQueueCount">0</strong><span>queued</span></article>
-              <article><strong id="uploadPdfCount">0</strong><span>PDF</span></article>
-              <article><strong id="uploadExcelCount">0</strong><span>Excel</span></article>
-            </div>
-          </div>
-
-          <div class="upload-desk-grid">
-            <form class="upload-card upload-form" id="rateSheetUploadForm">
-              <div class="upload-form-head">
-                <div>
-                  <p class="eyebrow">New upload</p>
-                  <h4>Stage a rate sheet</h4>
-                </div>
-                <span class="source-chip">PDF / XLS / XLSX</span>
-              </div>
-              <div class="form-grid compact-form-grid">
-                <label><span>Upload type</span><select id="uploadLenderMode"><option value="single">Single lender file</option><option value="combined">One PDF with all lenders</option></select></label>
-                <label><span>Lender</span><select id="uploadLenderSelect" required><option value="">Select lender</option></select></label>
-              </div>
-              <p class="upload-help-text compact-help" id="combinedUploadHelp">Choose “one PDF with all lenders” when the file contains multiple lenders. The AI will split rows by lender name and stage each rate under the matching lender for admin review.</p>
-              <div class="form-grid compact-form-grid">
-                <label><span>Uploader type</span><select id="uploadActorRole"><option>User / broker</option><option>Admin</option></select></label>
-                <label><span>Effective date</span><input id="uploadEffectiveDate" type="date" /></label>
-                <label><span>Priority</span><select id="uploadPriority"><option>Normal</option><option>Urgent - rate change</option><option>Monthly refresh</option><option>Policy/rate exception</option></select></label>
-              </div>
-              <label class="file-drop-zone" for="rateSheetFiles">
-                <input id="rateSheetFiles" type="file" multiple accept=".pdf,.xls,.xlsx,application/pdf,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" required />
-                <strong>Drop or choose PDF / Excel files</strong>
-                <span>Each file is queued for manual AI extraction, lender matching, and admin approval before publishing.</span>
-              </label>
-              <label><span>Reviewer note</span><textarea id="uploadNotes" rows="4" placeholder="Example: BDM says prime changed; check 1/3/5-year fixed and variable tabs first."></textarea></label>
-              <div class="upload-actions">
-                <button class="primary-button" type="submit">Queue manual upload for AI review</button>
-              </div>
-              <p class="upload-help-text" id="uploadStatusText">Only manual PDF/XLS/XLSX uploads are shown here. The AI reviews the saved file, writes a summary, and stages extracted rows for admin approval; nothing publishes automatically.</p>
-            </form>
-
-            <aside class="upload-card ai-review-card">
-              <p class="eyebrow">Manual AI workflow</p>
-              <h4>How the sheet moves</h4>
-              <ol class="review-steps">
-                <li><strong>Intake</strong><span>Capture lender, source, file type, effective date, and uploader context.</span></li>
-                <li><strong>AI analysis</strong><span>Extract terms, amortization, fixed/variable rows, Prime, hold period, conditions, and notes.</span></li>
-                <li><strong>Lender match</strong><span>Map clean rows back to the matching lender profile and flag conflicts for admin review.</span></li>
-                <li><strong>Publish gate</strong><span>Admin approves before rows are pushed into the live Rate Board.</span></li>
-              </ol>
-              <div class="upload-guardrail"><strong>Guardrail</strong><span>Unsupported combinations stay blank. The portal should never invent a rate from a PDF or spreadsheet.</span></div>
-            </aside>
-          </div>
-
-          <div class="upload-card upload-queue-card">
-            <div class="upload-queue-head">
-              <div>
-                <p class="eyebrow">Review queue</p>
-                <h4>Files waiting for extraction</h4>
-              </div>
-              <button class="secondary-button" type="button" id="clearUploadQueue">Clear local queue</button>
-            </div>
-            <div class="rate-sheet-upload-list" id="rateSheetUploadList"></div>
           </div>
         </section>
 
@@ -7890,7 +7892,7 @@ let resourceEntries = [];
 const pageNavLinks = document.querySelectorAll('.nav-list a[href^="#"]');
 const pageRoutes = ["dashboard", "pricing", "intelligence", "best-rates", "deal-desk", "lenders", "packages", "programs", "insurers", "contacts", "uploads", "admin-inbox", "resources", "compliance"];
 const pageGroups = {
-  dashboard: [document.querySelector("#dashboard"), document.querySelector("#product-direction"), document.querySelector(".metric-grid")],
+  dashboard: [document.querySelector("#dashboard"), document.querySelector("#uploads"), document.querySelector("#product-direction"), document.querySelector(".metric-grid")],
   pricing: [document.querySelector("#pricing")],
   intelligence: [document.querySelector("#intelligence")],
   "best-rates": [document.querySelector("#best-rates")],
@@ -7900,7 +7902,7 @@ const pageGroups = {
   programs: [document.querySelector("#programs")],
   insurers: [document.querySelector("#insurers")],
   contacts: [document.querySelector("#contacts")],
-  uploads: [document.querySelector("#uploads")],
+  uploads: [document.querySelector("#dashboard"), document.querySelector("#uploads")],
   "admin-inbox": [document.querySelector("#admin-inbox")],
   resources: [document.querySelector("#resources")],
   compliance: [document.querySelector("#compliance")]
@@ -8497,14 +8499,14 @@ function routeFromHash() {
 function showPage(route = "dashboard", options = {}) {
   const activeRoute = pageRoutes.includes(route) ? route : "dashboard";
   const { updateHash = true, scrollTop = true } = options;
+  const activeElements = new Set((pageGroups[activeRoute] || []).filter(Boolean));
+  const allPageElements = new Set(Object.values(pageGroups).flat().filter(Boolean));
 
-  Object.entries(pageGroups).forEach(([page, elements]) => {
-    elements.filter(Boolean).forEach((element) => {
-      const isActive = page === activeRoute;
-      element.classList.toggle("app-page-hidden", !isActive);
-      element.classList.toggle("app-page-active", isActive);
-      element.setAttribute("aria-hidden", String(!isActive));
-    });
+  allPageElements.forEach((element) => {
+    const isActive = activeElements.has(element);
+    element.classList.toggle("app-page-hidden", !isActive);
+    element.classList.toggle("app-page-active", isActive);
+    element.setAttribute("aria-hidden", String(!isActive));
   });
 
   pageNavLinks.forEach((link) => {
