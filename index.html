@@ -6053,14 +6053,7 @@ textarea,
             </div>
             <div class="rate-finder-summary" id="rateFinderSummary">
               <span><strong>0</strong> matching rate rows</span>
-              <span>Dry-run rows are visible and marked review-only so brokers can quote fast with source awareness.</span>
-            </div>
-            <div class="rate-title-board" aria-label="MortgageBOSS-style title sorted board">
-              <div class="rate-title-board-head">
-                <strong>Title-sorted board</strong>
-                <span>Readable by lender: 5-year fixed, 5-year variable, then other terms.</span>
-              </div>
-              <div class="rate-title-scroll" id="rateTitleBoard"></div>
+              <span>Only published 1-year, 3-year, and 5-year fixed/variable rates.</span>
             </div>
             <div class="rate-table-wrap">
               <table class="rate-finder-table" aria-label="Broker searchable rate table">
@@ -7844,7 +7837,6 @@ const searchInput = document.querySelector("#searchInput");
 const runSearchButton = document.querySelector("#runSearch");
 const bestRateGrid = document.querySelector("#bestRateGrid");
 const rateFinderTable = document.querySelector("#rateFinderTable");
-const rateTitleBoard = document.querySelector("#rateTitleBoard");
 const rateFinderSummary = document.querySelector("#rateFinderSummary");
 const rateFinderSearch = document.querySelector("#rateFinderSearch");
 const rateFinderLender = document.querySelector("#rateFinderLender");
@@ -9712,31 +9704,6 @@ function rateFinderRows() {
     if (liveVariableQuote) rows.push({ ...common, term: common.termValue === "heloc" ? "HELOC" : `${Number(common.termValue || 60) / 12}yr variable`, termValue: common.termValue === "heloc" ? "heloc" : (common.termValue || "60"), rateType: "variable", bucket: "variable", rateValue: liveVariableQuote.display, sortRateValue: liveVariableQuote.sort, note: liveVariableQuote.note });
   });
 
-  (dryRunRateSheetData?.lender_rate_matrix || []).forEach((item) => {
-    const lender = item.lender_name || "Unknown lender";
-    const common = {
-      lender,
-      lenderId: lenderIdForName(lender),
-      lenderType: lenderTypeForName(lender),
-      term: "5yr fixed",
-      termValue: "60",
-      rateType: "fixed",
-      amortization: "25",
-      purpose: "purchase/refinance",
-      hold: "—",
-      source: item.source_label || "Dry-run sheet",
-      updated: item.sheet_date || "",
-      status: item.source_status || "review-only",
-      note: "Dry-run visible to brokers; source still needs approval before client quote."
-    };
-    const rates = item.rates || {};
-    if (numericRate(rates.insured_5yr) !== null) rows.push({ ...common, bucket: "insured", rateValue: Number(rates.insured_5yr), sortRateValue: Number(rates.insured_5yr) });
-    if (numericRate(rates.insurable_75_80_5yr) !== null) rows.push({ ...common, bucket: "insurable", rateValue: Number(rates.insurable_75_80_5yr), sortRateValue: Number(rates.insurable_75_80_5yr) });
-    if (numericRate(rates.uninsured_refi_25yr_5yr) !== null) rows.push({ ...common, bucket: "uninsured", rateValue: Number(rates.uninsured_refi_25yr_5yr), sortRateValue: Number(rates.uninsured_refi_25yr_5yr) });
-    const dryRunVariableQuote = variableRateRowValue(rates.variable_insured, dealDeskSource.primeRate);
-    if (dryRunVariableQuote) rows.push({ ...common, term: "5yr variable", termValue: "60", rateType: "variable", bucket: "variable", rateValue: dryRunVariableQuote.display, sortRateValue: dryRunVariableQuote.sort, note: dryRunVariableQuote.note });
-  });
-
   const coreRows = rows.filter(isCoreQuoteRow);
   addRateFinderBlankCoverageRows(coreRows);
 
@@ -9800,62 +9767,6 @@ function rateTitleColumnForRow(row = {}) {
     || null;
 }
 
-function renderRateTitleBoard(rows = []) {
-  if (!rateTitleBoard) return;
-  const lenderRows = new Map();
-  rows.filter((row) => !row.isPlaceholder).forEach((row) => {
-    const column = rateTitleColumnForRow(row);
-    if (!column) return;
-    const lenderId = row.lenderId || slugifyLenderName(row.lender);
-    if (!lenderRows.has(lenderId)) lenderRows.set(lenderId, { lender: row.lender, cells: new Map() });
-    const current = lenderRows.get(lenderId).cells.get(column.key);
-    const nextScore = Date.parse(row.updated || row.approvedAt || "") || 0;
-    const currentScore = current ? Date.parse(current.updated || current.approvedAt || "") || 0 : -1;
-    if (!current || nextScore >= currentScore) lenderRows.get(lenderId).cells.set(column.key, row);
-  });
-
-  const shortLabel = (column) => {
-    if (column.key === "heloc") return "HELOC";
-    return column.label
-      .replace("Uninsurable (Within 65% / 20yr Amort)", "Unins. 65/20")
-      .replace("Uninsurable (With 25 Year Amort)", "Unins. 25yr")
-      .replace("Uninsurable (With 30 Year Amort)", "Unins. 30yr")
-      .replace("Uninsurable Refinance", "Unins. refi")
-      .replace("Uninsurable & Refi", "Unins./refi")
-      .replace("Insurable ", "Ins. ")
-      .replace("Insured", "Insured");
-  };
-  const sectionDefinitions = [
-    { key: "5fixed", title: "5 Year Fixed", columns: RATE_TITLE_COLUMNS.filter((column) => column.subGroup === "5 Year Fixed") },
-    { key: "5variable", title: "5 Year Variable", columns: RATE_TITLE_COLUMNS.filter((column) => column.subGroup === "5 Year Variable") },
-    { key: "other", title: "Other terms", columns: RATE_TITLE_COLUMNS.filter((column) => column.group === "Other Terms") }
-  ];
-  const renderSection = (cells, section) => {
-    const pills = section.columns
-      .map((column) => {
-        const row = cells.get(column.key);
-        if (!row) return "";
-        const title = `${column.subGroup} · ${column.label} · ${row.source || "source"} · ${row.updated || "latest"}`;
-        return `<span class="rate-title-pill" title="${escapeHtml(title)}"><span>${escapeHtml(shortLabel(column))}</span>${escapeHtml(rate(row.rateValue))}</span>`;
-      })
-      .filter(Boolean)
-      .join("");
-    return `<section class="rate-title-section"><h5>${escapeHtml(section.title)}</h5><div class="rate-title-pills">${pills || `<span class="rate-title-empty-text">No current row</span>`}</div></section>`;
-  };
-
-  const cards = [...lenderRows.values()]
-    .sort((a, b) => a.lender.localeCompare(b.lender))
-    .map(({ lender, cells }) => `<article class="rate-title-card">
-      <div class="rate-title-lender">${escapeHtml(lender)}</div>
-      <div class="rate-title-sections">${sectionDefinitions.map((section) => renderSection(cells, section)).join("")}</div>
-    </article>`)
-    .join("");
-
-  rateTitleBoard.innerHTML = cards
-    ? `<div class="rate-title-grid">${cards}</div>`
-    : `<div class="rate-title-empty-text">No matching title-board rates yet.</div>`;
-}
-
 function renderBrokerRateFinder() {
   if (!rateFinderTable) return;
   hydrateRateFinderLenders();
@@ -9901,8 +9812,7 @@ function renderBrokerRateFinder() {
   });
 
   const displayRows = rows;
-  rateFinderSummary.innerHTML = `<span><strong>${rows.length}</strong> matching rate row${rows.length === 1 ? "" : "s"}</span><span>${dryRunRateSheetData ? "Includes dry-run lender sheets marked review-only." : "Loading dry-run rate sheets…"}</span>`;
-  renderRateTitleBoard(displayRows);
+  rateFinderSummary.innerHTML = `<span><strong>${rows.length}</strong> matching rate row${rows.length === 1 ? "" : "s"}</span><span>Only published 1-year, 3-year, and 5-year fixed/variable rates.</span>`;
   rateFinderTable.innerHTML = displayRows.map((row) => {
     const tone = sourceStatusTone(row.status);
     return `
