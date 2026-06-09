@@ -5768,6 +5768,108 @@ textarea,
   .topbar h2 { font-size: clamp(2.55rem, 14vw, 4.2rem); }
   .rate-finder-toolbar { grid-template-columns: 1fr; }
 }
+
+/* 2026 ops redesign: compact SI command centre */
+:root {
+  --bg: #eef0e9;
+  --surface: #fffefa;
+  --surface-strong: #f8f6ee;
+  --ink: #10231e;
+  --text: #10231e;
+  --muted: #64706a;
+  --line: #d9ded1;
+  --green: #12624f;
+  --accent: #b8872c;
+  --shadow-soft: 0 14px 38px rgba(16, 35, 30, 0.08);
+}
+body { background: var(--bg); color: var(--text); }
+.app-shell { grid-template-columns: 238px minmax(0, 1fr); gap: 0; background: var(--bg); }
+.sidebar { background: #0b211b; color: #dce9e1; border-right: 1px solid rgba(255,255,255,.08); min-height: 100vh; padding: 18px 14px; }
+.brand-lockup { padding-bottom: 14px; margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,.1); }
+.brand-mark { background: #d7b36a; color: #0b211b; border-radius: 10px; }
+.nav-list { gap: 5px; }
+.nav-list a { min-height: 38px; padding: 9px 10px; border-radius: 9px; color: #aebdb5; font-size: .82rem; }
+.nav-list a span { color: #d7b36a; }
+.nav-list a.active, .nav-list a:hover { background: rgba(255,255,255,.09); border-color: rgba(255,255,255,.08); color: #fff; }
+.sidebar-panel { margin-top: 12px; padding: 12px; border-radius: 12px; background: rgba(255,255,255,.06); }
+main { padding: 16px; display: grid; gap: 14px; }
+.topbar, .band, .workspace, .metric-grid { border: 1px solid var(--line); background: var(--surface); border-radius: 18px; box-shadow: var(--shadow-soft); }
+.topbar { display: grid !important; min-height: auto; padding: 18px 20px !important; grid-template-columns: minmax(0, 1fr) 176px 280px; gap: 14px; align-items: start; }
+.topbar h2 { max-width: 780px; font-size: clamp(2.1rem, 4.2vw, 4rem); line-height: .9; letter-spacing: -.075em; margin: 8px 0; }
+.topbar-copy { max-width: 680px; font-size: .98rem; line-height: 1.45; color: var(--muted); }
+.topbar-actions { position: static; display: flex; flex-direction: column; gap: 8px; min-width: 170px; }
+.hero-proof-strip { margin-top: 12px; gap: 6px; }
+.hero-proof-strip span, .desk-badges span, .source-chip, .live-pill { min-height: 24px; padding: 5px 8px; border-radius: 999px; font-size: .66rem; letter-spacing: .08em; }
+.hero-insight { padding: 14px; border-radius: 14px; min-width: 220px; margin-top: 0 !important; grid-column: auto !important; }
+.hero-insight > strong { font-size: 2.35rem; }
+.metric-grid { padding: 10px; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.metric-grid article { min-height: 72px; padding: 10px; border-radius: 12px; background: var(--surface-strong); border: 1px solid var(--line); }
+.metric-grid strong { font-size: 1.55rem; }
+.band, .workspace { padding: 16px; }
+.section-heading { margin-bottom: 12px; align-items: end; }
+.section-heading h3 { font-size: clamp(1.45rem, 2.4vw, 2.2rem); line-height: 1; margin: 2px 0; letter-spacing: -.055em; }
+.section-copy, .contact-line, .upload-help-text { font-size: .85rem; line-height: 1.42; color: var(--muted); }
+.upload-desk { display: grid; gap: 12px; }
+.upload-heading { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 14px; }
+.upload-stats { grid-template-columns: repeat(3, 96px); gap: 8px; }
+.upload-stats article { padding: 10px; min-height: 68px; border-radius: 12px; }
+.upload-stats strong { font-size: 1.45rem; }
+.upload-desk-grid { grid-template-columns: minmax(420px, .95fr) minmax(280px, .55fr); gap: 12px; }
+.upload-card { border-radius: 14px; padding: 14px; }
+.upload-form-head { margin-bottom: 10px; }
+.form-grid, .compact-form-grid, .rate-finder-toolbar, .resource-toolbar, .admin-intake-toolbar { gap: 8px; }
+.compact-form-grid { grid-template-columns: 1fr 1fr; }
+.file-drop-zone { min-height: 92px; padding: 14px; border-radius: 12px; }
+.file-drop-zone strong { font-size: 1rem; }
+textarea, input, select { min-height: 38px; border-radius: 10px; }
+textarea { min-height: 78px; }
+.review-steps { display: grid; grid-template-columns: 1fr; gap: 8px; margin-top: 12px; }
+.review-steps li { padding: 9px; border-radius: 11px; display: grid; grid-template-columns: 28px 1fr; align-items: center; gap: 8px; }
+.review-steps li::before { content: none !important; }
+.review-steps li strong { grid-column: 1 !important; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 999px; background: #11352c; color: #fff; }
+.review-steps li span { grid-column: 2 !important; font-size: .82rem; }
+.upload-guardrail { margin-top: 10px; border-radius: 12px; padding: 10px; }
+.upload-queue-card { margin-top: 0; }
+.rate-sheet-upload-list { max-height: 360px; overflow: auto; }
+.landing-rate-board { display: grid; gap: 12px; }
+.broker-rate-finder { padding: 0; border: 0; background: transparent; }
+.rate-finder-head { padding: 12px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface-strong); margin-bottom: 10px; }
+.rate-finder-toolbar { grid-template-columns: 1.2fr repeat(6, minmax(120px, 1fr)); }
+.rate-finder-chips { gap: 6px; margin: 8px 0; }
+.rate-finder-chips button { padding: 7px 9px; border-radius: 999px; }
+.rate-finder-summary { padding: 9px 10px; border-radius: 12px; margin: 8px 0; }
+.rate-table-wrap { max-height: calc(100vh - 260px); overflow: auto; border-radius: 14px; }
+.rate-finder-table th { position: sticky; top: 0; z-index: 1; background: #10231e; color: #fff; }
+.rate-finder-table th, .rate-finder-table td, table th, table td { padding: 9px 10px; font-size: .82rem; }
+.workspace { display: grid; gap: 12px; }
+.workspace-header { margin-bottom: 0; }
+.split-view { grid-template-columns: minmax(340px, .72fr) minmax(360px, .88fr); gap: 12px; }
+.lender-list { max-height: calc(100vh - 260px); overflow: auto; }
+.detail-panel { position: sticky; top: 16px; max-height: calc(100vh - 42px); overflow: auto; }
+.program-grid, .insurer-grid { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 10px; }
+.contact-table-wrap, .resource-shell, .admin-intake-grid { border-radius: 14px; }
+.admin-intake-panel { min-height: auto; }
+.admin-intake-grid { grid-template-columns: minmax(320px, .75fr) minmax(420px, 1fr); gap: 12px; }
+.admin-inbox-list, .admin-email-detail { max-height: calc(100vh - 260px); overflow: auto; }
+.resource-shell { grid-template-columns: 260px minmax(0,1fr); }
+.resource-results { max-height: calc(100vh - 280px); overflow: auto; }
+.retired-rate-widgets, #deal-desk, #compliance { display: none !important; }
+body.dark .topbar, body.dark .band, body.dark .workspace, body.dark .metric-grid { background: #12251f; border-color: #244239; }
+@media (max-width: 1080px) {
+  .app-shell { grid-template-columns: 1fr; }
+  .sidebar { min-height: auto; position: static; }
+  .topbar, .upload-heading, .upload-desk-grid, .split-view, .admin-intake-grid, .resource-shell { grid-template-columns: 1fr; }
+  .topbar-actions { flex-direction: row; }
+  .metric-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .rate-finder-toolbar { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 720px) {
+  main { padding: 10px; }
+  .nav-list { grid-template-columns: 1fr 1fr; }
+  .metric-grid, .upload-stats, .compact-form-grid, .rate-finder-toolbar { grid-template-columns: 1fr; }
+  .topbar h2 { font-size: clamp(2.2rem, 13vw, 3.3rem); }
+}
+
     </style>
   </head>
   <body class="portal-locked">
@@ -5783,14 +5885,11 @@ textarea,
 
         <nav class="nav-list">
           <a href="#dashboard" class="active"><span>01</span> Dashboard</a>
-          <a href="#uploads"><span>02</span> Sheet Uploads</a>
+          <a href="#uploads"><span>02</span> Uploads</a>
           <a href="#best-rates"><span>03</span> Rate Board</a>
-          <a href="#deal-desk"><span>04</span> Deal Desk</a>
-          <a href="#lenders"><span>05</span> Lenders</a>
-          <a href="#programs"><span>06</span> Programs</a>
-          <a href="#insurers"><span>07</span> Insurers</a>
-          <a href="#contacts"><span>08</span> BDM Contacts</a>
-          <a href="#admin-inbox" data-admin-only><span>09</span> AI Review</a>
+          <a href="#admin-inbox" data-admin-only><span>04</span> AI Review</a>
+          <a href="#resources"><span>05</span> Broker Kits</a>
+          <a href="#lenders"><span>06</span> Directory</a>
         </nav>
 
         <section class="sidebar-panel">
@@ -5834,22 +5933,23 @@ textarea,
                 <p class="eyebrow">Ontario mortgage intelligence</p>
               <span class="live-pill">Live desk</span>
             </div>
-            <h2><span>Rates, policy, fit. One clean desk.</span></h2>
+            <h2><span>Rate desk command centre.</span></h2>
             <p class="topbar-copy">
-              A compact operations database for Ontario mortgage brokers: rate rows, lender policy, contacts, and deal-fit checks in one place.
+              Upload sheets, review AI extraction, and quote from the lowest-first rate board without leaving the desk.
             </p>
             <div class="hero-proof-strip" aria-label="Desk highlights">
-              <span>Rate table</span>
-              <span>Lender files</span>
-              <span>Deal fit</span>
+              <span>Upload</span>
+              <span>Review</span>
+              <span>Publish</span>
+              <span>Quote</span>
             </div>
           </div>
           <div class="topbar-actions">
             <button class="icon-button" id="themeToggle" type="button" title="Toggle theme" aria-label="Toggle theme">
               <span>◐</span>
             </button>
-            <a class="primary-button" href="#uploads">Open sheet command centre</a>
-            <a class="secondary-button" href="#best-rates">Open rate board</a>
+            <a class="primary-button" href="#uploads">Upload sheet</a>
+            <a class="secondary-button" href="#best-rates">Rate board</a>
           </div>
           <aside class="hero-insight" aria-label="Current rate snapshot">
             <p class="panel-label">Live abstract</p>
@@ -5867,192 +5967,6 @@ textarea,
             </dl>
           </aside>
         </header>
-
-        <section class="band upload-desk" id="uploads">
-          <div class="section-heading upload-heading">
-            <div>
-              <p class="eyebrow">Rate-sheet command centre</p>
-              <h3>Upload lender PDFs and Excel sheets right from the front page.</h3>
-              <p class="section-copy">Users and admins can stage rate sheets immediately after opening the desk. The queue is intentionally review-first: files are labelled, checked, and handed to manual AI analysis before anything is pushed to a lender record.</p>
-            </div>
-            <div class="upload-stats" aria-label="Rate sheet upload queue stats">
-              <article><strong id="uploadQueueCount">0</strong><span>queued</span></article>
-              <article><strong id="uploadPdfCount">0</strong><span>PDF</span></article>
-              <article><strong id="uploadExcelCount">0</strong><span>Excel</span></article>
-            </div>
-          </div>
-
-          <div class="upload-desk-grid">
-            <form class="upload-card upload-form" id="rateSheetUploadForm">
-              <div class="upload-form-head">
-                <div>
-                  <p class="eyebrow">New upload</p>
-                  <h4>Stage a rate sheet</h4>
-                </div>
-                <span class="source-chip">PDF / XLS / XLSX</span>
-              </div>
-              <div class="form-grid compact-form-grid">
-                <label><span>Upload type</span><select id="uploadLenderMode"><option value="single">Single lender file</option><option value="combined">One PDF with all lenders</option></select></label>
-                <label><span>Lender</span><select id="uploadLenderSelect" required><option value="">Select lender</option></select></label>
-              </div>
-              <p class="upload-help-text compact-help" id="combinedUploadHelp">Choose “one PDF with all lenders” when the file contains multiple lenders. The AI will split rows by lender name and stage each rate under the matching lender for admin review.</p>
-              <div class="form-grid compact-form-grid">
-                <label><span>Uploader type</span><select id="uploadActorRole"><option>User / broker</option><option>Admin</option></select></label>
-                <label><span>Effective date</span><input id="uploadEffectiveDate" type="date" /></label>
-                <label><span>Priority</span><select id="uploadPriority"><option>Normal</option><option>Urgent - rate change</option><option>Monthly refresh</option><option>Policy/rate exception</option></select></label>
-              </div>
-              <label class="file-drop-zone" for="rateSheetFiles">
-                <input id="rateSheetFiles" type="file" multiple accept=".pdf,.xls,.xlsx,application/pdf,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" required />
-                <strong>Drop or choose PDF / Excel files</strong>
-                <span>Each file is queued for manual AI extraction, lender matching, and admin approval before publishing.</span>
-              </label>
-              <label><span>Reviewer note</span><textarea id="uploadNotes" rows="4" placeholder="Example: BDM says prime changed; check 1/3/5-year fixed and variable tabs first."></textarea></label>
-              <div class="upload-actions">
-                <button class="primary-button" type="submit">Queue manual upload for AI review</button>
-              </div>
-              <p class="upload-help-text" id="uploadStatusText">Only manual PDF/XLS/XLSX uploads are shown here. The AI reviews the saved file, writes a summary, and stages extracted rows for admin approval; nothing publishes automatically.</p>
-            </form>
-
-            <aside class="upload-card ai-review-card">
-              <p class="eyebrow">Manual AI workflow</p>
-              <h4>How the sheet moves</h4>
-              <ol class="review-steps">
-                <li><strong>Intake</strong><span>Capture lender, source, file type, effective date, and uploader context.</span></li>
-                <li><strong>AI analysis</strong><span>Extract terms, amortization, fixed/variable rows, Prime, hold period, conditions, and notes.</span></li>
-                <li><strong>Lender match</strong><span>Map clean rows back to the matching lender profile and flag conflicts for admin review.</span></li>
-                <li><strong>Publish gate</strong><span>Admin approves before rows are pushed into the live Rate Board.</span></li>
-              </ol>
-              <div class="upload-guardrail"><strong>Guardrail</strong><span>Unsupported combinations stay blank. The portal should never invent a rate from a PDF or spreadsheet.</span></div>
-            </aside>
-          </div>
-
-          <div class="upload-card upload-queue-card">
-            <div class="upload-queue-head">
-              <div>
-                <p class="eyebrow">Review queue</p>
-                <h4>Files waiting for extraction</h4>
-              </div>
-              <button class="secondary-button" type="button" id="clearUploadQueue">Clear local queue</button>
-            </div>
-            <div class="rate-sheet-upload-list" id="rateSheetUploadList"></div>
-          </div>
-        </section>
-
-
-        <section class="product-direction-band" id="product-direction" aria-label="Product direction">
-          <article class="product-direction-card">
-            <p class="eyebrow">Product thesis</p>
-            <h3>The pre-submission layer for lender decisions.</h3>
-            <p>Agents need the number, source, policy catch, and next move in seconds. The desk stays calm, fast, and verifiable.</p>
-            <div class="agent-use-grid">
-              <article class="agent-use-card"><strong>Check</strong><small>See current insured and conventional options with source, date, and freshness.</small></article>
-              <article class="agent-use-card"><strong>Match</strong><small>Turn LTV, credit, income, and property notes into likely lender paths.</small></article>
-              <article class="agent-use-card"><strong>Package</strong><small>Open policies, kits, contacts, forms, and conditions from the same screen.</small></article>
-            </div>
-          </article>
-          <aside class="market-position-card">
-            <p class="eyebrow">Positioning</p>
-            <h3>Open before submission.</h3>
-            <p>A lightweight front door for placement decisions. Keep origination systems complex; keep rate decisions instant.</p>
-            <div class="product-position-list">
-              <div><span>1</span><small><strong>Free reference</strong><br />Rates, policy notes, kits, lender directory.</small></div>
-              <div><span>2</span><small><strong>Agent Pro</strong><br />Saved scenarios, alerts, notes, comparisons.</small></div>
-              <div><span>3</span><small><strong>Brokerage OS</strong><br />Approvals, internal overlays, audit, permissions.</small></div>
-            </div>
-          </aside>
-        </section>
-
-        <section class="band rate-intelligence-studio" id="intelligence">
-          <div class="intelligence-hero">
-            <div>
-              <p class="eyebrow">Rate intelligence</p>
-              <h3>The rate board becomes useful when every number explains itself.</h3>
-              <p class="intelligence-hero-copy">Lowest rate is only the headline. The desk adds source, freshness, policy catches, borrower fit, and the next action.</p>
-              <div class="hero-proof-strip" aria-label="Rate intelligence pillars">
-                <span>Source tracked</span>
-                <span>Freshness scored</span>
-                <span>Policy attached</span>
-                <span>Scenario-ready</span>
-              </div>
-            </div>
-            <aside class="intelligence-command-card">
-              <div class="intelligence-score">
-                <div class="score-orb"><strong id="freshnessScore">--</strong></div>
-                <div>
-                  <p class="eyebrow">Data confidence</p>
-                  <h4 id="freshnessHeadline">Calculating freshness</h4>
-                  <p class="contact-line" id="freshnessCopy">Rates become valuable when every number has a source, effective date, and review status.</p>
-                </div>
-              </div>
-              <div class="intelligence-micro-grid">
-                <span><small>Fresh rates</small><strong id="freshRateCount">0</strong></span>
-                <span><small>Watchlist</small><strong id="watchRateCount">0</strong></span>
-                <span><small>Sources</small><strong id="sourceCount">0</strong></span>
-              </div>
-            </aside>
-          </div>
-
-          <div class="section-heading">
-            <div>
-              <p class="eyebrow">Agent view</p>
-              <h3>Current opportunities, stripped down to signal.</h3>
-            </div>
-            <div class="desk-badges"><span>Rate</span><span>Source</span><span>Policy fit</span><span>Contact</span></div>
-          </div>
-          <div class="rate-intel-grid" id="rateIntelGrid"></div>
-
-          <div class="section-heading" style="margin-top: 22px;">
-            <div>
-              <p class="eyebrow">Policy answers</p>
-              <h3>Broker kits become placement answers.</h3>
-              <p class="section-copy">Policy, docs, BDM, and next action sit beside the rate — no tab maze.</p>
-            </div>
-          </div>
-          <div class="policy-answer-grid" id="policyAnswerGrid"></div>
-
-          <div class="section-heading" style="margin-top: 22px;">
-            <div>
-              <p class="eyebrow">Data moat</p>
-              <h3>Credible data without pretending to be connected to everything.</h3>
-            </div>
-          </div>
-          <div class="data-moat-grid">
-            <article class="data-moat-card"><b>1</b><strong>Inbox</strong><small>Approved lender and BDM updates enter with the source file attached.</small></article>
-            <article class="data-moat-card"><b>2</b><strong>Review</strong><small>AI extracts; humans approve before the public desk changes.</small></article>
-            <article class="data-moat-card"><b>3</b><strong>Overlay</strong><small>Brokerages add preferred lender tags, compensation notes, and internal policy.</small></article>
-            <article class="data-moat-card"><b>4</b><strong>Freshness</strong><small>Every number carries date, source, reviewer, and stale warning.</small></article>
-          </div>
-        </section>
-
-        <section class="band" id="pricing">
-          <div class="section-heading">
-            <div>
-              <p class="eyebrow">Pricing</p>
-              <h3>Free for reference. Paid for memory.</h3>
-              <p class="section-copy">Keep the public desk open. Charge when agents want saved scenarios, alerts, comparisons, and private workflow.</p>
-            </div>
-          </div>
-          <div class="pricing-grid">
-            <article class="pricing-card">
-              <p class="eyebrow">Free</p>
-              <div class="pricing-price">$0</div>
-              <small>Open reference for everyday checks.</small>
-              <ul><li>Rate board</li><li>Policy/broker kit search</li><li>Lender + BDM directory</li><li>Stale-rate warnings</li></ul>
-            </article>
-            <article class="pricing-card featured">
-              <p class="eyebrow">Agent Pro</p>
-              <div class="pricing-price">$9<span>/mo</span></div>
-              <small>A private workspace for active placement work.</small>
-              <ul><li>Saved scenarios</li><li>Rate alerts</li><li>Compare lenders side-by-side</li><li>Document checklist generator</li><li>Private notes + favourites</li></ul>
-            </article>
-            <article class="pricing-card">
-              <p class="eyebrow">Brokerage</p>
-              <div class="pricing-price">Custom</div>
-              <small>Control, approvals, and internal overlays for teams.</small>
-              <ul><li>Team users</li><li>Rate approval queue</li><li>Internal policy overlays</li><li>Audit trail + admin controls</li></ul>
-            </article>
-          </div>
-        </section>
 
         <section class="metric-grid" aria-label="Portal summary">
           <article>
@@ -6077,6 +5991,76 @@ textarea,
           </article>
         </section>
 
+
+        <section class="band upload-desk" id="uploads">
+          <div class="section-heading upload-heading">
+            <div>
+              <p class="eyebrow">Rate-sheet command centre</p>
+              <h3>Stage sheets for AI review.</h3>
+              <p class="section-copy">Upload broker-authorized PDF/XLS/XLSX files. Nothing publishes until review approves it.</p>
+            </div>
+            <div class="upload-stats" aria-label="Rate sheet upload queue stats">
+              <article><strong id="uploadQueueCount">0</strong><span>queued</span></article>
+              <article><strong id="uploadPdfCount">0</strong><span>PDF</span></article>
+              <article><strong id="uploadExcelCount">0</strong><span>Excel</span></article>
+            </div>
+          </div>
+
+          <div class="upload-desk-grid">
+            <form class="upload-card upload-form" id="rateSheetUploadForm">
+              <div class="upload-form-head">
+                <div>
+                  <p class="eyebrow">New upload</p>
+                  <h4>Stage a rate sheet</h4>
+                </div>
+                <span class="source-chip">PDF / XLS / XLSX</span>
+              </div>
+              <div class="form-grid compact-form-grid">
+                <label><span>Upload type</span><select id="uploadLenderMode"><option value="single">Single lender file</option><option value="combined">One PDF with all lenders</option></select></label>
+                <label><span>Lender</span><select id="uploadLenderSelect" required><option value="">Select lender</option></select></label>
+              </div>
+              <p class="upload-help-text compact-help" id="combinedUploadHelp">Use combined mode when one PDF contains multiple lenders.</p>
+              <div class="form-grid compact-form-grid">
+                <label><span>Effective date</span><input id="uploadEffectiveDate" type="date" /></label>
+              </div>
+              <label class="file-drop-zone" for="rateSheetFiles">
+                <input id="rateSheetFiles" type="file" multiple accept=".pdf,.xls,.xlsx,application/pdf,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" required />
+                <strong>Drop or choose PDF / Excel files</strong>
+                <span>Each file is queued for manual AI extraction, lender matching, and admin approval before publishing.</span>
+              </label>
+              <label><span>Reviewer note</span><textarea id="uploadNotes" rows="3" placeholder="What changed? Which tabs/products should AI check first?"></textarea></label>
+              <div class="upload-actions">
+                <button class="primary-button" type="submit">Queue manual upload for AI review</button>
+              </div>
+              <p class="upload-help-text" id="uploadStatusText">AI extracts rows for approval; it does not auto-publish.</p>
+            </form>
+
+            <aside class="upload-card ai-review-card compact-workflow-card">
+              <p class="eyebrow">Workflow</p>
+              <h4>Intake → extract → match → approve.</h4>
+              <ol class="review-steps">
+                <li><strong>1</strong><span>File saved</span></li>
+                <li><strong>2</strong><span>AI extracts rows</span></li>
+                <li><strong>3</strong><span>Lender matched</span></li>
+                <li><strong>4</strong><span>Admin publishes</span></li>
+              </ol>
+              <div class="upload-guardrail"><strong>No guessing</strong><span>Blank beats invented rates.</span></div>
+            </aside>
+          </div>
+
+          <div class="upload-card upload-queue-card">
+            <div class="upload-queue-head">
+              <div>
+                <p class="eyebrow">Review queue</p>
+                <h4>Files waiting for extraction</h4>
+              </div>
+              <button class="secondary-button" type="button" id="clearUploadQueue">Clear local queue</button>
+            </div>
+            <div class="rate-sheet-upload-list" id="rateSheetUploadList"></div>
+          </div>
+        </section>
+
+
         <section class="band landing-rate-board" id="best-rates">
           <div class="section-heading">
             <div>
@@ -6084,9 +6068,9 @@ textarea,
               <h3>The numbers, with less noise.</h3>
             </div>
             <div class="desk-badges">
-              <span>High ratio</span>
-              <span>Conventional</span>
-              <span>Bank-wise</span>
+              <span>Lowest first</span>
+              <span>Published rows</span>
+              <span>Source status</span>
             </div>
           </div>
 
@@ -6108,7 +6092,7 @@ textarea,
               <label><span>Search</span><input id="rateFinderSearch" type="search" placeholder="TD, CMLS, 30yr amortization..." /></label>
               <label><span>Lender</span><select id="rateFinderLender"><option value="all">Any lender</option></select></label>
               <label><span>Term</span><select id="rateFinderTerm"><option value="all">Any term</option><option value="12">1yr</option><option value="36">3yr</option><option value="60">5yr</option></select></label>
-              <label><span>Fixed / variable</span><select id="rateFinderRateType"><option value="all">Fixed or variable</option><option value="fixed">Fixed only</option><option value="variable">Variable only</option></select></label>
+              <label><span>Type</span><select id="rateFinderRateType"><option value="all">Any type</option><option value="fixed">Fixed</option><option value="variable">Variable</option></select></label>
               <label><span>Amortization</span><select id="rateFinderAmort"><option value="all">Any amort.</option><option value="25">25yr</option><option value="30">30yr</option></select></label>
               <label><span>Bucket</span><select id="rateFinderBucket"><option value="all">Any bucket</option><option value="insured">Insured / high ratio</option><option value="insurable">Insurable</option><option value="uninsured">Uninsured / refi</option><option value="variable">Variable</option><option value="alt">Alternative</option></select></label>
               <label><span>Purpose</span><select id="rateFinderPurpose"><option value="all">Any purpose</option><option value="purchase">Purchase</option><option value="refinance">Refinance</option><option value="rental">Rental</option><option value="private">Private exit</option></select></label>
@@ -6126,37 +6110,17 @@ textarea,
             </div>
             <div class="rate-table-wrap">
               <table class="rate-finder-table" aria-label="Broker searchable rate table">
-                <thead><tr><th>Lender</th><th>Term</th><th>Fixed/Var</th><th>Bucket</th><th>Rate</th><th>Amort.</th><th>Purpose</th><th>Source / status</th></tr></thead>
+                <thead><tr><th>Lender</th><th>Term</th><th>Type</th><th>Bucket</th><th>Rate</th><th>Amort.</th><th>Purpose</th><th>Source</th></tr></thead>
                 <tbody id="rateFinderTable"></tbody>
               </table>
             </div>
           </div>
 
-          <div class="best-rate-layout">
-            <div>
-              <p class="contact-line">Compare high-ratio and conventional options by lender type, then check source and fit before you quote.</p>
-              <div class="best-rate-grid" id="bestRateGrid"></div>
-            </div>
-
-            <aside class="preferred-lender-panel">
-              <div>
-                <p class="eyebrow">Preferred lender</p>
-                <h4>Choose your lens</h4>
-              </div>
-              <label class="search-box">
-                <span>Select preferred lender</span>
-                <select id="preferredLenderSelect"></select>
-              </label>
-              <div id="preferredLenderCard"></div>
-            </aside>
-          </div>
-
-          <div class="dry-run-rate-panel" id="dryRunRateSheetPanel" aria-live="polite">
-            <div class="dry-run-empty">
-              <p class="eyebrow">Inbox dry run</p>
-              <h4>Scanning received rate sheets…</h4>
-              <p class="contact-line">The portal will show extracted lender rows, policy/template items, and files that need review once the dry-run index loads.</p>
-            </div>
+          <div class="retired-rate-widgets" hidden>
+            <select id="preferredLenderSelect"></select>
+            <div id="preferredLenderCard"></div>
+            <div id="bestRateGrid"></div>
+            <div id="dryRunRateSheetPanel"></div>
           </div>
         </section>
 
@@ -6174,91 +6138,6 @@ textarea,
               <span>Audit trail</span>
             </div>
           </div>
-
-          <div class="deal-overview-grid">
-            <article class="deal-overview-card">
-              <span class="status-dot"></span>
-              <strong>Live now</strong>
-              <small>Login, pipeline, intake, rate queue, and audit trail are deployed.</small>
-            </article>
-            <article class="deal-overview-card warning">
-              <span class="status-dot"></span>
-              <strong>Protected data</strong>
-              <small>Auth and RLS need to stay enforced before real borrower data enters.</small>
-            </article>
-            <article class="deal-overview-card locked">
-              <span class="status-dot"></span>
-              <strong>Access model</strong>
-              <small>Signed-in advisors only. Workspace-scoped RLS controls which deals each team can see.</small>
-            </article>
-            <article class="deal-overview-card">
-              <span class="status-dot"></span>
-              <strong>Rate source</strong>
-              <small>Use broker-authorized inbox/portal exports, then approve changes before rates go live.</small>
-            </article>
-          </div>
-
-          <div class="deal-section-divider">
-            <div>
-              <p class="eyebrow">Workflow map</p>
-              <h4>Four lanes. No chaos.</h4>
-              <p>Each scenario keeps lender choice, missing documents, rate source, and next action visible.</p>
-            </div>
-            <div class="deal-command-actions">
-              <a class="primary-button" href="#deal-intake">Create intake</a>
-              <a class="secondary-button" href="#resources">Open broker kits</a>
-            </div>
-          </div>
-
-          <div class="deal-lane-grid">
-            <article class="deal-lane-card"><span>01</span><div><strong>Intake</strong><small>Borrower goal, purpose, occupancy, property, closing date, income, credit, and down payment source.</small></div></article>
-            <article class="deal-lane-card"><span>02</span><div><strong>Match</strong><small>Compare product fit across bank, monoline, credit union, alt, rental, BFS, newcomer, and private paths.</small></div></article>
-            <article class="deal-lane-card"><span>03</span><div><strong>Package</strong><small>Generate condition checklist, DCR notes, missing docs, insurer flags, and lender exceptions.</small></div></article>
-            <article class="deal-lane-card"><span>04</span><div><strong>Submit</strong><small>Track submission status, selected lender/rate, BDM escalation, approvals, and audit events.</small></div></article>
-          </div>
-
-          <div class="deal-section-divider">
-            <div>
-              <p class="eyebrow">Rate access</p>
-              <h4>Permissioned intake, not scraping theatre.</h4>
-              <p>Rate data comes from authorized sheets and bulletins, then gets normalized and approved before publishing.</p>
-            </div>
-          </div>
-
-          <div class="rate-path-grid">
-            <article class="rate-path-card"><strong><b>A</b> Upload</strong><small>Stage lender PDF or Excel rate sheets manually.</small></article>
-            <article class="rate-path-card"><strong><b>B</b> Extract</strong><small>Parse PDF/XLS/XLSX files into normalized rate records.</small></article>
-            <article class="rate-path-card"><strong><b>C</b> Review</strong><small>Approve changes before they affect the public desk.</small></article>
-            <article class="rate-path-card"><strong><b>D</b> Publish</strong><small>Show effective date, source, confidence, and stale warnings.</small></article>
-          </div>
-
-          <article class="auth-card locked" id="authCard">
-            <div>
-              <p class="eyebrow">Advisor login</p>
-              <h4>Protected deal desk access</h4>
-              <p id="authStatusLine">Sign in with an approved advisor email before entering borrower details. Supabase Auth and row-level security keep deal records tied to the signed-in user/workspace.</p>
-              <div class="schema-warning" id="schemaWarning" hidden>Database hardening SQL still needs to be applied before real borrower data is safe.</div>
-            </div>
-            <div class="auth-actions" id="authActions">
-            <label><span>Email / username</span><input id="authEmail" type="email" placeholder="advisor@example.com" autocomplete="email" /></label>
-            <label><span>Password</span><input id="authPassword" type="password" placeholder="Password" autocomplete="current-password" /></label>
-            <button class="primary-button" type="button" id="loginButton">Login</button>
-            <button class="secondary-button" type="button" id="createAccountButton">Create account</button>
-            <button class="secondary-button" type="button" id="signOutButton" hidden>Sign out</button>
-            </div>
-            <form class="profile-create-form" id="profileCreateForm" hidden>
-              <div class="profile-form-head"><strong>Create your portal profile</strong><small>New users sign in first, then complete this profile before using protected workspace tools.</small></div>
-              <div class="form-grid compact-form-grid">
-                <label><span>Full name</span><input id="profileFullName" autocomplete="name" placeholder="Your name" required /></label>
-                <label><span>Brokerage / team</span><input id="profileCompany" placeholder="SI Capital / brokerage" /></label>
-                <label><span>Phone</span><input id="profilePhone" autocomplete="tel" placeholder="416-555-0123" /></label>
-                <label><span>Requested access</span><select id="profileRequestedRole"><option value="broker">User / broker</option><option value="admin">Admin request</option></select></label>
-              </div>
-              <button class="primary-button" type="submit">Save profile</button>
-              <small>Admin access is controlled by the admin user/database role, not by this form alone.</small>
-            </form>
-            <div class="profile-summary-card" id="profileSummaryCard" hidden></div>
-          </article>
 
           <div class="deal-builder-grid" id="deal-intake">
             <article class="deal-intake-card">
@@ -6342,103 +6221,13 @@ textarea,
             </article>
           </div>
 
-          <div class="deal-command-grid">
-            <article class="deal-roadmap-card">
-              <p class="eyebrow">Build sequence</p>
-              <h4>What we should build next</h4>
-              <div class="deal-roadmap-list">
-                <div class="deal-roadmap-row"><span>1</span><div><strong>Rate ingestion lane</strong><small>Parse lender rate PDFs/XLS from email/folder, normalize products, detect changes, and require admin publish.</small></div></div>
-                <div class="deal-roadmap-row"><span>2</span><div><strong>Deal scenario wizard</strong><small>Broker enters client facts; desk ranks eligible lenders with reasons, missing docs, rate, comp, and BDM escalation.</small></div></div>
-                <div class="deal-roadmap-row"><span>3</span><div><strong>Condition checklist engine</strong><small>Auto-generate DCR/document requests from chosen lender, product, insurer, income type, and property type.</small></div></div>
-                <div class="deal-roadmap-row"><span>4</span><div><strong>Pipeline CRM</strong><small>Statuses, tasks, renewal dates, notes, files, compliance events, and Slack/Discord/email reminders.</small></div></div>
-              </div>
-            </article>
-            <article class="deal-roadmap-card">
-              <p class="eyebrow">Access checklist</p>
-              <h4>What Shiv needs to request</h4>
-              <div class="deal-roadmap-list">
-                <div class="deal-roadmap-row"><span>✓</span><div><strong>Brokerage permission</strong><small>Written permission to ingest lender rate sheets and broker-kit docs into internal tooling.</small></div></div>
-                <div class="deal-roadmap-row"><span>✓</span><div><strong>Rate-sheet recipients</strong><small>Add the desk inbox to lender/BDM daily bulletin lists for all target lenders.</small></div></div>
-                <div class="deal-roadmap-row"><span>✓</span><div><strong>Portal/export rights</strong><small>Confirm whether Finmo, Velocity, Filogix Expert, BOSS/M3, or lender portals allow export/API/report access.</small></div></div>
-                <div class="deal-roadmap-row"><span>✓</span><div><strong>Review owner</strong><small>Name who approves rate updates before publication and what stale-rate threshold triggers a warning.</small></div></div>
-              </div>
-            </article>
-          </div>
-        </section>
-
-        <section class="band package-band" id="packages">
-          <div class="section-heading">
-            <div>
-              <p class="eyebrow">Packages</p>
-              <h3>Simple access now. Deeper workflow later.</h3>
-            </div>
-            <span class="live-pill">Basic package is free</span>
-          </div>
-
-          <div class="package-layout">
-            <article class="package-card featured">
-              <p class="eyebrow">Starter</p>
-              <h4>Basic</h4>
-              <div class="price-line">
-                <strong>Free</strong>
-                <span>for every broker</span>
-              </div>
-              <ul class="feature-list">
-                <li>Access to prime, alternative, and private lender categories</li>
-                <li>Underwriting guideline summaries</li>
-                <li>English and French support-ready layout</li>
-              </ul>
-            </article>
-
-            <article class="package-card">
-              <p class="eyebrow">Pro workspace</p>
-              <h4>Deal Desk Plus</h4>
-              <div class="price-line">
-                <strong>$9</strong>
-                <span>per month</span>
-              </div>
-              <ul class="feature-list">
-                <li>Preferred lender selection for each broker</li>
-                <li>Granular policy breakdown by product and program</li>
-                <li>MIC and MIE private lender visibility</li>
-              </ul>
-            </article>
-          </div>
-
-          <div class="capability-grid" aria-label="Platform capabilities">
-            <article>
-              <span>01</span>
-              <strong>Lender universe</strong>
-              <p>Prime, alternative, private, MIC, and MIE options in one searchable workspace.</p>
-            </article>
-            <article>
-              <span>02</span>
-              <strong>Bilingual-ready</strong>
-              <p>Structure notes and resources so teams can support English and French workflows.</p>
-            </article>
-            <article>
-              <span>03</span>
-              <strong>Policy context</strong>
-              <p>Keep credit, income, property, insurer, and document notes close to the rate.</p>
-            </article>
-            <article>
-              <span>04</span>
-              <strong>Preferred lenses</strong>
-              <p>Let brokers prioritize partners and compare active programs quickly.</p>
-            </article>
-            <article>
-              <span>05</span>
-              <strong>Granular breakdown</strong>
-              <p>Break rules down by product, LTV, score, documentation, property, and exception path.</p>
-            </article>
-          </div>
         </section>
 
         <section class="workspace">
           <div class="workspace-header">
             <div>
-              <p class="eyebrow">Lender search</p>
-              <h3>Find the right path before you submit.</h3>
+              <p class="eyebrow">Directory</p>
+              <h3>Lenders, programs, insurers, and BDMs.</h3>
             </div>
             <div class="desk-badges">
               <span>Prime</span>
@@ -6496,8 +6285,8 @@ textarea,
         <section class="band" id="contacts">
           <div class="section-heading">
             <div>
-              <p class="eyebrow">Relationships</p>
-              <h3>The right BDM when the file needs context.</h3>
+              <p class="eyebrow">BDM contacts</p>
+              <h3>Escalation contacts.</h3>
             </div>
           </div>
           <div class="contact-table-wrap">
@@ -7890,21 +7679,18 @@ let activeAdminEmailId = "";
 let resourceIndex = null;
 let resourceEntries = [];
 const pageNavLinks = document.querySelectorAll('.nav-list a[href^="#"]');
-const pageRoutes = ["dashboard", "pricing", "intelligence", "best-rates", "deal-desk", "lenders", "packages", "programs", "insurers", "contacts", "uploads", "admin-inbox", "resources", "compliance"];
+const pageRoutes = ["dashboard", "uploads", "best-rates", "admin-inbox", "resources", "lenders", "deal-desk", "programs", "insurers", "contacts", "compliance"];
 const pageGroups = {
-  dashboard: [document.querySelector("#dashboard"), document.querySelector("#uploads"), document.querySelector("#product-direction"), document.querySelector(".metric-grid")],
-  pricing: [document.querySelector("#pricing")],
-  intelligence: [document.querySelector("#intelligence")],
-  "best-rates": [document.querySelector("#best-rates")],
-  "deal-desk": [document.querySelector("#deal-desk")],
-  lenders: [document.querySelector(".workspace")],
-  packages: [document.querySelector("#packages")],
-  programs: [document.querySelector("#programs")],
-  insurers: [document.querySelector("#insurers")],
-  contacts: [document.querySelector("#contacts")],
+  dashboard: [document.querySelector("#dashboard"), document.querySelector(".metric-grid"), document.querySelector("#uploads")],
   uploads: [document.querySelector("#dashboard"), document.querySelector("#uploads")],
+  "best-rates": [document.querySelector("#best-rates")],
   "admin-inbox": [document.querySelector("#admin-inbox")],
   resources: [document.querySelector("#resources")],
+  lenders: [document.querySelector(".workspace"), document.querySelector("#programs"), document.querySelector("#insurers"), document.querySelector("#contacts")],
+  programs: [document.querySelector(".workspace"), document.querySelector("#programs"), document.querySelector("#insurers"), document.querySelector("#contacts")],
+  insurers: [document.querySelector(".workspace"), document.querySelector("#programs"), document.querySelector("#insurers"), document.querySelector("#contacts")],
+  contacts: [document.querySelector(".workspace"), document.querySelector("#programs"), document.querySelector("#insurers"), document.querySelector("#contacts")],
+  "deal-desk": [document.querySelector("#deal-desk")],
   compliance: [document.querySelector("#compliance")]
 };
 
@@ -8023,7 +7809,7 @@ document.addEventListener("click", (event) => {
     event.stopPropagation();
     activeInsurerProgram = insurerProgramLink.dataset.insurerProgram;
     renderInsurers();
-    showPage("insurers");
+    showPage("lenders");
     document.querySelector("#insurers").scrollIntoView({ behavior: "smooth", block: "start" });
     return;
   }
@@ -8046,7 +7832,7 @@ document.addEventListener("click", (event) => {
   event.stopPropagation();
   activeProgram = programLink.dataset.programLink;
   renderPrograms();
-  showPage("programs");
+  showPage("lenders");
   document.querySelector("#programs").scrollIntoView({ behavior: "smooth", block: "start" });
 });
 
@@ -8057,7 +7843,7 @@ document.addEventListener("keydown", (event) => {
     event.preventDefault();
     activeInsurerProgram = insurerProgramLink.dataset.insurerProgram;
     renderInsurers();
-    showPage("insurers");
+    showPage("lenders");
     document.querySelector("#insurers").scrollIntoView({ behavior: "smooth", block: "start" });
     return;
   }
@@ -8068,7 +7854,7 @@ document.addEventListener("keydown", (event) => {
   event.preventDefault();
   activeProgram = programLink.dataset.programLink;
   renderPrograms();
-  showPage("programs");
+  showPage("lenders");
   document.querySelector("#programs").scrollIntoView({ behavior: "smooth", block: "start" });
 });
 
@@ -8430,7 +8216,16 @@ function numberOrNull(selector) {
 
 function filteredLenders() {
   const query = searchInput.value.trim();
-  return lenders.filter((lender) => matchesAggressiveSearch(buildSearchHaystack(lender), query));
+  return lenders
+    .filter((lender) => matchesAggressiveSearch(buildSearchHaystack(lender), query))
+    .sort((a, b) => lowestDisplayedRate(a) - lowestDisplayedRate(b) || String(a.name).localeCompare(String(b.name)));
+}
+
+function lowestDisplayedRate(lender) {
+  const values = [lender.rates.insuredFixed, lender.rates.variable, lender.rates.conventional, lender.rates.alt]
+    .map(numericRate)
+    .filter((value) => value !== null);
+  return values.length ? Math.min(...values) : 99;
 }
 
 function buildSearchHaystack(lender) {
@@ -8439,7 +8234,6 @@ function buildSearchHaystack(lender) {
   return normalizeSearchText(
     [
       lender.name,
-      lender.type,
       lender.region,
       lender.website,
       lender.portal,
@@ -9132,7 +8926,7 @@ function renderDealPipeline() {
 }
 function renderDealCard(deal) {
   const ltv = calculateLtv(deal); const recommendations = recommendLendersForDeal(deal); const docs = docsForDeal(deal); const risks = riskFlagsForDeal(deal); const statusOrder = ["intake", "review", "submit", "approved"]; const currentIndex = statusOrder.indexOf(deal.status); const nextStatus = statusOrder[currentIndex + 1];
-  return `<article class="deal-card"><div class="deal-card-top"><div><h6>${escapeHtml(deal.client)}</h6><small>${escapeHtml(deal.purpose)} · ${escapeHtml(deal.province)}${deal.closing ? ` · closes ${escapeHtml(deal.closing)}` : ""}</small></div><span class="deal-chip">${ltv}% LTV</span></div><div class="deal-chip-row"><span class="deal-chip">${escapeHtml(deal.credit)}</span><span class="deal-chip">${escapeHtml(deal.income)}</span><span class="deal-chip">${escapeHtml(deal.term)}</span><span class="deal-chip">${escapeHtml(deal.occupancy)}</span><span class="deal-chip">${escapeHtml(deal.propertyType || "Property")}</span>${deal.gds !== "" ? `<span class="deal-chip">GDS ${escapeHtml(deal.gds)}%</span>` : ""}${deal.tds !== "" ? `<span class="deal-chip">TDS ${escapeHtml(deal.tds)}%</span>` : ""}</div>${risks.length ? `<div>${risks.map((flag) => `<span class="deal-risk">${escapeHtml(flag)}</span>`).join(" ")}</div>` : ""}<div class="deal-card-section"><strong>Recommended lenders</strong><div class="recommendation-list">${recommendations.length ? recommendations.map(({ lender, rateValue }) => `<article><strong>${escapeHtml(lender.name)}</strong><small>${rate(rateValue === 99 ? lender.rates.insuredFixed : rateValue)} · ${escapeHtml(titleCase(lender.type))}</small></article>`).join("") : `<small>No strong matches yet. Review manually.</small>`}</div></div><div class="deal-card-section"><strong>Checklist</strong><div class="checklist-grid">${docs.map((doc) => `<div class="check-item"><strong>${escapeHtml(doc.title)}</strong><small>${escapeHtml(doc.detail)}</small></div>`).join("")}</div></div>${(deal.selectedLender || deal.selectedRate) ? `<small class="deal-card-meta"><strong>Selected:</strong> ${escapeHtml(deal.selectedLender || "Review lender")} ${deal.selectedRate ? `· ${escapeHtml(deal.selectedRate)}%` : ""}</small>` : ""}${deal.borrowerEmail || deal.borrowerPhone ? `<small class="deal-card-meta"><strong>Borrower:</strong> ${escapeHtml([deal.borrowerEmail, deal.borrowerPhone].filter(Boolean).join(" · "))}</small>` : ""}${deal.notes ? `<small class="deal-card-meta"><strong>Notes/reason:</strong> ${escapeHtml(deal.notes)}</small>` : ""}<div class="pipeline-actions">${nextStatus ? `<button class="primary-mini" type="button" data-move-deal="${deal.id}" data-status="${nextStatus}">Move to ${nextStatus}</button>` : ""}${currentIndex > 0 ? `<button type="button" data-move-deal="${deal.id}" data-status="${statusOrder[currentIndex - 1]}">Back</button>` : ""}<button type="button" data-remove-deal="${deal.id}">Remove</button></div></article>`;
+  return `<article class="deal-card"><div class="deal-card-top"><div><h6>${escapeHtml(deal.client)}</h6><small>${escapeHtml(deal.purpose)} · ${escapeHtml(deal.province)}${deal.closing ? ` · closes ${escapeHtml(deal.closing)}` : ""}</small></div><span class="deal-chip">${ltv}% LTV</span></div><div class="deal-chip-row"><span class="deal-chip">${escapeHtml(deal.credit)}</span><span class="deal-chip">${escapeHtml(deal.income)}</span><span class="deal-chip">${escapeHtml(deal.term)}</span><span class="deal-chip">${escapeHtml(deal.occupancy)}</span><span class="deal-chip">${escapeHtml(deal.propertyType || "Property")}</span>${deal.gds !== "" ? `<span class="deal-chip">GDS ${escapeHtml(deal.gds)}%</span>` : ""}${deal.tds !== "" ? `<span class="deal-chip">TDS ${escapeHtml(deal.tds)}%</span>` : ""}</div>${risks.length ? `<div>${risks.map((flag) => `<span class="deal-risk">${escapeHtml(flag)}</span>`).join(" ")}</div>` : ""}<div class="deal-card-section"><strong>Recommended lenders</strong><div class="recommendation-list">${recommendations.length ? recommendations.map(({ lender, rateValue }) => `<article><strong>${escapeHtml(lender.name)}</strong><small>${rate(rateValue === 99 ? lender.rates.insuredFixed : rateValue)}</small></article>`).join("") : `<small>No strong matches yet. Review manually.</small>`}</div></div><div class="deal-card-section"><strong>Checklist</strong><div class="checklist-grid">${docs.map((doc) => `<div class="check-item"><strong>${escapeHtml(doc.title)}</strong><small>${escapeHtml(doc.detail)}</small></div>`).join("")}</div></div>${(deal.selectedLender || deal.selectedRate) ? `<small class="deal-card-meta"><strong>Selected:</strong> ${escapeHtml(deal.selectedLender || "Review lender")} ${deal.selectedRate ? `· ${escapeHtml(deal.selectedRate)}%` : ""}</small>` : ""}${deal.borrowerEmail || deal.borrowerPhone ? `<small class="deal-card-meta"><strong>Borrower:</strong> ${escapeHtml([deal.borrowerEmail, deal.borrowerPhone].filter(Boolean).join(" · "))}</small>` : ""}${deal.notes ? `<small class="deal-card-meta"><strong>Notes/reason:</strong> ${escapeHtml(deal.notes)}</small>` : ""}<div class="pipeline-actions">${nextStatus ? `<button class="primary-mini" type="button" data-move-deal="${deal.id}" data-status="${nextStatus}">Move to ${nextStatus}</button>` : ""}${currentIndex > 0 ? `<button type="button" data-move-deal="${deal.id}" data-status="${statusOrder[currentIndex - 1]}">Back</button>` : ""}<button type="button" data-remove-deal="${deal.id}">Remove</button></div></article>`;
 }
 
 async function runStaticDemoRateIngestion() {
@@ -9225,7 +9019,7 @@ function syncUploadLenderMode() {
   const help = document.querySelector("#combinedUploadHelp");
   if (help) help.textContent = combined
     ? "Combined mode active: upload one PDF/Excel package and the AI will assign each extracted rate row to the lender named in the document."
-    : "Choose “one PDF with all lenders” when the file contains multiple lenders. The AI will split rows by lender name and stage each rate under the matching lender for admin review.";
+    : "Use combined mode when one PDF or Excel package contains multiple lenders.";
 }
 
 async function createRateSheetUploadsFromForm() {
@@ -9451,7 +9245,7 @@ function renderRateIntelligence() {
       <article class="rate-intel-card" style="--lender-color: ${lender.brandColor}; --lender-accent: ${lender.brandAccent};">
         <header>
           <div>
-            <span class="source-chip">${index === 0 ? "Leader" : titleCase(lender.type)}</span>
+            <span class="source-chip">${index === 0 ? "Leader" : `#${index + 1}`}</span>
             <h4>${escapeHtml(lender.name)}</h4>
             <p>${escapeHtml(topProgram)} · ${escapeHtml(policy.maxLtv)} max LTV guide</p>
           </div>
@@ -9523,11 +9317,6 @@ function parseRateUpdatedDate(updated = "") {
 }
 
 
-function lenderTypeForName(name) {
-  const lender = lenders.find((item) => item.name === name || slugifyLenderName(item.name) === slugifyLenderName(name));
-  return lender?.type || "unknown";
-}
-
 function lenderIdForName(name) {
   const lender = lenders.find((item) => item.name === name || slugifyLenderName(item.name) === slugifyLenderName(name));
   return lender?.id || slugifyLenderName(name);
@@ -9585,7 +9374,6 @@ function addRateFinderBlankCoverageRows(rows) {
     const base = {
       lender: lender.name,
       lenderId: lender.id,
-      lenderType: lender.type,
       bucket: "uninsured",
       rateValue: "",
       sortRateValue: null,
@@ -9621,7 +9409,6 @@ function rateFinderRows() {
     const base = {
       lender: lender.name,
       lenderId: lender.id,
-      lenderType: lender.type,
       source: typeof lender.liveRateSource === "string" ? lender.liveRateSource : rateSourceLabel(lender),
       updated: lender.updated,
       status: lender.liveRateSource || liveRatesLoaded ? "published" : "demo",
@@ -9668,7 +9455,6 @@ function rateFinderRows() {
     const common = {
       lender,
       lenderId: lenderIdForName(lender),
-      lenderType: lenderTypeForName(lender),
       term,
       termValue,
       rateType: normalizeSearchText(term).includes("variable") ? "variable" : "fixed",
@@ -9764,7 +9550,7 @@ function renderBrokerRateFinder() {
     purpose: rateFinderPurpose?.value || "all"
   };
   let rows = rateFinderRows().filter((row) => {
-    const haystack = normalizeSearchText([row.lender, row.lenderType, row.term, row.rateType, row.bucket, row.rateValue, row.purpose, row.amortization, row.source, row.status, row.note].join(" "));
+    const haystack = normalizeSearchText([row.lender, row.term, row.rateType, row.bucket, row.rateValue, row.purpose, row.amortization, row.source, row.status, row.note].join(" "));
     const rowRateType = row.rateType || (normalizeSearchText(row.term).includes("variable") || row.bucket === "variable" ? "variable" : "fixed");
     return (!controls.query || haystack.includes(controls.query))
       && (controls.lender === "all" || row.lenderId === controls.lender)
@@ -9786,14 +9572,14 @@ function renderBrokerRateFinder() {
   });
 
   const displayRows = rows;
-  rateFinderSummary.innerHTML = `<span><strong>${rows.length}</strong> matching rate row${rows.length === 1 ? "" : "s"}</span><span>Only published 1-year, 3-year, and 5-year fixed/variable rates.</span>`;
+  rateFinderSummary.innerHTML = `<span><strong>${rows.length}</strong> matching rate row${rows.length === 1 ? "" : "s"}</span><span>Always sorted from lowest available rate.</span>`;
   rateFinderTable.innerHTML = displayRows.map((row) => {
     const tone = sourceStatusTone(row.status);
     return `
       <tr class="${row.isPlaceholder ? "rate-row-blank" : ""}">
         <td data-label="Lender" class="lender-cell"><button class="text-link" type="button" data-lender="${escapeHtml(row.lenderId)}">${escapeHtml(row.lender)}</button></td>
         <td data-label="Term">${escapeHtml(row.term)}</td>
-        <td data-label="Fixed/Var">${escapeHtml(titleCase(row.rateType || (normalizeSearchText(row.term).includes("variable") ? "variable" : "fixed")))}</td>
+        <td data-label="Type">${escapeHtml(titleCase(row.rateType || (normalizeSearchText(row.term).includes("variable") ? "variable" : "fixed")))}</td>
         <td data-label="Bucket">${escapeHtml(titleCase(row.bucket))}</td>
         <td data-label="Rate" class="rate-number">${row.isPlaceholder ? "" : escapeHtml(rate(row.rateValue))}</td>
         <td data-label="Amort.">${escapeHtml(row.amortization)}${String(row.amortization).includes("—") ? "" : "yr"}</td>
@@ -9898,7 +9684,7 @@ function renderPreferredLender() {
         <span class="lender-logo" aria-hidden="true">${initials(lender.name)}</span>
         <div>
           <h5>${lender.name}</h5>
-          <p>${titleCase(lender.type)} · ${lender.updated}</p>
+          <p>${lender.updated}</p>
         </div>
       </header>
       <div class="best-rate-pair">
@@ -10030,7 +9816,7 @@ function renderLenderList(results) {
         <div class="lender-logo" aria-hidden="true">${initials(lender.name)}</div>
         <div>
           <h4>${lender.name}</h4>
-          <p class="lender-meta">${titleCase(lender.type)} · ${lender.portal}</p>
+          <p class="lender-meta">${lender.portal}</p>
         </div>
         <span class="badge ${lender.id === preferredLenderId ? "preferred-badge" : ""}">${lender.id === preferredLenderId ? "Preferred · " : ""}${lender.updated}</span>
       </header>
@@ -10061,7 +9847,7 @@ function renderDetails(lender) {
   detailPanel.innerHTML = `
     <div class="detail-title" style="--lender-color: ${lender.brandColor}; --lender-accent: ${lender.brandAccent};">
       <div>
-        <p class="eyebrow">${titleCase(lender.type)} · ${lender.region}</p>
+        <p class="eyebrow">${lender.region}</p>
         <h4><span class="lender-logo detail-logo" aria-hidden="true">${initials(lender.name)}</span>${lender.name}</h4>
       </div>
       <a class="website-link" href="${lender.website}" target="_blank" rel="noreferrer">Website</a>
@@ -10261,7 +10047,7 @@ function renderUnderwritingSection(lender) {
           <p class="eyebrow">Underwriting guidelines</p>
           <h5>${lender.name} placement notes</h5>
         </div>
-        <span class="badge">${titleCase(lender.type)}</span>
+        <span class="badge">${escapeHtml(lender.region)}</span>
       </div>
       <div class="underwriting-grid">
         ${rows
@@ -10419,7 +10205,7 @@ function renderProgramDetail(programMap) {
           (lender) => `
             <button class="program-lender" type="button" data-lender="${lender.id}" style="--lender-color: ${lender.brandColor}; --lender-accent: ${lender.brandAccent};">
               <span class="lender-logo" aria-hidden="true">${initials(lender.name)}</span>
-              <span><strong>${lender.name}</strong><small>${titleCase(lender.type)} · ${rate(lender.rates.insuredFixed || lender.rates.conventional || lender.rates.alt)}</small></span>
+              <span><strong>${lender.name}</strong><small>${rate(lender.rates.insuredFixed || lender.rates.conventional || lender.rates.alt)}</small></span>
             </button>
           `
         )
@@ -10496,7 +10282,7 @@ function renderContacts() {
     .map(
       (lender) => `
         <tr>
-          <td><strong>${lender.name}</strong><br /><span class="contact-line">${titleCase(lender.type)}</span></td>
+          <td><strong>${lender.name}</strong></td>
           <td>${lender.bdm}<br /><span class="contact-line">${lender.region}</span></td>
           <td>${lender.email}</td>
           <td>${lender.phone}</td>
