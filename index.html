@@ -4875,7 +4875,6 @@ th, td { border-color: var(--line); }
 }
 
 .rate-finder-table td[data-label="Purpose"] { max-width: 140px; overflow: hidden; text-overflow: ellipsis; }
-.rate-finder-table td[data-label="Lender type"] { color: color-mix(in srgb, var(--text) 82%, var(--muted)); }
 
 .rate-finder-table tr:hover td {
   background: color-mix(in srgb, var(--green) 7%, var(--surface));
@@ -6041,8 +6040,6 @@ textarea,
               <label><span>Amortization</span><select id="rateFinderAmort"><option value="all">Any amort.</option><option value="25">25yr</option><option value="30">30yr</option></select></label>
               <label><span>Bucket</span><select id="rateFinderBucket"><option value="all">Any bucket</option><option value="insured">Insured / high ratio</option><option value="insurable">Insurable</option><option value="uninsured">Uninsured / refi</option><option value="variable">Variable</option><option value="alt">Alternative</option></select></label>
               <label><span>Purpose</span><select id="rateFinderPurpose"><option value="all">Any purpose</option><option value="purchase">Purchase</option><option value="refinance">Refinance</option><option value="rental">Rental</option><option value="private">Private exit</option></select></label>
-              <label><span>Lender type</span><select id="rateFinderType"><option value="all">Any type</option><option value="bank">Bank</option><option value="monoline">Monoline</option><option value="credit union">Credit union</option><option value="alternative">Alternative</option><option value="private">Private / MIC</option></select></label>
-              <label><span>Sort</span><select id="rateFinderSort"><option value="title">Title board order</option><option value="lowest">Lowest rate</option><option value="freshest">Freshest source</option><option value="lender">Lender A-Z</option><option value="term">Term</option><option value="hold">Rate hold</option></select></label>
             </div>
             <div class="rate-finder-chips" aria-label="Common broker searches">
               <button type="button" data-rate-chip="best-5yr-insured">Best 5yr insured</button>
@@ -6057,7 +6054,7 @@ textarea,
             </div>
             <div class="rate-table-wrap">
               <table class="rate-finder-table" aria-label="Broker searchable rate table">
-                <thead><tr><th>Lender</th><th>Term</th><th>Fixed/Var</th><th>Bucket</th><th>Rate</th><th>Amort.</th><th>Purpose</th><th>Lender type</th><th>Source / status</th></tr></thead>
+                <thead><tr><th>Lender</th><th>Term</th><th>Fixed/Var</th><th>Bucket</th><th>Rate</th><th>Amort.</th><th>Purpose</th><th>Source / status</th></tr></thead>
                 <tbody id="rateFinderTable"></tbody>
               </table>
             </div>
@@ -7845,8 +7842,6 @@ const rateFinderRateType = document.querySelector("#rateFinderRateType");
 const rateFinderAmort = document.querySelector("#rateFinderAmort");
 const rateFinderBucket = document.querySelector("#rateFinderBucket");
 const rateFinderPurpose = document.querySelector("#rateFinderPurpose");
-const rateFinderType = document.querySelector("#rateFinderType");
-const rateFinderSort = document.querySelector("#rateFinderSort");
 const dryRunRateSheetPanel = document.querySelector("#dryRunRateSheetPanel");
 const preferredLenderSelect = document.querySelector("#preferredLenderSelect");
 const preferredLenderCard = document.querySelector("#preferredLenderCard");
@@ -7949,7 +7944,7 @@ resourceLenderFilter?.addEventListener("change", renderResources);
 resourceCategoryFilter?.addEventListener("change", renderResources);
 resourceTypeFilter?.addEventListener("change", renderResources);
 
-[rateFinderSearch, rateFinderLender, rateFinderTerm, rateFinderRateType, rateFinderAmort, rateFinderBucket, rateFinderPurpose, rateFinderType, rateFinderSort].forEach((control) => {
+[rateFinderSearch, rateFinderLender, rateFinderTerm, rateFinderRateType, rateFinderAmort, rateFinderBucket, rateFinderPurpose].forEach((control) => {
   control?.addEventListener(control === rateFinderSearch ? "input" : "change", renderBrokerRateFinder);
 });
 document.querySelectorAll("[data-rate-chip]").forEach((button) => button.addEventListener("click", () => applyRateFinderChip(button.dataset.rateChip)));
@@ -9778,8 +9773,7 @@ function renderBrokerRateFinder() {
     amort: rateFinderAmort?.value || "all",
     bucket: rateFinderBucket?.value || "all",
     purpose: rateFinderPurpose?.value || "all",
-    type: rateFinderType?.value || "all",
-    sort: rateFinderSort?.value || "title"
+    sort: "lowest"
   };
   let rows = rateFinderRows().filter((row) => {
     const haystack = normalizeSearchText([row.lender, row.lenderType, row.term, row.rateType, row.bucket, row.rateValue, row.purpose, row.amortization, row.source, row.status, row.note].join(" "));
@@ -9790,8 +9784,7 @@ function renderBrokerRateFinder() {
       && (controls.rateType === "all" || rowRateType === controls.rateType)
       && (controls.amort === "all" || (controls.term === "heloc" && row.termValue === "heloc") || String(row.amortization).includes(controls.amort))
       && (controls.bucket === "all" || row.bucket === controls.bucket)
-      && (controls.purpose === "all" || normalizeSearchText(row.purpose).includes(controls.purpose))
-      && (controls.type === "all" || row.lenderType === controls.type || (controls.type === "private" && normalizeSearchText(row.purpose + " " + row.bucket).includes("private")));
+      && (controls.purpose === "all" || normalizeSearchText(row.purpose).includes(controls.purpose));
   });
 
   rows.sort((a, b) => {
@@ -9824,10 +9817,9 @@ function renderBrokerRateFinder() {
         <td data-label="Rate" class="rate-number">${row.isPlaceholder ? "" : escapeHtml(rate(row.rateValue))}</td>
         <td data-label="Amort.">${escapeHtml(row.amortization)}${String(row.amortization).includes("—") ? "" : "yr"}</td>
         <td data-label="Purpose">${escapeHtml(row.purpose)}</td>
-        <td data-label="Lender type">${escapeHtml(titleCase(row.lenderType))}</td>
         <td data-label="Source / status" title="${escapeHtml(`${row.source} · ${String(row.status).replace(/_/g, " ")} · ${row.note}`)}"><span class="source-status-cell"><span class="source-label">${escapeHtml(row.source)}</span><span class="rate-status-pill ${tone}">${escapeHtml(String(row.status).replace(/_/g, " "))}</span></span></td>
       </tr>`;
-  }).join("") || `<tr><td colspan="9"><div class="rate-finder-empty">No matching rates. Broaden the filters or reset the finder.</div></td></tr>`;
+  }).join("") || `<tr><td colspan="8"><div class="rate-finder-empty">No matching rates. Broaden the filters or reset the finder.</div></td></tr>`;
 }
 
 function hydrateRateFinderLenders() {
@@ -9850,13 +9842,11 @@ function setRateFinder(values = {}) {
   if (values.amort !== undefined && rateFinderAmort) rateFinderAmort.value = values.amort;
   if (values.bucket !== undefined && rateFinderBucket) rateFinderBucket.value = values.bucket;
   if (values.purpose !== undefined && rateFinderPurpose) rateFinderPurpose.value = values.purpose;
-  if (values.type !== undefined && rateFinderType) rateFinderType.value = values.type;
-  if (values.sort !== undefined && rateFinderSort) rateFinderSort.value = values.sort;
   renderBrokerRateFinder();
 }
 
 function applyRateFinderChip(chip) {
-  const reset = { search: "", lender: "all", term: "all", rateType: "all", amort: "all", bucket: "all", purpose: "all", type: "all", sort: "title" };
+  const reset = { search: "", lender: "all", term: "all", rateType: "all", amort: "all", bucket: "all", purpose: "all" };
   const presets = {
     "best-5yr-insured": { ...reset, term: "60", rateType: "fixed", bucket: "insured" },
     "best-3yr-fixed": { ...reset, term: "36", rateType: "fixed" },
@@ -9864,8 +9854,8 @@ function applyRateFinderChip(chip) {
     variable: { ...reset, rateType: "variable", bucket: "variable" },
     refinance: { ...reset, purpose: "refinance", bucket: "uninsured" },
     rental: { ...reset, purpose: "rental" },
-    "alt-bfs": { ...reset, type: "alternative", search: "self employed bfs alternative" },
-    recent: { ...reset, sort: "freshest" },
+    "alt-bfs": { ...reset, search: "self employed bfs alternative" },
+    recent: reset,
     reset
   };
   setRateFinder(presets[chip] || reset);
