@@ -7001,7 +7001,7 @@ textarea {
 }
 
 
-/* SI Capital workspace shell — match the clean document-portal reference. */
+/* Mortgage portal shell — copies the clean workspace theme without importing unrelated SI dashboards. */
 :root {
   --ws-bg: #f7f7f6;
   --ws-panel: #ffffff;
@@ -7097,7 +7097,7 @@ body.portal-locked .workspace-topbar { display: none !important; }
   padding-top: 28px !important;
 }
 .nav-list::before {
-  content: "Work Queue";
+  content: "Rate Portal";
   position: absolute;
   top: 4px;
   left: 12px;
@@ -7156,7 +7156,7 @@ body.portal-locked .workspace-topbar { display: none !important; }
   display: flex !important;
   align-items: center !important;
   justify-content: space-between !important;
-  padding: 0 160px 0 144px !important;
+  padding: 0 32px !important;
   gap: 18px !important;
 }
 .workspace-tabs,
@@ -7175,6 +7175,10 @@ body.portal-locked .workspace-topbar { display: none !important; }
 }
 .workspace-tabs strong { font-size: .94rem !important; font-weight: 700 !important; color: #20251f !important; }
 .workspace-tabs span:last-child { color: #7c8492 !important; font-size: .8rem !important; }
+.workspace-context {
+  color: #7c8492 !important;
+  font: 500 .78rem/1 var(--font-field) !important;
+}
 .workspace-actions button,
 .alert-button {
   height: 30px !important;
@@ -7457,23 +7461,22 @@ body::after,
         <div class="brand-lockup">
           <div class="brand-mark">SI</div>
           <div>
-            <h1>Workspace</h1>
-            <p class="eyebrow">SI Capital</p>
+            <h1>Rate Desk</h1>
+            <p class="eyebrow">Mortgage Portal</p>
           </div>
         </div>
 
-        <button class="sidebar-new-record" type="button">+ New record</button>
+        <button class="sidebar-new-record" type="button" data-nav-target="uploads">+ Upload rates</button>
 
         <nav class="nav-list">
-          <a href="#dashboard" class="active"><span>▦</span> Dashboard</a>
-          <a href="#best-rates"><span>▣</span> Records</a>
+          <a href="#best-rates" class="active"><span>▣</span> Rate Desk</a>
           <a href="#uploads"><span>▤</span> Documents</a>
-          <a href="#admin-inbox" data-admin-only><span>✉</span> Messages</a>
-          <a href="#calculators"><span>◷</span> Tasks</a>
-          <a href="#deal-desk"><span>↯</span> Workflows</a>
-          <a href="#lenders"><span>♙</span> Users</a>
-          <a href="#compliance"><span>▥</span> Reports</a>
-          <a href="#resources"><span>▱</span> Reference</a>
+          <a href="#resources"><span>▱</span> Resources</a>
+          <a href="#calculators"><span>◷</span> Calculators</a>
+          <a href="#deal-desk"><span>↯</span> Deal Desk</a>
+          <a href="#lenders"><span>♙</span> Lenders</a>
+          <a href="#compliance"><span>▥</span> Compliance</a>
+          <a href="#admin-inbox" data-admin-only><span>✉</span> Inbox</a>
         </nav>
 
         <section class="sidebar-panel">
@@ -7481,17 +7484,13 @@ body::after,
         </section>
       </aside>
 
-      <header class="workspace-topbar" aria-label="Workspace toolbar">
+      <header class="workspace-topbar" aria-label="Rate portal toolbar">
         <div class="workspace-tabs">
           <span class="command-key">⌘K</span>
-          <strong id="workspacePageTitle">Documents</strong>
-          <span>Files</span>
+          <strong id="workspacePageTitle">Rate Desk</strong>
+          <span>Portal</span>
         </div>
-        <div class="workspace-actions">
-          <button class="alert-button" type="button">ⓘ 10 active alerts</button>
-          <button class="secondary-button" type="button">Invite User</button>
-          <button class="icon-button" type="button" aria-label="Notifications">●</button>
-        </div>
+        <div class="workspace-context">Source-backed mortgage rates</div>
       </header>
 
       <main>
@@ -7512,7 +7511,7 @@ body::after,
               <div class="profile-form-head"><strong>Create your portal profile</strong><small>You are signed in. Complete this profile to unlock the desk.</small></div>
               <div class="form-grid compact-form-grid">
                 <label><span>Full name</span><input id="globalProfileFullName" autocomplete="name" placeholder="Your name" required /></label>
-                <label><span>Brokerage / team</span><input id="globalProfileCompany" placeholder="SI Capital / brokerage" /></label>
+                <label><span>Brokerage / team</span><input id="globalProfileCompany" placeholder="Brokerage / team" /></label>
                 <label><span>Phone</span><input id="globalProfilePhone" autocomplete="tel" placeholder="416-555-0123" /></label>
                 <label><span>Requested access</span><select id="globalProfileRequestedRole"><option value="broker">User / broker</option><option value="admin">Admin request</option></select></label>
               </div>
@@ -9248,19 +9247,18 @@ let activeAdminEmailId = "";
 let resourceIndex = null;
 let resourceEntries = [];
 const pageNavLinks = document.querySelectorAll('.nav-list a[href^="#"]');
-const pageRoutes = ["dashboard", "uploads", "best-rates", "calculators", "admin-inbox", "resources", "lenders", "deal-desk", "programs", "insurers", "contacts", "compliance"];
+const pageRoutes = ["best-rates", "uploads", "resources", "calculators", "deal-desk", "lenders", "admin-inbox", "programs", "insurers", "contacts", "compliance"];
 const pageGroups = {
-  dashboard: [document.querySelector("#dashboard"), document.querySelector("#uploads")],
+  "best-rates": [document.querySelector("#dashboard"), document.querySelector("#best-rates")],
   uploads: [document.querySelector("#uploads")],
-  "best-rates": [document.querySelector("#best-rates")],
-  calculators: [document.querySelector("#calculators")],
-  "admin-inbox": [document.querySelector("#admin-inbox")],
   resources: [document.querySelector("#resources")],
+  calculators: [document.querySelector("#calculators")],
+  "deal-desk": [document.querySelector("#deal-desk")],
   lenders: [document.querySelector(".workspace"), document.querySelector("#programs"), document.querySelector("#insurers"), document.querySelector("#contacts")],
   programs: [document.querySelector(".workspace"), document.querySelector("#programs"), document.querySelector("#insurers"), document.querySelector("#contacts")],
   insurers: [document.querySelector(".workspace"), document.querySelector("#programs"), document.querySelector("#insurers"), document.querySelector("#contacts")],
   contacts: [document.querySelector(".workspace"), document.querySelector("#programs"), document.querySelector("#insurers"), document.querySelector("#contacts")],
-  "deal-desk": [document.querySelector("#deal-desk")],
+  "admin-inbox": [document.querySelector("#admin-inbox")],
   compliance: [document.querySelector("#compliance")]
 };
 
@@ -9287,6 +9285,10 @@ pageNavLinks.forEach((link) => {
     event.preventDefault();
     showPage(route);
   });
+});
+
+document.querySelectorAll("[data-nav-target]").forEach((button) => {
+  button.addEventListener("click", () => showPage(button.dataset.navTarget));
 });
 
 window.addEventListener("hashchange", () => showPage(routeFromHash(), { updateHash: false }));
@@ -9857,27 +9859,26 @@ function normalizeSearchText(value) {
 
 function routeFromHash() {
   const route = window.location.hash.replace("#", "");
-  return pageRoutes.includes(route) ? route : "dashboard";
+  return pageRoutes.includes(route) ? route : "best-rates";
 }
 
-function showPage(route = "dashboard", options = {}) {
-  const activeRoute = pageRoutes.includes(route) ? route : "dashboard";
+function showPage(route = "best-rates", options = {}) {
+  const activeRoute = pageRoutes.includes(route) ? route : "best-rates";
   const { updateHash = true, scrollTop = true } = options;
   const activeElements = new Set((pageGroups[activeRoute] || []).filter(Boolean));
   const allPageElements = new Set(Object.values(pageGroups).flat().filter(Boolean));
   const workspacePageTitle = document.querySelector("#workspacePageTitle");
   const workspaceTitles = {
-    dashboard: "Dashboard",
-    "best-rates": "Records",
+    "best-rates": "Rate Desk",
     uploads: "Documents",
-    resources: "Reference",
-    lenders: "Users",
-    calculators: "Tasks",
-    "admin-inbox": "Messages",
-    "deal-desk": "Workflows",
-    compliance: "Reports"
+    resources: "Resources",
+    calculators: "Calculators",
+    "deal-desk": "Deal Desk",
+    lenders: "Lenders",
+    "admin-inbox": "Inbox",
+    compliance: "Compliance"
   };
-  if (workspacePageTitle) workspacePageTitle.textContent = workspaceTitles[activeRoute] || "Workspace";
+  if (workspacePageTitle) workspacePageTitle.textContent = workspaceTitles[activeRoute] || "Rate Portal";
 
   allPageElements.forEach((element) => {
     const isActive = activeElements.has(element);
