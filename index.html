@@ -5871,6 +5871,150 @@ body.dark .topbar, body.dark .band, body.dark .workspace, body.dark .metric-grid
   .topbar h2 { font-size: clamp(2.2rem, 13vw, 3.3rem); }
 }
 
+/* Rate desk minimalist pass — clean, tight, to the point */
+.broker-rate-finder {
+  margin: 14px 0 16px !important;
+  border: 1px solid #d7ddd4 !important;
+  border-radius: 12px !important;
+  background: #fffefa !important;
+  box-shadow: none !important;
+}
+.rate-finder-head {
+  padding: 12px 14px !important;
+  border-bottom: 1px solid #e2e6df !important;
+  background: #fffefa !important;
+}
+.rate-finder-head h4 { font-size: 1.02rem !important; letter-spacing: -.025em !important; }
+.rate-finder-head p {
+  margin-top: 3px !important;
+  max-width: 560px;
+  color: #6b746d !important;
+  font-size: .82rem !important;
+  font-weight: 620 !important;
+}
+.rate-finder-mode {
+  gap: 6px !important;
+  color: #526057 !important;
+  font-size: .64rem !important;
+  font-weight: 760 !important;
+  letter-spacing: .035em !important;
+}
+.rate-finder-mode span {
+  padding: 4px 7px !important;
+  border-color: #dce2d9 !important;
+  background: #f7f8f4 !important;
+  color: #465148 !important;
+}
+.rate-finder-toolbar {
+  grid-template-columns: repeat(3, minmax(118px, .68fr)) minmax(220px, 1.25fr) minmax(150px, .85fr) minmax(150px, .85fr) !important;
+  gap: 8px !important;
+  padding: 10px !important;
+  border-bottom: 1px solid #e2e6df !important;
+  border-radius: 0 !important;
+  background: #f7f8f4 !important;
+}
+.rate-finder-toolbar label {
+  gap: 4px !important;
+  color: #667169 !important;
+  font-size: .62rem !important;
+  font-weight: 760 !important;
+  letter-spacing: .04em !important;
+}
+.rate-finder-toolbar input,
+.rate-finder-toolbar select {
+  min-height: 34px !important;
+  border: 1px solid #d9ded6 !important;
+  border-radius: 7px !important;
+  background: #fffefa !important;
+  color: #1c241f !important;
+  padding: 7px 9px !important;
+  font-size: .83rem !important;
+  font-weight: 620 !important;
+  box-shadow: none !important;
+}
+.rate-finder-toolbar input:focus,
+.rate-finder-toolbar select:focus {
+  outline: 2px solid rgba(46, 107, 79, .14) !important;
+  border-color: #6b8f79 !important;
+}
+.rate-finder-chips {
+  gap: 6px !important;
+  padding: 8px 10px !important;
+  border-bottom: 1px solid #e2e6df !important;
+  background: #fffefa !important;
+}
+.rate-finder-chips button {
+  padding: 5px 8px !important;
+  border: 1px solid #d9ded6 !important;
+  border-radius: 7px !important;
+  background: #fffefa !important;
+  color: #36443b !important;
+  font-size: .72rem !important;
+  font-weight: 700 !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+.rate-finder-chips button:hover {
+  border-color: #9fac9f !important;
+  background: #f1f4ee !important;
+  transform: none !important;
+}
+.rate-finder-summary {
+  padding: 9px 12px !important;
+  border-bottom: 1px solid #e2e6df;
+  background: #fbfcf8 !important;
+  color: #667169 !important;
+  font-size: .8rem !important;
+  font-weight: 620 !important;
+}
+.rate-finder-summary strong { color: #1f4f3a !important; font-size: .98rem !important; }
+.rate-table-wrap {
+  max-height: 560px;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: #fffefa !important;
+}
+.rate-finder-table { font-size: .8rem !important; }
+.rate-finder-table th {
+  padding: 8px 9px !important;
+  background: #f1f3ee !important;
+  color: #657067 !important;
+  border-top: 0 !important;
+  border-bottom: 1px solid #dfe4dc !important;
+  box-shadow: none !important;
+  font-size: .62rem !important;
+  font-weight: 760 !important;
+}
+.rate-finder-table td {
+  padding: 8px 9px !important;
+  border-color: #edf0ea !important;
+  color: #202821;
+}
+.rate-finder-table tbody tr:nth-child(even) td { background: #fafbf7 !important; }
+.rate-finder-table tbody tr:hover td { background: #f2f5f0 !important; }
+.rate-finder-table td.rate-number {
+  color: #1f6a49 !important;
+  font-size: .96rem !important;
+  font-weight: 820 !important;
+}
+.rate-finder-table .lender-cell { font-weight: 780 !important; }
+.rate-status-pill {
+  padding: 3px 6px !important;
+  border-radius: 6px !important;
+  background: #edf4ee !important;
+  color: #2d6a4a !important;
+  font-size: .58rem !important;
+  font-weight: 760 !important;
+}
+.source-status-cell { gap: 6px !important; }
+@media (max-width: 1180px) {
+  .rate-finder-toolbar { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+}
+@media (max-width: 760px) {
+  .rate-finder-head, .rate-finder-summary { align-items: flex-start; flex-direction: column; }
+  .rate-finder-toolbar { grid-template-columns: 1fr !important; }
+}
+
     </style>
   </head>
   <body class="portal-locked">
@@ -6081,21 +6225,21 @@ body.dark .topbar, body.dark .band, body.dark .workspace, body.dark .metric-grid
           <div class="broker-rate-finder" id="brokerRateFinder">
             <div class="rate-finder-head">
               <div>
-                <h4>Broker quote finder</h4>
-                <p>Pick term, fixed/variable, and amortization first — then narrow by bucket, purpose, or lender.</p>
+                <h4>Rate desk</h4>
+                <p>Choose term, type, and amortization. Lowest usable rates stay first.</p>
               </div>
-              <div class="rate-finder-mode" aria-label="Primary quote controls">
+              <div class="rate-finder-mode" aria-label="Primary quote filters">
                 <span>Term</span>
-                <span>Fixed / variable</span>
+                <span>Type</span>
                 <span>Amortization</span>
               </div>
             </div>
             <div class="rate-finder-toolbar" aria-label="Broker rate finder filters">
-              <label><span>Search</span><input id="rateFinderSearch" type="search" placeholder="TD, CMLS, 30yr amortization..." /></label>
-              <label><span>Lender</span><select id="rateFinderLender"><option value="all">Any lender</option></select></label>
               <label><span>Term</span><select id="rateFinderTerm"><option value="all">Any term</option><option value="12">1yr</option><option value="36">3yr</option><option value="60">5yr</option></select></label>
               <label><span>Type</span><select id="rateFinderRateType"><option value="all">Any type</option><option value="fixed">Fixed</option><option value="variable">Variable</option></select></label>
               <label><span>Amortization</span><select id="rateFinderAmort"><option value="all">Any amort.</option><option value="25">25yr</option><option value="30">30yr</option></select></label>
+              <label><span>Search</span><input id="rateFinderSearch" type="search" placeholder="Lender, purpose, source..." /></label>
+              <label><span>Lender</span><select id="rateFinderLender"><option value="all">Any lender</option></select></label>
               <label><span>Purpose</span><select id="rateFinderPurpose"><option value="all">Any purpose</option><option value="purchase">Purchase</option><option value="refinance">Refinance</option><option value="rental">Rental</option><option value="private">Private exit</option></select></label>
             </div>
             <div class="rate-finder-chips" aria-label="Common broker searches">
