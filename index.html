@@ -7026,7 +7026,7 @@ body.dark {
 }
 .app-shell {
   grid-template-columns: 212px minmax(0, 1fr) !important;
-  grid-template-rows: 50px minmax(0, 1fr) !important;
+  grid-template-rows: auto minmax(0, 1fr) !important;
   min-height: 100vh !important;
   background: var(--ws-bg) !important;
 }
@@ -7150,14 +7150,15 @@ body.portal-locked .workspace-topbar { display: none !important; }
   grid-column: 2 !important;
   grid-row: 1 !important;
   min-width: 0 !important;
-  height: 50px !important;
+  min-height: 50px !important;
   background: #fff !important;
   border-bottom: 1px solid var(--ws-line) !important;
   display: flex !important;
+  flex-wrap: wrap !important;
   align-items: center !important;
   justify-content: space-between !important;
-  padding: 0 32px !important;
-  gap: 18px !important;
+  padding: 10px 32px !important;
+  gap: 10px 18px !important;
 }
 .workspace-tabs,
 .workspace-actions { display: flex !important; align-items: center !important; gap: 9px !important; }
@@ -7179,6 +7180,10 @@ body.portal-locked .workspace-topbar { display: none !important; }
   color: #7c8492 !important;
   font: 500 .78rem/1 var(--font-field) !important;
 }
+.workspace-topbar .metric-grid {
+  flex: 0 0 100% !important;
+  width: 100% !important;
+}
 .workspace-actions button,
 .alert-button {
   height: 30px !important;
@@ -7197,7 +7202,7 @@ main {
   grid-row: 2 !important;
   width: min(1280px, calc(100vw - 260px)) !important;
   margin: 0 auto !important;
-  padding: 20px 0 64px !important;
+  padding: 14px 0 64px !important;
   display: grid !important;
   gap: 16px !important;
 }
@@ -7412,7 +7417,7 @@ td { color: #252a25 !important; border-color: var(--ws-line) !important; }
 @media (max-width: 1080px) {
   .app-shell { grid-template-columns: 1fr !important; grid-template-rows: auto auto 1fr !important; }
   .sidebar { position: static !important; height: auto !important; grid-row: 1 !important; }
-  .workspace-topbar { grid-column: 1 !important; grid-row: 2 !important; padding: 0 16px !important; }
+  .workspace-topbar { grid-column: 1 !important; grid-row: 2 !important; padding: 10px 16px !important; }
   main { grid-column: 1 !important; grid-row: 3 !important; width: 100% !important; padding: 16px !important; }
   .nav-list { grid-template-columns: repeat(3, minmax(0,1fr)) !important; }
 }
@@ -7420,6 +7425,10 @@ td { color: #252a25 !important; border-color: var(--ws-line) !important; }
   .workspace-actions { display: none !important; }
   .nav-list { grid-template-columns: repeat(2, minmax(0,1fr)) !important; }
   .metric-grid { grid-template-columns: 1fr !important; }
+  .workspace-topbar .metric-grid { grid-template-columns: repeat(2, minmax(0,1fr)) !important; }
+  .workspace-topbar .metric-grid article { min-height: 62px !important; padding: 10px 12px !important; }
+  .workspace-topbar .metric-grid strong { font-size: 1.2rem !important; }
+  .workspace-topbar .metric-grid span { font-size: .7rem !important; }
   .band, .workspace { padding: 16px !important; }
 }
 .app-page-hidden { display: none !important; }
@@ -7491,6 +7500,28 @@ body::after,
           <span>Portal</span>
         </div>
         <div class="workspace-context">Source-backed mortgage rates</div>
+        <section class="metric-grid" id="portalSummary" aria-label="Portal summary">
+          <article>
+            <small>01</small>
+            <span>Tracked lenders</span>
+            <strong id="lenderCount">0</strong>
+          </article>
+          <article>
+            <small>02</small>
+            <span>Lowest insured fixed</span>
+            <strong id="lowestFixed">0.00%</strong>
+          </article>
+          <article>
+            <small>03</small>
+            <span>Alt lending range</span>
+            <strong id="altRange">0</strong>
+          </article>
+          <article>
+            <small>04</small>
+            <span>BDM contacts</span>
+            <strong id="bdmCount">0</strong>
+          </article>
+        </section>
       </header>
 
       <main>
@@ -7521,30 +7552,6 @@ body::after,
             <small class="access-lock-status" id="globalAuthStatus">Enter your email to sign in or create an account.</small>
           </article>
         </section>
-        <section class="metric-grid" id="dashboard" aria-label="Portal summary">
-          <article>
-            <small>01</small>
-            <span>Tracked lenders</span>
-            <strong id="lenderCount">0</strong>
-          </article>
-          <article>
-            <small>02</small>
-            <span>Lowest insured fixed</span>
-            <strong id="lowestFixed">0.00%</strong>
-          </article>
-          <article>
-            <small>03</small>
-            <span>Alt lending range</span>
-            <strong id="altRange">0</strong>
-          </article>
-          <article>
-            <small>04</small>
-            <span>BDM contacts</span>
-            <strong id="bdmCount">0</strong>
-          </article>
-        </section>
-
-
         <section class="band upload-desk" id="uploads">
           <div class="section-heading upload-heading">
             <div>
@@ -9249,7 +9256,7 @@ let resourceEntries = [];
 const pageNavLinks = document.querySelectorAll('.nav-list a[href^="#"]');
 const pageRoutes = ["best-rates", "uploads", "resources", "calculators", "deal-desk", "lenders", "admin-inbox", "programs", "insurers", "contacts", "compliance"];
 const pageGroups = {
-  "best-rates": [document.querySelector("#dashboard"), document.querySelector("#best-rates")],
+  "best-rates": [document.querySelector("#best-rates")],
   uploads: [document.querySelector("#uploads")],
   resources: [document.querySelector("#resources")],
   calculators: [document.querySelector("#calculators")],
