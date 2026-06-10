@@ -7000,35 +7000,499 @@ textarea {
   .auth-button-row { grid-template-columns: 1fr !important; }
 }
 
+
+/* SI Capital workspace shell — match the clean document-portal reference. */
+:root {
+  --ws-bg: #f7f7f6;
+  --ws-panel: #ffffff;
+  --ws-panel-muted: #f4f3f1;
+  --ws-line: #deddd9;
+  --ws-line-strong: #d1d0cc;
+  --ws-ink: #171c18;
+  --ws-muted: #6d726d;
+  --ws-faint: #969b96;
+  --ws-navy: #1d2636;
+  --ws-orange: #c85d16;
+  --ws-active: #eef1f5;
+  --font-field: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-label: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+body,
+body.dark {
+  background: var(--ws-bg) !important;
+  color: var(--ws-ink) !important;
+  font-family: var(--font-field) !important;
+  letter-spacing: -.01em !important;
+}
+.app-shell {
+  grid-template-columns: 212px minmax(0, 1fr) !important;
+  grid-template-rows: 50px minmax(0, 1fr) !important;
+  min-height: 100vh !important;
+  background: var(--ws-bg) !important;
+}
+body.portal-locked .app-shell { grid-template-columns: 1fr !important; grid-template-rows: 1fr !important; }
+body.portal-locked .workspace-topbar { display: none !important; }
+.sidebar {
+  grid-row: 1 / -1 !important;
+  position: sticky !important;
+  top: 0 !important;
+  height: 100vh !important;
+  padding: 14px 8px 0 !important;
+  background: #fafafa !important;
+  border-right: 1px solid var(--ws-line) !important;
+  color: #344054 !important;
+  box-shadow: none !important;
+}
+.sidebar::after { content: none !important; }
+.brand-lockup {
+  gap: 12px !important;
+  align-items: center !important;
+  padding: 0 11px 14px !important;
+  border-bottom: 1px solid var(--ws-line) !important;
+}
+.brand-mark {
+  width: 28px !important;
+  height: 32px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: #214732 !important;
+  font-family: Georgia, "Times New Roman", serif !important;
+  font-size: 1.35rem !important;
+  letter-spacing: -.12em !important;
+}
+.brand-lockup h1 {
+  max-width: none !important;
+  margin: 0 !important;
+  color: var(--ws-ink) !important;
+  font-family: var(--font-field) !important;
+  font-size: .94rem !important;
+  line-height: 1.15 !important;
+  font-weight: 750 !important;
+  letter-spacing: -.02em !important;
+}
+.brand-lockup .eyebrow {
+  margin: 3px 0 0 !important;
+  color: var(--ws-muted) !important;
+  font-family: var(--font-field) !important;
+  font-size: .68rem !important;
+  font-weight: 500 !important;
+  letter-spacing: .01em !important;
+  text-transform: none !important;
+}
+.sidebar-new-record {
+  width: 100% !important;
+  height: 36px !important;
+  margin: 9px 0 14px !important;
+  border: 1px solid var(--ws-line) !important;
+  border-radius: 4px !important;
+  background: #fff !important;
+  color: #344054 !important;
+  font: 500 .78rem/1 var(--font-field) !important;
+}
+.nav-list {
+  position: relative !important;
+  gap: 0 !important;
+  padding-top: 28px !important;
+}
+.nav-list::before {
+  content: "Work Queue";
+  position: absolute;
+  top: 4px;
+  left: 12px;
+  color: #777b76;
+  font-size: .66rem;
+  letter-spacing: .02em;
+}
+.nav-list a {
+  min-height: 37px !important;
+  padding: 0 12px !important;
+  border: 0 !important;
+  border-radius: 5px !important;
+  background: transparent !important;
+  color: #48536a !important;
+  font: 500 .86rem/37px var(--font-field) !important;
+  letter-spacing: 0 !important;
+  box-shadow: none !important;
+}
+.nav-list a span {
+  width: 18px !important;
+  margin-right: 10px !important;
+  color: #4b5870 !important;
+  font-family: var(--font-field) !important;
+  font-size: .95rem !important;
+  letter-spacing: 0 !important;
+}
+.nav-list a.active,
+.nav-list a:hover {
+  background: var(--ws-active) !important;
+  color: #101828 !important;
+  box-shadow: none !important;
+}
+.sidebar-panel {
+  margin: auto -8px 0 !important;
+  min-height: 60px !important;
+  padding: 0 20px !important;
+  border: 0 !important;
+  border-top: 1px solid var(--ws-line) !important;
+  border-radius: 0 !important;
+  background: #fafafa !important;
+  box-shadow: none !important;
+  display: flex !important;
+  align-items: center !important;
+}
+.sidebar-panel strong {
+  color: #4b5870 !important;
+  font: 500 .86rem/1 var(--font-field) !important;
+}
+.workspace-topbar {
+  grid-column: 2 !important;
+  grid-row: 1 !important;
+  min-width: 0 !important;
+  height: 50px !important;
+  background: #fff !important;
+  border-bottom: 1px solid var(--ws-line) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 0 160px 0 144px !important;
+  gap: 18px !important;
+}
+.workspace-tabs,
+.workspace-actions { display: flex !important; align-items: center !important; gap: 9px !important; }
+.command-key {
+  min-width: 31px !important;
+  height: 28px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: 1px solid var(--ws-line) !important;
+  border-radius: 4px !important;
+  background: #fbfbfb !important;
+  color: #6d7585 !important;
+  font-size: .72rem !important;
+}
+.workspace-tabs strong { font-size: .94rem !important; font-weight: 700 !important; color: #20251f !important; }
+.workspace-tabs span:last-child { color: #7c8492 !important; font-size: .8rem !important; }
+.workspace-actions button,
+.alert-button {
+  height: 30px !important;
+  padding: 0 12px !important;
+  border-radius: 4px !important;
+  border: 1px solid var(--ws-line) !important;
+  background: #fbfbfa !important;
+  color: #344054 !important;
+  font: 500 .77rem/1 var(--font-field) !important;
+  box-shadow: none !important;
+}
+.alert-button { color: var(--ws-orange) !important; }
+.workspace-actions .icon-button { width: 32px !important; padding: 0 !important; color: #e64f61 !important; background: transparent !important; border-color: transparent !important; }
+main {
+  grid-column: 2 !important;
+  grid-row: 2 !important;
+  width: min(1280px, calc(100vw - 260px)) !important;
+  margin: 0 auto !important;
+  padding: 20px 0 64px !important;
+  display: grid !important;
+  gap: 16px !important;
+}
+.metric-grid,
+.band,
+.workspace,
+.compliance {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+.metric-grid {
+  padding: 8px !important;
+  gap: 8px !important;
+  border: 1px solid var(--ws-line) !important;
+  border-radius: 4px !important;
+  background: #fff !important;
+  box-shadow: none !important;
+}
+.metric-grid article,
+.band,
+.workspace,
+.access-lock-card,
+.upload-card,
+.broker-rate-finder,
+.deal-intake-card,
+.deal-pipeline-card,
+.rate-ingestion-card,
+.compliance-card,
+.detail-panel,
+.program-detail,
+.resource-sidebar,
+.resource-card,
+.calculator-app-shell,
+.lender-card,
+.program-card,
+.insurer-card,
+.contact-table-wrap,
+.rate-table-wrap,
+.admin-intake-toolbar,
+.admin-email-detail,
+.admin-inbox-list {
+  border-radius: 4px !important;
+  background: #fff !important;
+  border: 1px solid var(--ws-line) !important;
+  box-shadow: none !important;
+}
+.metric-grid article {
+  min-height: 78px !important;
+  padding: 14px 18px !important;
+  border-top: 1px solid var(--ws-line) !important;
+  display: grid !important;
+  grid-template-columns: 34px minmax(0, 1fr) !important;
+  align-items: center !important;
+  column-gap: 12px !important;
+}
+.metric-grid small {
+  grid-row: 1 / span 2 !important;
+  width: 34px !important;
+  height: 34px !important;
+  border-radius: 4px !important;
+  background: #f1f4f8 !important;
+  color: #42526b !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: .75rem !important;
+  letter-spacing: 0 !important;
+}
+.metric-grid strong {
+  grid-column: 2 !important;
+  grid-row: 1 !important;
+  color: var(--ws-ink) !important;
+  font: 750 1.28rem/1 var(--font-field) !important;
+  letter-spacing: -.03em !important;
+}
+.metric-grid span {
+  grid-column: 2 !important;
+  grid-row: 2 !important;
+  color: var(--ws-muted) !important;
+  font-size: .72rem !important;
+}
+.band,
+.workspace {
+  padding: 20px !important;
+  background: #fff !important;
+}
+.section-heading,
+.workspace-header,
+.upload-heading,
+.calculator-heading {
+  border-bottom: 0 !important;
+  padding-bottom: 0 !important;
+  margin-bottom: 18px !important;
+  align-items: flex-start !important;
+}
+.eyebrow,
+.panel-label,
+th,
+.form-grid label span,
+.access-lock-form label span,
+.deal-field span,
+.rate-finder-toolbar label span,
+.search-box span {
+  color: #667085 !important;
+  font-family: var(--font-label) !important;
+  font-size: .66rem !important;
+  font-weight: 600 !important;
+  letter-spacing: .04em !important;
+  text-transform: none !important;
+}
+.section-heading h3,
+.workspace-header h3,
+.access-lock-card h1,
+.rate-finder-head h4,
+.upload-form-head h4,
+.upload-queue-head h4 {
+  color: var(--ws-ink) !important;
+  font-family: var(--font-field) !important;
+  font-size: clamp(1.05rem, 1.5vw, 1.35rem) !important;
+  line-height: 1.15 !important;
+  font-weight: 750 !important;
+  letter-spacing: -.035em !important;
+}
+.section-copy,
+.upload-help-text,
+p,
+.contact-line,
+.deal-form-help {
+  color: var(--ws-muted) !important;
+  font-size: .86rem !important;
+  line-height: 1.55 !important;
+}
+.primary-button,
+.secondary-button,
+.icon-button,
+.search-button,
+.rate-finder-chips button,
+.source-chip,
+.live-pill,
+.badge,
+.desk-badges span {
+  min-height: 32px !important;
+  border-radius: 4px !important;
+  border: 1px solid var(--ws-line) !important;
+  box-shadow: none !important;
+  font: 500 .84rem/1 var(--font-field) !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+.primary-button { background: var(--ws-navy) !important; color: #fff !important; border-color: var(--ws-navy) !important; }
+.secondary-button,
+.source-chip,
+.live-pill,
+.badge,
+.desk-badges span { background: #f7f6f4 !important; color: #1f241f !important; }
+.rate-finder-head {
+  padding: 18px !important;
+  background: #fff !important;
+  color: var(--ws-ink) !important;
+  border-bottom: 1px solid var(--ws-line) !important;
+}
+.rate-finder-head h4 { color: var(--ws-ink) !important; }
+.rate-finder-head p { color: var(--ws-muted) !important; }
+.rate-finder-mode span,
+.rate-finder-tabs button {
+  background: #fff !important;
+  border: 1px solid var(--ws-line) !important;
+  border-radius: 4px !important;
+  color: #1f241f !important;
+}
+.rate-finder-tabs button.active,
+.segmented-control button.active {
+  background: var(--ws-navy) !important;
+  color: #fff !important;
+  border-color: var(--ws-navy) !important;
+}
+input,
+select,
+textarea {
+  min-height: 36px !important;
+  border: 1px solid var(--ws-line) !important;
+  border-radius: 4px !important;
+  background: #fff !important;
+  color: var(--ws-ink) !important;
+  font-family: var(--font-field) !important;
+  box-shadow: none !important;
+}
+.rate-table-wrap table,
+.contact-table-wrap table { border-collapse: collapse !important; }
+th { background: #f6f6f5 !important; color: #6f706c !important; }
+td { color: #252a25 !important; border-color: var(--ws-line) !important; }
+.file-drop-zone,
+.review-steps li,
+.upload-guardrail,
+.audit-item,
+.rate-event,
+.resource-download-row,
+.product-policy-card,
+.policy-answer-card,
+.deal-card,
+.dry-run-row-card,
+.dry-run-doc-card,
+.admin-rate-row {
+  border-radius: 4px !important;
+  background: #fff !important;
+  border: 1px solid var(--ws-line) !important;
+}
+.landing-rate-board { border-top: 1px solid var(--ws-line) !important; }
+.compliance { background: #fff !important; color: var(--ws-ink) !important; border-color: var(--ws-line) !important; }
+.compliance h3 { color: var(--ws-ink) !important; }
+.compliance p { color: var(--ws-muted) !important; }
+@media (max-width: 1080px) {
+  .app-shell { grid-template-columns: 1fr !important; grid-template-rows: auto auto 1fr !important; }
+  .sidebar { position: static !important; height: auto !important; grid-row: 1 !important; }
+  .workspace-topbar { grid-column: 1 !important; grid-row: 2 !important; padding: 0 16px !important; }
+  main { grid-column: 1 !important; grid-row: 3 !important; width: 100% !important; padding: 16px !important; }
+  .nav-list { grid-template-columns: repeat(3, minmax(0,1fr)) !important; }
+}
+@media (max-width: 720px) {
+  .workspace-actions { display: none !important; }
+  .nav-list { grid-template-columns: repeat(2, minmax(0,1fr)) !important; }
+  .metric-grid { grid-template-columns: 1fr !important; }
+  .band, .workspace { padding: 16px !important; }
+}
+.app-page-hidden { display: none !important; }
+.upload-stats {
+  position: static !important;
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(92px, 1fr)) !important;
+  gap: 8px !important;
+}
+.upload-stats::before,
+.upload-stats::after,
+.upload-desk::before,
+.upload-desk::after,
+.band::before,
+.band::after,
+.metric-grid article::before,
+.metric-grid article::after,
+body::before,
+body::after,
+.upload-heading::before,
+.upload-heading::after { content: none !important; display: none !important; }
+.upload-stats article {
+  min-height: 68px !important;
+  padding: 12px 14px !important;
+  border: 1px solid var(--ws-line) !important;
+  border-radius: 4px !important;
+  background: #fff !important;
+  box-shadow: none !important;
+}
+@media (max-width: 720px) {
+  .upload-stats { grid-template-columns: 1fr !important; width: 100% !important; }
+}
+
     </style>
   </head>
   <body class="portal-locked">
     <div class="app-shell">
       <aside class="sidebar" aria-label="Portal navigation">
         <div class="brand-lockup">
-          <div class="brand-mark">OR</div>
+          <div class="brand-mark">SI</div>
           <div>
-            <p class="eyebrow">Ontario Mortgage</p>
-            <h1>Institutional Rate Desk</h1>
+            <h1>Workspace</h1>
+            <p class="eyebrow">SI Capital</p>
           </div>
         </div>
 
+        <button class="sidebar-new-record" type="button">+ New record</button>
+
         <nav class="nav-list">
-          <a href="#dashboard" class="active"><span>01</span> Command</a>
-          <a href="#best-rates"><span>02</span> Rate Ledger</a>
-          <a href="#calculators"><span>03</span> Scenario Lab</a>
-          <a href="#uploads"><span>04</span> Source Intake</a>
-          <a href="#resources"><span>05</span> Evidence Library</a>
-          <a href="#lenders"><span>06</span> Lender Registry</a>
-          <a href="#admin-inbox" data-admin-only><span>07</span> Approval Gate</a>
+          <a href="#dashboard" class="active"><span>▦</span> Dashboard</a>
+          <a href="#best-rates"><span>▣</span> Records</a>
+          <a href="#uploads"><span>▤</span> Documents</a>
+          <a href="#admin-inbox" data-admin-only><span>✉</span> Messages</a>
+          <a href="#calculators"><span>◷</span> Tasks</a>
+          <a href="#deal-desk"><span>↯</span> Workflows</a>
+          <a href="#lenders"><span>♙</span> Users</a>
+          <a href="#compliance"><span>▥</span> Reports</a>
+          <a href="#resources"><span>▱</span> Reference</a>
         </nav>
 
         <section class="sidebar-panel">
-          <p class="panel-label">Desk date</p>
-          <strong id="todayLabel"></strong>
-          <span>Controlled broker operating system for rate evidence, deal fit, source files, and approval trails.</span>
+          <strong>Sign Out</strong>
         </section>
       </aside>
+
+      <header class="workspace-topbar" aria-label="Workspace toolbar">
+        <div class="workspace-tabs">
+          <span class="command-key">⌘K</span>
+          <strong id="workspacePageTitle">Documents</strong>
+          <span>Files</span>
+        </div>
+        <div class="workspace-actions">
+          <button class="alert-button" type="button">ⓘ 10 active alerts</button>
+          <button class="secondary-button" type="button">Invite User</button>
+          <button class="icon-button" type="button" aria-label="Notifications">●</button>
+        </div>
+      </header>
 
       <main>
         <section class="access-lock-screen" id="accessLockScreen" aria-live="polite">
@@ -8800,11 +9264,11 @@ const pageGroups = {
   compliance: [document.querySelector("#compliance")]
 };
 
-document.querySelector("#todayLabel").textContent = new Intl.DateTimeFormat("en-CA", {
+const todayLabel = document.querySelector("#todayLabel");
+if (todayLabel) todayLabel.textContent = new Intl.DateTimeFormat("en-CA", {
   weekday: "short",
   month: "short",
-  day: "numeric",
-  year: "numeric"
+  day: "numeric"
 }).format(new Date());
 
 document.querySelector("#themeToggle")?.addEventListener("click", () => {
@@ -9401,6 +9865,19 @@ function showPage(route = "dashboard", options = {}) {
   const { updateHash = true, scrollTop = true } = options;
   const activeElements = new Set((pageGroups[activeRoute] || []).filter(Boolean));
   const allPageElements = new Set(Object.values(pageGroups).flat().filter(Boolean));
+  const workspacePageTitle = document.querySelector("#workspacePageTitle");
+  const workspaceTitles = {
+    dashboard: "Dashboard",
+    "best-rates": "Records",
+    uploads: "Documents",
+    resources: "Reference",
+    lenders: "Users",
+    calculators: "Tasks",
+    "admin-inbox": "Messages",
+    "deal-desk": "Workflows",
+    compliance: "Reports"
+  };
+  if (workspacePageTitle) workspacePageTitle.textContent = workspaceTitles[activeRoute] || "Workspace";
 
   allPageElements.forEach((element) => {
     const isActive = activeElements.has(element);
