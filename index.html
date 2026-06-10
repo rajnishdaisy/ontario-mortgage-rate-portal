@@ -7058,46 +7058,7 @@ textarea {
             <small class="access-lock-status" id="globalAuthStatus">Enter your email to sign in or create an account.</small>
           </article>
         </section>
-        <header class="topbar" id="dashboard">
-          <div>
-            <div class="status-row">
-                <p class="eyebrow">Bank-grade broker command centre</p>
-              <span class="live-pill">Source controlled</span>
-            </div>
-            <h2><span>Institutional mortgage rate operations.</span></h2>
-            <p class="topbar-copy">
-              A professional operating system for brokers who need verified rates, lender evidence, scenario controls, and a defensible decision trail before advising clients.
-            </p>
-            <div class="hero-proof-strip" aria-label="Desk highlights">
-              <span>Verify source</span>
-              <span>Price scenario</span>
-              <span>Document rationale</span>
-              <span>Escalate cleanly</span>
-            </div>
-          </div>
-          <div class="topbar-actions">
-            <button class="secondary-button" id="themeToggle" type="button" title="Toggle theme" aria-label="Toggle theme">Theme</button>
-            <a class="primary-button" href="#best-rates">Open rate ledger</a>
-            <a class="secondary-button" href="#calculators">Run scenario control</a>
-          </div>
-          <aside class="hero-insight" aria-label="Current rate snapshot">
-            <p class="panel-label">Current best evidence</p>
-            <strong id="heroBestFixed">0.00%</strong>
-            <span id="heroBestLender">Calculating lender leader</span>
-            <dl>
-              <div>
-                <dt>Conventional</dt>
-                <dd id="heroConventional">0.00%</dd>
-              </div>
-              <div>
-                <dt>Updated</dt>
-                <dd id="heroUpdated">Today</dd>
-              </div>
-            </dl>
-          </aside>
-        </header>
-
-        <section class="metric-grid" aria-label="Portal summary">
+        <section class="metric-grid" id="dashboard" aria-label="Portal summary">
           <article>
             <small>01</small>
             <span>Tracked lenders</span>
@@ -8825,8 +8786,8 @@ let resourceEntries = [];
 const pageNavLinks = document.querySelectorAll('.nav-list a[href^="#"]');
 const pageRoutes = ["dashboard", "uploads", "best-rates", "calculators", "admin-inbox", "resources", "lenders", "deal-desk", "programs", "insurers", "contacts", "compliance"];
 const pageGroups = {
-  dashboard: [document.querySelector("#dashboard"), document.querySelector(".metric-grid"), document.querySelector("#uploads")],
-  uploads: [document.querySelector("#dashboard"), document.querySelector("#uploads")],
+  dashboard: [document.querySelector("#dashboard"), document.querySelector("#uploads")],
+  uploads: [document.querySelector("#uploads")],
   "best-rates": [document.querySelector("#best-rates")],
   calculators: [document.querySelector("#calculators")],
   "admin-inbox": [document.querySelector("#admin-inbox")],
@@ -10355,10 +10316,14 @@ function renderMetrics() {
   document.querySelector("#lowestFixed").textContent = fixedRates.length ? rate(Math.min(...fixedRates)) : "N/A";
   document.querySelector("#altRange").textContent = altRates.length ? `${rate(Math.min(...altRates))}–${rate(Math.max(...altRates))}` : "N/A";
   document.querySelector("#bdmCount").textContent = lenders.filter((item) => item.bdm).length;
-  document.querySelector("#heroBestFixed").textContent = bestFixed ? rate(bestFixed.value) : "N/A";
-  document.querySelector("#heroBestLender").textContent = bestFixed ? `${bestFixed.lender.name} leads ${liveRateCount ? "published" : "demo"} insured 5-year fixed` : "No fixed rate available";
-  document.querySelector("#heroConventional").textContent = bestConventional ? rate(bestConventional.value) : "N/A";
-  document.querySelector("#heroUpdated").textContent = liveRateCount ? `${liveRateCount} AI-published rows` : (bestFixed?.lender.updated || "Demo data");
+  const heroBestFixed = document.querySelector("#heroBestFixed");
+  const heroBestLender = document.querySelector("#heroBestLender");
+  const heroConventional = document.querySelector("#heroConventional");
+  const heroUpdated = document.querySelector("#heroUpdated");
+  if (heroBestFixed) heroBestFixed.textContent = bestFixed ? rate(bestFixed.value) : "N/A";
+  if (heroBestLender) heroBestLender.textContent = bestFixed ? `${bestFixed.lender.name} leads ${liveRateCount ? "published" : "demo"} insured 5-year fixed` : "No fixed rate available";
+  if (heroConventional) heroConventional.textContent = bestConventional ? rate(bestConventional.value) : "N/A";
+  if (heroUpdated) heroUpdated.textContent = liveRateCount ? `${liveRateCount} AI-published rows` : (bestFixed?.lender.updated || "Demo data");
 }
 
 function renderRateIntelligence() {
