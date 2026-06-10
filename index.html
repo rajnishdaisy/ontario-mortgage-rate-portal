@@ -6627,6 +6627,166 @@ body.dark .lender-card {
   .contact-table-wrap { overflow-x: auto !important; }
 }
 
+
+/* Front-end designer pass — distinctive broker terminal, still minimalist */
+:root {
+  --fd-ink: #101410;
+  --fd-paper: #fbf7ec;
+  --fd-paper-2: #f4efe2;
+  --fd-paper-3: #ebe3d1;
+  --fd-rule: #d8cfbd;
+  --fd-green-bright: #217a55;
+  --fd-black: #09110d;
+}
+body {
+  background:
+    linear-gradient(90deg, rgba(16,20,16,.035) 1px, transparent 1px),
+    linear-gradient(rgba(16,20,16,.028) 1px, transparent 1px),
+    radial-gradient(circle at 78% -12%, rgba(186,138,45,.18), transparent 28rem),
+    var(--fd-paper-2) !important;
+  background-size: 40px 40px, 40px 40px, auto, auto !important;
+}
+body::before {
+  background:
+    linear-gradient(180deg, rgba(251,247,236,.0), rgba(251,247,236,.72) 52%, rgba(244,239,226,.94)),
+    radial-gradient(circle at 15% 0%, rgba(15,61,47,.08), transparent 24rem) !important;
+  mask-image: none !important;
+}
+.app-shell { grid-template-columns: 212px minmax(0, 1fr) !important; }
+.sidebar {
+  background: linear-gradient(180deg, rgba(214,177,96,.08), transparent 22%), var(--fd-black) !important;
+  padding: 12px !important;
+}
+.brand-lockup { display: grid !important; grid-template-columns: 34px 1fr; padding: 6px 4px 12px !important; }
+.brand-mark {
+  width: 34px !important;
+  border-radius: 6px !important;
+  background: var(--fd-paper-3) !important;
+  color: var(--fd-black) !important;
+  font-family: "IBM Plex Mono", ui-monospace, monospace !important;
+  font-size: .72rem !important;
+}
+.brand-lockup h1 {
+  text-transform: uppercase;
+  font-family: "IBM Plex Mono", ui-monospace, monospace !important;
+  font-size: .82rem !important;
+  letter-spacing: .08em !important;
+}
+.nav-list a { min-height: 32px !important; border-radius: 6px !important; font-size: .76rem !important; }
+.nav-list a.active, .nav-list a:hover { background: var(--fd-paper) !important; color: var(--fd-black) !important; }
+.sidebar-panel { border-radius: 8px !important; background: rgba(251,247,236,.07) !important; }
+main { padding: 12px !important; gap: 10px !important; }
+.topbar, .band, .workspace, .metric-grid, .access-lock-card {
+  border-color: var(--fd-rule) !important;
+  border-radius: 10px !important;
+  background: color-mix(in srgb, var(--fd-paper) 96%, white) !important;
+  box-shadow: 0 1px 0 rgba(16,20,16,.04), 0 20px 80px rgba(16,20,16,.045) !important;
+}
+.topbar {
+  position: relative;
+  grid-template-columns: minmax(0, 1fr) 172px 246px !important;
+  padding: 16px !important;
+  border-top: 3px solid var(--fd-black) !important;
+}
+.topbar::after {
+  content: "BROKER RATE DESK";
+  position: absolute;
+  right: 14px;
+  bottom: 10px;
+  color: rgba(16,20,16,.15);
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: .62rem;
+  font-weight: 700;
+  letter-spacing: .16em;
+}
+.topbar h2 {
+  max-width: 940px !important;
+  font-size: clamp(2.35rem, 5.6vw, 5.8rem) !important;
+  line-height: .82 !important;
+  letter-spacing: -.095em !important;
+}
+.topbar-copy { max-width: 620px !important; color: #566158 !important; font-size: .95rem !important; }
+.eyebrow, .panel-label, .metric-grid small, .rate-finder-toolbar label, .rate-highlight-card span, .rate-highlight-card small {
+  font-family: "IBM Plex Mono", ui-monospace, monospace !important;
+  letter-spacing: .08em !important;
+}
+.primary-button, .secondary-button, .icon-button { border-radius: 6px !important; min-height: 36px !important; }
+.primary-button { background: var(--fd-black) !important; border-color: var(--fd-black) !important; }
+.secondary-button, .icon-button { background: var(--fd-paper) !important; border-color: var(--fd-rule) !important; }
+.primary-button:hover, .secondary-button:hover, .rate-finder-chips button:hover { transform: translateY(-1px) !important; }
+.hero-proof-strip span, .live-pill, .desk-badges span, .source-chip, .rate-status-pill, .upload-item-meta span, .upload-status-chip, .supabase-status-pill, .pipeline-count-pill {
+  border-radius: 5px !important;
+  background: var(--fd-paper-2) !important;
+  border-color: var(--fd-rule) !important;
+}
+.live-pill { background: #e7f0e7 !important; color: var(--fd-green-bright) !important; }
+.hero-insight {
+  background: var(--fd-black) !important;
+  border-color: var(--fd-black) !important;
+  color: var(--fd-paper) !important;
+  border-radius: 8px !important;
+}
+.hero-insight .panel-label, .hero-insight span, .hero-insight dt { color: rgba(251,247,236,.62) !important; }
+.hero-insight > strong { color: var(--fd-paper) !important; }
+.hero-insight dd { color: #d7b160 !important; }
+.metric-grid { display: grid !important; grid-template-columns: repeat(4, minmax(0,1fr)) !important; padding: 0 !important; overflow: hidden; }
+.metric-grid article {
+  border-width: 0 1px 0 0 !important;
+  border-radius: 0 !important;
+  background: rgba(251,247,236,.66) !important;
+}
+.metric-grid article:last-child { border-right: 0 !important; }
+.metric-grid strong { color: var(--fd-ink) !important; }
+.section-heading h3, .workspace-header h3 { font-size: clamp(1.45rem, 2.8vw, 2.7rem) !important; }
+.upload-card, .deal-intake-card, .deal-pipeline-card, .rate-ingestion-card, .compliance-card, .program-card, .detail-panel, .resource-sidebar, .resource-card, .admin-email-detail, .admin-inbox-card, .insurer-card, .lender-card {
+  border-radius: 8px !important;
+  background: rgba(251,247,236,.8) !important;
+}
+.landing-rate-board { background: var(--fd-paper) !important; border-top: 3px solid var(--fd-black) !important; }
+.landing-rate-board > .section-heading h3 { font-size: clamp(2rem, 4.4vw, 3.8rem) !important; }
+.broker-rate-finder { border-radius: 8px !important; border-color: var(--fd-rule) !important; background: var(--fd-paper) !important; }
+.rate-finder-head { background: var(--fd-paper) !important; border-bottom-color: var(--fd-rule) !important; }
+.rate-finder-head h4 {
+  font-size: 1rem !important;
+  text-transform: uppercase;
+  letter-spacing: .08em !important;
+  font-family: "IBM Plex Mono", ui-monospace, monospace !important;
+}
+.rate-finder-mode span { border-radius: 4px !important; background: var(--fd-paper-2) !important; }
+.rate-finder-highlights { background: var(--fd-rule) !important; border-bottom-color: var(--fd-rule) !important; }
+.rate-highlight-card { min-height: 92px !important; background: #faf6ea !important; }
+.rate-highlight-card.primary { background: var(--fd-black) !important; }
+.rate-highlight-card strong { color: var(--fd-green-bright) !important; font-size: clamp(1.45rem, 2.8vw, 2.45rem) !important; }
+.rate-highlight-card.primary strong { color: var(--fd-paper) !important; }
+.rate-finder-toolbar { background: var(--fd-paper-2) !important; border-bottom-color: var(--fd-rule) !important; }
+input, select, textarea, .search-box input, .resource-toolbar input, .resource-toolbar select {
+  border-radius: 6px !important;
+  background: #fffaf0 !important;
+  border-color: var(--fd-rule) !important;
+}
+.rate-finder-chips, .rate-finder-summary { background: var(--fd-paper) !important; border-color: var(--fd-rule) !important; }
+.rate-finder-chips button { border-radius: 5px !important; background: #fffaf0 !important; }
+.rate-table-wrap, .contact-table-wrap { border-radius: 6px !important; border-color: var(--fd-rule) !important; }
+.rate-finder-table th, table th { background: var(--fd-black) !important; color: rgba(251,247,236,.76) !important; border-color: #1c2820 !important; }
+.rate-finder-table td, table td { background: #fffaf0 !important; }
+.rate-finder-table tbody tr:nth-child(even) td, table tbody tr:nth-child(even) td { background: #f8f1e3 !important; }
+.rate-finder-table tbody tr:hover td, table tbody tr:hover td { background: #efe6d4 !important; }
+.rate-finder-table td.rate-number { color: var(--fd-green-bright) !important; font-weight: 900 !important; }
+.resource-toolbar, .admin-intake-toolbar, .control-row { border-radius: 8px !important; background: var(--fd-paper-2) !important; }
+.file-drop-zone, .review-steps li, .upload-guardrail, .upload-item, .pipeline-column, .pipeline-card, .rate-event-card, .audit-card { border-radius: 7px !important; background: #f8f1e3 !important; }
+@media (max-width: 1180px) { .topbar { grid-template-columns: minmax(0,1fr) 190px !important; } }
+@media (max-width: 900px) {
+  .app-shell { grid-template-columns: 1fr !important; }
+  .metric-grid { grid-template-columns: repeat(2, minmax(0,1fr)) !important; }
+  .metric-grid article:nth-child(2n) { border-right: 0 !important; }
+}
+@media (max-width: 640px) {
+  .topbar { border-top-width: 2px !important; }
+  .topbar h2 { font-size: clamp(2.05rem, 11.5vw, 3rem) !important; }
+  .metric-grid { grid-template-columns: 1fr 1fr !important; }
+  .rate-highlight-card { min-height: 76px !important; }
+}
+
     </style>
   </head>
   <body class="portal-locked">
