@@ -6131,6 +6131,502 @@ body.dark .topbar, body.dark .band, body.dark .workspace, body.dark .metric-grid
   .rate-finder-toolbar { grid-template-columns: 1fr !important; }
 }
 
+/* Whole-site Rate Desk redesign — calm, tight, broker-first */
+:root {
+  --rd-page: #f2f1eb;
+  --rd-ink: #111813;
+  --rd-muted: #68736a;
+  --rd-panel: #fffdf7;
+  --rd-panel-2: #f8f6ef;
+  --rd-line: #dedbd0;
+  --rd-green: #123f31;
+  --rd-green-2: #1f6a4a;
+  --rd-gold: #c09a49;
+  --rd-shadow: 0 18px 50px rgba(17, 24, 19, .075);
+  --rd-radius: 16px;
+}
+html { scroll-behavior: auto; }
+body {
+  background: var(--rd-page) !important;
+  color: var(--rd-ink) !important;
+  font-family: Geist, Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(17,24,19,.035) 1px, transparent 1px), linear-gradient(rgba(17,24,19,.025) 1px, transparent 1px);
+  background-size: 42px 42px;
+  mask-image: linear-gradient(180deg, rgba(0,0,0,.55), transparent 56%);
+}
+.app-shell {
+  grid-template-columns: 224px minmax(0, 1fr) !important;
+  background: transparent !important;
+}
+.sidebar {
+  padding: 14px 12px !important;
+  background: #0e1813 !important;
+  border-right: 1px solid rgba(255,255,255,.08) !important;
+  gap: 14px !important;
+}
+.brand-lockup {
+  gap: 10px !important;
+  margin: 0 !important;
+  padding: 8px 6px 14px !important;
+  border-bottom: 1px solid rgba(255,255,255,.1) !important;
+}
+.brand-mark {
+  width: 38px !important;
+  border-radius: 9px !important;
+  background: #d6b160 !important;
+  color: #0e1813 !important;
+  font-size: .86rem !important;
+  box-shadow: none !important;
+}
+.brand-lockup h1 { font-size: 1.05rem !important; letter-spacing: -.035em; }
+.sidebar .eyebrow, .sidebar .panel-label { color: rgba(255,255,255,.52) !important; }
+.nav-list { gap: 3px !important; }
+.nav-list a {
+  display: grid;
+  grid-template-columns: 26px 1fr;
+  align-items: center;
+  min-height: 34px !important;
+  padding: 7px 8px !important;
+  border-radius: 8px !important;
+  color: rgba(255,255,255,.66) !important;
+  font-size: .8rem !important;
+  font-weight: 650 !important;
+  letter-spacing: -.01em;
+}
+.nav-list a span {
+  color: rgba(214,177,96,.74) !important;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: .68rem;
+}
+.nav-list a.active,
+.nav-list a:hover {
+  background: #f4efe1 !important;
+  border-color: #f4efe1 !important;
+  color: #0e1813 !important;
+}
+.nav-list a.active span,
+.nav-list a:hover span { color: #7b5a19 !important; }
+.sidebar-panel {
+  margin-top: auto !important;
+  padding: 12px !important;
+  border-radius: 12px !important;
+  background: rgba(255,255,255,.055) !important;
+  border-color: rgba(255,255,255,.1) !important;
+  color: rgba(255,255,255,.68) !important;
+  font-size: .82rem;
+  line-height: 1.35;
+}
+main {
+  padding: 14px !important;
+  gap: 12px !important;
+}
+.topbar,
+.band,
+.workspace,
+.metric-grid,
+.access-lock-card {
+  border: 1px solid var(--rd-line) !important;
+  border-radius: var(--rd-radius) !important;
+  background: var(--rd-panel) !important;
+  box-shadow: var(--rd-shadow) !important;
+}
+.topbar {
+  grid-template-columns: minmax(0, 1fr) 164px 260px !important;
+  gap: 14px !important;
+  min-height: 0 !important;
+  padding: 18px !important;
+  overflow: visible !important;
+}
+.status-row { gap: 8px !important; }
+.topbar h2 {
+  max-width: 900px !important;
+  margin: 8px 0 10px !important;
+  font-size: clamp(2.2rem, 5.1vw, 5.2rem) !important;
+  line-height: .86 !important;
+  letter-spacing: -.085em !important;
+  text-wrap: balance;
+}
+.topbar-copy {
+  max-width: 650px !important;
+  margin: 0 !important;
+  color: var(--rd-muted) !important;
+  font-size: .98rem !important;
+  line-height: 1.42 !important;
+}
+.topbar-actions {
+  align-self: stretch !important;
+  display: grid !important;
+  grid-auto-rows: min-content;
+  gap: 8px !important;
+}
+.primary-button,
+.secondary-button,
+.icon-button,
+.segmented-control button,
+.rate-finder-chips button,
+button {
+  border-radius: 8px !important;
+  box-shadow: none !important;
+}
+.primary-button {
+  min-height: 38px !important;
+  display: inline-grid;
+  place-items: center;
+  border-color: var(--rd-green) !important;
+  background: var(--rd-green) !important;
+  color: #fff !important;
+  font-size: .84rem !important;
+  font-weight: 760 !important;
+  text-decoration: none;
+}
+.secondary-button,
+.icon-button {
+  min-height: 38px !important;
+  display: inline-grid;
+  place-items: center;
+  border-color: var(--rd-line) !important;
+  background: #fbfaf4 !important;
+  color: var(--rd-ink) !important;
+  font-size: .84rem !important;
+  font-weight: 720 !important;
+  text-decoration: none;
+}
+.hero-proof-strip {
+  margin-top: 13px !important;
+  display: flex !important;
+  gap: 6px !important;
+  flex-wrap: wrap;
+}
+.hero-proof-strip span,
+.live-pill,
+.desk-badges span,
+.source-chip,
+.rate-status-pill,
+.upload-item-meta span,
+.upload-status-chip,
+.supabase-status-pill,
+.pipeline-count-pill {
+  min-height: 22px !important;
+  border-radius: 999px !important;
+  border: 1px solid var(--rd-line) !important;
+  background: var(--rd-panel-2) !important;
+  color: var(--rd-muted) !important;
+  font-family: "IBM Plex Mono", ui-monospace, monospace !important;
+  font-size: .62rem !important;
+  letter-spacing: .06em !important;
+  font-weight: 760 !important;
+  text-transform: uppercase;
+}
+.live-pill {
+  background: #ecf4ed !important;
+  color: var(--rd-green-2) !important;
+  border-color: #cfdccd !important;
+}
+.hero-insight {
+  min-width: 0 !important;
+  padding: 14px !important;
+  border-radius: 14px !important;
+  border: 1px solid #d8d6cb !important;
+  background: #f8f6ef !important;
+  box-shadow: none !important;
+}
+.hero-insight > strong {
+  color: var(--rd-green) !important;
+  font-size: clamp(2rem, 3vw, 2.85rem) !important;
+  letter-spacing: -.065em !important;
+}
+.metric-grid {
+  padding: 8px !important;
+  gap: 8px !important;
+  box-shadow: none !important;
+}
+.metric-grid article {
+  min-height: 76px !important;
+  padding: 12px !important;
+  border-radius: 12px !important;
+  border-color: #e3dfd4 !important;
+  background: #f9f7ef !important;
+  box-shadow: none !important;
+}
+.metric-grid article::after { content: none !important; }
+.metric-grid small { color: var(--rd-gold) !important; font-family: "IBM Plex Mono", ui-monospace, monospace; }
+.metric-grid strong {
+  font-size: clamp(1.35rem, 2.2vw, 1.9rem) !important;
+  letter-spacing: -.055em !important;
+}
+.band,
+.workspace { padding: 14px !important; }
+.section-heading,
+.workspace-header {
+  margin-bottom: 10px !important;
+  padding: 0 0 10px !important;
+  border-bottom: 1px solid #e7e3d8 !important;
+  align-items: end !important;
+}
+.section-heading h3,
+.workspace-header h3,
+.access-lock-card h1 {
+  color: var(--rd-ink) !important;
+  font-size: clamp(1.35rem, 2.4vw, 2.45rem) !important;
+  line-height: .96 !important;
+  letter-spacing: -.065em !important;
+  text-wrap: balance;
+}
+.section-copy,
+.contact-line,
+.upload-help-text,
+.program-card p,
+.compliance p,
+.access-lock-card p { color: var(--rd-muted) !important; }
+input,
+select,
+textarea,
+.search-box input,
+.resource-toolbar input,
+.resource-toolbar select {
+  min-height: 36px !important;
+  border-radius: 8px !important;
+  border-color: #d9d6cb !important;
+  background: #fffdf7 !important;
+  color: var(--rd-ink) !important;
+  box-shadow: none !important;
+}
+input:focus,
+select:focus,
+textarea:focus,
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid rgba(31, 106, 74, .24) !important;
+  outline-offset: 2px;
+}
+.upload-desk-grid,
+.admin-intake-grid,
+.deal-builder-grid,
+.deal-command-grid {
+  gap: 10px !important;
+}
+.upload-card,
+.deal-intake-card,
+.deal-pipeline-card,
+.rate-ingestion-card,
+.compliance-card,
+.program-card,
+.detail-panel,
+.resource-sidebar,
+.resource-card,
+.admin-email-detail,
+.admin-inbox-card,
+.insurer-card,
+.lender-card {
+  border: 1px solid var(--rd-line) !important;
+  border-radius: 12px !important;
+  background: #fffdf7 !important;
+  box-shadow: none !important;
+}
+.file-drop-zone {
+  min-height: 108px !important;
+  border-radius: 12px !important;
+  border-color: #cfd8c9 !important;
+  background: #f7f6ee !important;
+}
+.review-steps li,
+.upload-guardrail,
+.upload-item,
+.pipeline-column,
+.pipeline-card,
+.rate-event-card,
+.audit-card {
+  border-radius: 10px !important;
+  border: 1px solid #e2ded3 !important;
+  background: #faf8f1 !important;
+  box-shadow: none !important;
+}
+.landing-rate-board {
+  padding: 12px !important;
+  background: #f5f4ed !important;
+  border-radius: var(--rd-radius) !important;
+}
+.landing-rate-board > .section-heading h3 { font-size: clamp(1.8rem, 4vw, 3.15rem) !important; }
+.broker-rate-finder {
+  margin: 0 !important;
+  border: 1px solid #d7d4c8 !important;
+  border-radius: 14px !important;
+  overflow: hidden !important;
+  background: #fffdf7 !important;
+}
+.rate-finder-head,
+.rate-finder-toolbar,
+.rate-finder-chips,
+.rate-finder-summary {
+  background: #fffdf7 !important;
+  border-color: #e5e1d6 !important;
+}
+.rate-finder-head { padding: 12px !important; }
+.rate-finder-head h4 { color: var(--rd-ink) !important; }
+.rate-highlight-card { background: #fbf9f1 !important; }
+.rate-highlight-card.primary { background: var(--rd-green) !important; }
+.rate-highlight-card strong { color: var(--rd-green-2) !important; }
+.rate-highlight-card.primary strong { color: #fff !important; }
+.rate-finder-toolbar {
+  grid-template-columns: 112px 116px 132px minmax(220px, 1fr) 158px 148px !important;
+  padding: 9px !important;
+  background: #f8f6ef !important;
+}
+.rate-finder-toolbar label { color: var(--rd-muted) !important; }
+.rate-finder-chips { padding: 7px 9px !important; }
+.rate-finder-chips button {
+  min-height: 30px !important;
+  padding: 5px 8px !important;
+  border-color: #d9d6cb !important;
+  background: #fffdf7 !important;
+  color: #26332b !important;
+}
+.rate-finder-summary {
+  min-height: 34px !important;
+  padding: 8px 10px !important;
+  color: var(--rd-muted) !important;
+}
+.rate-table-wrap,
+.contact-table-wrap {
+  border-color: #d9d6cb !important;
+  border-radius: 12px !important;
+  background: #fffdf7 !important;
+}
+table { border-collapse: collapse; }
+.rate-finder-table th,
+table th {
+  background: #f2f0e8 !important;
+  color: #667067 !important;
+  border-color: #dedbd0 !important;
+  font-family: "IBM Plex Mono", ui-monospace, monospace !important;
+  font-size: .62rem !important;
+  letter-spacing: .06em !important;
+  text-transform: uppercase !important;
+}
+.rate-finder-table td,
+table td {
+  border-color: #ede9de !important;
+  color: #1b241f !important;
+}
+.rate-finder-table tbody tr:nth-child(even) td,
+table tbody tr:nth-child(even) td { background: #fbfaf4 !important; }
+.rate-finder-table tbody tr:hover td,
+table tbody tr:hover td { background: #f3f2ea !important; }
+.rate-finder-table td.rate-number { color: var(--rd-green-2) !important; font-size: 1.06rem !important; }
+.calculator-desk .desk-badges span:nth-child(n+2),
+.section-heading .desk-badges span:nth-child(n+3) { display: none !important; }
+.calculator-app-shell,
+.calculator-app-shell * { --calculator-accent: var(--rd-green); }
+.resource-toolbar,
+.admin-intake-toolbar,
+.control-row {
+  padding: 8px !important;
+  border: 1px solid var(--rd-line) !important;
+  border-radius: 12px !important;
+  background: #f8f6ef !important;
+}
+.resource-shell,
+.admin-intake-grid,
+.split-view {
+  gap: 10px !important;
+}
+#resources.app-page-active { display: grid !important; }
+.resource-results,
+.lender-list,
+.admin-inbox-list {
+  scrollbar-width: thin;
+  scrollbar-color: #c9c4b7 transparent;
+}
+body.dark {
+  --rd-page: #101611;
+  --rd-ink: #eef4ed;
+  --rd-muted: #a9b4aa;
+  --rd-panel: #151d17;
+  --rd-panel-2: #1b241d;
+  --rd-line: #2e382f;
+  --rd-green: #a8d6bd;
+  --rd-green-2: #9ad6b5;
+  --rd-gold: #d7b160;
+}
+body.dark .sidebar { background: #090f0b !important; }
+body.dark .nav-list a.active,
+body.dark .nav-list a:hover { background: #e8ddbd !important; color: #101611 !important; }
+body.dark .topbar,
+body.dark .band,
+body.dark .workspace,
+body.dark .metric-grid,
+body.dark .access-lock-card,
+body.dark .upload-card,
+body.dark .broker-rate-finder,
+body.dark .deal-intake-card,
+body.dark .deal-pipeline-card,
+body.dark .rate-ingestion-card,
+body.dark .compliance-card,
+body.dark .program-card,
+body.dark .detail-panel,
+body.dark .resource-sidebar,
+body.dark .resource-card,
+body.dark .admin-email-detail,
+body.dark .admin-inbox-card,
+body.dark .insurer-card,
+body.dark .lender-card {
+  background: var(--rd-panel) !important;
+  border-color: var(--rd-line) !important;
+}
+@media (max-width: 1180px) {
+  .topbar { grid-template-columns: minmax(0,1fr) 220px !important; }
+  .hero-insight { grid-column: 1 / -1 !important; }
+  .rate-finder-toolbar { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+}
+@media (max-width: 900px) {
+  .app-shell { grid-template-columns: 1fr !important; }
+  .sidebar { position: static !important; height: auto !important; min-height: auto !important; }
+  .brand-lockup { border-bottom: 0 !important; padding-bottom: 8px !important; }
+  .nav-list { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  .sidebar-panel { margin-top: 4px !important; }
+  .topbar,
+  .upload-heading,
+  .upload-desk-grid,
+  .split-view,
+  .admin-intake-grid,
+  .resource-shell,
+  .deal-builder-grid,
+  .deal-command-grid { grid-template-columns: 1fr !important; }
+  .topbar-actions { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .metric-grid { grid-template-columns: repeat(2, minmax(0,1fr)) !important; }
+  .resource-results,
+  .lender-list,
+  .admin-inbox-list,
+  .detail-panel { max-height: none !important; }
+}
+@media (max-width: 640px) {
+  main { padding: 8px !important; }
+  .sidebar { padding: 10px !important; gap: 8px !important; }
+  .sidebar-panel { display: none !important; }
+  .nav-list { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  .nav-list a { min-height: 32px !important; font-size: .76rem !important; }
+  .topbar,
+  .band,
+  .workspace { border-radius: 12px !important; padding: 11px !important; }
+  .topbar h2 { font-size: clamp(1.95rem, 11vw, 2.9rem) !important; }
+  .topbar-copy { font-size: .9rem !important; }
+  .hero-insight { display: none !important; }
+  .topbar-actions,
+  .metric-grid,
+  .rate-finder-highlights,
+  .rate-finder-toolbar,
+  .compact-form-grid,
+  .resource-toolbar { grid-template-columns: 1fr !important; }
+  .rate-table-wrap,
+  .contact-table-wrap { overflow-x: auto !important; }
+}
+
     </style>
   </head>
   <body class="portal-locked">
@@ -6145,19 +6641,19 @@ body.dark .topbar, body.dark .band, body.dark .workspace, body.dark .metric-grid
         </div>
 
         <nav class="nav-list">
-          <a href="#dashboard" class="active"><span>01</span> Dashboard</a>
-          <a href="#uploads"><span>02</span> Uploads</a>
-          <a href="#best-rates"><span>03</span> Rate Board</a>
-          <a href="#calculators"><span>04</span> Calculators</a>
-          <a href="#admin-inbox" data-admin-only><span>05</span> AI Review</a>
-          <a href="#resources"><span>06</span> Broker Kits</a>
-          <a href="#lenders"><span>07</span> Directory</a>
+          <a href="#dashboard" class="active"><span>01</span> Overview</a>
+          <a href="#best-rates"><span>02</span> Quote Board</a>
+          <a href="#calculators"><span>03</span> Calculators</a>
+          <a href="#uploads"><span>04</span> Intake</a>
+          <a href="#resources"><span>05</span> Broker Kits</a>
+          <a href="#lenders"><span>06</span> Directory</a>
+          <a href="#admin-inbox" data-admin-only><span>07</span> AI Review</a>
         </nav>
 
         <section class="sidebar-panel">
           <p class="panel-label">Desk date</p>
           <strong id="todayLabel"></strong>
-          <span>Internal rate, lender, and deal-fit database for Ontario broker work.</span>
+          <span>One broker workspace for pricing, qualification, source files, and lender fit.</span>
         </section>
       </aside>
 
@@ -6192,29 +6688,27 @@ body.dark .topbar, body.dark .band, body.dark .workspace, body.dark .metric-grid
         <header class="topbar" id="dashboard">
           <div>
             <div class="status-row">
-                <p class="eyebrow">Ontario mortgage intelligence</p>
-              <span class="live-pill">Live desk</span>
+                <p class="eyebrow">Ontario broker workspace</p>
+              <span class="live-pill">Lowest first</span>
             </div>
-            <h2><span>Rate desk command centre.</span></h2>
+            <h2><span>Quote faster. Stay source-backed.</span></h2>
             <p class="topbar-copy">
-              Upload sheets, review AI extraction, and quote from the lowest-first rate board without leaving the desk.
+              A clean rate desk for brokers: pick the deal shape, compare the lowest usable rows, qualify the file, then open the source kit when it matters.
             </p>
             <div class="hero-proof-strip" aria-label="Desk highlights">
-              <span>Upload</span>
-              <span>Review</span>
-              <span>Publish</span>
               <span>Quote</span>
+              <span>Qualify</span>
+              <span>Verify</span>
+              <span>Place</span>
             </div>
           </div>
           <div class="topbar-actions">
-            <button class="icon-button" id="themeToggle" type="button" title="Toggle theme" aria-label="Toggle theme">
-              <span>◐</span>
-            </button>
-            <a class="primary-button" href="#uploads">Upload sheet</a>
-            <a class="secondary-button" href="#best-rates">Rate board</a>
+            <button class="secondary-button" id="themeToggle" type="button" title="Toggle theme" aria-label="Toggle theme">Theme</button>
+            <a class="primary-button" href="#best-rates">Open quote board</a>
+            <a class="secondary-button" href="#calculators">Run scenario</a>
           </div>
           <aside class="hero-insight" aria-label="Current rate snapshot">
-            <p class="panel-label">Live abstract</p>
+            <p class="panel-label">Best visible row</p>
             <strong id="heroBestFixed">0.00%</strong>
             <span id="heroBestLender">Calculating lender leader</span>
             <dl>
