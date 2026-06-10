@@ -2,6 +2,7 @@
   "type": "module",
   "scripts": {
     "check": "node --check api/*.js lib/*.js scripts/*.js",
+    "test:calculators": "node scripts/test-calculator-math.js",
     "verify:demo-ingestion": "node scripts/verify-demo-rate-ingestion.js"
   },
   "dependencies": {

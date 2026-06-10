@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;450;500;600;700;800;900&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="lib/rate-desk-calculators.css" />
     <style>
 :root {
   color-scheme: light;
@@ -5887,9 +5888,10 @@ body.dark .topbar, body.dark .band, body.dark .workspace, body.dark .metric-grid
           <a href="#dashboard" class="active"><span>01</span> Dashboard</a>
           <a href="#uploads"><span>02</span> Uploads</a>
           <a href="#best-rates"><span>03</span> Rate Board</a>
-          <a href="#admin-inbox" data-admin-only><span>04</span> AI Review</a>
-          <a href="#resources"><span>05</span> Broker Kits</a>
-          <a href="#lenders"><span>06</span> Directory</a>
+          <a href="#calculators"><span>04</span> Calculators</a>
+          <a href="#admin-inbox" data-admin-only><span>05</span> AI Review</a>
+          <a href="#resources"><span>06</span> Broker Kits</a>
+          <a href="#lenders"><span>07</span> Directory</a>
         </nav>
 
         <section class="sidebar-panel">
@@ -6094,7 +6096,6 @@ body.dark .topbar, body.dark .band, body.dark .workspace, body.dark .metric-grid
               <label><span>Term</span><select id="rateFinderTerm"><option value="all">Any term</option><option value="12">1yr</option><option value="36">3yr</option><option value="60">5yr</option></select></label>
               <label><span>Type</span><select id="rateFinderRateType"><option value="all">Any type</option><option value="fixed">Fixed</option><option value="variable">Variable</option></select></label>
               <label><span>Amortization</span><select id="rateFinderAmort"><option value="all">Any amort.</option><option value="25">25yr</option><option value="30">30yr</option></select></label>
-              <label><span>Bucket</span><select id="rateFinderBucket"><option value="all">Any bucket</option><option value="insured">Insured / high ratio</option><option value="insurable">Insurable</option><option value="uninsured">Uninsured / refi</option><option value="variable">Variable</option><option value="alt">Alternative</option></select></label>
               <label><span>Purpose</span><select id="rateFinderPurpose"><option value="all">Any purpose</option><option value="purchase">Purchase</option><option value="refinance">Refinance</option><option value="rental">Rental</option><option value="private">Private exit</option></select></label>
             </div>
             <div class="rate-finder-chips" aria-label="Common broker searches">
@@ -6110,7 +6111,7 @@ body.dark .topbar, body.dark .band, body.dark .workspace, body.dark .metric-grid
             </div>
             <div class="rate-table-wrap">
               <table class="rate-finder-table" aria-label="Broker searchable rate table">
-                <thead><tr><th>Lender</th><th>Term</th><th>Type</th><th>Bucket</th><th>Rate</th><th>Amort.</th><th>Purpose</th><th>Source</th></tr></thead>
+                <thead><tr><th>Lender</th><th>Term</th><th>Type</th><th>Rate</th><th>Amort.</th><th>Purpose</th><th>Source</th></tr></thead>
                 <tbody id="rateFinderTable"></tbody>
               </table>
             </div>
@@ -6122,6 +6123,22 @@ body.dark .topbar, body.dark .band, body.dark .workspace, body.dark .metric-grid
             <div id="bestRateGrid"></div>
             <div id="dryRunRateSheetPanel"></div>
           </div>
+        </section>
+
+        <section class="band calculator-desk" id="calculators">
+          <div class="section-heading calculator-heading">
+            <div>
+              <p class="eyebrow">Broker calculators</p>
+              <h3>Qualify, price, and compare scenarios.</h3>
+              <p class="section-copy">All Simple Home Financing calculator logic rebuilt for the Rate Desk theme with live-rate defaults from the lowest-first board.</p>
+            </div>
+            <div class="desk-badges">
+              <span>22 tools</span>
+              <span>Lowest live rate</span>
+              <span>Broker use</span>
+            </div>
+          </div>
+          <div id="calculatorApp" class="calculator-app-shell"></div>
         </section>
 
         <section class="band full-deal-desk" id="deal-desk">
@@ -7679,11 +7696,12 @@ let activeAdminEmailId = "";
 let resourceIndex = null;
 let resourceEntries = [];
 const pageNavLinks = document.querySelectorAll('.nav-list a[href^="#"]');
-const pageRoutes = ["dashboard", "uploads", "best-rates", "admin-inbox", "resources", "lenders", "deal-desk", "programs", "insurers", "contacts", "compliance"];
+const pageRoutes = ["dashboard", "uploads", "best-rates", "calculators", "admin-inbox", "resources", "lenders", "deal-desk", "programs", "insurers", "contacts", "compliance"];
 const pageGroups = {
   dashboard: [document.querySelector("#dashboard"), document.querySelector(".metric-grid"), document.querySelector("#uploads")],
   uploads: [document.querySelector("#dashboard"), document.querySelector("#uploads")],
   "best-rates": [document.querySelector("#best-rates")],
+  calculators: [document.querySelector("#calculators")],
   "admin-inbox": [document.querySelector("#admin-inbox")],
   resources: [document.querySelector("#resources")],
   lenders: [document.querySelector(".workspace"), document.querySelector("#programs"), document.querySelector("#insurers"), document.querySelector("#contacts")],
@@ -9546,7 +9564,7 @@ function renderBrokerRateFinder() {
     term: rateFinderTerm?.value || "all",
     rateType: rateFinderRateType?.value || "all",
     amort: rateFinderAmort?.value || "all",
-    bucket: rateFinderBucket?.value || "all",
+    bucket: "all",
     purpose: rateFinderPurpose?.value || "all"
   };
   let rows = rateFinderRows().filter((row) => {
@@ -9580,13 +9598,12 @@ function renderBrokerRateFinder() {
         <td data-label="Lender" class="lender-cell"><button class="text-link" type="button" data-lender="${escapeHtml(row.lenderId)}">${escapeHtml(row.lender)}</button></td>
         <td data-label="Term">${escapeHtml(row.term)}</td>
         <td data-label="Type">${escapeHtml(titleCase(row.rateType || (normalizeSearchText(row.term).includes("variable") ? "variable" : "fixed")))}</td>
-        <td data-label="Bucket">${escapeHtml(titleCase(row.bucket))}</td>
         <td data-label="Rate" class="rate-number">${row.isPlaceholder ? "" : escapeHtml(rate(row.rateValue))}</td>
         <td data-label="Amort.">${escapeHtml(row.amortization)}${String(row.amortization).includes("—") ? "" : "yr"}</td>
         <td data-label="Purpose">${escapeHtml(row.purpose)}</td>
         <td data-label="Source / status" title="${escapeHtml(`${row.source} · ${String(row.status).replace(/_/g, " ")} · ${row.note}`)}"><span class="source-status-cell"><span class="source-label">${escapeHtml(row.source)}</span><span class="rate-status-pill ${tone}">${escapeHtml(String(row.status).replace(/_/g, " "))}</span></span></td>
       </tr>`;
-  }).join("") || `<tr><td colspan="8"><div class="rate-finder-empty">No matching rates. Broaden the filters or reset the finder.</div></td></tr>`;
+  }).join("") || `<tr><td colspan="7"><div class="rate-finder-empty">No matching rates. Broaden the filters or reset the finder.</div></td></tr>`;
 }
 
 function hydrateRateFinderLenders() {
@@ -10653,5 +10670,6 @@ showPage(routeFromHash(), { updateHash: window.location.hash !== "", scrollTop: 
 window.addEventListener("load", () => showPage(routeFromHash(), { updateHash: false, scrollTop: true }));
 
 </script>
+    <script src="lib/rate-desk-calculators.js"></script>
   </body>
 </html>
