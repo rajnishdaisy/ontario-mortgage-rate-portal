@@ -6787,42 +6787,98 @@ input, select, textarea, .search-box input, .resource-toolbar input, .resource-t
   .rate-highlight-card { min-height: 76px !important; }
 }
 
+
+/* Bank-grade institutional redesign override — applied after legacy styles. */
+:root {
+  --bank-bg: #f5f2ec; --bank-bg-2: #ece7dc; --bank-ink: #07131f; --bank-ink-2: #122335; --bank-navy: #071827; --bank-navy-2: #0d2638; --bank-steel: #476171; --bank-muted: #6f7b82; --bank-line: #d6d0c4; --bank-line-strong: #b9aa92; --bank-panel: #fffdf8; --bank-panel-2: #f8f5ee; --bank-gold: #a7792b; --bank-gold-2: #c39b56; --bank-green: #1f6b4d; --bank-red: #9a3d33; --bank-radius: 14px; --bank-radius-sm: 8px; --bank-shadow: 0 24px 70px rgba(7, 24, 39, .14); --bank-shadow-soft: 0 10px 30px rgba(7, 24, 39, .08);
+  --bg: var(--bank-bg); --surface: var(--bank-panel); --surface-strong: var(--bank-panel-2); --surface-tint: #eef3f2; --text: var(--bank-ink); --muted: var(--bank-muted); --line: var(--bank-line); --accent: var(--bank-gold); --accent-strong: #705017; --accent-soft: #f1e5cc; --green: var(--bank-green); --amber: var(--bank-gold); --red: var(--bank-red); --nav: var(--bank-navy); --shadow: var(--bank-shadow); --shadow-soft: var(--bank-shadow-soft);
+}
+body, body.dark { color-scheme: light; background: linear-gradient(rgba(7,24,39,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(7,24,39,.035) 1px, transparent 1px), radial-gradient(circle at 76% -10%, rgba(167,121,43,.16), transparent 36rem), linear-gradient(180deg, #fbf8f1 0%, var(--bank-bg) 38%, #eee8dc 100%); background-size:42px 42px,42px 42px,auto,auto; color: var(--bank-ink); font-family:"Geist",ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; letter-spacing:-.01em; }
+main { min-width:0; }
+.app-shell { grid-template-columns:304px minmax(0,1fr); }
+.sidebar { padding:26px 22px; background:linear-gradient(180deg, rgba(195,155,86,.16), transparent 26%), linear-gradient(90deg, rgba(255,255,255,.06), transparent 34%), var(--bank-navy); border-right:1px solid rgba(255,255,255,.12); color:#f7f0e4; box-shadow:18px 0 60px rgba(7,24,39,.18); }
+.sidebar::after { content:"CONTROLLED RATE INFRASTRUCTURE"; margin-top:auto; padding-top:18px; border-top:1px solid rgba(255,255,255,.12); color:rgba(247,240,228,.48); font:700 .64rem/1.4 "IBM Plex Mono",monospace; letter-spacing:.18em; }
+.brand-lockup{align-items:flex-start;gap:13px}.brand-mark{border-radius:4px;width:52px;background:linear-gradient(135deg,#f1ddac 0%,var(--bank-gold) 100%);color:var(--bank-navy);border:1px solid rgba(255,255,255,.35);box-shadow:inset 0 0 0 1px rgba(7,24,39,.18),0 12px 30px rgba(0,0,0,.22);font-family:"IBM Plex Mono",monospace}.brand-lockup h1{font-size:1rem;line-height:1.05;letter-spacing:-.025em;max-width:150px}.eyebrow,.panel-label,.form-grid label span,.access-lock-form label span,.deal-field span,.rate-finder-toolbar label span,.search-box span{font-family:"IBM Plex Mono",monospace;letter-spacing:.14em;text-transform:uppercase;font-weight:700}.nav-list{gap:7px}.nav-list a{border-radius:6px;color:rgba(247,240,228,.7);border:1px solid transparent;background:transparent;min-height:42px;padding:0 12px;font-weight:650}.nav-list a span{color:rgba(195,155,86,.86);font-family:"IBM Plex Mono",monospace}.nav-list a:hover,.nav-list a.active{color:#fffaf0;background:rgba(255,255,255,.075);border-color:rgba(195,155,86,.34);box-shadow:inset 3px 0 0 var(--bank-gold)}.sidebar-panel{border-radius:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);box-shadow:none}.sidebar-panel strong{color:#fff}.sidebar-panel span{color:rgba(247,240,228,.68)}
+.topbar{margin:18px;min-height:520px;padding:clamp(26px,5vw,64px);border-radius:0;border:1px solid rgba(255,255,255,.13);background:linear-gradient(135deg,rgba(7,24,39,.96),rgba(13,38,56,.97)),var(--bank-navy);color:#fffaf0;box-shadow:var(--bank-shadow);grid-template-columns:minmax(0,1fr) 220px 330px;gap:clamp(20px,3vw,42px);position:relative;isolation:isolate;overflow:hidden}.topbar::before{content:"";position:absolute;inset:24px;border:1px solid rgba(195,155,86,.22);pointer-events:none;z-index:-1}.topbar::after{content:"";position:absolute;right:-140px;top:-180px;width:520px;height:520px;border:1px solid rgba(195,155,86,.18);border-radius:999px;background:radial-gradient(circle,rgba(195,155,86,.12),transparent 62%);z-index:-1}.status-row{justify-content:flex-start;gap:12px}.live-pill,.source-chip,.supabase-status-pill,.pipeline-count-pill,.deal-chip,.desk-badges span,.badge{border-radius:999px;border:1px solid var(--bank-line);background:rgba(255,255,255,.78);color:var(--bank-steel);font-family:"IBM Plex Mono",monospace;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700}.topbar .live-pill,.topbar .eyebrow,.topbar .hero-proof-strip span{color:#ead4a2;border-color:rgba(195,155,86,.32);background:rgba(195,155,86,.08)}.topbar h2{max-width:930px;margin:16px 0;font-size:clamp(3.3rem,8.1vw,7.5rem);line-height:.84;letter-spacing:-.085em;font-weight:900}.topbar h2 span{background:none;color:inherit;-webkit-text-fill-color:initial}.topbar-copy{max-width:720px;color:rgba(255,250,240,.72);font-size:clamp(1rem,1.4vw,1.22rem);line-height:1.65}.hero-proof-strip{margin-top:30px;display:flex;flex-wrap:wrap;gap:9px}.hero-proof-strip span{padding:10px 12px;border-radius:4px}.topbar-actions{align-self:end;gap:10px}.primary-button,.secondary-button,.icon-button,.search-button,.rate-finder-chips button{min-height:42px;border-radius:6px;font-weight:760;letter-spacing:-.01em;transition:transform .15s ease,box-shadow .15s ease,border-color .15s ease,background .15s ease}.primary-button{background:linear-gradient(180deg,#f0dba9,var(--bank-gold));color:#151006;border:1px solid #8d681f;box-shadow:0 12px 26px rgba(93,67,17,.22),inset 0 1px 0 rgba(255,255,255,.55)}.secondary-button,.icon-button,.rate-finder-chips button{background:rgba(255,255,255,.82);color:var(--bank-ink-2);border:1px solid var(--bank-line)}.topbar .secondary-button{background:rgba(255,255,255,.07);color:#fffaf0;border-color:rgba(255,255,255,.18)}.primary-button:hover,.secondary-button:hover,.rate-finder-chips button:hover{transform:translateY(-1px);box-shadow:var(--bank-shadow-soft)}.hero-insight{border-radius:0;border:1px solid rgba(195,155,86,.32);background:rgba(255,250,240,.075);backdrop-filter:blur(18px);box-shadow:none}.hero-insight strong{color:#f6dca3;font-family:"IBM Plex Mono",monospace;letter-spacing:-.05em}.hero-insight span,.hero-insight dt{color:rgba(255,250,240,.65)}.hero-insight dd{color:#fffaf0}
+.metric-grid,.band,.workspace,.compliance{margin-left:18px;margin-right:18px}.metric-grid{margin-top:18px;gap:12px}.metric-grid article,.band,.workspace,.access-lock-card,.upload-card,.broker-rate-finder,.deal-intake-card,.deal-pipeline-card,.rate-ingestion-card,.compliance-card,.detail-panel,.program-detail,.resource-sidebar,.resource-card,.calculator-app-shell,.lender-card,.program-card,.insurer-card,.contact-table-wrap,.rate-table-wrap,.admin-intake-toolbar,.admin-email-detail,.admin-inbox-list{border-radius:var(--bank-radius);background:rgba(255,253,248,.92);border:1px solid var(--bank-line);box-shadow:var(--bank-shadow-soft)}.metric-grid article{min-height:138px;padding:22px;background:linear-gradient(180deg,#fffdf8,#f7f2e8);border-top:3px solid var(--bank-navy)}.metric-grid small{color:var(--bank-gold);font-family:"IBM Plex Mono",monospace}.metric-grid span{color:var(--bank-muted)}.metric-grid strong{font-family:"IBM Plex Mono",monospace;color:var(--bank-ink);letter-spacing:-.05em}.band,.workspace{padding:clamp(22px,3.6vw,42px);margin-top:18px;background:linear-gradient(180deg,rgba(255,255,255,.72),rgba(248,245,238,.92)),var(--bank-panel)}.section-heading,.workspace-header,.upload-heading,.calculator-heading{border-bottom:1px solid var(--bank-line);padding-bottom:20px;margin-bottom:22px}.section-heading h3,.workspace-header h3,.access-lock-card h1{color:var(--bank-ink);letter-spacing:-.055em;line-height:.95;font-weight:880}.section-copy,.topbar-copy,p,.contact-line,.deal-form-help,.upload-help-text{color:var(--bank-muted)}.landing-rate-board{background:linear-gradient(180deg,rgba(7,24,39,.03),transparent),rgba(255,253,248,.94);border-top:5px solid var(--bank-navy)}.broker-rate-finder{padding:0;overflow:hidden;border-color:var(--bank-line-strong)}.rate-finder-head{padding:22px;background:linear-gradient(135deg,var(--bank-navy),var(--bank-navy-2));color:#fffaf0;border-bottom:1px solid rgba(195,155,86,.28)}.rate-finder-head h4{color:#fffaf0;letter-spacing:-.035em}.rate-finder-head p{color:rgba(255,250,240,.65)}.rate-finder-mode span{background:rgba(195,155,86,.1);color:#ead4a2;border:1px solid rgba(195,155,86,.22)}.rate-finder-highlights,.rate-finder-toolbar,.rate-finder-chips,.rate-finder-summary{margin-left:22px;margin-right:22px}.rate-finder-toolbar{padding:16px;background:#f8f4eb;border:1px solid var(--bank-line);border-radius:10px}input,select,textarea,.resource-toolbar input,.resource-toolbar select,.admin-intake-toolbar input,.admin-intake-toolbar select{border-radius:6px!important;border:1px solid var(--bank-line-strong)!important;background:#fffdf8!important;color:var(--bank-ink)!important;box-shadow:inset 0 1px 0 rgba(7,24,39,.03)}input:focus,select:focus,textarea:focus{outline:3px solid rgba(167,121,43,.2);border-color:var(--bank-gold)!important}.rate-finder-chips button{border-color:var(--bank-line-strong)}.rate-finder-chips button[aria-pressed="true"],.rate-finder-chips button.active{background:var(--bank-navy);color:#fffaf0}.rate-finder-summary{color:var(--bank-muted);border-top:1px solid var(--bank-line);padding-top:12px}.rate-table-wrap{margin:18px 22px 22px;border-radius:8px;overflow:auto}table{border-collapse:separate;border-spacing:0;width:100%}th{background:#eee6d8;color:var(--bank-steel);font-family:"IBM Plex Mono",monospace;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid var(--bank-line-strong)}td{border-bottom:1px solid #ebe4d7;color:var(--bank-ink-2)}tbody tr:hover{background:rgba(167,121,43,.07)}.rate-highlight-card.primary,.best-rate-card:first-child{background:linear-gradient(135deg,var(--bank-navy),#123049)!important;color:#fffaf0!important;border-color:rgba(195,155,86,.35)!important}.rate-highlight-card.primary small,.rate-highlight-card.primary span{color:rgba(255,250,240,.66)!important}.rate-highlight-card.primary strong{color:#f1d69e!important}
+.upload-desk-grid,.deal-builder-grid,.deal-command-grid,.resource-shell,.split-view{gap:16px}.file-drop-zone{border-radius:8px;border:1px dashed var(--bank-line-strong);background:repeating-linear-gradient(-45deg,rgba(167,121,43,.045) 0 8px,rgba(255,255,255,.55) 8px 16px)}.review-steps li,.upload-guardrail,.audit-item,.rate-event,.resource-download-row,.product-policy-card,.policy-answer-card,.deal-card,.dry-run-row-card,.dry-run-doc-card,.admin-rate-row{border-radius:8px;border:1px solid var(--bank-line);background:#fffdf8}.lender-card,.program-card,.insurer-card,.preferred-lender-card{border-left:4px solid var(--bank-navy);background:linear-gradient(180deg,#fffdf8,#faf6ed)}.lender-card::before{display:none}.lender-logo,.detail-logo,.insurer-logo,.program-logo{border-radius:5px!important;background:linear-gradient(135deg,var(--bank-navy),var(--bank-steel))!important;color:#fffaf0!important}.rate-pill{border-radius:6px;background:#f8f4eb;box-shadow:inset 3px 0 0 var(--bank-gold)}.detail-panel{top:18px}.calculator-app-shell{overflow:hidden}.resource-stats article,.upload-stats article{border-radius:8px;background:#fffdf8;border:1px solid var(--bank-line)}.compliance{border-radius:0;background:var(--bank-navy);color:#fffaf0;border:1px solid rgba(195,155,86,.28);margin-bottom:18px}.compliance h3{color:#fffaf0}.compliance p{color:rgba(255,250,240,.68)}.access-lock-screen{background:radial-gradient(circle at 20% 0%,rgba(167,121,43,.16),transparent 32rem),linear-gradient(135deg,var(--bank-navy),var(--bank-navy-2))}.access-lock-card{border-radius:0;border-color:rgba(195,155,86,.38);background:#fffdf8;position:relative}.access-lock-card::before{content:"PRIVATE BROKER INFRASTRUCTURE";font:700 .65rem "IBM Plex Mono",monospace;letter-spacing:.16em;color:var(--bank-gold)}
+@media (max-width:1100px){.app-shell{grid-template-columns:1fr}.sidebar{position:relative;height:auto;flex-direction:row;flex-wrap:wrap;align-items:center}.sidebar::after{display:none}.nav-list{grid-template-columns:repeat(4,minmax(0,1fr));width:100%}.topbar{grid-template-columns:1fr;min-height:auto}.topbar-actions{align-self:start;flex-direction:row;flex-wrap:wrap}}
+@media (max-width:720px){.sidebar{padding:18px}.nav-list{grid-template-columns:1fr 1fr}.nav-list a{min-height:38px;font-size:.82rem}.topbar,.metric-grid,.band,.workspace,.compliance{margin-left:10px;margin-right:10px}.topbar{padding:28px 20px}.topbar::before{inset:12px}.topbar h2{font-size:clamp(2.7rem,16vw,4.4rem)}.hero-proof-strip span{width:100%;justify-content:center;text-align:center}.metric-grid{grid-template-columns:1fr 1fr}.section-heading,.workspace-header,.upload-heading,.calculator-heading{align-items:stretch}.rate-finder-toolbar{grid-template-columns:1fr}.rate-finder-highlights,.rate-finder-toolbar,.rate-finder-chips,.rate-finder-summary,.rate-table-wrap{margin-left:12px;margin-right:12px}}
+@media (max-width:430px){.metric-grid{grid-template-columns:1fr}.auth-button-row{grid-template-columns:1fr}.topbar-actions a,.topbar-actions button{width:100%}}
+
+
+/* Final bank hero override: supersede earlier !important compact-shell rules. */
+.topbar {
+  margin: 18px !important;
+  min-height: 520px !important;
+  padding: clamp(26px, 5vw, 64px) !important;
+  border-radius: 0 !important;
+  border: 1px solid rgba(255,255,255,.13) !important;
+  background: linear-gradient(135deg, rgba(7,24,39,.97), rgba(13,38,56,.98)) !important;
+  color: #fffaf0 !important;
+  box-shadow: var(--bank-shadow) !important;
+  grid-template-columns: minmax(0,1fr) 220px 330px !important;
+  gap: clamp(20px,3vw,42px) !important;
+  overflow: hidden !important;
+}
+.topbar h2,
+.topbar h2 span,
+.topbar .topbar-copy,
+.topbar .eyebrow,
+.topbar .hero-proof-strip span,
+.topbar .live-pill { color: inherit !important; -webkit-text-fill-color: currentColor !important; }
+.topbar .eyebrow,.topbar .live-pill,.topbar .hero-proof-strip span { color: #ead4a2 !important; }
+.topbar .topbar-copy { color: rgba(255,250,240,.74) !important; }
+.topbar h2 { font-size: clamp(3.3rem,8.1vw,7.5rem) !important; line-height: .84 !important; letter-spacing: -.085em !important; }
+@media (max-width:1100px){.topbar{grid-template-columns:1fr !important;min-height:auto !important}.topbar-actions{align-self:start!important;flex-direction:row!important;flex-wrap:wrap!important}}
+@media (max-width:720px){.topbar{margin-left:10px!important;margin-right:10px!important;padding:28px 20px!important}.topbar h2{font-size:clamp(2.7rem,16vw,4.4rem)!important}}
+
+
+/* Final bank hero composition fix. */
+.topbar { grid-template-columns: minmax(0, 1fr) 350px !important; align-items: start !important; }
+.topbar > div:first-child { max-width: 760px !important; min-width: 0 !important; }
+.topbar-actions { position: absolute !important; top: 64px !important; right: 390px !important; align-self: auto !important; z-index: 2 !important; }
+.hero-insight { grid-column: 2 !important; grid-row: 1 !important; width: 100% !important; margin-top: 0 !important; }
+.topbar h2 { max-width: 720px !important; font-size: clamp(3.6rem, 5.7vw, 6.3rem) !important; line-height: .9 !important; overflow-wrap: normal !important; word-break: normal !important; }
+@media (max-width:1100px){.topbar{grid-template-columns:1fr!important}.topbar-actions{position:static!important;right:auto!important;top:auto!important}.hero-insight{grid-column:auto!important;grid-row:auto!important}.topbar h2{font-size:clamp(3rem,9vw,5.2rem)!important}}
+@media (max-width:720px){.topbar h2{font-size:clamp(2.45rem,12vw,4rem)!important}.hero-insight{width:100%!important}}
+
     </style>
   </head>
   <body class="portal-locked">
     <div class="app-shell">
       <aside class="sidebar" aria-label="Portal navigation">
         <div class="brand-lockup">
-          <div class="brand-mark">RD</div>
+          <div class="brand-mark">OR</div>
           <div>
-            <p class="eyebrow">Ontario</p>
-            <h1>Rate Desk</h1>
+            <p class="eyebrow">Ontario Mortgage</p>
+            <h1>Institutional Rate Desk</h1>
           </div>
         </div>
 
         <nav class="nav-list">
-          <a href="#dashboard" class="active"><span>01</span> Overview</a>
-          <a href="#best-rates"><span>02</span> Quote Board</a>
-          <a href="#calculators"><span>03</span> Calculators</a>
-          <a href="#uploads"><span>04</span> Intake</a>
-          <a href="#resources"><span>05</span> Broker Kits</a>
-          <a href="#lenders"><span>06</span> Directory</a>
-          <a href="#admin-inbox" data-admin-only><span>07</span> AI Review</a>
+          <a href="#dashboard" class="active"><span>01</span> Command</a>
+          <a href="#best-rates"><span>02</span> Rate Ledger</a>
+          <a href="#calculators"><span>03</span> Scenario Lab</a>
+          <a href="#uploads"><span>04</span> Source Intake</a>
+          <a href="#resources"><span>05</span> Evidence Library</a>
+          <a href="#lenders"><span>06</span> Lender Registry</a>
+          <a href="#admin-inbox" data-admin-only><span>07</span> Approval Gate</a>
         </nav>
 
         <section class="sidebar-panel">
           <p class="panel-label">Desk date</p>
           <strong id="todayLabel"></strong>
-          <span>One broker workspace for pricing, qualification, source files, and lender fit.</span>
+          <span>Controlled broker operating system for rate evidence, deal fit, source files, and approval trails.</span>
         </section>
       </aside>
 
       <main>
         <section class="access-lock-screen" id="accessLockScreen" aria-live="polite">
           <article class="access-lock-card">
-            <p class="eyebrow">Private rate desk</p>
-            <h1>Login or create account.</h1>
-            <p>Ontario Mortgage Rate Portal is locked. Use email and password to sign in. New users can create an account, then complete a profile before the desk unlocks.<span id="localAdminHint"> Local development admin: <strong>raj@localtest</strong>.</span></p>
+            <p class="eyebrow">Controlled access</p>
+            <h1>Secure rate desk access.</h1>
+            <p>Ontario Mortgage Rate Portal is a private broker workspace. Sign in to access source-backed pricing, lender policy, and controlled file workflows.<span id="localAdminHint"> Local development admin: <strong>raj@localtest</strong>.</span></p>
             <form class="access-lock-form" id="globalAuthForm">
               <label><span>Email / username</span><input id="globalAuthEmail" type="email" placeholder="advisor@example.com" autocomplete="email" required /></label>
               <label><span>Password</span><input id="globalAuthPassword" type="password" placeholder="Minimum 6 characters" autocomplete="current-password" /></label>
@@ -6848,27 +6904,27 @@ input, select, textarea, .search-box input, .resource-toolbar input, .resource-t
         <header class="topbar" id="dashboard">
           <div>
             <div class="status-row">
-                <p class="eyebrow">Ontario broker workspace</p>
-              <span class="live-pill">Lowest first</span>
+                <p class="eyebrow">Bank-grade broker command centre</p>
+              <span class="live-pill">Source controlled</span>
             </div>
-            <h2><span>Quote faster. Stay source-backed.</span></h2>
+            <h2><span>Institutional mortgage rate operations.</span></h2>
             <p class="topbar-copy">
-              A clean rate desk for brokers: pick the deal shape, compare the lowest usable rows, qualify the file, then open the source kit when it matters.
+              A professional operating system for brokers who need verified rates, lender evidence, scenario controls, and a defensible decision trail before advising clients.
             </p>
             <div class="hero-proof-strip" aria-label="Desk highlights">
-              <span>Quote</span>
-              <span>Qualify</span>
-              <span>Verify</span>
-              <span>Place</span>
+              <span>Verify source</span>
+              <span>Price scenario</span>
+              <span>Document rationale</span>
+              <span>Escalate cleanly</span>
             </div>
           </div>
           <div class="topbar-actions">
             <button class="secondary-button" id="themeToggle" type="button" title="Toggle theme" aria-label="Toggle theme">Theme</button>
-            <a class="primary-button" href="#best-rates">Open quote board</a>
-            <a class="secondary-button" href="#calculators">Run scenario</a>
+            <a class="primary-button" href="#best-rates">Open rate ledger</a>
+            <a class="secondary-button" href="#calculators">Run scenario control</a>
           </div>
           <aside class="hero-insight" aria-label="Current rate snapshot">
-            <p class="panel-label">Best visible row</p>
+            <p class="panel-label">Current best evidence</p>
             <strong id="heroBestFixed">0.00%</strong>
             <span id="heroBestLender">Calculating lender leader</span>
             <dl>
@@ -6911,9 +6967,9 @@ input, select, textarea, .search-box input, .resource-toolbar input, .resource-t
         <section class="band upload-desk" id="uploads">
           <div class="section-heading upload-heading">
             <div>
-              <p class="eyebrow">Rate-sheet command centre</p>
-              <h3>Stage sheets for AI review.</h3>
-              <p class="section-copy">Upload broker-authorized PDF/XLS/XLSX files. Nothing publishes until review approves it.</p>
+              <p class="eyebrow">Source intake</p>
+              <h3>Controlled rate-sheet intake.</h3>
+              <p class="section-copy">Stage broker-authorized PDF/XLS/XLSX sources through extraction, matching, and approval before any row reaches the board.</p>
             </div>
             <div class="upload-stats" aria-label="Rate sheet upload queue stats">
               <article><strong id="uploadQueueCount">0</strong><span>queued</span></article>
@@ -6980,11 +7036,11 @@ input, select, textarea, .search-box input, .resource-toolbar input, .resource-t
         <section class="band landing-rate-board" id="best-rates">
           <div class="section-heading">
             <div>
-              <p class="eyebrow">Rate board</p>
-              <h3>Rates.</h3>
+              <p class="eyebrow">Rate ledger</p>
+              <h3>Verified pricing ledger.</h3>
             </div>
             <div class="desk-badges">
-              <span>Lowest first</span>
+              <span>Lowest usable first</span>
             </div>
           </div>
 
@@ -6993,8 +7049,8 @@ input, select, textarea, .search-box input, .resource-toolbar input, .resource-t
           <div class="broker-rate-finder" id="brokerRateFinder">
             <div class="rate-finder-head">
               <div>
-                <h4>Rate desk</h4>
-                <p>Pick the deal shape. Quote the lowest usable row.</p>
+                <h4>Institutional rate ledger</h4>
+                <p>Filter by deal shape, quote from published rows, and keep source status visible.</p>
               </div>
               <div class="rate-finder-mode" aria-label="Primary quote filters">
                 <span>Term</span>
@@ -7041,9 +7097,9 @@ input, select, textarea, .search-box input, .resource-toolbar input, .resource-t
         <section class="band calculator-desk" id="calculators">
           <div class="section-heading calculator-heading">
             <div>
-              <p class="eyebrow">Broker calculators</p>
-              <h3>Qualify, price, and compare scenarios.</h3>
-              <p class="section-copy">All Simple Home Financing calculator logic rebuilt for the Rate Desk theme with live-rate defaults from the lowest-first board.</p>
+              <p class="eyebrow">Scenario controls</p>
+              <h3>Qualify and compare with controlled assumptions.</h3>
+              <p class="section-copy">Broker calculators use rate-board defaults so qualification, payment, and comparison work from the same pricing evidence.</p>
             </div>
             <div class="desk-badges">
               <span>22 tools</span>
@@ -7057,8 +7113,8 @@ input, select, textarea, .search-box input, .resource-toolbar input, .resource-t
         <section class="band full-deal-desk" id="deal-desk">
           <div class="section-heading">
             <div>
-              <p class="eyebrow">Deal desk</p>
-              <h3>From quick check to lender-ready file.</h3>
+              <p class="eyebrow">Deal control room</p>
+              <h3>From intake to defensible placement.</h3>
               <p class="section-copy">A simple operating layer for placement: current rates, product fit, conditions, BDM escalation, and the audit trail.</p>
             </div>
             <div class="desk-badges">
@@ -7156,8 +7212,8 @@ input, select, textarea, .search-box input, .resource-toolbar input, .resource-t
         <section class="workspace">
           <div class="workspace-header">
             <div>
-              <p class="eyebrow">Directory</p>
-              <h3>Lenders, programs, insurers, and BDMs.</h3>
+              <p class="eyebrow">Lender registry</p>
+              <h3>Lender, insurer, and escalation registry.</h3>
             </div>
             <div class="desk-badges">
               <span>Prime</span>
@@ -7266,8 +7322,8 @@ input, select, textarea, .search-box input, .resource-toolbar input, .resource-t
         <section class="band" id="resources">
           <div class="section-heading resource-heading">
             <div>
-              <p class="eyebrow">Broker kits</p>
-              <h3>Policy library without the filing cabinet.</h3>
+              <p class="eyebrow">Evidence library</p>
+              <h3>Source documents without the filing cabinet.</h3>
               <p class="section-copy">Search lender PDFs by lender, form, product, or policy and jump straight to the source file.</p>
             </div>
             <div class="resource-stats" aria-label="Broker kit ingestion stats">
@@ -7305,8 +7361,8 @@ input, select, textarea, .search-box input, .resource-toolbar input, .resource-t
 
         <section class="band compliance" id="compliance">
           <div>
-            <p class="eyebrow">Compliance note</p>
-            <h3>Calm interface. Conservative claims.</h3>
+            <p class="eyebrow">Control note</p>
+            <h3>Professional interface. Conservative claims.</h3>
           </div>
           <p>
             Sample rates and guidelines are placeholders until replaced with current lender notices. Brokers should confirm pricing, eligibility, compensation, and policies with each lender before advising a borrower.
@@ -9055,7 +9111,7 @@ function renderDryRunRateSheets() {
   dryRunRateSheetPanel.innerHTML = `
     <div class="section-heading resource-heading">
       <div>
-        <p class="eyebrow">Rate-sheet command centre</p>
+        <p class="eyebrow">Source intake</p>
         <h4>Organized by lender, source, and review status</h4>
         <p class="contact-line">This is the clean structure for the existing site: lender rate matrix first, extracted publish-ready rows second, then source docs, templates, and review/noise. Review-only until approved.</p>
       </div>
