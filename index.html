@@ -6843,6 +6843,163 @@ main { min-width:0; }
 @media (max-width:1100px){.topbar{grid-template-columns:1fr!important}.topbar-actions{position:static!important;right:auto!important;top:auto!important}.hero-insight{grid-column:auto!important;grid-row:auto!important}.topbar h2{font-size:clamp(3rem,9vw,5.2rem)!important}}
 @media (max-width:720px){.topbar h2{font-size:clamp(2.45rem,12vw,4rem)!important}.hero-insight{width:100%!important}}
 
+
+/* Times New Roman field typography + graphics theme polish. No behavior changes. */
+:root {
+  --font-field: "Times New Roman", Times, serif;
+  --font-label: "Times New Roman", Times, serif;
+  --graphic-border: var(--bank-line);
+  --graphic-border-strong: var(--bank-line-strong);
+  --graphic-surface: var(--bank-panel);
+  --graphic-surface-muted: var(--bank-panel-2);
+  --graphic-accent: var(--bank-gold);
+  --graphic-radius: 8px;
+}
+body,
+body.dark,
+button,
+input,
+select,
+textarea,
+table,
+.sidebar,
+.topbar,
+.band,
+.workspace,
+.metric-grid,
+.access-lock-card,
+.upload-card,
+.broker-rate-finder,
+.deal-intake-card,
+.deal-pipeline-card,
+.rate-ingestion-card,
+.compliance-card,
+.detail-panel,
+.program-detail,
+.resource-sidebar,
+.resource-card,
+.calculator-app-shell,
+.lender-card,
+.program-card,
+.insurer-card,
+.contact-table-wrap,
+.rate-table-wrap,
+.admin-intake-toolbar,
+.admin-email-detail,
+.admin-inbox-list {
+  font-family: var(--font-field) !important;
+}
+.brand-mark,
+.sidebar::after,
+.eyebrow,
+.panel-label,
+.form-grid label span,
+.access-lock-form label span,
+.deal-field span,
+.rate-finder-toolbar label span,
+.search-box span,
+.nav-list a span,
+.live-pill,
+.source-chip,
+.supabase-status-pill,
+.pipeline-count-pill,
+.deal-chip,
+.desk-badges span,
+.badge,
+.metric-grid small,
+.metric-grid strong,
+.hero-insight strong,
+.rate-pill strong,
+th,
+.rate-finder-chips button,
+.resource-stats span,
+.upload-stats span {
+  font-family: var(--font-label) !important;
+}
+.eyebrow,
+.panel-label,
+th,
+.form-grid label span,
+.access-lock-form label span,
+.deal-field span,
+.rate-finder-toolbar label span,
+.search-box span,
+.live-pill,
+.source-chip,
+.supabase-status-pill,
+.pipeline-count-pill,
+.deal-chip,
+.desk-badges span,
+.badge {
+  letter-spacing: .075em !important;
+}
+.topbar h2,
+.section-heading h3,
+.workspace-header h3,
+.access-lock-card h1,
+.rate-finder-head h4,
+.brand-lockup h1 {
+  font-family: var(--font-field) !important;
+  text-rendering: geometricPrecision;
+}
+input,
+select,
+textarea {
+  font-family: var(--font-field) !important;
+  border-color: var(--graphic-border-strong) !important;
+}
+.metric-grid article,
+.upload-card,
+.broker-rate-finder,
+.deal-intake-card,
+.deal-pipeline-card,
+.rate-ingestion-card,
+.compliance-card,
+.detail-panel,
+.program-detail,
+.resource-sidebar,
+.resource-card,
+.calculator-app-shell,
+.lender-card,
+.program-card,
+.insurer-card,
+.contact-table-wrap,
+.rate-table-wrap,
+.admin-intake-toolbar,
+.admin-email-detail,
+.admin-inbox-list {
+  border-color: var(--graphic-border) !important;
+}
+.rate-finder-head,
+.compliance {
+  border-color: rgba(195,155,86,.34) !important;
+}
+
+
+/* Times typography lock-screen width guard. */
+.access-lock-screen {
+  place-items: center !important;
+  padding: 40px !important;
+}
+.access-lock-card {
+  width: min(560px, calc(100vw - 48px)) !important;
+  max-width: 560px !important;
+  min-width: min(320px, calc(100vw - 48px)) !important;
+}
+.auth-button-row {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+}
+.auth-button-row button {
+  min-width: 0 !important;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+}
+@media (max-width: 430px) {
+  .access-lock-screen { padding: 20px !important; }
+  .access-lock-card { width: 100% !important; min-width: 0 !important; }
+  .auth-button-row { grid-template-columns: 1fr !important; }
+}
+
     </style>
   </head>
   <body class="portal-locked">
