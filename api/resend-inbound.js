@@ -155,7 +155,7 @@ async function getRateInboxStatus() {
   const sourceKinds = ['email', 'manual_upload'];
   const [total, activePublishedRates, recentDocuments, bucket] = await Promise.all([
     supabaseCount(base),
-    supabaseCount(`/rest/v1/lender_rates?select=id&workspace_id=eq.${encodeURIComponent(workspaceId)}&is_published=eq.true`),
+    supabaseCount(`/rest/v1/published_rates?select=id&workspace_id=eq.${encodeURIComponent(workspaceId)}&is_published=eq.true`),
     getRows('rate_source_documents', `select=id,source_kind,status,received_at,lender_name,source_email_from,source_email_to,source_email_subject&workspace_id=eq.${encodeURIComponent(workspaceId)}&order=received_at.desc&limit=8`),
     supabaseFetch(`/storage/v1/bucket/${encodeURIComponent(RATE_EMAIL_BUCKET)}`).then(() => true).catch(() => false)
   ]);
@@ -1301,7 +1301,11 @@ export default async function handler(req, res) {
       }
       if (body.mode === 'status') {
         if (inboxTokenKind !== 'admin') return json(res, 403, { ok: false, error: 'Admin token required for inbox status.' });
-        return json(res, 200, await getRateInboxStatus());
+        try {
+          return json(res, 200, await getRateInboxStatus());
+        } catch (error) {
+          return json(res, 500, { ok: false, error: error.message });
+        }
       }
       const limit = Math.max(1, Math.min(inboxTokenKind === 'cron' ? 10 : 100, Number(body.limit || req.query?.limit || 25)));
       const processImmediately = body.processImmediately !== false;
