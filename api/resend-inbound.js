@@ -1364,13 +1364,15 @@ export default async function handler(req, res) {
       for (const item of listed) {
         const emailId = item.email_id || item.id;
         if (!emailId) continue;
-        const event = {
-          type: 'email.received',
-          created_at: item.created_at || new Date().toISOString(),
-          data: { ...item, email_id: emailId }
-        };
         try {
-          results.push(await ingestReceivedEmailEvent(event, { queuedBy: 'admin-sync', processImmediately }));
+          const emailResponse = await resendApi(`/emails/receiving/${encodeURIComponent(emailId)}`);
+          const email = emailResponse?.data || emailResponse || {};
+          const event = {
+            type: 'email.received',
+            created_at: item.created_at || email.created_at || new Date().toISOString(),
+            data: { ...item, ...email, email_id: emailId }
+          };
+          results.push(await ingestReceivedEmailEvent(event, { queuedBy: 'admin-sync', processImmediately, email }));
         } catch (error) {
           results.push({ ok: false, resendEmailId: emailId, error: error.message });
         }
