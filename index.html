@@ -7882,12 +7882,12 @@ body::after,
         <section class="band admin-intake-panel" id="admin-inbox" data-admin-page>
           <div class="section-heading upload-heading">
             <div>
-              <p class="eyebrow">Manual AI review</p>
-              <h3>Manual rate-sheet uploads, AI analysis, and publish gate.</h3>
-              <p class="section-copy">Admin-only review centre for manually uploaded PDF and Excel rate sheets. The AI reads the saved file, writes a summary, stages extracted rows for review, and approved rows can publish to the frontend rate board.</p>
+              <p class="eyebrow">Rate inbox review</p>
+              <h3>Email and manual rate sheets, AI analysis, and publish gate.</h3>
+              <p class="section-copy">Admin-only review centre for inbound lender emails plus manually uploaded PDF and Excel rate sheets. The AI reads saved emails/files, writes a summary, stages extracted rows for review, and approved rows can publish to the frontend rate board.</p>
             </div>
             <div class="upload-stats" aria-label="Admin email intake stats">
-              <article><strong id="adminInboxCount">0</strong><span>uploads</span></article>
+              <article><strong id="adminInboxCount">0</strong><span>inbox items</span></article>
               <article><strong id="adminAttachmentCount">0</strong><span>files</span></article>
               <article><strong id="adminDraftRateCount">0</strong><span>draft rows</span></article>
             </div>
@@ -7901,8 +7901,8 @@ body::after,
           <div class="admin-intake-grid">
             <div class="admin-inbox-list" id="adminInboxList"><div class="admin-empty-state">Admin inbox loads after an admin signs in.</div></div>
             <div class="admin-email-detail" id="adminEmailDetail">
-              <p class="eyebrow">Manual upload detail</p><h4>Select an upload</h4>
-              <p class="contact-line">Open a manual upload to review the file, AI summary, extracted rows, and publish controls.</p>
+              <p class="eyebrow">Inbox item detail</p><h4>Select an email or upload</h4>
+              <p class="contact-line">Open an inbound email or manual upload to review the source, AI summary, extracted rows, and publish controls.</p>
             </div>
           </div>
         </section>
@@ -12049,7 +12049,7 @@ function filteredAdminDocuments() {
   const status = adminInboxStatus?.value || "all";
   return (adminInboxData.documents || []).filter((doc) => {
     const matchesStatus = status === "all" || doc.status === status;
-    const haystack = normalizeSearchText([doc.source_email_from, doc.source_email_to, doc.source_email_subject, doc.lender_name, doc.status].join(" "));
+    const haystack = normalizeSearchText([doc.source_email_from, doc.source_email_to, doc.source_email_subject, doc.lender_name, doc.file_name, doc.source_kind, doc.status].join(" "));
     return matchesStatus && (!query || haystack.includes(query));
   });
 }
@@ -12066,6 +12066,18 @@ function adminAttachmentsForEvent(eventId) {
   return (adminInboxData.attachments || []).filter((row) => row.ingestion_event_id === eventId);
 }
 
+function adminDocumentKindLabel(doc) {
+  if (doc?.source_kind === "email") return "Inbound email";
+  if (doc?.source_kind === "manual_upload") return "Manual upload";
+  return "Source document";
+}
+
+function adminDocumentAttachmentCount(doc) {
+  if (!doc) return 0;
+  if (doc.source_kind === "manual_upload") return doc.storage_path ? 1 : 0;
+  return adminAttachmentsForEvent(doc.ingestion_event_id).length;
+}
+
 function renderAdminInbox() {
   if (!adminInboxList) return;
   if (!isAdminUser()) {
@@ -12074,13 +12086,13 @@ function renderAdminInbox() {
     return;
   }
   const docs = filteredAdminDocuments();
-  const attachments = adminInboxData.documents || [];
+  const attachmentCount = (adminInboxData.documents || []).reduce((sum, doc) => sum + adminDocumentAttachmentCount(doc), 0);
   const drafts = (adminInboxData.extractedRates || []).filter((row) => ["needs_review", "approved"].includes(row.status));
   document.querySelector("#adminInboxCount") && (document.querySelector("#adminInboxCount").textContent = String((adminInboxData.documents || []).length));
-  document.querySelector("#adminAttachmentCount") && (document.querySelector("#adminAttachmentCount").textContent = String(attachments.length));
+  document.querySelector("#adminAttachmentCount") && (document.querySelector("#adminAttachmentCount").textContent = String(attachmentCount));
   document.querySelector("#adminDraftRateCount") && (document.querySelector("#adminDraftRateCount").textContent = String(drafts.length));
   if (!docs.length) {
-    adminInboxList.innerHTML = `<div class="admin-empty-state">No manual uploads match this filter yet. Upload a PDF/XLS/XLSX, then run the AI processor.</div>`;
+    adminInboxList.innerHTML = `<div class="admin-empty-state">No inbox items match this filter yet. Forward a lender email or upload a PDF/XLS/XLSX, then run the AI processor.</div>`;
     renderAdminEmailDetail(null);
     return;
   }
@@ -12092,6 +12104,7 @@ function renderAdminInbox() {
     return `<button class="admin-email-row ${doc.id === activeAdminEmailId ? "active" : ""}" type="button" data-admin-email="${escapeHtml(doc.id)}">
       <strong>${escapeHtml(doc.source_email_subject || "(no subject)")}</strong>
       <div class="admin-email-meta">
+        <span class="admin-chip">${escapeHtml(adminDocumentKindLabel(doc))}</span>
         <span>${escapeHtml(doc.source_email_from || "unknown sender")}</span>
         <span>${escapeHtml(displayDate(doc.received_at))}</span>
         <span class="admin-chip ${adminStatusClass(doc.status)}">${escapeHtml(String(doc.status || "stored").replace(/_/g, " "))}</span>
@@ -12111,7 +12124,7 @@ function renderAdminInbox() {
 function renderAdminEmailDetail(doc) {
   if (!adminEmailDetail) return;
   if (!doc) {
-    adminEmailDetail.innerHTML = `<p class="eyebrow">Manual upload detail</p><h4>No upload selected</h4><p class="contact-line">No matching manual upload items.</p>`;
+    adminEmailDetail.innerHTML = `<p class="eyebrow">Inbox item detail</p><h4>No item selected</h4><p class="contact-line">No matching inbox items.</p>`;
     return;
   }
   const attachments = doc.source_kind === "manual_upload" ? [doc] : adminAttachmentsForEvent(doc.ingestion_event_id);
@@ -12119,16 +12132,17 @@ function renderAdminEmailDetail(doc) {
   const rows = adminRowsForEmail(doc.id);
   const latestRun = runs[0];
   adminEmailDetail.innerHTML = `
-    <p class="eyebrow">Manual upload detail</p>
-    <h4>${escapeHtml(doc.file_name || doc.source_email_subject || "Manual rate sheet")}</h4>
+    <p class="eyebrow">${escapeHtml(adminDocumentKindLabel(doc))} detail</p>
+    <h4>${escapeHtml(doc.file_name || doc.source_email_subject || "Rate sheet")}</h4>
     <div class="admin-email-meta">
+      <span class="admin-chip">${escapeHtml(adminDocumentKindLabel(doc))}</span>
       <span>${escapeHtml(doc.source_email_from || "unknown sender")}</span>
       <span>${escapeHtml(doc.source_email_to || "rate inbox")}</span>
       <span>${escapeHtml(displayDate(doc.received_at))}</span>
       <span class="admin-chip ${adminStatusClass(doc.status)}">${escapeHtml((doc.status || "stored").replace(/_/g, " "))}</span>
     </div>
-    <p class="contact-line">${escapeHtml(latestRun?.summary || latestRun?.error_message || doc.metadata?.fetch_error || "File is saved. Click Run AI processor to get the AI review summary and extracted rows.")}</p>
-    <h4>Uploaded file</h4>
+    <p class="contact-line">${escapeHtml(latestRun?.summary || latestRun?.error_message || doc.metadata?.fetch_error || "Email/file is saved. Click Run AI processor to get the AI review summary and extracted rows.")}</p>
+    <h4>${doc.source_kind === "email" ? "Email attachments" : "Uploaded file"}</h4>
     <div class="admin-attachment-list">${attachments.length ? attachments.map((att) => `<button class="secondary-button" type="button" data-admin-attachment="${escapeHtml(att.id)}">${escapeHtml(att.file_name || "rate sheet")} · ${Math.round((att.file_size_bytes || 0)/1024)} KB</button>`).join("") : `<span class="admin-chip warn">No saved file found</span>`}</div>
     <h4>AI extracted rows</h4>
     <div class="admin-rate-review-list">${rows.length ? rows.map(renderAdminRateRow).join("") : `<div class="admin-empty-state">No extracted rate rows yet. Run the AI processor. If it fails, the error summary appears above instead of silently hiding it.</div>`}</div>

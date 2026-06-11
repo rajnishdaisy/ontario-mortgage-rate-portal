@@ -253,10 +253,14 @@ function ratePresent(row) {
 }
 
 async function listInbox(workspaceId) {
-  const documents = await supabaseFetch(`/rest/v1/rate_source_documents?select=*&workspace_id=eq.${encodeURIComponent(workspaceId)}&source_kind=eq.manual_upload&order=received_at.desc&limit=80`, {
+  const documents = await supabaseFetch(`/rest/v1/rate_source_documents?select=*&workspace_id=eq.${encodeURIComponent(workspaceId)}&source_kind=in.(email,manual_upload)&order=received_at.desc&limit=80`, {
     headers: { Accept: 'application/json' }
   });
   const sourceIds = (documents || []).map((row) => row.id);
+  const ingestionEventIds = [...new Set((documents || []).map((row) => row.ingestion_event_id).filter(Boolean))];
+  const attachments = ingestionEventIds.length
+    ? await supabaseFetch(`/rest/v1/rate_source_documents?select=*&workspace_id=eq.${encodeURIComponent(workspaceId)}&source_kind=eq.attachment&ingestion_event_id=in.(${ingestionEventIds.map(encodeURIComponent).join(',')})&order=created_at.asc&limit=250`, { headers: { Accept: 'application/json' } })
+    : [];
   const runs = sourceIds.length
     ? await supabaseFetch(`/rest/v1/rate_extraction_runs?select=*&workspace_id=eq.${encodeURIComponent(workspaceId)}&source_document_id=in.(${sourceIds.map(encodeURIComponent).join(',')})&order=created_at.desc`, { headers: { Accept: 'application/json' } })
     : [];
@@ -264,7 +268,7 @@ async function listInbox(workspaceId) {
     ? await supabaseFetch(`/rest/v1/extracted_rate_products?select=*&workspace_id=eq.${encodeURIComponent(workspaceId)}&source_document_id=in.(${sourceIds.map(encodeURIComponent).join(',')})&order=created_at.desc&limit=250`, { headers: { Accept: 'application/json' } })
     : [];
 
-  return { ok: true, documents: documents || [], runs: runs || [], attachments: [], extractedRates: extracted || [] };
+  return { ok: true, documents: documents || [], runs: runs || [], attachments: attachments || [], extractedRates: extracted || [] };
 }
 
 async function signedUrl(attachmentId, workspaceId) {
@@ -426,7 +430,7 @@ export default async function handler(req, res) {
     const body = req.body || {};
     if (body.action === 'signed-url') return json(res, 200, await signedUrl(body.attachmentId, actor.workspaceId));
     if (body.action === 'queue-url') return json(res, 200, await queueUrlRateSource(body, actor, actor.workspaceId));
-    if (body.action === 'analyze-queued') return json(res, 200, { ok: true, ...(await processQueuedRateEmails({ limit: body.limit || 10, sourceKind: 'manual_upload', sourceDocumentId: body.sourceDocumentId || '' })) });
+    if (body.action === 'analyze-queued') return json(res, 200, { ok: true, ...(await processQueuedRateEmails({ limit: body.limit || 10, sourceKind: body.sourceKind || 'all', sourceDocumentId: body.sourceDocumentId || '' })) });
     if (body.action === 'approve') return json(res, 200, await setExtractedStatus(body.rateIds, 'approved', actor, actor.workspaceId, body.reviewNotes));
     if (body.action === 'reject') return json(res, 200, await setExtractedStatus(body.rateIds, 'rejected', actor, actor.workspaceId, body.reviewNotes || body.reason));
     if (body.action === 'update-rate') return json(res, 200, await updateExtractedRate(body.rateId, body.patch || {}, actor, actor.workspaceId));
