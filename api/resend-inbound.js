@@ -631,7 +631,7 @@ async function runAiExtraction({ email, meta, sourceDocument, attachments }) {
   const inputContent = [
     {
       type: 'input_text',
-      text: `You are an Ontario mortgage rate-sheet operations analyst. Extract only facts visible in the email/attachments. Do not guess missing rates. Normalize rates as percentages, e.g. 4.59 not 0.0459. If a number is unclear, omit it or set null and lower confidence. Return products, policy notes, and BDM/lender contacts. If the source is a combined/all-lenders package, set top-level lender_name to "Multiple lenders" and put the exact lender name on every product.lender_name, policy_notes[].lender_name, and contacts[].lender_name so each row can be filed under the correct lender. Auto-publish should be true only if lender, effective date, term, at least one rate, and conditions are clear. Source document id: ${sourceDocument.id}\n\n${bodyText}`
+      text: `You are an Ontario mortgage rate-sheet operations analyst. Extract only facts visible in the email/attachments. Do not guess missing rates. Normalize rates as percentages, e.g. 4.59 not 0.0459. OMRP rate scope is intentionally narrow: extract ONLY 1-year fixed, 2-year fixed, 3-year fixed, 5-year fixed, and 5-year variable products. Ignore 4-year, 6-year, 7-year, 10-year, HELOC, private/alternative, Smart/Saver/promo variants, posted-rate-only rows, cashback flyers, and pricing-exception templates as rate products. Capture only two pricing buckets: Hi Ratio in insured_rate and Conventional in insurable_rate; leave uninsured_rate null. If a lender separates conventional into multiple LTV/amortization columns, use the standard <=25-year conventional bucket when available and mention the source column in conditions. For variable products, include lender_prime_rate and variable_discount when visible. Return products, policy notes, and BDM/lender contacts. If the source is a combined/all-lenders package, set top-level lender_name to "Multiple lenders" and put the exact lender name on every product.lender_name, policy_notes[].lender_name, and contacts[].lender_name so each row can be filed under the correct lender. Auto-publish should be true only if lender, effective date, term, at least one scoped rate, and conditions are clear. Source document id: ${sourceDocument.id}\n\n${bodyText}`
     },
     ...(await attachmentContentParts(attachments))
   ];
@@ -701,6 +701,58 @@ function isExpiredDate(value) {
   return Boolean(date && Date.parse(date) < Date.now() - 86400000);
 }
 
+const SCOPED_FIXED_TERM_MONTHS = new Set([12, 24, 36, 60]);
+const SCOPED_VARIABLE_TERM_MONTHS = new Set([60]);
+
+function inferredTermMonths(product = {}) {
+  const explicit = Number(product.term_months);
+  if (Number.isFinite(explicit) && explicit > 0) return explicit;
+  const text = `${product.term_label || ''} ${product.product_name || ''}`;
+  const match = text.match(/\b(1|2|3|5)\s*(?:year|yr)\b/i);
+  return match ? Number(match[1]) * 12 : null;
+}
+
+function scopedMortgageType(product = {}) {
+  const explicit = String(product.mortgage_type || '').toLowerCase();
+  const text = `${product.term_label || ''} ${product.product_name || ''}`.toLowerCase();
+  if (explicit === 'variable' || /\bvariable\b/.test(text)) return 'variable';
+  if (explicit === 'fixed' || /\bfixed\b/.test(text)) return 'fixed';
+  return explicit || 'other';
+}
+
+function normalizeScopedRateProduct(product = {}) {
+  const termMonths = inferredTermMonths(product);
+  const mortgageType = scopedMortgageType(product);
+  const text = `${product.term_label || ''} ${product.product_name || ''}`.toLowerCase();
+  if (/\bsmart\b|\bsaver\b|\bsavers\b|\bcash\s*back\b|\bcashback\b/.test(text)) return null;
+  if (mortgageType === 'fixed' && !SCOPED_FIXED_TERM_MONTHS.has(termMonths)) return null;
+  if (mortgageType === 'variable' && !SCOPED_VARIABLE_TERM_MONTHS.has(termMonths)) return null;
+  if (!['fixed', 'variable'].includes(mortgageType)) return null;
+
+  const hiRatioRate = realisticRateOrNull(product.insured_rate);
+  const conventionalRate = realisticRateOrNull(product.insurable_rate) ?? realisticRateOrNull(product.uninsured_rate);
+  if (hiRatioRate === null && conventionalRate === null && !product.variable_discount) return null;
+
+  return {
+    ...product,
+    mortgage_type: mortgageType,
+    term_months: termMonths,
+    term_label: product.term_label || `${termMonths / 12} Year ${mortgageType === 'variable' ? 'Variable' : 'Fixed'}`,
+    product_name: product.product_name || product.term_label || `${termMonths / 12} Year ${mortgageType === 'variable' ? 'Variable' : 'Fixed'}`,
+    insured_rate: hiRatioRate,
+    insurable_rate: conventionalRate,
+    uninsured_rate: null,
+    conditions: [
+      ...(Array.isArray(product.conditions) ? product.conditions : []),
+      'OMRP scope: only 1/2/3/5-year fixed and 5-year variable; Hi Ratio + Conventional buckets.'
+    ]
+  };
+}
+
+function scopedRateProducts(products = []) {
+  return (Array.isArray(products) ? products : []).map(normalizeScopedRateProduct).filter(Boolean);
+}
+
 function isPublishableProduct(product, extraction) {
   const effectiveDate = validDateOrNull(product.effective_date) || validDateOrNull(extraction.effective_date);
   const expiryDate = validDateOrNull(product.expiry_date) || validDateOrNull(extraction.expiry_date);
@@ -727,7 +779,8 @@ async function markOlderPublishedRatesStale(rows, workspaceId) {
 
 async function persistExtraction({ extraction, sourceDocumentId, extractionRunId, workspaceId, canAutoPublish = false }) {
   const lender = extraction.lender_name || 'Unknown lender';
-  const products = Array.isArray(extraction.products) ? extraction.products : [];
+  const scopedProducts = scopedRateProducts(extraction.products);
+  const products = scopedProducts;
   const policies = Array.isArray(extraction.policy_notes) ? extraction.policy_notes : [];
   const contacts = Array.isArray(extraction.contacts) ? extraction.contacts : [];
   const confidence = averageConfidence(extraction);
