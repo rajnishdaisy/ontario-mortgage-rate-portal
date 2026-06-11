@@ -211,6 +211,12 @@ function parseEmailAddress(value) {
   return email.toLowerCase();
 }
 
+function parseEmailAddresses(value) {
+  const text = Array.isArray(value) ? value.join(', ') : String(value || '');
+  return [...text.toLowerCase().matchAll(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/gi)]
+    .map((match) => match[0].toLowerCase());
+}
+
 function senderDomain(email) {
   return String(email || '').split('@')[1]?.toLowerCase() || '';
 }
@@ -230,6 +236,27 @@ function senderMatchesList(senderEmail, list) {
     if (entry.includes('@')) return senderEmail === entry;
     return domain === entry;
   });
+}
+
+function configuredAllowedRecipients() {
+  return String(process.env.RATE_AI_ALLOWED_RECIPIENTS || 'rates@luniaontua.resend.app,rates@ontariomortgagerateportal.ca')
+    .split(/[\r\n,;]+/)
+    .map((item) => item.trim().toLowerCase())
+    .filter(Boolean);
+}
+
+function isAllowedRecipient(meta) {
+  const recipients = [
+    ...parseEmailAddresses(meta.to),
+    ...parseEmailAddresses(meta.cc),
+    ...parseEmailAddresses(meta.bcc)
+  ];
+  const list = configuredAllowedRecipients();
+  if (!recipients.length) return { allowed: false, recipients, reason: 'missing_recipient_email' };
+  const matched = recipients.find((recipient) => senderMatchesList(recipient, list));
+  return matched
+    ? { allowed: true, recipients, recipient: matched, source: 'recipient_allowlist' }
+    : { allowed: false, recipients, reason: 'recipient_not_rate_inbox' };
 }
 
 async function lookupTrustedSender(senderEmail, workspaceId) {
@@ -795,6 +822,21 @@ async function processStoredSourceDocument(row) {
       messageId: row.source_email_message_id
     };
 
+    const recipientAllowed = isAllowedRecipient(meta);
+    if (!recipientAllowed.allowed) {
+      await patchRows('rate_source_documents', `id=eq.${encodeURIComponent(row.id)}`, {
+        status: 'rejected',
+        metadata: { ...(row.metadata || {}), recipient_allowed: false, reason: recipientAllowed.reason }
+      });
+      if (row.ingestion_event_id) {
+        await patchRows('rate_ingestion_events', `id=eq.${encodeURIComponent(row.ingestion_event_id)}`, {
+          status: 'Rejected',
+          notes: 'Skipped non-rate-inbox recipient before AI analysis.'
+        });
+      }
+      return { sourceDocumentId: row.id, ignored: true, reason: recipientAllowed.reason };
+    }
+
     senderAllowed = await isAllowedSender(meta, workspaceId);
     if (!senderAllowed.allowed) {
       await patchRows('rate_source_documents', `id=eq.${encodeURIComponent(row.id)}`, {
@@ -961,6 +1003,10 @@ export async function ingestReceivedEmailEvent(event, options = {}) {
   const workspaceId = process.env.RATE_AI_WORKSPACE_ID || DEFAULT_WORKSPACE_ID;
   const meta = normalizeEmailFromWebhook(event);
   if (!meta.emailId) throw new Error('Resend webhook missing data.email_id');
+  const recipientAllowed = isAllowedRecipient(meta);
+  if (!recipientAllowed.allowed) {
+    return { ok: true, ignored: true, reason: recipientAllowed.reason, resendEmailId: meta.emailId };
+  }
   const senderAllowed = await isAllowedSender(meta, workspaceId);
 
   let emailResponse;
