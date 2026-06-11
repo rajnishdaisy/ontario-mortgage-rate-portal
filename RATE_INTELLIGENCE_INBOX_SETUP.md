@@ -32,17 +32,19 @@ This creates:
 
 ## 2) Create the intake email address
 
-Recommended MVP address:
+Temporary MVP address from the legacy/shared Resend setup:
 
 ```text
 rates@luniaontua.resend.app
 ```
 
-Resend also accepts any local-part on the managed receiving domain, for example:
+Target no-custom-domain setup:
 
 ```text
-desk@luniaontua.resend.app
+rates@<dedicated-omrp>.resend.app
 ```
+
+Create this in a dedicated Resend project/API key for OMRP. Do not reuse the SI Capital docs Resend receiving setup. OMRP also enforces `RATE_AI_ALLOWED_RECIPIENTS`, so only the dedicated rate inbox address is processed.
 
 Broker workflow:
 
@@ -57,7 +59,7 @@ For each broker mailbox, create filters like:
 
 ```text
 From contains: td.com OR scotiabank.com OR firstnational.ca OR mcap.com OR rmgmortgages.ca
-Action: Forward to rates@luniaontua.resend.app
+Action: Forward to rates@<dedicated-omrp>.resend.app
 Action: Apply label Lender Rates
 ```
 

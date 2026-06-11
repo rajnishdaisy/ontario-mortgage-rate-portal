@@ -6,7 +6,7 @@ This is the preferred workflow: brokers/lenders simply email a Resend receiving 
 
 ```text
 Broker/lender sends email
-  → <anything>@luniaontua.resend.app handled by Resend Inbound
+  → rates@<dedicated-omrp>.resend.app handled by the dedicated OMRP Resend Inbound setup
   → Resend webhook POST /api/resend-inbound
   → API retrieves full email + attachments from Resend
   → stores raw email in Supabase Storage bucket lender-rate-emails
@@ -34,30 +34,38 @@ Local/preview webhook URL uses the same path on the preview domain.
 
 ## Resend setup
 
-1. In Resend, configure a receiving domain. A Resend-managed `*.resend.app` receiving domain works when no custom domain is ready.
-2. If using a custom domain/subdomain, add the required MX records. If using the Resend-managed domain, use the generated `*.resend.app` address shown in Resend.
-3. Create a webhook endpoint:
+1. Create/use a **dedicated Resend project/API key for OMRP**. Do not reuse the SI Capital docs Resend setup.
+2. In Resend, configure a receiving domain. A Resend-managed `*.resend.app` receiving domain works when no custom domain is ready.
+3. If using the Resend-managed domain, use the generated `*.resend.app` address shown in Resend. Pick `rates@<managed-domain>.resend.app` as the operating inbox.
+4. Create a webhook endpoint pointing to production:
 
 ```text
-/api/resend-inbound
+https://ontario-mortgage-rate-portal-kappa.vercel.app/api/resend-inbound
 ```
 
-4. Subscribe it to the event:
+5. Subscribe it to the event:
 
 ```text
 email.received
 ```
 
-5. Copy the webhook signing secret.
-6. Add the signing secret to Vercel as `RESEND_WEBHOOK_SECRET`.
+6. Copy the webhook signing secret.
+7. Create/copy a Resend API key scoped to this dedicated OMRP setup.
+8. Add the API key, webhook secret, and exact managed inbox address to Vercel production.
 
-Current Resend-managed inbox:
+Current temporary inbox / legacy shared feed:
 
 ```text
-<anything>@luniaontua.resend.app
+rates@luniaontua.resend.app
 ```
 
-Examples: `rates@luniaontua.resend.app`, `desk@luniaontua.resend.app`, or `shiv@luniaontua.resend.app` all route to the same Resend receiving domain. Use `rates@luniaontua.resend.app` as the standard forwarding address unless a custom domain is added later.
+Target after split, with no custom domain yet:
+
+```text
+rates@<dedicated-omrp>.resend.app
+```
+
+The app has a recipient allowlist. Only addresses listed in `RATE_AI_ALLOWED_RECIPIENTS` are processed. This prevents SI Capital `docs.sicapital.ca` mail from being stored or analyzed if a provider feed is accidentally shared.
 
 No Gmail polling is required.
 
@@ -68,6 +76,7 @@ SUPABASE_URL=...
 SUPABASE_SERVICE_ROLE_KEY=...
 RESEND_API_KEY=...
 RESEND_WEBHOOK_SECRET=...
+RATE_AI_ALLOWED_RECIPIENTS=rates@<dedicated-omrp>.resend.app
 OPENAI_API_KEY=...
 OPENAI_RATE_EXTRACTION_MODEL=gpt-4.1-mini
 RATE_AI_AUTO_PUBLISH_MIN_CONFIDENCE=0.84
