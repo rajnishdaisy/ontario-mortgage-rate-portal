@@ -130,6 +130,62 @@ async function supabaseFetch(path, options = {}) {
   try { return text ? JSON.parse(text) : null; } catch { return text; }
 }
 
+async function supabaseCount(path) {
+  const url = requireEnv('SUPABASE_URL').replace(/\/$/, '');
+  const key = requireEnv('SUPABASE_SERVICE_ROLE_KEY');
+  const response = await fetch(`${url}${path}`, {
+    method: 'GET',
+    headers: supabaseHeaders(key, {
+      Accept: 'application/json',
+      Prefer: 'count=exact',
+      Range: '0-0'
+    })
+  });
+  const text = await response.text();
+  if (!response.ok) throw new Error(`Supabase count ${path} failed ${response.status}: ${text}`);
+  const range = response.headers.get('content-range') || '';
+  const parsed = range.match(/\/(\d+)$/)?.[1];
+  return parsed ? Number(parsed) : 0;
+}
+
+async function getRateInboxStatus() {
+  const workspaceId = process.env.RATE_AI_WORKSPACE_ID || DEFAULT_WORKSPACE_ID;
+  const base = `/rest/v1/rate_source_documents?select=id&workspace_id=eq.${encodeURIComponent(workspaceId)}`;
+  const statusValues = ['stored', 'queued', 'extracting', 'needs_review', 'approved', 'failed'];
+  const sourceKinds = ['email', 'manual_upload'];
+  const [total, activePublishedRates, recentDocuments, bucket] = await Promise.all([
+    supabaseCount(base),
+    supabaseCount(`/rest/v1/lender_rates?select=id&workspace_id=eq.${encodeURIComponent(workspaceId)}&is_published=eq.true`),
+    getRows('rate_source_documents', `select=id,source_kind,status,received_at,lender_name,source_email_from,source_email_to,source_email_subject&workspace_id=eq.${encodeURIComponent(workspaceId)}&order=received_at.desc&limit=8`),
+    supabaseFetch(`/storage/v1/bucket/${encodeURIComponent(RATE_EMAIL_BUCKET)}`).then(() => true).catch(() => false)
+  ]);
+  const byStatus = {};
+  for (const status of statusValues) {
+    byStatus[status] = await supabaseCount(`${base}&status=eq.${encodeURIComponent(status)}`);
+  }
+  const bySourceKind = {};
+  for (const sourceKind of sourceKinds) {
+    bySourceKind[sourceKind] = await supabaseCount(`${base}&source_kind=eq.${encodeURIComponent(sourceKind)}`);
+  }
+  return {
+    ok: true,
+    workspaceId,
+    queue: { total, byStatus, bySourceKind },
+    activePublishedRates,
+    storage: { [RATE_EMAIL_BUCKET]: bucket },
+    recentDocuments: (recentDocuments || []).map((row) => ({
+      id: row.id,
+      source_kind: row.source_kind,
+      status: row.status,
+      received_at: row.received_at,
+      lender_name: row.lender_name,
+      source_email_from_domain: senderDomain(parseEmailAddress(row.source_email_from)),
+      source_email_to: row.source_email_to,
+      subject_present: Boolean(row.source_email_subject)
+    }))
+  };
+}
+
 async function uploadToBucket(bucket, path, bytes, contentType) {
   const urlPath = `/storage/v1/object/${encodeURIComponent(bucket)}/${path.split('/').map(encodeURIComponent).join('/')}`;
   return supabaseFetch(urlPath, {
@@ -1242,6 +1298,10 @@ export default async function handler(req, res) {
       const body = rawBody ? JSON.parse(rawBody) : {};
       if (inboxTokenKind === 'cron' && (body.mode === 'inspect' || body.emailIds?.length)) {
         return json(res, 403, { ok: false, error: 'Cron token cannot inspect or select inbox messages.' });
+      }
+      if (body.mode === 'status') {
+        if (inboxTokenKind !== 'admin') return json(res, 403, { ok: false, error: 'Admin token required for inbox status.' });
+        return json(res, 200, await getRateInboxStatus());
       }
       const limit = Math.max(1, Math.min(inboxTokenKind === 'cron' ? 10 : 100, Number(body.limit || req.query?.limit || 25)));
       const processImmediately = body.processImmediately !== false;
