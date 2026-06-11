@@ -87,7 +87,7 @@ You can also manage trusted senders in Supabase table `lender_email_sources` by 
 
 ## Hourly cron
 
-`vercel.json` schedules:
+The hourly cron processes queued inbound emails by default:
 
 ```json
 {
@@ -96,7 +96,7 @@ You can also manage trusted senders in Supabase table `lender_email_sources` by 
 }
 ```
 
-The cron processes queued emails from approved senders and active broker/admin profiles. If `CRON_SECRET` is set, Vercel sends it as an authorization bearer header; direct unauthenticated calls are rejected.
+By default `/api/rate-updates-cron` uses `sourceKind=email`, which is the lender-email bucket flow. To override for operations/testing, set `RATE_AI_CRON_SOURCE_KIND=all` or call the endpoint with `?sourceKind=all` / `?sourceKind=manual_upload`.
 
 ## Auto-review / auto-update rule
 

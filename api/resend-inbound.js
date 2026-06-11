@@ -618,6 +618,22 @@ function isPublishableProduct(product, extraction) {
   return Boolean(effectiveDate && !isExpiredDate(expiryDate) && product.term_label && hasRate);
 }
 
+async function markOlderPublishedRatesStale(rows, workspaceId) {
+  const seen = new Set();
+  for (const row of rows || []) {
+    const lender = String(row.lender_name || '').trim();
+    const term = String(row.term_label || 'Rate product').trim() || 'Rate product';
+    const key = `${lender.toLowerCase()}::${term.toLowerCase()}`;
+    if (!lender || seen.has(key)) continue;
+    seen.add(key);
+    await patchRows(
+      'published_rates',
+      `workspace_id=eq.${encodeURIComponent(workspaceId)}&lender_name=eq.${encodeURIComponent(lender)}&term_label=eq.${encodeURIComponent(term)}&is_published=eq.true`,
+      { is_published: false, freshness_status: 'stale' }
+    );
+  }
+}
+
 async function persistExtraction({ extraction, sourceDocumentId, extractionRunId, workspaceId, canAutoPublish = false }) {
   const lender = extraction.lender_name || 'Unknown lender';
   const products = Array.isArray(extraction.products) ? extraction.products : [];
@@ -691,6 +707,7 @@ async function persistExtraction({ extraction, sourceDocumentId, extractionRunId
       is_published: true,
       approved_at: new Date().toISOString()
     }));
+    await markOlderPublishedRatesStale(publishedRows, workspaceId);
     await insertRows('published_rates', publishedRows, 'return=minimal');
     publishedCount = publishedRows.length;
   }
