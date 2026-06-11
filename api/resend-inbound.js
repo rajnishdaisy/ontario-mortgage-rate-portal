@@ -553,6 +553,13 @@ function isSpreadsheetAttachment(filename, mime) {
     || mime === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
 }
 
+function storageSafeContentType(filename, mime) {
+  const lower = String(filename || '').toLowerCase();
+  const value = String(mime || '').trim().toLowerCase();
+  if (lower.endsWith('.xlsm') || value.includes('macroenabled')) return 'application/octet-stream';
+  return mime || 'application/octet-stream';
+}
+
 async function spreadsheetToText(buffer, filename) {
   const ExcelJS = await import('exceljs');
   const Workbook = ExcelJS.default?.Workbook || ExcelJS.Workbook;
@@ -1189,8 +1196,9 @@ export async function ingestReceivedEmailEvent(event, options = {}) {
     const downloaded = await downloadUrl(downloadUrlValue);
     const filename = attachmentMeta.filename || `${attachmentMeta.id || safeId('att')}`;
     const mime = attachmentMeta.content_type || downloaded.contentType;
+    const storageMime = storageSafeContentType(filename, mime);
     const attachmentPath = `${basePath}/attachments/${cleanPathPart(filename)}`;
-    await uploadToBucket(ATTACHMENT_BUCKET, attachmentPath, downloaded.buffer, mime);
+    await uploadToBucket(ATTACHMENT_BUCKET, attachmentPath, downloaded.buffer, storageMime);
     const attachmentDocId = stableId('rsdatt', `${workspaceId}:${meta.emailId}:${attachmentMeta.id || filename}`);
     await insertIgnoreRows('rate_source_documents', [{
       id: attachmentDocId,
