@@ -156,7 +156,7 @@ async function getRateInboxStatus() {
   const [total, activePublishedRates, recentDocuments, bucket] = await Promise.all([
     supabaseCount(base),
     supabaseCount(`/rest/v1/published_rates?select=id&workspace_id=eq.${encodeURIComponent(workspaceId)}&is_published=eq.true`),
-    getRows('rate_source_documents', `select=id,source_kind,status,received_at,lender_name,source_email_from,source_email_to,source_email_subject&workspace_id=eq.${encodeURIComponent(workspaceId)}&order=received_at.desc&limit=8`),
+    getRows('rate_source_documents', `select=id,source_kind,status,received_at,lender_name,source_email_from,source_email_to,source_email_subject,metadata&workspace_id=eq.${encodeURIComponent(workspaceId)}&order=received_at.desc&limit=8`),
     supabaseFetch(`/storage/v1/bucket/${encodeURIComponent(RATE_EMAIL_BUCKET)}`).then(() => true).catch(() => false)
   ]);
   const byStatus = {};
@@ -181,7 +181,8 @@ async function getRateInboxStatus() {
       lender_name: row.lender_name,
       source_email_from_domain: senderDomain(parseEmailAddress(row.source_email_from)),
       source_email_to: row.source_email_to,
-      subject_present: Boolean(row.source_email_subject)
+      subject_present: Boolean(row.source_email_subject),
+      failure_reason: row.status === 'failed' ? (row.metadata?.fetch_error || row.metadata?.error || null) : null
     }))
   };
 }
